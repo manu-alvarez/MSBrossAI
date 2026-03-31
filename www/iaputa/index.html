@@ -27,7 +27,7 @@
         .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
         .content { flex: 1; padding: 2rem 0; }
         .footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.8rem; }
-        .footer a { color: #06b6d4; text-decoration: none; }
+        .footer a { color: var(--accent); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -41,6 +41,9 @@
         .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
         .feature-title { font-weight: 700; margin-bottom: 0.5rem; }
         .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #06b6d4); border: none; border-radius: 100px; color: white; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3); margin-top: 1.5rem; }
+        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5); }
+        .run-btn svg { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
@@ -51,13 +54,13 @@
 
     <div class="container">
         <header class="header">
-            <a href="https://msbross.me/" class="logo">MSBrossAI</a>
+            <a href="https://msbrossai.alvarezconsult.com/" class="logo">MSBrossAI</a>
             <h1 class="title">🤖 IAPuta OS</h1>
             <span class="badge">CORE AI</span>
         </header>
 
         <nav style="margin-bottom: 1.5rem;">
-            <a href="https://msbross.me/" class="back-btn">← Volver al Ecosistema</a>
+            <a href="https://msbrossai.alvarezconsult.com/" class="back-btn">← Volver al Ecosistema</a>
         </nav>
 
         <main class="content">
@@ -104,12 +107,19 @@
                     <div class="feature-desc">Ejecución de código Python para cálculos complejos.</div>
                 </div>
             </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/app/iaputa/" class="run-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    EJECUTAR APLICACIÓN
+                </a>
+            </div>
         </main>
 
         <footer class="footer">
             <p>MSBrossAI © 2026 — IAPuta OS</p>
             <p style="margin-top: 0.5rem;">
-                <a href="https://msbross.me/">Ecosistema</a> • 
+                <a href="https://msbrossai.alvarezconsult.com/">Ecosistema</a> • 
                 <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>
             </p>
         </footer>
