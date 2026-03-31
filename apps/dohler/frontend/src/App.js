@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import TaskList from './components/TaskList';
 import Timer from './components/Timer';
 import './index.css';
 
-const API_BASE = './api.php?action=';
+// FIXED: Point to FastAPI backend instead of api.php
+const API_BASE = '/api';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -21,11 +21,11 @@ function App() {
   const fetchData = useCallback(async () => {
     try {
       const [tasksRes, statsRes] = await Promise.all([
-        axios.get(`${API_BASE}get_tasks`),
-        axios.get(`${API_BASE}get_stats`)
+        fetch(`${API_BASE}/tasks/`).then(r => r.json()),
+        fetch(`${API_BASE}/stats/`).then(r => r.json())
       ]);
       
-      const fetchedTasks = Array.isArray(tasksRes.data) ? tasksRes.data : [];
+      const fetchedTasks = Array.isArray(tasksRes) ? tasksRes : [];
       setTasks(fetchedTasks);
       
       // Calculate local stats from tasks
@@ -60,9 +60,10 @@ function App() {
     try {
       const task = tasks.find(t => t.id === taskId);
       if (!task) return;
-      await axios.post(`${API_BASE}update_task`, {
-        id: taskId,
-        completed: !task.completed
+      await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed: !task.completed })
       });
       fetchData();
     } catch (error) {
@@ -72,7 +73,9 @@ function App() {
 
   const handleTaskDelete = async (taskId) => {
     try {
-      await axios.delete(`${API_BASE}delete_task&id=${taskId}`);
+      await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: 'DELETE'
+      });
       fetchData();
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -81,12 +84,16 @@ function App() {
 
   const handleTaskAdd = async (title, description, priority) => {
     try {
-      await axios.post(`${API_BASE}add_task`, {
-        title,
-        description,
-        priority,
-        completed: false,
-        created_at: new Date().toISOString()
+      await fetch(`${API_BASE}/tasks/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          priority,
+          completed: false,
+          created_at: new Date().toISOString()
+        })
       });
       fetchData();
     } catch (error) {
