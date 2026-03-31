@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MSBrossAI — Ecosistema unificado de 9 aplicaciones IA premium.">
+    <title>MSBrossAI • Ecosistema Unificado</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #030712;
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.06);
+            --card-hover: rgba(255,255,255,0.08);
+            --text: #f8fafc;
+            --text-muted: #64748b;
+            --accent-1: #8b5cf6;
+            --accent-2: #06b6d4;
+            --accent-3: #10b981;
+            --accent-4: #f59e0b;
+            --accent-5: #ef4444;
+            --accent-6: #ec4899;
+            --accent-7: #3b82f6;
+            --accent-8: #14b8a6;
+            --accent-9: #f97316;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ambient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 600px; height: 600px; background: var(--accent-1); top: -200px; left: -100px; }
+        .orb-2 { width: 500px; height: 500px; background: var(--accent-2); bottom: -150px; right: -100px; animation-delay: -5s; }
+        .orb-3 { width: 400px; height: 400px; background: var(--accent-6); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -50px) scale(0.9); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-6));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 8s ease infinite;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* App Card */
+        .app-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--card-accent) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--card-accent);
+            box-shadow: 0 20px 60px -15px var(--card-accent-shadow);
+        }
+
+        .app-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .app-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: var(--card-accent);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .card-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.6rem;
+            border-radius: 100px;
+            background: var(--card-accent);
+            color: white;
+            margin-left: auto;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .card-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.7rem;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--accent-3);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-3);
+            animation: pulse 2s infinite;
+        }
+
+        .card-arrow {
+            font-size: 1.2rem;
+            color: var(--card-accent);
+            transition: transform 0.3s ease;
+        }
+
+        .app-card:hover .card-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 0 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: var(--accent-2);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .app-grid { grid-template-columns: 1fr; }
+            .container { padding: 1rem; }
+            header { padding: 2rem 0 1.5rem; }
+        }
+
+        /* Loading Animation */
+        .app-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .app-card:nth-child(1) { animation-delay: 0.1s; }
+        .app-card:nth-child(2) { animation-delay: 0.2s; }
+        .app-card:nth-child(3) { animation-delay: 0.3s; }
+        .app-card:nth-child(4) { animation-delay: 0.4s; }
+        .app-card:nth-child(5) { animation-delay: 0.5s; }
+        .app-card:nth-child(6) { animation-delay: 0.6s; }
+        .app-card:nth-child(7) { animation-delay: 0.7s; }
+        .app-card:nth-child(8) { animation-delay: 0.8s; }
+        .app-card:nth-child(9) { animation-delay: 0.9s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">MSBrossAI</h1>
+            <p class="subtitle">Ecosistema Unificado de Inteligencia Artificial</p>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-dot"></span>
+                    <span>9 Aplicaciones</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-dot" style="background: var(--accent-2)"></span>
+                    <span>100% Fusionado</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-dot" style="background: var(--accent-6)"></span>
+                    <span>Producción</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-grid">
+            <!-- IAPuta OS -->
+            <a href="/iaputa/" class="app-card" style="--card-accent: var(--accent-1); --card-accent-shadow: rgba(139,92,246,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🤖</div>
+                    <div>
+                        <div class="card-title">IAPuta OS</div>
+                        <span class="card-badge">CORE AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Asistente IA soberano con orbe 3D reactivo, 12 herramientas integradas, visión computacional y multi-LLM fallback (Groq → Ollama → OpenRouter).</p>
+                <div class="card-tech">
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">Three.js</span>
+                    <span class="tech-tag">Clean Arch</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- LIVEKIT Nikolina -->
+            <a href="/nikolina/" class="app-card" style="--card-accent: var(--accent-2); --card-accent-shadow: rgba(6,182,212,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🎙️</div>
+                    <div>
+                        <div class="card-title">LIVEKIT Nikolina</div>
+                        <span class="card-badge">VOICE AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio, gestión de reservas, carta interactiva y logging de llamadas.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">LiveKit</span>
+                    <span class="tech-tag">Gemini 2.5</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">React 18</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Arantxa Translate -->
+            <a href="/traductor/" class="app-card" style="--card-accent: var(--accent-3); --card-accent-shadow: rgba(16,185,129,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🌐</div>
+                    <div>
+                        <div class="card-title">Arantxa Translate PRO</div>
+                        <span class="card-badge">TRANSLATION</span>
+                    </div>
+                </div>
+                <p class="card-desc">Traductor neural con 4 modos (estándar, profesional, coloquial, resumen), 4 providers (Groq, OpenAI, Gemini, OpenRouter) y OCR con Tesseract.js.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Express</span>
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">MUI 7</span>
+                    <span class="tech-tag">Multi-Provider</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- TaskFlowPro -->
+            <a href="/taskflow/" class="app-card" style="--card-accent: var(--accent-4); --card-accent-shadow: rgba(245,158,11,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div>
+                        <div class="card-title">TaskFlowPro</div>
+                        <span class="card-badge">PRODUCTIVITY</span>
+                    </div>
+                </div>
+                <p class="card-desc">Gestión de tareas con alarmas, categorías, integración WhatsApp, export/import, búsqueda y drag-and-drop. Persistencia en localStorage.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 18</span>
+                    <span class="tech-tag">MUI 5</span>
+                    <span class="tech-tag">Zustand</span>
+                    <span class="tech-tag">PWA</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- DOHLER -->
+            <a href="/dohler/" class="app-card" style="--card-accent: var(--accent-7); --card-accent-shadow: rgba(59,130,246,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <div>
+                        <div class="card-title">DOHLER</div>
+                        <span class="card-badge">TASK MANAGER</span>
+                    </div>
+                </div>
+                <p class="card-desc">Gestor de tareas con temporizador Pomodoro, estadísticas de productividad, checklists anidadas y diseño neón glassmorphism.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">SQLite</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- LogiSearch -->
+            <a href="/logisearch/" class="app-card" style="--card-accent: var(--accent-5); --card-accent-shadow: rgba(239,68,68,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div>
+                        <div class="card-title">LogiSearch</div>
+                        <span class="card-badge">LOGISTICS AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Buscador logístico con IA, análisis de rutas, comparador de transportistas, calculadora de costes y generación de RFQs con PDF.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Supabase</span>
+                    <span class="tech-tag">Tavily</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Edelweiss -->
+            <a href="/edelweiss/" class="app-card" style="--card-accent: var(--accent-6); --card-accent-shadow: rgba(236,72,153,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">👶</div>
+                    <div>
+                        <div class="card-title">Edelweiss</div>
+                        <span class="card-badge">VISION PLAY</span>
+                    </div>
+                </div>
+                <p class="card-desc">Estimulación visual infantil con 5 modos (alto contraste, seguimiento, enfoque, descanso, formas), parental lock e i18n ES/EN.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 18</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">Framer Motion</span>
+                    <span class="tech-tag">PWA</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Moko-Tools -->
+            <a href="/moko/" class="app-card" style="--card-accent: var(--accent-8); --card-accent-shadow: rgba(20,184,166,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🛠️</div>
+                    <div>
+                        <div class="card-title">Moko-Tools</div>
+                        <span class="card-badge">DEV TOOLS</span>
+                    </div>
+                </div>
+                <p class="card-desc">Directorio curado de 189 herramientas de desarrollo en 14 categorías con búsqueda semántica, favoritos y bento grid navigation.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">Vite 7</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">189 Tools</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- CombiPro -->
+            <a href="/combipro/" class="app-card" style="--card-accent: var(--accent-9); --card-accent-shadow: rgba(249,115,22,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">⚽</div>
+                    <div>
+                        <div class="card-title">CombiPro</div>
+                        <span class="card-badge">SPORTS AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Generador de combinadas deportivas con algoritmo de probabilidad real, perfiles de riesgo, gestión de stake y seguimiento de resultados.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">MUI 7</span>
+                    <span class="tech-tag">Framer Motion</span>
+                    <span class="tech-tag">API-Football</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+        </main>
+
+        <footer>
+            <p>MSBrossAI © 2026 — Ecosistema unificado de 9 aplicaciones IA</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="https://github.com/manu-alvarez/MSBrossAI" target="_blank">GitHub</a> • 
+                <a href="/dashboard/" target="_blank">Dashboard Premium</a> • 
+                <a href="/dev/" target="_blank">Dev Panel</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Animated Background Canvas
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: 0, y: 0 };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Mouse interaction
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    this.vx -= dx * 0.00005;
+                    this.vy -= dy * 0.00005;
+                }
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(139, 92, 246, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        // Create particles
+        const particleCount = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 15000));
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - dist / 150)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            drawConnections();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Card hover sound effect (optional)
+        document.querySelectorAll('.app-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    </script>
+</body>
+</html>
