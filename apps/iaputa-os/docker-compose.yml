@@ -1,0 +1,42 @@
+services:
+  iaputa-backend:
+    build: ./backend
+    container_name: msbrossai-iaputa-backend
+    ports:
+      - "8006:8000"
+    env_file:
+      - ../../.env.local
+    volumes:
+      - iaputa-audio:/app/temp_audio
+      - iaputa-vision:/app/temp_vision
+    networks:
+      - msbrossai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  iaputa-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: msbrossai-iaputa-frontend
+    ports:
+      - "8080:80"
+    networks:
+      - msbrossai-network
+    restart: unless-stopped
+    depends_on:
+      iaputa-backend:
+        condition: service_healthy
+
+networks:
+  msbrossai-network:
+    driver: bridge
+
+volumes:
+  iaputa-audio:
+  iaputa-vision:
