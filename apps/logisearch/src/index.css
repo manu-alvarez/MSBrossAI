@@ -1,0 +1,27 @@
+/* LogiSearch AI — Minimal Global Styles */
+/* MUI handles all component styling via theme.ts */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Override any remaining defaults */
+#root {
+  min-height: 100vh;
+}
+
+/* Text gradient utility */
+.text-gradient {
+  background: linear-gradient(135deg, #00B4D8, #48CAE4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pulsing glow for active searches */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 180, 216, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(0, 180, 216, 0.3); }
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
