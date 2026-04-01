@@ -1,17 +1,8 @@
 services:
   logisearch:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: msbrossai-logisearch
-    ports:
-      - "5175:80"
-    env_file:
-      - ../../.env.local
-    networks:
-      - msbrossai-network
-    restart: unless-stopped
-
+    build: .
+    ports: ["5175:80"]
+    env_file: ../../.env.local
+    networks: [msbrossai-network]
 networks:
-  msbrossai-network:
-    driver: bridge
+  msbrossai-network: { driver: bridge }
