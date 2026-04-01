@@ -8,13 +8,6 @@ class LLMPort(ABC):
 
 class AudioPort(ABC):
     @abstractmethod
-    async def transcribe(self, audio_path: str) -> str:
-        pass
-        
+    async def transcribe(self, audio_path: str) -> str: pass
     @abstractmethod
-    async def transcribe_bytes(self, audio_bytes: bytes, filename: str) -> str:
-        pass
-        
-    @abstractmethod
-    async def generate_speech(self, text: str) -> str:
-        pass
+    async def generate_speech(self, text: str) -> str: pass
