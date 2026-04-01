@@ -9,25 +9,13 @@ import extrasRouter from './routes/extras.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-// Security
 app.use(helmet());
-
-// CORS - secure configuration
 const corsOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173'];
 app.use(cors({ origin: corsOrigins, credentials: true }));
-
-// Rate limiting
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-app.use('/api', limiter);
-
+app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 100 }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/api', processRouter);
 app.use('/api', documentsRouter);
 app.use('/api', extrasRouter);
-
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
-
-app.listen(PORT, () => {
-  console.log(`Arantxa API listening on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Arantxa API on :${PORT}`));
