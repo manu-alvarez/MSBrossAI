@@ -1,7 +1,7 @@
 services:
-  taskflow-pro:
+  edelweiss:
     build: .
-    ports: ["8887:80"]
+    ports: ["5176:80"]
     networks: [msbrossai-network]
 networks:
   msbrossai-network: { driver: bridge }

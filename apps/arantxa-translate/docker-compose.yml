@@ -1,35 +1,13 @@
 services:
   arantxa-server:
     build: ./server
-    container_name: msbrossai-arantxa-server
-    ports:
-      - "3001:3001"
-    env_file:
-      - ../../.env.local
-    networks:
-      - msbrossai-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
+    ports: ["3001:3001"]
+    env_file: ../../.env.local
+    networks: [msbrossai-network]
   arantxa-client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    container_name: msbrossai-arantxa-client
-    ports:
-      - "5173:80"
-    networks:
-      - msbrossai-network
-    restart: unless-stopped
-    depends_on:
-      arantxa-server:
-        condition: service_healthy
-
+    build: ./client
+    ports: ["5173:80"]
+    depends_on: [arantxa-server]
+    networks: [msbrossai-network]
 networks:
-  msbrossai-network:
-    driver: bridge
+  msbrossai-network: { driver: bridge }
