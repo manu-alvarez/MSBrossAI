@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional
 
-from app.core.config import settings, APP_PREFIX
+from app.core.config import settings
 from app.application.use_cases.chat_use_case import ChatUseCase
 from app.infrastructure.llm.groq_adapter import GroqAdapter
 from app.infrastructure.audio.tts_stt_adapter import GroqEdgeAudioAdapter
@@ -19,8 +19,9 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 def get_chat_usecase() -> ChatUseCase:
+    llm_port = GroqAdapter()
     audio_port = GroqEdgeAudioAdapter()
-    return ChatUseCase(audio_adapter=audio_port)
+    return ChatUseCase(llm_adapter=llm_port, audio_adapter=audio_port)
 
 def get_audio_adapter() -> GroqEdgeAudioAdapter:
     return GroqEdgeAudioAdapter()

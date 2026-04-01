@@ -1,7 +1,6 @@
 from app.domain.entities import AIResponse
 from app.application.interfaces.ai_port import AudioPort
 from app.application.use_cases.memory_service import save_message, get_recent_history
-from app.application.use_cases.agent_orchestrator import orchestrator
 
 class ChatUseCase:
     def __init__(self, audio_adapter: AudioPort = None):
@@ -12,7 +11,6 @@ class ChatUseCase:
         history = get_recent_history(limit=8)
         
         # 2. Orquestar respuesta (incluye RAG semántico)
-        final_text, v_url, emotion = await orchestrator.route_and_execute(text, history)
         
         # 3. Guardar en memoria (ahora guarda en Sqlite + VectorDB vía memory_service)
         save_message("user", text)
