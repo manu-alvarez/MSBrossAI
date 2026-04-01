@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import commonjs from '@rollup/plugin-commonjs';
 
 export default defineConfig({
   base: './',
@@ -8,17 +7,12 @@ export default defineConfig({
   server: { port: 8887 },
   preview: { port: 8887 },
   build: {
+    crossOrigin: false,
     rollupOptions: {
-      plugins: [
-        commonjs({
-          include: /node_modules/,
-          requireReturnsDefault: 'auto',
-        })
-      ],
       output: {
-        format: 'iife',
-        inlineDynamicImports: true,
+        manualChunks: undefined
       }
     }
-  }
+  },
+  appType: 'spa',
 });
