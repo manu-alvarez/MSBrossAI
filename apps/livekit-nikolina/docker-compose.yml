@@ -1,6 +1,8 @@
 services:
   livekit-server:
-    build: ./server
+    build:
+      context: .
+      dockerfile: server/Dockerfile
     container_name: msbrossai-livekit-server
     ports:
       - "8000:8000"
@@ -21,8 +23,8 @@ services:
 
   livekit-agent:
     build:
-      context: ./agent
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: agent/Dockerfile
     container_name: msbrossai-livekit-agent
     env_file:
       - ../../.env.local

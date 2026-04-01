@@ -5,14 +5,11 @@ Asistente de voz especializado en gestión de reservas para restaurantes, con ar
 - **Realtime Pipeline**: Gemini 2.5 Flash Native Audio (STT+LLM+TTS en un solo paso)
 - **Modular Pipeline**: Ollama (LLM) + Faster-Whisper (STT) + Kokoro (TTS)
 
-Incluye gestión de reservas, consulta de carta, información del restaurante y logging de llamadas.
-
 ## Arquitectura
 - **Servidor Backend**: FastAPI + SQLite (restaurant.db)
 - **Agente de Voz**: LiveKit Agents 1.4.3 con arquitectura dual
 - **Frontend**: React 18 + LiveKit Components + MUI 7
 - **STT/TTS/LLM**: Múltiples proveedores con fallback automático
-- **Base de Datos**: SQLite con WAL mode para concurrencia
 
 ## Estructura
 ```
@@ -38,19 +35,12 @@ docker-compose up -d --build
 | PUT | `/api/restaurant` | Actualiza información del restaurante |
 | GET | `/api/tables` | Lista mesas (activas/todas) |
 | POST | `/api/tables` | Crea nueva mesa |
-| PUT | `/api/tables/{id}` | Actualiza mesa |
-| DELETE | `/api/tables/{id}` | Elimina mesa |
 | GET | `/api/menu` | Obtiene carta (filtrada por categoría) |
-| POST | `/api/menu` | Crea nuevo plato |
-| PUT | `/api/menu/{id}` | Actualiza plato |
-| DELETE | `/api/menu/{id}` | Elimina plato |
 | GET | `/api/reservations` | Lista reservas (filtradas) |
 | POST | `/api/reservations` | Crea nueva reserva |
-| DELETE | `/api/reservations/{id}` | Cancela reserva |
 | GET | `/api/calls` | Historial de llamadas |
 | GET | `/api/stats` | Estadísticas de uso |
-| GET | `/api/check_availability` | Verifica disponibilidad de mesas |
-| GET | `/api/dev/*` | Endpoints de desarrollo (config, logs, etc.) |
+| GET | `/health` | Health check |
 
 ## Variables de Entorno
 Ver `.env.example` en server/
@@ -62,7 +52,7 @@ Ver `.env.example` en server/
 - ✅ Wire transcript panel a datos reales del agent
 - ✅ Implementado `/api/dev/reset-agent` correctamente
 - ✅ Métricas del sistema cross-platform (no solo Linux)
-- ✅ Eliminado API keys expuestas en .env files (usar .env.example)
+- ✅ Eliminado API keys expuestas en .env files
 - ✅ Completado sistema de logging de llamadas
 - ✅ Sincronizado menú del frontend con base de datos
 - ✅ Sentry integrado para monitoring de errores
