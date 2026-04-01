@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { WhatsAppService } from '../services/whatsappService';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type Priority = 'low' | 'medium' | 'high';
@@ -82,14 +83,9 @@ export const useTaskStore = create<TaskStore>()(
           updatedAt: new Date().toISOString(),
           order: state.tasks.length,
         };
-        
-        // Wire WhatsApp to task creation
         if (state.settings.whatsappEnabled) {
-          import('../services/whatsappService').then(({ WhatsAppService }) => {
-            WhatsAppService.onTaskCreated(newTask.title);
-          });
+          WhatsAppService.onTaskCreated(newTask.title);
         }
-        
         return { tasks: [newTask, ...state.tasks] };
       }),
 
