@@ -7,10 +7,12 @@ export default defineConfig({
   server: { port: 8887 },
   preview: { port: 8887 },
   build: {
+    crossOrigin: false,
     rollupOptions: {
       output: {
         manualChunks: undefined
       }
     }
-  }
+  },
+  appType: 'spa',
 });
