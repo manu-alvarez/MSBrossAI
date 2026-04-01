@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter basename="/taskflow/">
+      <BrowserRouter basename="">
         <App />
       </BrowserRouter>
     </ThemeProvider>
