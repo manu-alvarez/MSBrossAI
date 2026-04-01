@@ -19,9 +19,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 def get_chat_usecase() -> ChatUseCase:
-    llm_port = GroqAdapter()
     audio_port = GroqEdgeAudioAdapter()
-    return ChatUseCase(llm_adapter=llm_port, audio_adapter=audio_port)
+    return ChatUseCase(audio_adapter=audio_port)
 
 def get_audio_adapter() -> GroqEdgeAudioAdapter:
     return GroqEdgeAudioAdapter()
@@ -55,12 +54,10 @@ async def voice_command_endpoint(request: Request, audio_file: UploadFile = File
             return JSONResponse(status_code=400, content={"error": "El archivo de audio está vacío."})
 
         ext = "mp4" if audio_file.content_type and "mp4" in audio_file.content_type else "webm"
-        temp_in = f"{APP_PREFIX}/temp_audio/in_{uuid.uuid4().hex[:6]}.{ext}"
+        filename = f"in_{uuid.uuid4().hex[:6]}.{ext}"
         
-        async with aiofiles.open(temp_in, "wb") as f:
-            await f.write(content)
-
-        res = await chat_usecase.execute_voice(temp_in)
+        # Zero-Trash I/O: Pass raw bytes directly to use case
+        res = await chat_usecase.execute_voice_bytes(content, filename)
         return res.model_dump()
 
     except HTTPException:

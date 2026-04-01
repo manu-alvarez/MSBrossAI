@@ -56,7 +56,7 @@ class GroqEdgeAudioAdapter(AudioPort):
         self.groq_client = groq_client
         
     async def transcribe(self, audio_path: str) -> str:
-        """STT via Whisper asíncrono"""
+        """STT via Whisper asíncrono desde archivo"""
         with open(audio_path, "rb") as f:
             transcription = await self.groq_client.audio.transcriptions.create(
                 file=(os.path.basename(audio_path), f.read()), 
@@ -65,12 +65,29 @@ class GroqEdgeAudioAdapter(AudioPort):
             )
         return transcription
 
+    async def transcribe_bytes(self, audio_bytes: bytes, filename: str) -> str:
+        """STT via Whisper asíncrono directo desde Memoria RAM"""
+        transcription = await self.groq_client.audio.transcriptions.create(
+            file=(filename, audio_bytes), 
+            model="whisper-large-v3", 
+            response_format="text"
+        )
+        return transcription
+
     async def generate_speech(self, text: str) -> str:
-        """TTS asíncrono via Edge-TTS — filtra código y ruido antes de hablar."""
+        """TTS asíncrono via Edge-TTS — todo en streaming hacia Base64 (Zero-Trash)."""
         clean_text = _clean_for_tts(text)
         if not clean_text:
             clean_text = "Listo."
-        temp_out = f"temp_audio/out_{uuid.uuid4().hex[:6]}.mp3"
+            
         communicate = edge_tts.Communicate(clean_text, "es-ES-AlvaroNeural", rate="+25%")
-        await communicate.save(temp_out)
-        return f"/{temp_out}"
+        
+        # Recoger audio directamente en memoria RAM
+        audio_buffer = bytearray()
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_buffer.extend(chunk["data"])
+                
+        import base64
+        b64_str = base64.b64encode(audio_buffer).decode('utf-8')
+        return f"data:audio/mp3;base64,{b64_str}"

@@ -47,3 +47,5 @@ Ver `.env.example` en backend/
 - ✅ Multi-LLM fallback chain (Groq → Ollama → OpenRouter)
 - ✅ Anti-hallucination safeguards
 - ✅ Agentic tool loop (hasta 5 iteraciones)
+- ✅ Rate limiting con slowapi
+- ✅ Type-safe configuration con Pydantic Settings

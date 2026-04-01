@@ -1,38 +1,30 @@
 import sqlite3
-import os
-import logging
-import asyncio
-from datetime import datetime, timedelta
+from app.infrastructure.data.vector_memory import vector_memory
 
-logger = logging.getLogger(__name__)
-
-DB_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
-    "iaputa_os_memory.db",
-)
-
+DB_PATH = "iaputa_os_memory.db"
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("""
+    # Tabla para contexto key-value (mantenemos la antigua por compatibilidad si es necesario)
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS context_memory (
-            key TEXT PRIMARY KEY,
-            value TEXT,
+            key TEXT PRIMARY KEY, 
+            value TEXT, 
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-    """)
-    cursor.execute("""
+    ''')
+    # Nueva tabla para el historial del chat
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS chat_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             role TEXT NOT NULL,
             content TEXT NOT NULL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-    """)
+    ''')
     conn.commit()
     conn.close()
-
 
 def save_message(role: str, content: str):
     if not content:
@@ -40,11 +32,18 @@ def save_message(role: str, content: str):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO chat_history (role, content) VALUES (?, ?)", (role, content)
+        "INSERT INTO chat_history (role, content) VALUES (?, ?)",
+        (role, content)
     )
     conn.commit()
     conn.close()
-
+    
+    # Zero-Trash persistent memory: Ingest into Vector DB
+    try:
+        vector_memory.add_message(role, content)
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"Vector memory insertion failed: {e}")
 
 def get_recent_history(limit: int = 8) -> list:
     """Obtiene los últimos N mensajes para pasárselos al LLM como memoria contextual."""
@@ -52,16 +51,16 @@ def get_recent_history(limit: int = 8) -> list:
     cursor = conn.cursor()
     cursor.execute(
         "SELECT role, content FROM chat_history ORDER BY timestamp DESC LIMIT ?",
-        (limit,),
+        (limit,)
     )
     rows = cursor.fetchall()
     conn.close()
-
+    
     history = []
+    # Invertir para que estén en orden cronológico ascendente (los más antiguos primero)
     for row in reversed(rows):
         history.append({"role": row[0], "content": row[1]})
     return history
-
 
 def clear_history():
     conn = sqlite3.connect(DB_PATH)
@@ -76,21 +75,23 @@ async def cleanup_task(idle_minutes: int = 10):
     Background task: trims chat history entries older than idle_minutes.
     Runs every 60 seconds. Referenced by main.py lifespan.
     """
+    import asyncio
     while True:
         try:
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
             cursor.execute(
                 "DELETE FROM chat_history WHERE timestamp < datetime('now', ?)",
-                (f"-{idle_minutes} minutes",),
+                (f'-{idle_minutes} minutes',)
             )
             deleted = cursor.rowcount
             conn.commit()
             conn.close()
             if deleted > 0:
-                logger.info(f"Memory cleanup: {deleted} old messages purged.")
-        except Exception as e:
-            logger.error(f"Memory cleanup error: {e}")
+                import logging
+                logging.getLogger(__name__).info(f"Memory cleanup: {deleted} old messages purged.")
+        except Exception:
+            pass
         await asyncio.sleep(60)
 
 

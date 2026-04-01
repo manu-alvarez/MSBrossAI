@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalamos módulos de Node limpios
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copiamos código y construimos la web SPA
 COPY . .

@@ -49,12 +49,12 @@ async def analyze_vision_image(image_b64: str, prompt: str = None, source: str =
     if "base64," in image_b64:
         image_b64 = image_b64.split("base64,")[1]
 
-    # Save image locally for reference
+    # Zero-Trash I/O: We return the image as a Data URI so the frontend 
+    # can display it without saving it to the server's disk.
     try:
-        img_bytes = base64.b64decode(image_b64)
-        path_name = f"temp_vision/eye_{uuid.uuid4().hex[:6]}.jpg"
-        async with aiofiles.open(path_name, "wb") as f:
-            await f.write(img_bytes)
+        # Validate base64 validity
+        base64.b64decode(image_b64)
+        path_name = f"data:image/jpeg;base64,{image_b64}"
     except Exception:
         path_name = None
 
@@ -137,8 +137,13 @@ async def approve_and_run_script(script_id: str):
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
-    stdout, stderr = await process.communicate()
-    
+    try:
+        stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=30.0)
+    except asyncio.TimeoutError:
+        process.kill()
+        await process.wait()
+        return f"Error: Timeout de 30 segundos alcanzado. El script '{name}' tardó demasiado.", None
+        
     out = stdout.decode('utf-8')
     err = stderr.decode('utf-8')
     if err:
@@ -166,6 +171,7 @@ async def execute_python(code: str):
         stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=30.0)
     except asyncio.TimeoutError:
         process.kill()
+        await process.wait()  # Prevenir zombie process
         return "Error: Timeout de 30 segundos alcanzado. El script tardó demasiado.", None
 
     out = stdout.decode('utf-8')

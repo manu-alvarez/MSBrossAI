@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import logging
+import os
 
 from app.core.config import settings
 from app.presentation.api.routes import router
@@ -16,7 +17,6 @@ if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
     from sentry_sdk.integrations.starlette import StarletteIntegration
-
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
         integrations=[StarletteIntegration(), FastApiIntegration()],
@@ -24,15 +24,13 @@ if settings.SENTRY_DSN:
     )
     logger.info("Sentry initialized.")
 
-# Tareas en segundo plano
-from app.infrastructure.tools.telegram_tool import telegram_polling_loop
-from app.application.use_cases.memory_service import cleanup_task
-
 background_tasks = set()
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    from app.infrastructure.tools.telegram_tool import telegram_polling_loop
+    from app.application.use_cases.memory_service import cleanup_task
+
     if settings.TELEGRAM_BOT_TOKEN:
         logger.info("Iniciando Telegram polling...")
         tg_task = asyncio.create_task(telegram_polling_loop())
@@ -51,13 +49,13 @@ async def lifespan(app: FastAPI):
         t.cancel()
     await asyncio.gather(*background_tasks, return_exceptions=True)
 
-
 app = FastAPI(title="IAPuta OS Core API", lifespan=lifespan)
 
 # CORS SECURE: Use configured origins instead of wildcard
+cors_origins = settings.get_cors_origins()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.get_cors_origins(),
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,13 +63,14 @@ app.add_middleware(
 
 app.include_router(router)
 
-
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
-
 if __name__ == "__main__":
     uvicorn.run(
-        "app.main:app", host=settings.API_HOST, port=settings.API_PORT, reload=False
+        "app.main:app",
+        host=settings.API_HOST,
+        port=settings.API_PORT,
+        reload=False
     )

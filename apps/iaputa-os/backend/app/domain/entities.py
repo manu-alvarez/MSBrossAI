@@ -1,11 +1,9 @@
 from typing import Optional, Dict, Any, Tuple
 from pydantic import BaseModel
 
-
 class UserMessage(BaseModel):
     text: str
-
-
+    
 class AIResponse(BaseModel):
     transcript: str
     response: str

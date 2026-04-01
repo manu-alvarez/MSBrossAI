@@ -7,11 +7,9 @@ import json
 import logging
 
 from app.infrastructure.tools.toolbox import (
-    vision_eye,
-    vision_webcam,
+    vision_eye, vision_webcam,
     os_control_request,
-    approve_and_run_script,
-    execute_python,
+    approve_and_run_script, execute_python
 )
 from app.infrastructure.tools.google_tools import google_executor
 from app.infrastructure.tools.hotmail_tool import hotmail_executor
@@ -39,9 +37,7 @@ async def handle_tool_call(call):
         return await vision_webcam()
 
     elif name == "web_search":
-        return await unified_search(
-            args.get("query", ""), args.get("engine", "tavily")
-        ), None
+        return await unified_search(args.get("query", ""), args.get("engine", "tavily")), None
 
     elif name == "hotmail_task":
         res, img = await hotmail_executor(args.get("task", ""), args)
@@ -49,13 +45,10 @@ async def handle_tool_call(call):
         return res, img
 
     elif name == "google_task":
-        srv = args.get("srv")
+        srv = args.get('srv')
         if srv == "gmail":
-            return (
-                "Error: Gmail no está disponible. Usa hotmail_task para correos.",
-                None,
-            )
-        res, img = await google_executor(srv, args.get("task"))
+            return "Error: Gmail no está disponible. Usa hotmail_task para correos.", None
+        res, img = await google_executor(srv, args.get('task'))
         return res, img
 
     elif name == "os_control":
@@ -71,7 +64,6 @@ async def handle_tool_call(call):
 
     elif name == "get_current_time":
         from app.infrastructure.tools.toolbox import get_current_time
-
         return await get_current_time()
 
     elif name == "telegram_send":
@@ -82,7 +74,6 @@ async def handle_tool_call(call):
 
     elif name == "ios_shortcut":
         import httpx
-
         webhook_url = args.get("url", "")
         params = args.get("params", {})
         if not webhook_url:
