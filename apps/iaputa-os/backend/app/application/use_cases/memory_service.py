@@ -1,20 +1,23 @@
 import sqlite3
-from app.infrastructure.data.vector_memory import vector_memory
+import os
+import logging
+import asyncio
+from datetime import datetime, timedelta
 
-DB_PATH = "iaputa_os_memory.db"
+logger = logging.getLogger(__name__)
+
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "iaputa_os_memory.db")
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    # Tabla para contexto key-value (mantenemos la antigua por compatibilidad si es necesario)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS context_memory (
-            key TEXT PRIMARY KEY, 
-            value TEXT, 
+            key TEXT PRIMARY KEY,
+            value TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
-    # Nueva tabla para el historial del chat
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS chat_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,16 +40,8 @@ def save_message(role: str, content: str):
     )
     conn.commit()
     conn.close()
-    
-    # Zero-Trash persistent memory: Ingest into Vector DB
-    try:
-        vector_memory.add_message(role, content)
-    except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning(f"Vector memory insertion failed: {e}")
 
 def get_recent_history(limit: int = 8) -> list:
-    """Obtiene los últimos N mensajes para pasárselos al LLM como memoria contextual."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
@@ -55,9 +50,7 @@ def get_recent_history(limit: int = 8) -> list:
     )
     rows = cursor.fetchall()
     conn.close()
-    
     history = []
-    # Invertir para que estén en orden cronológico ascendente (los más antiguos primero)
     for row in reversed(rows):
         history.append({"role": row[0], "content": row[1]})
     return history
@@ -69,13 +62,7 @@ def clear_history():
     conn.commit()
     conn.close()
 
-
 async def cleanup_task(idle_minutes: int = 10):
-    """
-    Background task: trims chat history entries older than idle_minutes.
-    Runs every 60 seconds. Referenced by main.py lifespan.
-    """
-    import asyncio
     while True:
         try:
             conn = sqlite3.connect(DB_PATH)
@@ -88,12 +75,9 @@ async def cleanup_task(idle_minutes: int = 10):
             conn.commit()
             conn.close()
             if deleted > 0:
-                import logging
-                logging.getLogger(__name__).info(f"Memory cleanup: {deleted} old messages purged.")
-        except Exception:
-            pass
+                logger.info(f"Memory cleanup: {deleted} old messages purged.")
+        except Exception as e:
+            logger.error(f"Memory cleanup error: {e}")
         await asyncio.sleep(60)
 
-
-# Inicializamos las tablas al importar el módulo
 init_db()

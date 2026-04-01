@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import processRouter from './routes/process.js';
 import documentsRouter from './routes/documents.js';
 import extrasRouter from './routes/extras.js';
@@ -8,13 +10,24 @@ import extrasRouter from './routes/extras.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.json({ limit: '2mb' }));
+// Security
+app.use(helmet());
 
+// CORS - secure configuration
+const corsOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173'];
+app.use(cors({ origin: corsOrigins, credentials: true }));
+
+// Rate limiting
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use('/api', limiter);
+
+app.use(express.json({ limit: '2mb' }));
 app.use('/api', processRouter);
 app.use('/api', documentsRouter);
 app.use('/api', extrasRouter);
 
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
 app.listen(PORT, () => {
-  console.log(`API escuchando en http://localhost:${PORT}`);
+  console.log(`Arantxa API listening on http://localhost:${PORT}`);
 });

@@ -100,7 +100,7 @@ export const useTaskStore = create<TaskStore>()(
         // Wire WhatsApp to task completion
         if (updates.status === 'completed' && oldTask?.status !== 'completed' && state.settings.whatsappEnabled) {
           import('../services/whatsappService').then(({ WhatsAppService }) => {
-            WhatsAppService.onTaskCompleted(oldTask.title);
+            WhatsAppService.onTaskCompleted(oldTask!.title);
           });
         }
         

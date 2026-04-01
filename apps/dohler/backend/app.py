@@ -1,72 +1,60 @@
-"""
-DOHLER Task Manager - Main Application
-FastAPI backend with SQLite database
-"""
-
+"""DOHLER Task Manager - FastAPI backend with SQLite"""
 import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-# Import routers
-from routes import tasks as tasks_router
-from services import timer as timer_router
-
-# Database initialization
 import database as db
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """lifespan handler for startup and shutdown"""
-    # Startup: initialize database
-    await db.init_db()
-    print("[STARTUP] Database initialized")
+    db.init_db()
     yield
-    # Shutdown: cleanup if needed
-    print("[SHUTDOWN] Application stopping")
 
+app = FastAPI(title="DOHLER Task Manager", lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-# Create FastAPI app
-app = FastAPI(
-    title="DOHLER Task Manager API",
-    description="Intelligent task management with timers",
-    version="1.0.0",
-    lifespan=lifespan,
-)
+# Inline routes to avoid import issues
+from fastapi import HTTPException
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
 
-# CORS setup
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class TaskCreate(BaseModel):
+    title: str
+    description: str = ""
+    priority: str = "Medium"
+    completed: bool = False
 
-# Include routers
-app.include_router(tasks_router.router, prefix="/api/tasks", tags=["tasks"])
-app.include_router(timer_router.router, prefix="/api/timer", tags=["timer"])
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    priority: Optional[str] = None
+    completed: Optional[bool] = None
 
+@app.get("/api/tasks/")
+async def get_tasks():
+    return db.get_all_tasks()
 
-# Root endpoint
-@app.get("/")
-async def root():
-    return {
-        "message": "DOHLER Task Manager API",
-        "version": "1.0.0",
-        "status": "running",
-    }
+@app.post("/api/tasks/")
+async def create_task(task: TaskCreate):
+    return db.create_task(task.title, task.description, task.priority)
 
+@app.put("/api/tasks/{task_id}")
+async def update_task(task_id: int, task: TaskUpdate):
+    updates = {k: v for k, v in task.model_dump().items() if v is not None}
+    if not updates:
+        raise HTTPException(400, "No fields to update")
+    return db.update_task(task_id, updates)
 
-# Health check
-@app.get("/api/health")
-async def health_check():
-    return {"status": "healthy", "database": "connected"}
+@app.delete("/api/tasks/{task_id}")
+async def delete_task(task_id: int):
+    db.delete_task(task_id)
+    return {"status": "deleted"}
 
+@app.get("/api/stats/")
+async def get_stats():
+    return db.get_stats()
 
-if __name__ == "__main__":
-    import uvicorn
-
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True, log_level="info")
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
