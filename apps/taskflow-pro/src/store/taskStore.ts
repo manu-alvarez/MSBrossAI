@@ -48,6 +48,10 @@ interface TaskStore {
   exportTasks: () => string;
   importTasks: (json: string) => void;
   searchTasks: (query: string) => Task[];
+  // Category CRUD
+  addCategory: (category: Omit<Category, "id">) => void;
+  updateCategory: (id: string, updates: Partial<Category>) => void;
+  deleteCategory: (id: string) => void;
 }
 
 const defaultCategories: Category[] = [
@@ -155,6 +159,15 @@ export const useTaskStore = create<TaskStore>()(
           state.categories.find(c => c.id === task.categoryId)?.name.toLowerCase().includes(lowerQuery)
         );
       },
+      addCategory: (cat) => set((state) => ({
+        categories: [...state.categories, { ...cat, id: crypto.randomUUID() }]
+      })),
+      updateCategory: (id, updates) => set((state) => ({
+        categories: state.categories.map(c => c.id === id ? { ...c, ...updates } : c)
+      })),
+      deleteCategory: (id) => set((state) => ({
+        categories: state.categories.filter(c => c.id !== id)
+      })),
     }),
     {
       name: 'taskflowpro-v2-storage',
