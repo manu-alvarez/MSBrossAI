@@ -1,77 +1,56 @@
 import { Router } from 'express';
-import { ProviderFactory } from '../providers/index.js';
+import OpenAI from 'openai';
 
 const router = Router();
 
-// Keywords extraction
-router.post('/keywords', async (req, res) => {
-  try {
-    const { texto, idioma = 'es' } = req.body;
-    if (!texto) return res.status(400).json({ error: 'Texto requerido' });
-
-    const provider = ProviderFactory.create(req.body.provider || 'groq');
-    const completion = await provider.chat.completions.create({
-      model: provider.getDefaultModel(),
-      temperature: 0.1,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: `Extrae las 5-10 palabras clave más importantes del texto en ${idioma}. Devuelve JSON: {"keywords": ["palabra1", "palabra2"]}` },
-        { role: 'user', content: texto },
-      ],
-    });
-    const raw = completion.choices[0]?.message?.content || '{"keywords": []}';
-    const parsed = JSON.parse(raw);
-    return res.json(parsed);
-  } catch (err: any) {
-    return res.status(500).json({ error: 'Error extrayendo keywords', details: err?.message });
-  }
+const openai = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: 'https://api.groq.com/openai/v1',
 });
 
-// Sentiment analysis
-router.post('/sentiment', async (req, res) => {
-  try {
-    const { texto } = req.body;
-    if (!texto) return res.status(400).json({ error: 'Texto requerido' });
+const prompts: Record<string, string> = {
+  keywords: 'Eres un experto analista SEO y de contenido. Tu tarea es extraer de 5 a 10 palabras clave o etiquetas (keywords) principales del texto proporcionado. Devuélvelas en una lista con viñetas separada por comas, sin explicaciones adicionales.',
+  sentiment: 'Eres un experto en psicología y análisis de lenguaje. Tu tarea es analizar el sentimiento general (positivo, negativo, neutral) y el tono (ej: formal, sarcástico, entusiasta, urgente) del texto proporcionado. Devuelve un breve párrafo o viñetas explicando el sentimiento y el tono, sin explicaciones adicionales.',
+  entities: 'Eres un experto en extracción de información (NER). Tu tarea es listar todas las Entidades Nombradas importantes que encuentres en el texto, categorizándolas en: Personas, Organizaciones, Lugares, y Fechas clave. Devuelve la lista jerárquica clara, omitiendo las categorías que no existan en el texto.',
+  appbuilder: 'Eres un prestigioso Full-Stack Developer experto en crear prototipos rápidos y PWA. Tu tarea es generar el CÓDIGO de una aplicación o herramienta funcional basada en la descripción que el usuario te dará. Si el usuario pide una web, genera un archivo ÚNICO de HTML que incluya CSS (vibrante y moderno) y JS (lógica funcional). Si pide algo complejo, explica la estructura necesaria. Enfócate en código listo para copiar y usar.',
+};
 
-    const provider = ProviderFactory.create(req.body.provider || 'groq');
-    const completion = await provider.chat.completions.create({
-      model: provider.getDefaultModel(),
-      temperature: 0.1,
-      response_format: { type: 'json_object' },
+router.post('/extras', async (req, res) => {
+  try {
+    const { texto, herramienta } = req.body;
+
+    if (!texto || !texto.trim()) {
+      return res.status(400).json({ error: 'Texto vacío' });
+    }
+
+    const system = prompts[herramienta];
+    if (!system) {
+      return res.status(400).json({ error: 'Herramienta no válida' });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.3,
       messages: [
-        { role: 'system', content: 'Analiza el sentimiento del texto. Devuelve JSON: {"sentiment": "positive|negative|neutral", "confidence": 0.0-1.0, "explanation": "breve explicación"}' },
-        { role: 'user', content: texto },
+        { role: 'system', content: system },
+        {
+          role: 'user',
+          content: texto,
+        },
       ],
     });
-    const raw = completion.choices[0]?.message?.content || '{"sentiment": "neutral"}';
-    const parsed = JSON.parse(raw);
-    return res.json(parsed);
-  } catch (err: any) {
-    return res.status(500).json({ error: 'Error analizando sentimiento', details: err?.message });
-  }
-});
 
-// NER (Named Entity Recognition)
-router.post('/ner', async (req, res) => {
-  try {
-    const { texto } = req.body;
-    if (!texto) return res.status(400).json({ error: 'Texto requerido' });
+    const content = completion.choices[0]?.message?.content || '';
 
-    const provider = ProviderFactory.create(req.body.provider || 'groq');
-    const completion = await provider.chat.completions.create({
-      model: provider.getDefaultModel(),
-      temperature: 0.1,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: 'Extrae entidades nombradas del texto. Devuelve JSON: {"entities": [{"text": "...", "type": "PERSON|ORG|LOCATION|DATE|MONEY|OTHER"}]}' },
-        { role: 'user', content: texto },
-      ],
+    return res.json({
+      resultado: content.trim(),
     });
-    const raw = completion.choices[0]?.message?.content || '{"entities": []}';
-    const parsed = JSON.parse(raw);
-    return res.json(parsed);
   } catch (err: any) {
-    return res.status(500).json({ error: 'Error extrayendo entidades', details: err?.message });
+    console.error(err);
+    return res.status(500).json({
+      error: 'Error procesando la herramienta extra',
+      details: err?.message,
+    });
   }
 });
 

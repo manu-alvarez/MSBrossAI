@@ -1,7 +1,12 @@
 import { Router } from 'express';
-import { ProviderFactory } from '../providers/index.js';
+import OpenAI from 'openai';
 
 const router = Router();
+
+const openai = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: 'https://api.groq.com/openai/v1',
+});
 
 type Modo = 'traducir_estandar' | 'traducir' | 'traducir_profesional' | 'traducir_coloquial' | 'resumir' | 'traducir_resumir';
 type Nivel = 'breve' | 'normal' | 'detallado';
@@ -14,14 +19,12 @@ router.post('/process', async (req, res) => {
       destino = 'es',
       modo = 'traducir_resumir',
       nivelResumen = 'normal',
-      provider = 'groq',
     }: {
       texto: string;
       origen?: string;
       destino?: string;
       modo?: Modo;
       nivelResumen?: Nivel;
-      provider?: 'groq' | 'openai' | 'gemini' | 'openrouter';
     } = req.body;
 
     if (!texto || !texto.trim()) {
@@ -69,11 +72,8 @@ Instrucción específica: ${systemPrompt}
 - No añadas explicaciones fuera del JSON.
     `.trim();
 
-    // Use provider factory for multi-provider support
-    const providerClient = ProviderFactory.create(provider);
-    
-    const completion = await providerClient.chat.completions.create({
-      model: providerClient.getDefaultModel(),
+    const completion = await openai.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
       temperature: 0.2,
       response_format: { type: 'json_object' },
       messages: [
@@ -93,7 +93,6 @@ Instrucción específica: ${systemPrompt}
     return res.json({
       traduccion: parsed.traduccion ?? '',
       resumen: parsed.resumen ?? '',
-      provider: provider,
     });
   } catch (err: any) {
     console.error(err);

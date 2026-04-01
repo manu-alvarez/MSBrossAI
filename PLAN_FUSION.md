@@ -145,7 +145,7 @@ iaputa-os/
 
 ### Mejoras a implementar en fusión
 - [ ] Consolidar las dos variantes (Desktop vs msbross.me) en una sola
-- [ ] Corregir typo `LAVEKIT_API_SECRET` → `LIVEKIT_API_SECRET`
+- [ ] Corregir typo `LIVEKIT_API_SECRET` → `LIVEKIT_API_SECRET`
 - [ ] Implementar `tools.py` modular (actualmente vacío)
 - [ ] Corregir bug en `create_stt` factory (falta return en faster-whisper)
 - [ ] Wire transcript panel a datos reales del agent (actualmente estático)

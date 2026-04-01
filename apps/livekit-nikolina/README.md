@@ -46,7 +46,7 @@ docker-compose up -d --build
 Ver `.env.example` en server/
 
 ## Mejoras Fusionadas
-- ✅ Corregido typo: `LAVEKIT_API_SECRET` → `LIVEKIT_API_SECRET`
+- ✅ Corregido typo: `LIVEKIT_API_SECRET` → `LIVEKIT_API_SECRET`
 - ✅ Implementado `tools.py` modular (antes vacío)
 - ✅ Corregido bug en `create_stt` factory (falta return)
 - ✅ Wire transcript panel a datos reales del agent
