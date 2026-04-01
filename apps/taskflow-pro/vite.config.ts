@@ -6,13 +6,4 @@ export default defineConfig({
   plugins: [react()],
   server: { port: 8887 },
   preview: { port: 8887 },
-  build: {
-    crossOrigin: false,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
-  },
-  appType: 'spa',
 });
