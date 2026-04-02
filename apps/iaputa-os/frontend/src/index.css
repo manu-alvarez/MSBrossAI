@@ -1,166 +1,38 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap");
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --bg-deep: #020202;
-  --accent-cyan: #00f2ff;
-  --accent-purple: #8a2be2;
+  --bg-deep: #0a0a0f;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-pink: #ec4899;
   --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --text-primary: #ffffff;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --text-primary: #f8fafc;
   --text-secondary: rgba(255, 255, 255, 0.5);
-  --font-main: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
 }
 
-@layer base {
-  * { 
-    box-sizing: border-box;
-    cursor: none !important; /* Luxury Custom Cursor integration soon */
-  }
-  
-  body {
-    margin: 0;
-    overflow: auto;
-    font-family: var(--font-main);
-    color: var(--text-primary);
-    background-color: var(--bg-deep);
-    -webkit-font-smoothing: antialiased;
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, var(--bg-deep) 0%, #1a1a2e 50%, #16213e 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-@layer components {
-  .luxury-layout {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    background: radial-gradient(circle at center, #080815 0%, var(--bg-deep) 100%);
-  }
-
-  /* Extreme Glassmorphism Utility */
-  .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-  }
-
-  .glow-border {
-    position: relative;
-  }
-  
-  .glow-border::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(45deg, transparent, var(--glass-border), transparent);
-    border-radius: inherit;
-    z-index: -1;
-    opacity: 0.5;
-  }
-
-  /* Scanlines Effect */
-  .scanlines::before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-    z-index: 2;
-    background-size: 100% 4px, 3px 100%;
-    pointer-events: none;
-    opacity: 0.3;
-  }
-
-  /* Layout Areas */
-  .luxury-header {
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    z-index: 100;
-  }
-
-  .luxury-main {
-    flex: 1;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    padding: 0 40px;
-    align-items: center;
-    gap: 40px;
-    position: relative;
-  }
-
-  /* Animations */
-  @keyframes aura-float {
-    0% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(5%, 5%) scale(1.1); }
-    66% { transform: translate(-5%, 2%) scale(0.9); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
-
-  .aura-sphere {
-    position: absolute;
-    width: 60vw;
-    height: 60vw;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    z-index: 0;
-    pointer-events: none;
-    animation: aura-float 20s infinite ease-in-out;
-  }
-
-  .aura-cyan { background: var(--accent-cyan); top: -20%; left: -10%; }
-  .aura-purple { background: var(--accent-purple); bottom: -20%; right: -10%; animation-delay: -5s; }
-
-  /* Command Pill Redesign */
-  .command-pill {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 600px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    z-index: 1000;
-  }
-
-  .command-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 1rem;
-    padding: 0 20px;
-    font-family: var(--font-main);
-  }
-
-  .command-input::placeholder {
-    color: rgba(255, 255, 255, 0.2);
-  }
-
-  .luxury-title {
-    font-size: 3.5rem;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    background: linear-gradient(to bottom, #fff 40%, rgba(255, 255, 255, 0.1));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.2));
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse { animation: pulse 2s infinite; }
+.animate-fadeInUp { animation: fadeInUp 0.5s ease forwards; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
