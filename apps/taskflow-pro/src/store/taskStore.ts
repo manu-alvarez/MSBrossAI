@@ -168,6 +168,25 @@ export const useTaskStore = create<TaskStore>()(
     {
       name: 'taskflowpro-v2-storage',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      migrate: (persisted: any, version: number) => {
+        if (version < 2) {
+          // Clear corrupted storage from previous versions
+          return {
+            tasks: [],
+            categories: defaultCategories,
+            settings: {
+              soundEnabled: true,
+              whatsappEnabled: false,
+              whatsappPhone1: '',
+              whatsappApiKey1: '',
+              whatsappPhone2: '',
+              whatsappApiKey2: '',
+            },
+          };
+        }
+        return persisted;
+      },
     }
   )
 );
