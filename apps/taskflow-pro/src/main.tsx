@@ -2,7 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { theme } from './theme/theme';
 import './index.css';
@@ -23,7 +23,7 @@ class ErrorBoundary extends Component<{children: ReactNode}, {hasError: boolean,
       return React.createElement('div', { style: { padding: '2rem', color: '#fff', background: '#050505', minHeight: '100vh' } },
         React.createElement('h2', null, 'Error en TaskFlowPro'),
         React.createElement('p', null, this.state.error),
-        React.createElement('button', { onClick: () => window.location.reload() }, 'Reintentar')
+        React.createElement('button', { onClick: () => window.location.reload(), style: { padding: '0.5rem 1rem', background: '#8b5cf6', color: '#fff', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' } }, 'Reintentar')
       );
     }
     return this.props.children;
@@ -35,9 +35,9 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <BrowserRouter>
+        <HashRouter>
           <App />
-        </BrowserRouter>
+        </HashRouter>
       </ThemeProvider>
     </ErrorBoundary>
   </React.StrictMode>
