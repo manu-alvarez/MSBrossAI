@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import ChatPanel from './components/ChatPanel';
 import ToolPalette from './components/ToolPalette';
 import StatusBar from './components/StatusBar';
 import VisionPanel from './components/VisionPanel';
 import SettingsModal from './components/SettingsModal';
 
-// API Configuration
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const API_KEY = import.meta.env.VITE_API_KEY || '';
 
@@ -30,6 +29,7 @@ export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [visionImage, setVisionImage] = useState<string | undefined>();
   const [settings, setSettings] = useState<AppSettings>({
     apiKey: API_KEY,
     autoAudio: true,
@@ -42,7 +42,6 @@ export default function App() {
     memory: 0,
   });
 
-  // Check backend status on mount
   useEffect(() => {
     checkStatus();
     const interval = setInterval(checkStatus, 30000);
@@ -61,7 +60,6 @@ export default function App() {
     }
   };
 
-  // Send text command
   const sendText = useCallback(async (text: string) => {
     if (!text.trim() || loading) return;
     setLoading(true);
@@ -94,7 +92,6 @@ export default function App() {
       };
       setMessages(prev => [...prev, assistantMsg]);
 
-      // Auto-play audio if enabled
       if (settings.autoAudio && data.audio_url) {
         const audio = new Audio(data.audio_url);
         audio.play().catch(() => {});
@@ -111,7 +108,6 @@ export default function App() {
     }
   }, [loading, settings]);
 
-  // Clear memory
   const clearMemory = async () => {
     try {
       await fetch(`${API_BASE}/clear-memory`, {
@@ -127,6 +123,28 @@ export default function App() {
     } catch (err) {
       console.error('Clear memory error:', err);
     }
+  };
+
+  const handleVisionCapture = async (type: 'screen' | 'webcam') => {
+    // Vision capture - placeholder for now
+    setMessages(prev => [...prev, {
+      id: crypto.randomUUID(),
+      role: 'system',
+      content: `📷 Captura de ${type} iniciada. El backend procesará la imagen.`,
+      timestamp: new Date(),
+    }]);
+  };
+
+  const handleToolAction = (action: string) => {
+    const actionMap: Record<string, string> = {
+      vision: 'Analiza lo que ves en pantalla',
+      screenshot: 'Captura una pantalla',
+      calendar: '¿Qué tengo hoy en el calendario?',
+      email: 'Léeme mis últimos correos',
+      terminal: 'Abre una terminal',
+      python: 'Ejecuta código Python',
+    };
+    sendText(actionMap[action] || `Ejecuta: ${action}`);
   };
 
   return (
@@ -203,6 +221,9 @@ export default function App() {
           onSend={sendText}
         />
       </div>
+
+      {/* Status Bar */}
+      <StatusBar status={status} />
 
       {/* Settings Modal */}
       {showSettings && (
