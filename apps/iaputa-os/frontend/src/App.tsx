@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import NeuralOrb from './components/NeuralOrb';
 import './index.css';
 
 const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || '/api';
@@ -13,10 +14,10 @@ interface Message {
 }
 
 const DEMO: Record<string, string> = {
-  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal. Estoy en modo demo. ¿En qué puedo ayudarte hoy?',
-  hello: 'Hello! I am IAPuta OS, your personal AI assistant. Demo mode active. How can I help you?',
+  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal. ¿En qué puedo ayudarte hoy?',
+  hello: 'Hello! I am IAPuta OS, your personal AI assistant. How can I help you?',
   ayuda: 'Puedo ayudarte con:\n• 📷 Análisis de imágenes y pantalla\n• 📧 Gestión de correos y calendario\n• 🐍 Código Python\n• 🔍 Búsquedas web\n• 💻 Control del sistema',
-  default: 'Entiendo tu consulta. En modo demo mis respuestas son limitadas. Para funcionalidad completa necesitas el backend (FastAPI en puerto 8000).',
+  default: 'Entiendo tu consulta. En modo demo mis respuestas son limitadas. Para funcionalidad completa necesitas el backend.',
 };
 
 export default function App() {
@@ -27,6 +28,8 @@ export default function App() {
   const [visionImage, setVisionImage] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [orbState, setOrbState] = useState<'idle' | 'listening' | 'thinking' | 'speaking' | 'error'>('idle');
+  const [volume, setVolume] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -41,7 +44,6 @@ export default function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // TTS - Speak text
   const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -49,14 +51,13 @@ export default function App() {
       utterance.lang = 'es-ES';
       utterance.rate = 1;
       utterance.pitch = 1;
-      utterance.onstart = () => setSpeaking(true);
-      utterance.onend = () => setSpeaking(false);
-      utterance.onerror = () => setSpeaking(false);
+      utterance.onstart = () => { setSpeaking(true); setOrbState('speaking'); };
+      utterance.onend = () => { setSpeaking(false); setOrbState('idle'); };
+      utterance.onerror = () => { setSpeaking(false); setOrbState('idle'); };
       window.speechSynthesis.speak(utterance);
     }
   }, []);
 
-  // STT - Record voice
   const startRecording = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -71,6 +72,7 @@ export default function App() {
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(t => t.stop());
         setRecording(false);
+        setOrbState('thinking');
         
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         
@@ -92,7 +94,6 @@ export default function App() {
             speak(response);
           }, 1000);
         } else {
-          // Send to backend
           const formData = new FormData();
           formData.append('audio_file', blob, 'audio.webm');
           
@@ -119,12 +120,8 @@ export default function App() {
             };
             setMessages(prev => [...prev, assistantMsg]);
             
-            // Auto-speak the response
             if (data.audio_url) {
-              new Audio(data.audio_url).play().catch(() => {
-                // Fallback to browser TTS
-                speak(data.response || data.transcript || '');
-              });
+              new Audio(data.audio_url).play().catch(() => speak(data.response || data.transcript || ''));
             } else {
               speak(data.response || data.transcript || '');
             }
@@ -135,14 +132,16 @@ export default function App() {
               content: `❌ Error de voz: ${String(err)}`,
               timestamp: new Date(),
             }]);
+            setOrbState('error');
+            setTimeout(() => setOrbState('idle'), 3000);
           }
         }
       };
       
       mediaRecorder.start();
       setRecording(true);
+      setOrbState('listening');
       
-      // Auto-stop after 15 seconds
       setTimeout(() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
           mediaRecorderRef.current.stop();
@@ -155,6 +154,8 @@ export default function App() {
         content: `❌ Error micrófono: ${String(err)}`,
         timestamp: new Date(),
       }]);
+      setOrbState('error');
+      setTimeout(() => setOrbState('idle'), 3000);
     }
   }, [demoMode, speak]);
 
@@ -164,10 +165,10 @@ export default function App() {
     }
   }, []);
 
-  // Send text
   const sendText = useCallback(async (text: string) => {
     if (!text.trim()) return;
     setLoading(true);
+    setOrbState('thinking');
     setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date() }]);
 
     if (demoMode) {
@@ -198,7 +199,6 @@ export default function App() {
         };
         setMessages(prev => [...prev, assistantMsg]);
         
-        // Auto-speak
         if (data.audio_url) {
           new Audio(data.audio_url).play().catch(() => speak(data.response || ''));
         } else {
@@ -206,6 +206,8 @@ export default function App() {
         }
       } catch (err) {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error: ${String(err)}`, timestamp: new Date() }]);
+        setOrbState('error');
+        setTimeout(() => setOrbState('idle'), 3000);
       }
       setLoading(false);
     }
@@ -266,12 +268,29 @@ export default function App() {
         <div className="header-actions">
           <button className="action-btn" onClick={captureWebcam} title="Capturar cámara">📷</button>
           <button className="action-btn" onClick={captureScreen} title="Capturar pantalla">🖥️</button>
-          <button className="action-btn" onClick={() => { setMessages([]); setVisionImage(null); window.speechSynthesis.cancel(); }} title="Limpiar chat">🗑️</button>
+          <button className="action-btn" onClick={() => { setMessages([]); setVisionImage(null); window.speechSynthesis.cancel(); setOrbState('idle'); }} title="Limpiar chat">🗑️</button>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="app-main">
+        {/* Orb Section */}
+        <div className="orb-section">
+          <div className="orb-container">
+            <NeuralOrb state={orbState} volume={volume} />
+            <div className="orb-status">
+              <span className={`orb-status-dot orb-status-dot--${orbState}`} />
+              <span className="orb-status-text">
+                {orbState === 'idle' && 'Listo'}
+                {orbState === 'listening' && 'Escuchando...'}
+                {orbState === 'thinking' && 'Pensando...'}
+                {orbState === 'speaking' && 'Hablando...'}
+                {orbState === 'error' && 'Error'}
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Vision Panel */}
         {visionImage && (
           <div className="vision-panel">
@@ -283,35 +302,10 @@ export default function App() {
           </div>
         )}
 
-        {/* Recording Indicator */}
-        {recording && (
-          <div className="waveform">
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <span style={{ marginLeft: '0.5rem', color: '#ff006e', fontSize: '0.85rem', fontWeight: 600 }}>Grabando...</span>
-          </div>
-        )}
-
-        {/* Speaking Indicator */}
-        {speaking && (
-          <div className="waveform">
-            <div className="waveform-bar" style={{ background: '#00f5ff' }} />
-            <div className="waveform-bar" style={{ background: '#06ff8f', height: '12px' }} />
-            <div className="waveform-bar" style={{ background: '#8338ec', height: '16px' }} />
-            <div className="waveform-bar" style={{ background: '#3a86ff', height: '12px' }} />
-            <div className="waveform-bar" style={{ background: '#00f5ff' }} />
-            <span style={{ marginLeft: '0.5rem', color: '#00f5ff', fontSize: '0.85rem', fontWeight: 600 }}>Hablando...</span>
-          </div>
-        )}
-
         {/* Chat */}
         <div className="chat-container">
           {messages.length === 0 && (
             <div className="chat-empty">
-              <div className="chat-empty-icon">🤖</div>
               <h2 className="chat-empty-title">IAPuta OS</h2>
               <p className="chat-empty-desc">Tu asistente IA personal con voz. Escribe o habla para comenzar.</p>
             </div>
@@ -371,7 +365,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="app-footer">
-        MSBrossAI © 2026 — IAPuta OS v6.0
+        MSBrossAI © 2026 — IAPuta OS v7.0
       </footer>
     </div>
   );
