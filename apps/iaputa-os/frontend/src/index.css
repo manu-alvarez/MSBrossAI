@@ -605,3 +605,55 @@ body::before {
   .header-title { font-size: 1.2rem; }
   .chat-empty-title { font-size: 1.5rem; }
 }
+
+/* Orb Section */
+.orb-section {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-xl) 0;
+}
+
+.orb-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+  animation: orbPulse 3s ease-in-out infinite;
+}
+
+.orb-status {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(15, 15, 46, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+}
+
+.orb-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.orb-status-dot--idle { background: #8b5cf6; }
+.orb-status-dot--listening { background: #00f5ff; }
+.orb-status-dot--thinking { background: #ff006e; }
+.orb-status-dot--speaking { background: #06ff8f; }
+.orb-status-dot--error { background: #ff0054; }
+
+.orb-status-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
