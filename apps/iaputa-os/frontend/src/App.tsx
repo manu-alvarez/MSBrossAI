@@ -365,7 +365,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="app-footer">
-        MSBrossAI © 2026 — IAPuta OS v7.0
+        MSBrossAI © 2026 — IAPuta OS v8.0
       </footer>
     </div>
   );
