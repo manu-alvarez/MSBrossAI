@@ -1,23 +1,22 @@
 {
-  "name": "visionplay",
+  "name": "edelweiss-vision-play",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 5173"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lucide-react": "^0.290.0",
-    "framer-motion": "^6.0.0",
-    "tailwindcss": "^3.0.0",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.23"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "vite": "^4.3.0"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^7.0.0",
+    "typescript": "~5.6.3"
   }
 }
