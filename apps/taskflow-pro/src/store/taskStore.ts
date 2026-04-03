@@ -23,6 +23,7 @@ export interface Task {
   updatedAt: string;
   dueDate?: string;
   reminderTime?: string;
+  reminderSent?: boolean;
   order: number;
 }
 
@@ -39,7 +40,7 @@ interface TaskStore {
   tasks: Task[];
   categories: Category[];
   settings: AppSettings;
-  addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'order'>) => void;
+  addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'order' | 'reminderSent'>) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   clearTasks: () => void;
@@ -49,10 +50,10 @@ interface TaskStore {
   exportTasks: () => string;
   importTasks: (json: string) => void;
   searchTasks: (query: string) => Task[];
-  // Category CRUD
   addCategory: (category: Omit<Category, "id">) => void;
   updateCategory: (id: string, updates: Partial<Category>) => void;
   deleteCategory: (id: string) => void;
+  checkReminders: () => void;
 }
 
 const defaultCategories: Category[] = [
@@ -81,11 +82,15 @@ export const useTaskStore = create<TaskStore>()(
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          reminderSent: false,
           order: state.tasks.length,
         };
+        
+        // WhatsApp notification on task creation
         if (state.settings.whatsappEnabled) {
           WhatsAppService.onTaskCreated(newTask.title);
         }
+        
         return { tasks: [newTask, ...state.tasks] };
       }),
 
@@ -97,11 +102,9 @@ export const useTaskStore = create<TaskStore>()(
             : task
         );
         
-        // Wire WhatsApp to task completion
+        // WhatsApp on task completion
         if (updates.status === 'completed' && oldTask?.status !== 'completed' && state.settings.whatsappEnabled) {
-          import('../services/whatsappService').then(({ WhatsAppService }) => {
-            WhatsAppService.onTaskCompleted(oldTask!.title);
-          });
+          WhatsAppService.onTaskCompleted(oldTask!.title);
         }
         
         return { tasks: newTasks };
@@ -112,10 +115,9 @@ export const useTaskStore = create<TaskStore>()(
       })),
 
       clearTasks: () => set({ tasks: [] }),
-
       setTasks: (tasks) => set({ tasks }),
 
-      updateSettings: (updates: Partial<AppSettings>) => set((state: TaskStore) => ({
+      updateSettings: (updates) => set((state) => ({
         settings: { ...state.settings, ...updates }
       })),
 
@@ -155,15 +157,58 @@ export const useTaskStore = create<TaskStore>()(
           state.categories.find(c => c.id === task.categoryId)?.name.toLowerCase().includes(lowerQuery)
         );
       },
+
       addCategory: (cat) => set((state) => ({
         categories: [...state.categories, { ...cat, id: crypto.randomUUID() }]
       })),
+
       updateCategory: (id, updates) => set((state) => ({
         categories: state.categories.map(c => c.id === id ? { ...c, ...updates } : c)
       })),
+
       deleteCategory: (id) => set((state) => ({
         categories: state.categories.filter(c => c.id !== id)
       })),
+
+      // Check reminders every minute and send CallMeBot alerts at the exact reminder time
+      checkReminders: () => {
+        const state = get();
+        const now = new Date();
+        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        
+        state.tasks.forEach(task => {
+          if (task.reminderTime && !task.reminderSent && task.status !== 'completed') {
+            // Check if it's time for the reminder (within the current minute)
+            if (task.reminderTime === currentTime) {
+              // Send WhatsApp alert via CallMeBot
+              if (state.settings.whatsappEnabled) {
+                WhatsAppService.onTaskDue(task.title, task.reminderTime);
+              }
+              
+              // Also show browser notification
+              if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(`⏰ Recordatorio: ${task.title}`, {
+                  body: `Es hora de cumplir esta tarea. Prioridad: ${task.priority}`,
+                  icon: '/taskflow/pwa-192x192.png',
+                });
+              }
+              
+              // Play sound if enabled
+              if (state.settings.soundEnabled) {
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play().catch(() => {});
+              }
+              
+              // Mark reminder as sent
+              set((s) => ({
+                tasks: s.tasks.map(t => 
+                  t.id === task.id ? { ...t, reminderSent: true } : t
+                )
+              }));
+            }
+          }
+        });
+      },
     }),
     {
       name: 'taskflowpro-v2-storage',
@@ -171,11 +216,10 @@ export const useTaskStore = create<TaskStore>()(
       version: 2,
       migrate: (persisted: any, version: number) => {
         if (version < 2) {
-          // Clear corrupted storage from previous versions
           return {
-            tasks: [],
-            categories: defaultCategories,
-            settings: {
+            tasks: persisted.state?.tasks || [],
+            categories: persisted.state?.categories || defaultCategories,
+            settings: persisted.state?.settings || {
               soundEnabled: true,
               whatsappEnabled: false,
               whatsappPhone1: '',
@@ -185,7 +229,7 @@ export const useTaskStore = create<TaskStore>()(
             },
           };
         }
-        return persisted;
+        return persisted.state;
       },
     }
   )

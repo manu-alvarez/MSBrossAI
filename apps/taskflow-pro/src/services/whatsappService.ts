@@ -1,13 +1,11 @@
-
 export const WhatsAppService = {
   async sendReminder(message: string) {
     try {
-      // In TaskFlowPro V2 we fetch global settings directly from localStorage or zustand
       const storageStr = localStorage.getItem('taskflowpro-v2-storage');
       if (!storageStr) return;
       
       const parsed = JSON.parse(storageStr);
-      const settings = parsed.state?.settings || {}; // Asumiendo estructura de Zustand persist
+      const settings = parsed.state?.settings || {};
       const { whatsappEnabled, whatsappPhone1, whatsappApiKey1, whatsappPhone2, whatsappApiKey2 } = settings;
 
       if (!whatsappEnabled) {
@@ -24,7 +22,7 @@ export const WhatsAppService = {
       }
 
       if (recipients.length === 0) {
-        console.log('No valid WhatsApp recipients configured with API Keys');
+        console.log('No valid WhatsApp recipients configured');
         return;
       }
 
@@ -51,7 +49,7 @@ export const WhatsAppService = {
     await this.sendReminder(`🎉 *¡Tarea Completada!* ${title}\n¡Excelente trabajo!`);
   },
 
-  async onTaskDue(title: string) {
-    await this.sendReminder(`⏰ *¡Atención!* La tarea "${title}" vence ahora.`);
+  async onTaskDue(title: string, reminderTime: string) {
+    await this.sendReminder(`⏰ *¡RECORDATORIO!* La tarea "${title}" vence a las ${reminderTime}.\n¡Es hora de actuar!`);
   }
 };
