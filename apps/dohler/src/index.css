@@ -1,0 +1,38 @@
+:root {
+  --bg: #0a0e17;
+  --bg-card: rgba(15, 23, 42, 0.8);
+  --border: rgba(59, 130, 246, 0.2);
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --text: #f8fafc;
+  --text2: rgba(248, 250, 252, 0.6);
+  --text3: rgba(248, 250, 252, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 50%, #0a1a2e 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-fadeIn { animation: fadeIn 0.4s ease forwards; }
+.animate-pulse { animation: pulse 2s infinite; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3b82f6, #06b6d4); border-radius: 4px; }
