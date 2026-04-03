@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './index.css';
 
 const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || '/api';
@@ -13,9 +13,10 @@ interface Message {
 }
 
 const DEMO: Record<string, string> = {
-  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal. Estoy en modo demo. ¿En qué puedo ayudarte?',
-  ayuda: 'Puedo ayudarte con:\n• Análisis de imágenes y pantalla\n• Gestión de correos y calendario\n• Código Python\n• Búsquedas web\n• Control del sistema',
-  default: 'Entiendo. En modo demo mis respuestas son limitadas. Para funcionalidad completa necesitas el backend (FastAPI en puerto 8000).',
+  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal. Estoy en modo demo. ¿En qué puedo ayudarte hoy?',
+  hello: 'Hello! I am IAPuta OS, your personal AI assistant. Demo mode active. How can I help you?',
+  ayuda: 'Puedo ayudarte con:\n• 📷 Análisis de imágenes y pantalla\n• 📧 Gestión de correos y calendario\n• 🐍 Código Python\n• 🔍 Búsquedas web\n• 💻 Control del sistema',
+  default: 'Entiendo tu consulta. En modo demo mis respuestas son limitadas. Para funcionalidad completa necesitas el backend (FastAPI en puerto 8000).',
 };
 
 export default function App() {
@@ -24,7 +25,11 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
   const [visionImage, setVisionImage] = useState<string | null>(null);
-  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const [recording, setRecording] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(3000) })
@@ -36,6 +41,130 @@ export default function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // TTS - Speak text
+  const speak = useCallback((text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.onstart = () => setSpeaking(true);
+      utterance.onend = () => setSpeaking(false);
+      utterance.onerror = () => setSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  }, []);
+
+  // STT - Record voice
+  const startRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
+      
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        setRecording(false);
+        
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        
+        if (demoMode) {
+          setMessages(prev => [...prev, {
+            id: crypto.randomUUID(),
+            role: 'user',
+            content: '🎤 [Mensaje de voz]',
+            timestamp: new Date(),
+          }]);
+          setTimeout(() => {
+            const response = 'He recibido tu mensaje de voz. En modo demo no puedo transcribirlo, pero en modo completo usaría Whisper para convertir tu voz a texto.';
+            setMessages(prev => [...prev, {
+              id: crypto.randomUUID(),
+              role: 'assistant',
+              content: response,
+              timestamp: new Date(),
+            }]);
+            speak(response);
+          }, 1000);
+        } else {
+          // Send to backend
+          const formData = new FormData();
+          formData.append('audio_file', blob, 'audio.webm');
+          
+          setMessages(prev => [...prev, {
+            id: crypto.randomUUID(),
+            role: 'user',
+            content: '🎤 [Procesando voz...]',
+            timestamp: new Date(),
+          }]);
+          
+          try {
+            const res = await fetch(`${API_BASE}/voice-command`, {
+              method: 'POST',
+              headers: { 'x-api-key': API_KEY },
+              body: formData,
+            });
+            const data = await res.json();
+            const assistantMsg: Message = {
+              id: crypto.randomUUID(),
+              role: 'assistant',
+              content: data.response || data.transcript || 'Sin respuesta',
+              timestamp: new Date(),
+              audioUrl: data.audio_url,
+            };
+            setMessages(prev => [...prev, assistantMsg]);
+            
+            // Auto-speak the response
+            if (data.audio_url) {
+              new Audio(data.audio_url).play().catch(() => {
+                // Fallback to browser TTS
+                speak(data.response || data.transcript || '');
+              });
+            } else {
+              speak(data.response || data.transcript || '');
+            }
+          } catch (err) {
+            setMessages(prev => [...prev, {
+              id: crypto.randomUUID(),
+              role: 'system',
+              content: `❌ Error de voz: ${String(err)}`,
+              timestamp: new Date(),
+            }]);
+          }
+        }
+      };
+      
+      mediaRecorder.start();
+      setRecording(true);
+      
+      // Auto-stop after 15 seconds
+      setTimeout(() => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+          mediaRecorderRef.current.stop();
+        }
+      }, 15000);
+    } catch (err) {
+      setMessages(prev => [...prev, {
+        id: crypto.randomUUID(),
+        role: 'system',
+        content: `❌ Error micrófono: ${String(err)}`,
+        timestamp: new Date(),
+      }]);
+    }
+  }, [demoMode, speak]);
+
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+    }
+  }, []);
+
+  // Send text
   const sendText = useCallback(async (text: string) => {
     if (!text.trim()) return;
     setLoading(true);
@@ -49,6 +178,7 @@ export default function App() {
       }
       setTimeout(() => {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: response, timestamp: new Date() }]);
+        speak(response);
         setLoading(false);
       }, 1000);
     } else {
@@ -59,14 +189,27 @@ export default function App() {
           body: JSON.stringify({ text }),
         });
         const data = await res.json();
-        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: data.response || data.error || 'Sin respuesta', timestamp: new Date(), audioUrl: data.audio_url }]);
-        if (data.audio_url) new Audio(data.audio_url).play().catch(() => {});
+        const assistantMsg: Message = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: data.response || data.error || 'Sin respuesta',
+          timestamp: new Date(),
+          audioUrl: data.audio_url,
+        };
+        setMessages(prev => [...prev, assistantMsg]);
+        
+        // Auto-speak
+        if (data.audio_url) {
+          new Audio(data.audio_url).play().catch(() => speak(data.response || ''));
+        } else {
+          speak(data.response || '');
+        }
       } catch (err) {
-        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `Error: ${String(err)}`, timestamp: new Date() }]);
+        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error: ${String(err)}`, timestamp: new Date() }]);
       }
       setLoading(false);
     }
-  }, [demoMode]);
+  }, [demoMode, speak]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,13 +260,13 @@ export default function App() {
           <div className="header-logo">🤖</div>
           <div>
             <h1 className="header-title">IAPuta OS</h1>
-            <p className="header-subtitle">{demoMode ? 'Modo Demo' : 'Conectado'}</p>
+            <p className="header-subtitle">{demoMode ? '🟡 Modo Demo' : '🟢 Conectado'}</p>
           </div>
         </div>
         <div className="header-actions">
           <button className="action-btn" onClick={captureWebcam} title="Capturar cámara">📷</button>
           <button className="action-btn" onClick={captureScreen} title="Capturar pantalla">🖥️</button>
-          <button className="action-btn" onClick={() => { setMessages([]); setVisionImage(null); }} title="Limpiar chat">🗑️</button>
+          <button className="action-btn" onClick={() => { setMessages([]); setVisionImage(null); window.speechSynthesis.cancel(); }} title="Limpiar chat">🗑️</button>
         </div>
       </header>
 
@@ -140,13 +283,37 @@ export default function App() {
           </div>
         )}
 
+        {/* Recording Indicator */}
+        {recording && (
+          <div className="waveform">
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <span style={{ marginLeft: '0.5rem', color: '#ff006e', fontSize: '0.85rem', fontWeight: 600 }}>Grabando...</span>
+          </div>
+        )}
+
+        {/* Speaking Indicator */}
+        {speaking && (
+          <div className="waveform">
+            <div className="waveform-bar" style={{ background: '#00f5ff' }} />
+            <div className="waveform-bar" style={{ background: '#06ff8f', height: '12px' }} />
+            <div className="waveform-bar" style={{ background: '#8338ec', height: '16px' }} />
+            <div className="waveform-bar" style={{ background: '#3a86ff', height: '12px' }} />
+            <div className="waveform-bar" style={{ background: '#00f5ff' }} />
+            <span style={{ marginLeft: '0.5rem', color: '#00f5ff', fontSize: '0.85rem', fontWeight: 600 }}>Hablando...</span>
+          </div>
+        )}
+
         {/* Chat */}
         <div className="chat-container">
           {messages.length === 0 && (
             <div className="chat-empty">
               <div className="chat-empty-icon">🤖</div>
               <h2 className="chat-empty-title">IAPuta OS</h2>
-              <p className="chat-empty-desc">Tu asistente IA personal. Escribe un mensaje para comenzar.</p>
+              <p className="chat-empty-desc">Tu asistente IA personal con voz. Escribe o habla para comenzar.</p>
             </div>
           )}
 
@@ -155,15 +322,22 @@ export default function App() {
               <div className="message-bubble">
                 {msg.content}
                 <div className="message-time">{msg.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                {msg.role === 'assistant' && (
+                  <button className="audio-btn" onClick={() => speak(msg.content)}>
+                    🔊 Escuchar
+                  </button>
+                )}
               </div>
             </div>
           ))}
 
           {loading && (
             <div className="loading-indicator">
-              <div className="loading-dot" />
-              <div className="loading-dot" />
-              <div className="loading-dot" />
+              <div className="loading-dots">
+                <div className="loading-dot" />
+                <div className="loading-dot" />
+                <div className="loading-dot" />
+              </div>
               <span>Pensando...</span>
             </div>
           )}
@@ -181,6 +355,14 @@ export default function App() {
             placeholder="Escribe tu mensaje..."
             disabled={loading}
           />
+          <button
+            type="button"
+            className={`input-btn--mic ${recording ? 'recording' : ''}`}
+            onClick={recording ? stopRecording : startRecording}
+            title={recording ? 'Detener grabación' : 'Grabar voz'}
+          >
+            {recording ? '⏹️' : '🎤'}
+          </button>
           <button className="input-btn input-btn--primary" type="submit" disabled={loading || !input.trim()}>
             Enviar
           </button>
@@ -189,7 +371,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="app-footer">
-        MSBrossAI © 2026 — IAPuta OS
+        MSBrossAI © 2026 — IAPuta OS v6.0
       </footer>
     </div>
   );
