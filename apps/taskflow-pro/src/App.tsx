@@ -12,6 +12,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const checkAlarms = () => {
+      useTaskStore.getState().checkReminders();
       const now = new Date();
       tasks.forEach(task => {
         if (task.reminderTime && task.status !== 'completed') {
