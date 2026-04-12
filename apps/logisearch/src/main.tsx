@@ -12,6 +12,17 @@ import theme from './theme'
 import App from './App'
 import './index.css'
 
+const checkEnv = () => {
+  const missing = [];
+  if (!import.meta.env.VITE_SUPABASE_URL) missing.push('VITE_SUPABASE_URL');
+  if (!import.meta.env.VITE_SUPABASE_ANON_KEY) missing.push('VITE_SUPABASE_ANON_KEY');
+  if (!import.meta.env.VITE_GEMINI_API_KEY) missing.push('VITE_GEMINI_API_KEY');
+  if (missing.length > 0) {
+    console.warn('⚠️ Faltan variables de entorno para LogiSearch:', missing.join(', '));
+  }
+}
+checkEnv();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>

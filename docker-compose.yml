@@ -9,7 +9,9 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s; timeout: 10s; retries: 3
+      interval: 30s
+      timeout: 10s
+      retries: 3
   iaputa-frontend:
     build: ./apps/iaputa-os/frontend
     ports: ["8080:80"]
@@ -29,7 +31,9 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
-      interval: 30s; timeout: 10s; retries: 3
+      interval: 30s
+      timeout: 10s
+      retries: 3
   livekit-agent:
     build:
       context: ./apps/livekit-nikolina
@@ -75,7 +79,7 @@ services:
     networks: [msbrossai-network]
     restart: unless-stopped
   dohler-frontend:
-    build: ./apps/dohler/frontend
+    build: ./apps/dohler
     ports: ["3000:80"]
     depends_on: [dohler-backend]
     networks: [msbrossai-network]
