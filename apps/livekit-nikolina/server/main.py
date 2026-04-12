@@ -36,6 +36,7 @@ from livekit.api.agent_dispatch_service import CreateAgentDispatchRequest
 from pydantic import BaseModel
 
 from src.core.database import db
+from src.api.routes import router as api_router
 
 load_dotenv()
 
@@ -43,6 +44,8 @@ logger = logging.getLogger("token-server")
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="MSB LiveKit Token Server")
+
+app.include_router(api_router, prefix="/api")
 
 ALLOWED_ORIGINS = os.getenv(
     "CORS_ORIGINS",
@@ -482,127 +485,7 @@ async def _dispatch_agent(url: str, key: str, secret: str, room: str) -> None:
         logger.warning("Agent dispatch failed (may already be in room): %s", exc)
 
 
-# ---------------------------------------------------------------------------
-# Dashboard REST API Routes
-# ---------------------------------------------------------------------------
-
-
-@app.get("/api/restaurant")
-def get_restaurant(current_user: str = Depends(get_current_user)):
-    return db.get_restaurant_info()
-
-
-@app.put("/api/restaurant")
-def update_restaurant(info: RestaurantInfoUpdate, current_user: str = Depends(get_current_user)):
-    db.update_restaurant_info(**info.model_dump(exclude_unset=True))
-    return {"status": "success"}
-
-
-@app.get("/api/tables")
-def get_tables(active_only: bool = False, current_user: str = Depends(get_current_user)):
-    return db.get_tables(active_only=active_only)
-
-
-@app.post("/api/tables")
-def create_table(table: TableCreate, current_user: str = Depends(get_current_user)):
-    tid = db.create_table(
-        table.table_number, table.capacity, table.location, table.description
-    )
-    return {"id": tid}
-
-
-@app.put("/api/tables/{table_id}")
-def update_table(table_id: int, table: TableUpdate, current_user: str = Depends(get_current_user)):
-    db.update_table(table_id, **table.model_dump(exclude_unset=True))
-    return {"status": "success"}
-
-
-@app.delete("/api/tables/{table_id}")
-def delete_table(table_id: int, current_user: str = Depends(get_current_user)):
-    db.delete_table(table_id)
-    return {"status": "success"}
-
-
-# ---------------------------------------------------------------------------
-# Menu API Routes
-# ---------------------------------------------------------------------------
-
-
-@app.get("/api/menu")
-def get_menu(category: Optional[str] = None, available_only: bool = True, current_user: str = Depends(get_current_user)):
-    return db.get_menu(category=category, available_only=available_only)
-
-
-@app.post("/api/menu")
-def create_menu_item(item: MenuItemCreate, current_user: str = Depends(get_current_user)):
-    item_id = db.create_menu_item(
-        name=item.name,
-        description=item.description,
-        category=item.category,
-        price=item.price,
-        allergens=item.allergens,
-        is_available=item.is_available,
-        is_daily_special=item.is_daily_special,
-    )
-    return {"id": item_id}
-
-
-@app.put("/api/menu/{item_id}")
-def update_menu_item(item_id: int, item: MenuItemUpdate, current_user: str = Depends(get_current_user)):
-    db.update_menu_item(item_id, **item.model_dump(exclude_unset=True))
-    return {"status": "success"}
-
-
-@app.delete("/api/menu/{item_id}")
-def delete_menu_item(item_id: int, current_user: str = Depends(get_current_user)):
-    db.delete_menu_item(item_id)
-    return {"status": "success"}
-
-
-@app.get("/api/reservations")
-def get_reservations(date: Optional[str] = None, status: Optional[str] = None, current_user: str = Depends(get_current_user)):
-    return db.get_reservations(date=date, status=status)
-
-
-@app.post("/api/reservations")
-def create_reservation(res: ReservationCreate, current_user: str = Depends(get_current_user)):
-    try:
-        return db.create_reservation(
-            customer_name=res.customer_name,
-            date=res.date,
-            time=res.time,
-            num_guests=res.num_guests,
-            customer_phone=res.customer_phone,
-            notes=res.notes,
-            source="dashboard",
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@app.delete("/api/reservations/{reservation_id}")
-def cancel_reservation(reservation_id: int, current_user: str = Depends(get_current_user)):
-    success = db.cancel_reservation(reservation_id=reservation_id)
-    if not success:
-        raise HTTPException(
-            status_code=404, detail="Reservation not found or already cancelled"
-        )
-    return {"status": "success"}
-
-
-@app.get("/api/calls")
-def get_calls(limit: int = 50, current_user: str = Depends(get_current_user)):
-    return db.get_call_log(limit=limit)
-
-
-@app.get("/api/stats")
-def get_stats(date: Optional[str] = None, current_user: str = Depends(get_current_user)):
-    return db.get_stats(date=date)
-
-
-@app.get("/api/check_availability")
-def check_availability(date: str, time: str, num_guests: int, current_user: str = Depends(get_current_user)):
-    return db.check_availability(date, time, num_guests)
+# Enrutador externo src/api/routes.py montado para manejar Restaurant/Menu/Reservations/Calls.
 
 
 # ---------------------------------------------------------------------------

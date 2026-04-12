@@ -9,48 +9,48 @@ export interface AppStatus {
 
 const APPS: { name: string; healthUrl: string; appUrl: string }[] = [
   {
-    name: 'IAPuta OS',
-    healthUrl: '/api/health',
+    name: 'IAPuta OS (Backend Local)',
+    healthUrl: 'http://localhost:8000/health',
     appUrl: 'https://msbross.me/iaputa/',
   },
   {
-    name: 'LIVEKIT Nikolina',
-    healthUrl: '/api/health',
+    name: 'LIVEKIT Nikolina (Backend Local)',
+    healthUrl: 'http://localhost:8001/api/health',
     appUrl: 'https://msbross.me/nikolina/',
   },
   {
-    name: 'Arantxa Translate',
-    healthUrl: '/health',
+    name: 'Arantxa Translate (Backend Local)',
+    healthUrl: 'http://localhost:3001/health',
     appUrl: 'https://msbross.me/traductor/',
   },
   {
-    name: 'TaskFlowPro',
-    healthUrl: '/health',
-    appUrl: 'https://msbross.me/taskflow/',
-  },
-  {
-    name: 'DOHLER',
-    healthUrl: '/health',
+    name: 'DOHLER (Backend Local)',
+    healthUrl: 'http://localhost:8002/health',
     appUrl: 'https://msbross.me/dohler/',
   },
   {
-    name: 'LogiSearch',
-    healthUrl: '/health',
+    name: 'TaskFlowPro (Estático)',
+    healthUrl: 'https://msbross.me/taskflow/',
+    appUrl: 'https://msbross.me/taskflow/',
+  },
+  {
+    name: 'LogiSearch (Estático)',
+    healthUrl: 'https://msbross.me/logisearch/',
     appUrl: 'https://msbross.me/logisearch/',
   },
   {
-    name: 'Edelweiss',
-    healthUrl: '/health',
+    name: 'Edelweiss (Estático)',
+    healthUrl: 'https://msbross.me/edelweiss/',
     appUrl: 'https://msbross.me/edelweiss/',
   },
   {
-    name: 'Moko-Tools',
-    healthUrl: '/health',
+    name: 'Moko-Tools (Estático)',
+    healthUrl: 'https://msbross.me/moko/',
     appUrl: 'https://msbross.me/moko/',
   },
   {
-    name: 'CombiPro',
-    healthUrl: '/health',
+    name: 'CombiPro (Estático)',
+    healthUrl: 'https://msbross.me/combipro/',
     appUrl: 'https://msbross.me/combipro/',
   },
 ];
@@ -59,8 +59,10 @@ export async function checkAppHealth(app: typeof APPS[0]): Promise<AppStatus> {
   const start = performance.now();
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // Fast timeout
 
+    // We use mode: 'no-cors' so we don't get blocked by localhost ports from https://
+    // the catch here is that no-cors always returns an opaque response (status 0).
     const response = await fetch(app.healthUrl, {
       method: 'GET',
       signal: controller.signal,
