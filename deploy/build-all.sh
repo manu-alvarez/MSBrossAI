@@ -11,10 +11,16 @@ build_app() {
   echo "=> Construyendo $app_dir..."
   cd "$BASE_DIR/$app_dir" || return
   npm run build || return
-  rm -rf "$WWW_DIR/$target_dir"/*
-  mkdir -p "$WWW_DIR/$target_dir"
-  cp -r dist/* "$WWW_DIR/$target_dir/"
-  echo "✅ $app_dir construido y movido a www/$target_dir"
+  rm -rf "$WWW_DIR/app/$target_dir"/*
+  mkdir -p "$WWW_DIR/app/$target_dir"
+  cp -r dist/* "$WWW_DIR/app/$target_dir/"
+  
+  # Inject Service Worker Kill Switch to unblock user's cached browsers
+  if [ -f "$WWW_DIR/app/$target_dir/index.html" ]; then
+    sed -i '' -e 's|<head>|<head><script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(reg=>reg.unregister()));}</script>|' "$WWW_DIR/app/$target_dir/index.html"
+  fi
+  
+  echo "✅ $app_dir construido y movido a www/app/$target_dir"
 }
 
 build_app "apps/iaputa-os/frontend" "iaputa"
@@ -26,6 +32,7 @@ build_app "apps/edelweiss" "edelweiss"
 build_app "apps/moko-tools" "moko"
 build_app "apps/taskflow-pro" "taskflow"
 build_app "apps/logisearch" "logisearch"
+build_app "apps/app-generator" "app-generator"
 # build_app "dashboard" "dashboard" # if dashboard is root or separate
 
 echo "🚀 Todas las builds completadas estáticamente en $WWW_DIR."

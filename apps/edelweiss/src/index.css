@@ -6,16 +6,16 @@
   --yellow: #FBBF24;
   --orange: #FB923C;
   --red: #F87171;
-  --bg: #FFF0F5;
-  --card: #FFFFFF;
-  --text: #4A1942;
+  --bg: #0A0A0A;
+  --card: #1A1A1A;
+  --text: #F3F4F6;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, #FFF0F5 0%, #F0F0FF 50%, #F0FFF0 100%);
+  background: linear-gradient(135deg, #0A0A0F 0%, #171722 50%, #0F1A15 100%);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;

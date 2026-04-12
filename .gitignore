@@ -12,3 +12,15 @@ __pycache__/
 temp_audio/
 temp_vision/
 scripts/
+livekit-server
+logs/
+package-lock.json
+*.tar.gz
+*.zip
+*.log
+node_modules/
+dist/
+venv/
+.pm2/
+pm2/
+EOF/

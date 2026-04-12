@@ -5,8 +5,7 @@ interface EyePatchTimerProps {
 }
 
 const EyePatchTimer: React.FC<EyePatchTimerProps> = ({ onComplete }) => {
-  const [minutes, setMinutes] = useState(5);
-  const [seconds, setSeconds] = useState(0);
+  const [activeMinutes, setActiveMinutes] = useState(5);
   const [isRunning, setIsRunning] = useState(false);
   const [totalSeconds, setTotalSeconds] = useState(5 * 60);
   const [done, setDone] = useState(false);
@@ -40,10 +39,8 @@ const EyePatchTimer: React.FC<EyePatchTimerProps> = ({ onComplete }) => {
     return () => clearTimer();
   }, [isRunning, totalSeconds, clearTimer, onComplete]);
 
-  useEffect(() => {
-    setMinutes(Math.floor(totalSeconds / 60));
-    setSeconds(totalSeconds % 60);
-  }, [totalSeconds]);
+  const displayMinutes = Math.floor(totalSeconds / 60);
+  const displaySeconds = totalSeconds % 60;
 
   const startTimer = () => {
     if (totalSeconds > 0) {
@@ -82,15 +79,15 @@ const EyePatchTimer: React.FC<EyePatchTimerProps> = ({ onComplete }) => {
       <p style={{ fontSize: '1rem', color: 'var(--text2)', marginBottom: '1rem' }}>¡Cuenta regresiva para tu ejercicio!</p>
       <div style={{
         fontSize: '5rem', fontWeight: 900, fontFamily: 'var(--font-display)',
-        color: isRunning ? 'var(--green)' : 'var(--text2)',
+        color: isRunning ? 'var(--green)' : 'var(--text)',
         marginBottom: '1rem',
       }}>
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        {String(displayMinutes).padStart(2, '0')}:{String(displaySeconds).padStart(2, '0')}
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
         <button onClick={startTimer} disabled={isRunning} style={{
           padding: '1rem 2rem', fontSize: '1.2rem', fontWeight: 700,
-          background: isRunning ? '#ccc' : 'linear-gradient(135deg, var(--green), var(--accent2))',
+          background: isRunning ? '#333' : 'linear-gradient(135deg, var(--green), var(--blue))',
           border: 'none', borderRadius: '15px', color: 'white',
           cursor: isRunning ? 'not-allowed' : 'pointer',
         }}>
@@ -98,7 +95,7 @@ const EyePatchTimer: React.FC<EyePatchTimerProps> = ({ onComplete }) => {
         </button>
         <button onClick={resetTimer} style={{
           padding: '1rem 2rem', fontSize: '1.2rem', fontWeight: 700,
-          background: 'linear-gradient(135deg, var(--red), var(--yellow))',
+          background: 'linear-gradient(135deg, var(--red), var(--orange))',
           border: 'none', borderRadius: '15px', color: 'white', cursor: 'pointer',
         }}>
           🔄 Reiniciar
@@ -106,12 +103,12 @@ const EyePatchTimer: React.FC<EyePatchTimerProps> = ({ onComplete }) => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
         {[5, 10, 15, 20, 30].map(m => (
-          <button key={m} onClick={() => { setMinutes(m); setTotalSeconds(m * 60); setIsRunning(false); setDone(false); clearTimer(); }} style={{
+          <button key={m} onClick={() => { setActiveMinutes(m); setTotalSeconds(m * 60); setIsRunning(false); setDone(false); clearTimer(); }} style={{
             padding: '0.5rem 1rem', fontSize: '1rem', fontWeight: 700,
-            background: minutes === m && !isRunning ? 'var(--green)' : 'rgba(255,255,255,0.05)',
-            border: `2px solid ${minutes === m && !isRunning ? 'var(--green)' : 'rgba(255,255,255,0.1)'}`,
+            background: activeMinutes === m && !isRunning ? 'var(--green)' : 'rgba(255,255,255,0.05)',
+            border: `2px solid ${activeMinutes === m && !isRunning ? 'var(--green)' : 'rgba(255,255,255,0.1)'}`,
             borderRadius: '10px',
-            color: minutes === m && !isRunning ? 'white' : 'var(--text2)',
+            color: activeMinutes === m && !isRunning ? 'white' : 'var(--text)',
             cursor: 'pointer',
           }}>
             {m} min

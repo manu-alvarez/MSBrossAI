@@ -10,14 +10,7 @@ import { Provider } from './api';
 
 const App: React.FC = () => {
   const [tab, setTab] = React.useState(0);
-  const [provider, setProvider] = React.useState<Provider>('groq');
-
-  const PROVIDERS: { id: Provider; label: string; icon: string }[] = [
-    { id: 'groq',       label: 'GROQ (Llama 3.3)',  icon: '🚀' },
-    { id: 'openai',     label: 'OpenAI (GPT-4o)',    icon: '🧠' },
-    { id: 'gemini',     label: 'Gemini (2.0 Flash)', icon: '🌠' },
-    { id: 'openrouter', label: 'Claude (via OR)',     icon: '🎭' },
-  ];
+  const provider: Provider = 'groq';
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -36,24 +29,11 @@ const App: React.FC = () => {
           <Typography
             variant="h1"
             className="neural-title reflector-neon"
-            data-text="Arantxa Translate PRO v3.0"
+            data-text="Traductor PRO v3.0"
             sx={{ fontSize: { xs: '2rem', md: '3.5rem' }, textAlign: 'center' }}
           >
-            Arantxa <b>Translate PRO</b> v3.0
+            Traductor <b>PRO</b> v3.0
           </Typography>
-        </Box>
-
-        {/* Global Neural Provider Selector */}
-        <Box className="neural-provider-selector">
-          {PROVIDERS.map((p) => (
-            <Box
-              key={p.id}
-              className={`provider-chip ${p.id} ${provider === p.id ? 'active' : ''}`}
-              onClick={() => setProvider(p.id)}
-            >
-              <span>{p.icon}</span> {p.label}
-            </Box>
-          ))}
         </Box>
 
         {/* Centered Main Panel Area */}

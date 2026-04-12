@@ -577,12 +577,14 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFF0F5 0%, #F0F0FF 50%, #F0FFF0 100%)' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #09090b 100%)', color: '#f4f4f5' }}>
       {/* Header */}
       <header style={{
         padding: '1rem 2rem',
-        background: 'white',
-        boxShadow: '0 2px 20px rgba(0,0,0,0.05)',
+        background: 'rgba(24, 24, 27, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        boxShadow: '0 2px 20px rgba(0,0,0,0.5)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -590,29 +592,31 @@ export default function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{
             width: 50, height: 50, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #FF6B9D, #C084FC)',
+            background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1.5rem',
+            boxShadow: '0 0 15px rgba(236, 72, 153, 0.5)',
           }}>
             👁️
           </div>
           <div>
-            <h1 style={{ fontFamily: 'Fredoka One', fontSize: '1.5rem', color: '#4A1942' }}>
+            <h1 style={{ fontFamily: 'Fredoka One', fontSize: '1.5rem', color: '#f9a8d4' }}>
               Edelweiss
             </h1>
-            <p style={{ fontSize: '0.8rem', color: '#999' }}>Juegos para mis ojitos ✨</p>
+            <p style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Juegos para mis ojitos ✨</p>
           </div>
         </div>
         {selectedGame && (
           <button onClick={() => setSelectedGame(null)} style={{
             padding: '0.5rem 1rem',
-            background: '#FFF0F5',
-            border: '2px solid #FF6B9D',
+            background: 'rgba(244, 114, 182, 0.1)',
+            border: '1px solid rgba(244, 114, 182, 0.3)',
             borderRadius: '10px',
-            color: '#FF6B9D',
+            color: '#f472b6',
             fontWeight: 700,
             cursor: 'pointer',
             fontSize: '0.9rem',
+            transition: 'all 0.2s',
           }}>
             ← Volver
           </button>
@@ -623,21 +627,23 @@ export default function App() {
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
         {selectedGame ? (
           <div style={{
-            background: 'white',
+            background: 'rgba(39, 39, 42, 0.6)',
+            border: '1px solid rgba(255,255,255,0.05)',
             borderRadius: '25px',
             padding: '2rem',
-            boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
+            boxShadow: '0 4px 30px rgba(0,0,0,0.5)',
             animation: 'slideIn 0.5s ease',
+            backdropFilter: 'blur(10px)',
           }}>
             <selectedGame.component />
           </div>
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#4A1942', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#fbcfe8', marginBottom: '0.5rem' }}>
                 ¡Elige tu juego! 🎮
               </h2>
-              <p style={{ color: '#666', fontSize: '1.1rem' }}>
+              <p style={{ color: '#9ca3af', fontSize: '1.1rem' }}>
                 Toca un juego para empezar a jugar
               </p>
             </div>
@@ -652,23 +658,24 @@ export default function App() {
                   onClick={() => setSelectedGame(game)}
                   style={{
                     padding: '1.5rem',
-                    background: 'white',
-                    border: `3px solid ${game.color}20`,
+                    background: 'rgba(39, 39, 42, 0.4)',
+                    border: `1px solid ${game.color}40`,
                     borderRadius: '20px',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     animation: `slideIn 0.5s ease ${i * 0.1}s both`,
                     textAlign: 'center',
+                    backdropFilter: 'blur(5px)',
                   }}
                   onMouseEnter={e => {
                     (e.target as HTMLElement).style.transform = 'translateY(-5px)';
-                    (e.target as HTMLElement).style.boxShadow = `0 10px 30px ${game.color}30`;
-                    (e.target as HTMLElement).style.borderColor = game.color;
+                    (e.target as HTMLElement).style.boxShadow = `0 10px 30px ${game.color}20`;
+                    (e.target as HTMLElement).style.background = 'rgba(63, 63, 70, 0.6)';
                   }}
                   onMouseLeave={e => {
                     (e.target as HTMLElement).style.transform = 'translateY(0)';
                     (e.target as HTMLElement).style.boxShadow = 'none';
-                    (e.target as HTMLElement).style.borderColor = `${game.color}20`;
+                    (e.target as HTMLElement).style.background = 'rgba(39, 39, 42, 0.4)';
                   }}
                 >
                   <div style={{ fontSize: '3rem', marginBottom: '0.5rem', animation: 'float 3s ease-in-out infinite' }}>
@@ -677,7 +684,7 @@ export default function App() {
                   <div style={{ fontFamily: 'Fredoka One', fontSize: '1.1rem', color: game.color, marginBottom: '0.25rem' }}>
                     {game.name}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: '#999' }}>
+                  <div style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>
                     {game.description}
                   </div>
                 </button>
@@ -691,7 +698,7 @@ export default function App() {
       <footer style={{
         textAlign: 'center',
         padding: '1.5rem',
-        color: '#999',
+        color: '#71717a',
         fontSize: '0.8rem',
       }}>
         Edelweiss VisionPlay © 2026 — Juegos de terapia visual para niños ✨
