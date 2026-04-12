@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import NeuralOrb from './components/NeuralOrb';
 import './index.css';
 
-const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || '/api';
+const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 const API_KEY = (import.meta as any).env.VITE_API_KEY || '';
 
 interface Message {
@@ -14,10 +14,10 @@ interface Message {
 }
 
 const DEMO: Record<string, string> = {
-  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal. ¿En qué puedo ayudarte hoy?',
-  hello: 'Hello! I am IAPuta OS, your personal AI assistant. How can I help you?',
-  ayuda: 'Puedo ayudarte con:\n• 📷 Análisis de imágenes y pantalla\n• 📧 Gestión de correos y calendario\n• 🐍 Código Python\n• 🔍 Búsquedas web\n• 💻 Control del sistema',
-  default: 'Entiendo tu consulta. En modo demo mis respuestas son limitadas. Para funcionalidad completa necesitas el backend.',
+  hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal de élite. ¿En qué puedo ayudarte hoy?',
+  hello: 'Hello! I am IAPuta OS, your luxury AI assistant. How can I act for you?',
+  ayuda: 'Tengo acceso a:\n• 📷 Análisis de visión y pantalla\n• 🌐 Búsquedas avanzadas\n• 💻 Shell y manipulación local\n• 🧠 Multi-LLM en fallback (Groq → Ollama → OpenRouter)',
+  default: 'Entendido. En modo demo puro no conecto con el backend esclavo en local, por favor levanta la API de FastAPI.',
 };
 
 export default function App() {
@@ -77,64 +77,45 @@ export default function App() {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         
         if (demoMode) {
-          setMessages(prev => [...prev, {
-            id: crypto.randomUUID(),
-            role: 'user',
-            content: '🎤 [Mensaje de voz]',
-            timestamp: new Date(),
-          }]);
+          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '🎤 [Voz capturada]', timestamp: new Date() }]);
           setTimeout(() => {
-            const response = 'He recibido tu mensaje de voz. En modo demo no puedo transcribirlo, pero en modo completo usaría Whisper para convertir tu voz a texto.';
-            setMessages(prev => [...prev, {
-              id: crypto.randomUUID(),
-              role: 'assistant',
-              content: response,
-              timestamp: new Date(),
-            }]);
-            speak(response);
+            setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: 'Grabación procesada localmente en demo.', timestamp: new Date() }]);
+            speak('Procesado localmente.');
+            setOrbState('idle');
           }, 1000);
-        } else {
-          const formData = new FormData();
-          formData.append('audio_file', blob, 'audio.webm');
-          
-          setMessages(prev => [...prev, {
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('audio_file', blob, 'audio.webm');
+        
+        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '🎤 [Procesando comandos de voz...]', timestamp: new Date() }]);
+        
+        try {
+          const res = await fetch(`${API_BASE}/voice-command`, {
+            method: 'POST',
+            headers: { 'x-api-key': API_KEY },
+            body: formData,
+          });
+          const data = await res.json();
+          const assistantMsg: Message = {
             id: crypto.randomUUID(),
-            role: 'user',
-            content: '🎤 [Procesando voz...]',
+            role: 'assistant',
+            content: data.response || data.transcript || 'Sin respuesta',
             timestamp: new Date(),
-          }]);
+            audioUrl: data.audio_url,
+          };
+          setMessages(prev => [...prev, assistantMsg]);
           
-          try {
-            const res = await fetch(`${API_BASE}/voice-command`, {
-              method: 'POST',
-              headers: { 'x-api-key': API_KEY },
-              body: formData,
-            });
-            const data = await res.json();
-            const assistantMsg: Message = {
-              id: crypto.randomUUID(),
-              role: 'assistant',
-              content: data.response || data.transcript || 'Sin respuesta',
-              timestamp: new Date(),
-              audioUrl: data.audio_url,
-            };
-            setMessages(prev => [...prev, assistantMsg]);
-            
-            if (data.audio_url) {
-              new Audio(data.audio_url).play().catch(() => speak(data.response || data.transcript || ''));
-            } else {
-              speak(data.response || data.transcript || '');
-            }
-          } catch (err) {
-            setMessages(prev => [...prev, {
-              id: crypto.randomUUID(),
-              role: 'system',
-              content: `❌ Error de voz: ${String(err)}`,
-              timestamp: new Date(),
-            }]);
-            setOrbState('error');
-            setTimeout(() => setOrbState('idle'), 3000);
+          if (data.audio_url) {
+            new Audio(data.audio_url).play().catch(() => speak(data.response || data.transcript || ''));
+          } else {
+            speak(data.response || data.transcript || '');
           }
+        } catch (err) {
+          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de backend esclavo: ${String(err)}`, timestamp: new Date() }]);
+          setOrbState('error');
+          setTimeout(() => setOrbState('idle'), 3000);
         }
       };
       
@@ -148,12 +129,6 @@ export default function App() {
         }
       }, 15000);
     } catch (err) {
-      setMessages(prev => [...prev, {
-        id: crypto.randomUUID(),
-        role: 'system',
-        content: `❌ Error micrófono: ${String(err)}`,
-        timestamp: new Date(),
-      }]);
       setOrbState('error');
       setTimeout(() => setOrbState('idle'), 3000);
     }
@@ -205,7 +180,7 @@ export default function App() {
           speak(data.response || '');
         }
       } catch (err) {
-        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error: ${String(err)}`, timestamp: new Date() }]);
+        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Host: Imposible conectar al backend local: ${String(err)}`, timestamp: new Date() }]);
         setOrbState('error');
         setTimeout(() => setOrbState('idle'), 3000);
       }
@@ -218,155 +193,68 @@ export default function App() {
     if (input.trim() && !loading) { sendText(input); setInput(''); }
   };
 
-  const captureWebcam = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      await video.play();
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d')!.drawImage(video, 0, 0);
-      stream.getTracks().forEach(t => t.stop());
-      setVisionImage(canvas.toDataURL('image/jpeg'));
-      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: '📷 Cámara capturada correctamente.', timestamp: new Date() }]);
-    } catch (err) {
-      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error cámara: ${String(err)}`, timestamp: new Date() }]);
-    }
-  };
-
-  const captureScreen = async () => {
-    try {
-      const stream = await (navigator.mediaDevices as any).getDisplayMedia({ video: true });
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      await video.play();
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d')!.drawImage(video, 0, 0);
-      stream.getTracks().forEach(t => t.stop());
-      setVisionImage(canvas.toDataURL('image/jpeg'));
-      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: '🖥️ Pantalla capturada correctamente.', timestamp: new Date() }]);
-    } catch (err) {
-      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error captura: ${String(err)}`, timestamp: new Date() }]);
-    }
-  };
-
   return (
     <div className="app-container">
-      {/* Header */}
-      <header className="app-header">
-        <div className="header-brand">
-          <div className="header-logo">🤖</div>
-          <div>
-            <h1 className="header-title">IAPuta OS</h1>
-            <p className="header-subtitle">{demoMode ? '🟡 Modo Demo' : '🟢 Conectado'}</p>
-          </div>
-        </div>
-        <div className="header-actions">
-          <button className="action-btn" onClick={captureWebcam} title="Capturar cámara">📷</button>
-          <button className="action-btn" onClick={captureScreen} title="Capturar pantalla">🖥️</button>
-          <button className="action-btn" onClick={() => { setMessages([]); setVisionImage(null); window.speechSynthesis.cancel(); setOrbState('idle'); }} title="Limpiar chat">🗑️</button>
-        </div>
-      </header>
+      {/* Background Neural Orb fills the viewport contextually */}
+      <div className="luxury-orb-background">
+        <NeuralOrb state={orbState} volume={volume} />
+      </div>
 
-      {/* Main Content */}
-      <main className="app-main">
-        {/* Orb Section */}
-        <div className="orb-section">
-          <div className="orb-container">
-            <NeuralOrb state={orbState} volume={volume} />
-            <div className="orb-status">
-              <span className={`orb-status-dot orb-status-dot--${orbState}`} />
-              <span className="orb-status-text">
-                {orbState === 'idle' && 'Listo'}
-                {orbState === 'listening' && 'Escuchando...'}
-                {orbState === 'thinking' && 'Pensando...'}
-                {orbState === 'speaking' && 'Hablando...'}
-                {orbState === 'error' && 'Error'}
-              </span>
+      <div className="luxury-dashboard">
+        {/* Left/Main Panel - Glassmorphic Chat */}
+        <div className="glass-panel chat-glass-panel">
+          <header className="glass-header">
+            <div className="brand">
+               <span className="brand-logo">🤖</span>
+               <div className="brand-text">
+                  <h1>IAPuta OS</h1>
+                  <span className={`status-badge ${demoMode ? 'demo' : 'online'}`}>{demoMode ? 'Host Only' : 'Host + Local'}</span>
+               </div>
             </div>
-          </div>
-        </div>
+          </header>
 
-        {/* Vision Panel */}
-        {visionImage && (
-          <div className="vision-panel">
-            <div className="vision-header">
-              <span className="vision-title">👁️ Visión</span>
-              <button className="vision-close" onClick={() => setVisionImage(null)}>✕</button>
-            </div>
-            <img src={visionImage} alt="Visión" className="vision-image" />
-          </div>
-        )}
-
-        {/* Chat */}
-        <div className="chat-container">
-          {messages.length === 0 && (
-            <div className="chat-empty">
-              <h2 className="chat-empty-title">IAPuta OS</h2>
-              <p className="chat-empty-desc">Tu asistente IA personal con voz. Escribe o habla para comenzar.</p>
-            </div>
-          )}
-
-          {messages.map(msg => (
-            <div key={msg.id} className={`message message--${msg.role}`}>
-              <div className="message-bubble">
-                {msg.content}
-                <div className="message-time">{msg.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
-                {msg.role === 'assistant' && (
-                  <button className="audio-btn" onClick={() => speak(msg.content)}>
-                    🔊 Escuchar
-                  </button>
-                )}
+          <div className="chat-area">
+            {messages.length === 0 ? (
+              <div className="chat-empty-state">
+                <h2>Awaiting Directives</h2>
+                <p>El núcleo neuronal está conectado. Estoy lista para gestionar tu entorno.</p>
               </div>
-            </div>
-          ))}
-
-          {loading && (
-            <div className="loading-indicator">
-              <div className="loading-dots">
-                <div className="loading-dot" />
-                <div className="loading-dot" />
-                <div className="loading-dot" />
+            ) : (
+              messages.map(msg => (
+                <div key={msg.id} className={`chat-message chat-message--${msg.role}`}>
+                  <div className="chat-bubble">
+                    <p>{msg.content}</p>
+                    <span className="chat-time">{msg.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                </div>
+              ))
+            )}
+            {loading && (
+              <div className="chat-message chat-message--loading">
+                 <div className="chat-bubble"><div className="loader-dots"><span></span><span></span><span></span></div></div>
               </div>
-              <span>Pensando...</span>
-            </div>
-          )}
+            )}
+            <div ref={messagesEndRef} />
+          </div>
 
-          <div ref={messagesEndRef} />
+          <form className="glass-input-dock" onSubmit={handleSubmit}>
+            <input 
+              type="text" 
+              placeholder="Inyectar comandos al núcleo..." 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              disabled={loading}
+              className="glass-input"
+            />
+            <button type="button" className={`btn-icon ${recording ? 'pulsing' : ''}`} onClick={recording ? stopRecording : startRecording}>
+              {recording ? '⏹️' : '🎤'}
+            </button>
+            <button type="button" className="btn-icon" onClick={() => setVisionImage('📸')}>
+               👁️
+            </button>
+          </form>
         </div>
-
-        {/* Input */}
-        <form className="input-bar" onSubmit={handleSubmit}>
-          <input
-            className="input-field"
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="Escribe tu mensaje..."
-            disabled={loading}
-          />
-          <button
-            type="button"
-            className={`input-btn--mic ${recording ? 'recording' : ''}`}
-            onClick={recording ? stopRecording : startRecording}
-            title={recording ? 'Detener grabación' : 'Grabar voz'}
-          >
-            {recording ? '⏹️' : '🎤'}
-          </button>
-          <button className="input-btn input-btn--primary" type="submit" disabled={loading || !input.trim()}>
-            Enviar
-          </button>
-        </form>
-      </main>
-
-      {/* Footer */}
-      <footer className="app-footer">
-        MSBrossAI © 2026 — IAPuta OS v8.0
-      </footer>
+      </div>
     </div>
   );
 }
