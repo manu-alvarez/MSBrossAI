@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 // COMBIPRO — Real Odds + Combo Generator
 // ============================================
 
-const ODDS_API_KEY = ''; // Add your valid key from the-odds-api.com
+const ODDS_API_KEY = (import.meta as any).env.VITE_ODDS_API_KEY || '';
 const ODDS_API_BASE = 'https://api.the-odds-api.com/v4/sports';
 
 interface Match {

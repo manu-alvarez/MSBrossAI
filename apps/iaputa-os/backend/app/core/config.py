@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     def get_cors_origins(self) -> List[str]:
-        if self.CORS_ORIGINS == "*": return ["*"]
-        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+        if self.CORS_ORIGINS == "*": return ["*", "https://msbross.me", "https://msbrossai.alvarezconsult.com"]
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()] + ["https://msbross.me", "https://msbrossai.alvarezconsult.com"]
 
 settings = Settings()
 for folder in ["temp_audio", "temp_vision", "scripts"]:

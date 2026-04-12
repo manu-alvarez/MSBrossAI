@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import OpenAI from 'openai';
+import { ProviderFactory } from '../providers/index.js';
 
 const router = Router();
 
-const openai = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1',
-});
-
-type Modo = 'traducir_estandar' | 'traducir' | 'traducir_profesional' | 'traducir_coloquial' | 'resumir' | 'traducir_resumir';
+type Modo =
+  | 'traducir_estandar'
+  | 'traducir'
+  | 'traducir_profesional'
+  | 'traducir_coloquial'
+  | 'resumir'
+  | 'traducir_resumir';
 type Nivel = 'breve' | 'normal' | 'detallado';
 
 router.post('/process', async (req, res) => {
@@ -19,17 +20,22 @@ router.post('/process', async (req, res) => {
       destino = 'es',
       modo = 'traducir_resumir',
       nivelResumen = 'normal',
+      provider: providerName = 'groq',
     }: {
       texto: string;
       origen?: string;
       destino?: string;
       modo?: Modo;
       nivelResumen?: Nivel;
+      provider?: string;
     } = req.body;
 
     if (!texto || !texto.trim()) {
       return res.status(400).json({ error: 'Texto vacío' });
     }
+
+    // Multi-provider support via ProviderFactory
+    const aiProvider = ProviderFactory.create(providerName);
 
     const detalleMap: Record<Nivel, string> = {
       breve: 'muy breve (1-3 frases)',
@@ -51,7 +57,7 @@ router.post('/process', async (req, res) => {
       systemPrompt = `Realiza una traducción COLOQUIAL, SENCILLA y BREVE de ${origen} a ${destino}. Usa un lenguaje directo y cotidiano.
       traduccion = <texto traducido>, resumen = ""`;
     } else if (modo === 'resumir') {
-      systemPrompt = `No traduzcas. Resume el texto en su idioma original (${origen}). 
+      systemPrompt = `No traduzcas. Resume el texto en su idioma original (${origen}).
       Nivel de resumen: ${detalleMap[nivelResumen]}.
       traduccion = "", resumen = <resumen>`;
     } else if (modo === 'traducir_resumir') {
@@ -72,8 +78,8 @@ Instrucción específica: ${systemPrompt}
 - No añadas explicaciones fuera del JSON.
     `.trim();
 
-    const completion = await openai.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+    const completion = await aiProvider.chat.completions.create({
+      model: aiProvider.getDefaultModel(),
       temperature: 0.2,
       response_format: { type: 'json_object' },
       messages: [
@@ -86,13 +92,13 @@ Instrucción específica: ${systemPrompt}
     });
 
     const raw = completion.choices[0]?.message?.content || '{}';
-    // extract JSON block if model wraps it in markdown
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
 
     return res.json({
       traduccion: parsed.traduccion ?? '',
       resumen: parsed.resumen ?? '',
+      provider: providerName,
     });
   } catch (err: any) {
     console.error(err);

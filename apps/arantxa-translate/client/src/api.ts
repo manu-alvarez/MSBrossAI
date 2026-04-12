@@ -39,7 +39,7 @@ export interface ExtrasResult {
   provider?: string;
 }
 
-const API_BASE = '/traductor/api.php';
+const API_BASE = '/api';
 
 /**
  * Translate / Summarise text via the serverless PHP gateway.
