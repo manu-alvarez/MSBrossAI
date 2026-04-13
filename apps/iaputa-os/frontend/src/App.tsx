@@ -2,8 +2,15 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import NeuralOrb from './components/NeuralOrb';
 import './index.css';
 
-const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8006/api';
+/**
+ * API base URL: auto-detect production (msbross.me → PHP gateway) vs local (FastAPI)
+ */
+const isProduction = window.location.hostname === 'msbross.me';
+const API_BASE = isProduction
+  ? './api.php?action='
+  : ((import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8006/api');
 const API_KEY = (import.meta as any).env.VITE_API_KEY || '';
+const USE_PHP_GATEWAY = isProduction;
 
 interface Message {
   id: string;
@@ -35,7 +42,8 @@ export default function App() {
   const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(3000) })
+    const statusUrl = USE_PHP_GATEWAY ? `${API_BASE}status` : `${API_BASE}/status`;
+    fetch(statusUrl, { signal: AbortSignal.timeout(3000) })
       .then(r => { if (!r.ok) setDemoMode(true); })
       .catch(() => setDemoMode(true));
   }, []);
@@ -92,7 +100,7 @@ export default function App() {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '🎤 [Procesando comandos de voz...]', timestamp: new Date() }]);
         
         try {
-          const res = await fetch(`${API_BASE}/voice-command`, {
+          const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}voice-command` : `${API_BASE}/voice-command`, {
             method: 'POST',
             headers: { 'x-api-key': API_KEY },
             body: formData,
@@ -159,7 +167,7 @@ export default function App() {
       }, 1000);
     } else {
       try {
-        const res = await fetch(`${API_BASE}/text-command`, {
+        const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}text-command` : `${API_BASE}/text-command`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
           body: JSON.stringify({ text }),

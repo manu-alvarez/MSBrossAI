@@ -57,7 +57,7 @@ const Dashboard: React.FC = () => {
 
       <Grid container spacing={3} sx={{ mb: 4, position: 'relative', zIndex: 1 }}>
         {stats.map((stat, i) => (
-          <Grid item xs={6} md={3} key={stat.id}>
+          <Grid size={{ xs: 6, md: 3 }} key={stat.id}>
             <MotionPaper
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
       </Grid>
 
       <Grid container spacing={3} sx={{ position: 'relative', zIndex: 1 }}>
-        <Grid item xs={12} lg={8}>
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h5" sx={{ fontWeight: 700 }}>Misiones de Próxima Ejecución</Typography>
             <Button size="small" endIcon={<ChevronRight />} onClick={() => navigate('/tasks')}>Ver todas</Button>
@@ -133,7 +133,7 @@ const Dashboard: React.FC = () => {
             )}
           </Box>
         </Grid>
-        <Grid item xs={12} lg={4}>
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Ratio de Ejecución</Typography>
           <MotionPaper
             initial={{ opacity: 0, x: 20 }}

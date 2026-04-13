@@ -211,7 +211,7 @@ const Tasks: React.FC = () => {
         </AnimatePresence>
       </Box>
 
-      <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ sx: { borderRadius: 5, width: '100%', maxWidth: 450, p: 1, backgroundImage: 'none', bgcolor: 'background.paper' } }}>
+      <Dialog open={open} onClose={() => setOpen(false)} slotProps={{ paper: { sx: { borderRadius: 5, width: '100%', maxWidth: 450, p: 1, backgroundImage: 'none', bgcolor: 'background.paper' } } }}>
         <DialogTitle sx={{ fontWeight: 900, fontSize: '1.5rem', pb: 1, color: 'primary.main', display: 'flex', alignItems: 'center', gap: 1.5 }}>
           {editingTaskId ? <Edit2 size={24} /> : <Plus size={24} />}
           {editingTaskId ? 'Modificar Misión' : 'Nueva Misión'}
@@ -262,7 +262,7 @@ const Tasks: React.FC = () => {
               variant="filled"
               value={reminderTime}
               onChange={(e) => setReminderTime(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ inputLabel: { shrink: true } }}
               sx={{ borderRadius: 2 }}
             />
           </Box>

@@ -51,7 +51,7 @@ const Categories: React.FC = () => {
           const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
           return (
-            <Grid item xs={12} sm={6} md={4} key={category.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={category.id}>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}>
@@ -75,15 +75,14 @@ const Categories: React.FC = () => {
       </Grid>
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth
-        PaperProps={{ sx: { bgcolor: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)' } }}>
+        slotProps={{ paper: { sx: { bgcolor: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)' } } }}>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {editing ? 'Editar Categoría' : 'Nueva Categoría'}
           <IconButton onClick={handleClose} size="small"><X size={20} /></IconButton>
         </DialogTitle>
         <DialogContent>
           <TextField fullWidth label="Nombre" value={name} onChange={e => setName(e.target.value)}
-            sx={{ mb: 3, mt: 1 }} InputLabelProps={{ sx: { color: '#888' } }}
-            InputProps={{ sx: { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } }} />
+            sx={{ mb: 3, mt: 1 }} slotProps={{ inputLabel: { sx: { color: '#888' } }, input: { sx: { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } } }} />
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#888' }}>Color</Typography>
           <Box sx={{ display: 'flex', gap: 1, mb: 3, flexWrap: 'wrap' }}>
             {PRESET_COLORS.map(c => (
