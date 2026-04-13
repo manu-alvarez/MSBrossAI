@@ -331,7 +331,7 @@ function App() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
             >
-              <Stack spacing={5} alignItems="center">
+              <Stack spacing={5} sx={{ alignItems: 'center' }}>
                 {/* Hero */}
                 <Box sx={{ textAlign: 'center', maxWidth: 750, mx: 'auto' }}>
                   <Typography
@@ -423,10 +423,10 @@ function App() {
                       }
                       disabled={isLoading}
                       variant="standard"
-                      InputProps={{
+                      slotProps={{ input: {
                         disableUnderline: true,
                         sx: { fontSize: '1.05rem', py: 1.5, px: 1 },
-                      }}
+                      }}}
                     />
                     <Button
                       variant="contained"
@@ -481,7 +481,7 @@ function App() {
                     <Typography variant="caption" sx={{ color: 'text.disabled', mb: 2, display: 'block' }}>
                       Prueba con estos ejemplos
                     </Typography>
-                    <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={1}>
+                    <Stack direction="row" sx={{ flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
                       {QUICK_EXAMPLES.map((example) => (
                         <Chip
                           key={example.label}
@@ -574,7 +574,7 @@ function App() {
                   <SparklesIcon sx={{ color: 'primary.main' }} />
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{query}</Typography>
                 </Box>
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   {savedToDB && (
                     <Chip
                       icon={<CheckIcon sx={{ fontSize: 16 }} />}

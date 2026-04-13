@@ -223,7 +223,7 @@ export default function CostCalculator({ defaultMode = 'mar' }: CostCalculatorPr
                             type="number"
                             value={quantity}
                             onChange={(e) => { setQuantity(Math.max(1, parseInt(e.target.value) || 1)); setCalculated(false) }}
-                            inputProps={{ min: 1 }}
+                            slotProps={{ htmlInput: { min: 1 } }}
                         />
                     </Grid>
 
@@ -236,7 +236,7 @@ export default function CostCalculator({ defaultMode = 'mar' }: CostCalculatorPr
                             type="number"
                             value={distance}
                             onChange={(e) => { setDistance(Math.max(1, parseInt(e.target.value) || 1)); setCalculated(false) }}
-                            inputProps={{ min: 1 }}
+                            slotProps={{ htmlInput: { min: 1 } }}
                         />
                     </Grid>
 
