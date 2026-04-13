@@ -57,26 +57,34 @@ export default function App() {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       
-      // Auto-select the best Google / Premium Spanish voice available to avoid robotic sound
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoices = voices.filter(v => 
-        (v.lang.startsWith('es-') || v.lang === 'es') && 
-        (v.name.includes('Google') || v.name.includes('Premium') || v.name.includes('Natural'))
-      );
-      if (preferredVoices.length > 0) {
-        utterance.voice = preferredVoices[0];
+      const setVoiceAndSpeak = () => {
+        let voices = window.speechSynthesis.getVoices();
+        let bestVoice = voices.find(v => v.name === 'Google español')
+                     || voices.find(v => v.lang.startsWith('es') && v.name.includes('Premium'))
+                     || voices.find(v => v.lang.startsWith('es') && (v.name.includes('Monica') || v.name.includes('Jorge') || v.name.includes('Diego')))
+                     || voices.find(v => v.lang.startsWith('es-ES'))
+                     || voices.find(v => v.lang.startsWith('es'));
+                     
+        if (bestVoice) {
+          utterance.voice = bestVoice;
+        }
+        
+        utterance.lang = 'es-ES';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.05; 
+        utterance.onstart = () => { setSpeaking(true); setOrbState('speaking'); };
+        utterance.onend = () => { setSpeaking(false); setOrbState('idle'); };
+        utterance.onerror = () => { setSpeaking(false); setOrbState('idle'); };
+        window.speechSynthesis.speak(utterance);
+      };
+
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
+        // Fallback timeout in case onvoiceschanged never fires
+        setTimeout(setVoiceAndSpeak, 250);
       } else {
-        const esVoices = voices.filter(v => v.lang.startsWith('es-'));
-        if (esVoices.length > 0) utterance.voice = esVoices[0];
+        setVoiceAndSpeak();
       }
-      
-      utterance.lang = 'es-ES';
-      utterance.rate = 1.0;
-      utterance.pitch = 1.05; // Slightly higher pitch for clarity
-      utterance.onstart = () => { setSpeaking(true); setOrbState('speaking'); };
-      utterance.onend = () => { setSpeaking(false); setOrbState('idle'); };
-      utterance.onerror = () => { setSpeaking(false); setOrbState('idle'); };
-      window.speechSynthesis.speak(utterance);
     }
   }, []);
 
