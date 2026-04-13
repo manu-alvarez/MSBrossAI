@@ -47,21 +47,21 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 100, // Pill shaped buttons
+          borderRadius: 100,
           padding: '10px 24px',
-        },
-        containedPrimary: {
-          boxShadow: '0 4px 14px 0 rgba(0, 245, 255, 0.39)',
-          '&:hover': {
-            boxShadow: '0 6px 20px rgba(0, 245, 255, 0.5)',
+          '&.MuiButton-containedPrimary': {
+            boxShadow: '0 4px 14px 0 rgba(0, 245, 255, 0.39)',
+            '&:hover': {
+              boxShadow: '0 6px 20px rgba(0, 245, 255, 0.5)',
+            },
+          },
+          '&.MuiButton-containedSecondary': {
+            boxShadow: '0 4px 14px 0 rgba(255, 0, 228, 0.39)',
+            '&:hover': {
+              boxShadow: '0 6px 20px rgba(255, 0, 228, 0.5)',
+            },
           },
         },
-        containedSecondary: {
-          boxShadow: '0 4px 14px 0 rgba(255, 0, 228, 0.39)',
-          '&:hover': {
-            boxShadow: '0 6px 20px rgba(255, 0, 228, 0.5)',
-          },
-        }
       },
     },
     MuiPaper: {

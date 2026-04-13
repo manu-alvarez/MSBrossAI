@@ -93,10 +93,10 @@ const Layout: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText 
                   primary={item.text} 
-                  primaryTypographyProps={{ 
+                  slotProps={{ primary: { sx: { 
                     fontWeight: isActive ? 800 : 500,
                     fontSize: '0.95rem'
-                  }} 
+                  }}}} 
                 />
                 {isActive && (
                   <motion.div layoutId="activeNav" style={{ width: 4, height: 20, borderRadius: 2, backgroundColor: theme.palette.primary.main }} />
