@@ -56,7 +56,7 @@ export default function App() {
         generationConfig: { temperature: 0.7 }
       };
 
-      const doFetch = async (retries = 3) => {
+      const doFetch = async (retries = 5) => {
         for (let i = 0; i < retries; i++) {
           try {
             const response = await fetch(GEMINI_API_URL, {
@@ -65,7 +65,7 @@ export default function App() {
               body: JSON.stringify(payload)
             });
             if (response.ok) return await response.json();
-            if (response.status === 429) await new Promise(r => setTimeout(r, 2000 * (i + 1))); // Exponential backoff
+            if (response.status === 429) await new Promise(r => setTimeout(r, 4000 * (i + 1))); // Exponential backoff
             else throw new Error(`API Error: ${response.status}`);
           } catch (e) {
             if (i === retries - 1) throw e;
