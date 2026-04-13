@@ -40,16 +40,15 @@ export interface ExtrasResult {
 }
 
 /**
- * API base URL: uses relative path for dev proxy,
- * or full URL from env var for production.
+ * API base URL: point to the IAPuta API
  */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/app/iaputa/api.php';
 
 /**
  * Translate / Summarise text via the Express backend.
  */
 export async function processText(payload: ProcessPayload): Promise<ProcessResult> {
-  const res = await fetch(`${API_BASE}/process`, {
+  const res = await fetch(`${API_BASE}?action=process`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -65,10 +64,10 @@ export async function processText(payload: ProcessPayload): Promise<ProcessResul
  * Run an "extras" tool (keywords, sentiment, entities, appbuilder).
  */
 export async function processExtras(payload: ExtrasPayload): Promise<ExtrasResult> {
-  const res = await fetch(`${API_BASE}/extras`, {
+  const res = await fetch(`${API_BASE}?action=process`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({...payload, modo: 'extras'}),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => null);

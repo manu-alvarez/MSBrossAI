@@ -56,24 +56,34 @@ export default function App() {
         generationConfig: { temperature: 0.7 }
       };
 
-      const response = await fetch(GEMINI_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const doFetch = async (retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            const response = await fetch(GEMINI_API_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (response.ok) return await response.json();
+            if (response.status === 429) await new Promise(r => setTimeout(r, 2000 * (i + 1))); // Exponential backoff
+            else throw new Error(`API Error: ${response.status}`);
+          } catch (e) {
+            if (i === retries - 1) throw e;
+          }
+        }
+      };
 
-      if (!response.ok) throw new Error("Fallo en la comunicación con GEMINI API");
-
-      const data = await response.json();
-      const botResponse = data.candidates[0].content.parts[0].text;
+      const data = await doFetch();
+      const botResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       
+      if (!botResponse) throw new Error("Respuesta nula");
       const cleanCode = extractHTML(botResponse);
       setGeneratedCode(cleanCode);
       
       setMessages([...newMessages, { role: 'assistant', content: "¡Aplicación generada con éxito! He desplegado el resultado interactivo en el Sandbox." }]);
     } catch (error) {
       console.error(error);
-      setMessages([...newMessages, { role: 'assistant', content: "⚠️ Error crítico generando la aplicación. Revisa la red o los límites de API." }]);
+      setMessages([...newMessages, { role: 'assistant', content: "⚠️ Error crítico generando la aplicación. Se superaron los límites de la API de Gemini (Rate Limit). Reinténtalo en unos segundos." }]);
     } finally {
       setIsLoading(false);
     }
@@ -99,10 +109,10 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: window.innerWidth < 768 ? 'column' : 'row', height: '100vh', width: '100vw', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflow: 'hidden' }}>
       
       {/* 🔴 CONTROL PANEL (Chat) */}
-      <div style={{ width: '400px', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', background: 'var(--bg-secondary)', zIndex: 10 }}>
+      <div style={{ width: window.innerWidth < 768 ? '100%' : '400px', height: window.innerWidth < 768 ? '50vh' : '100%', display: 'flex', flexDirection: 'column', borderRight: window.innerWidth < 768 ? 'none' : '1px solid var(--border)', borderBottom: window.innerWidth < 768 ? '1px solid var(--border)' : 'none', background: 'var(--bg-secondary)', zIndex: 10 }}>
         
         {/* Header */}
         <div style={{ padding: '20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
