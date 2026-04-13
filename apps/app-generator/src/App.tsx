@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Code2, MonitorPlay, Sparkles, Loader2, Copy, Check } from 'lucide-react';
 
-const GEMINI_API_KEY = "AIzaSyAXuH24H9_K617kyY1BP2e4uVKn7keTrVo"; // Inyectada directo como solicitó el usuario para Producción
+const GEMINI_API_KEY = (import.meta as any).env.VITE_GEMINI_API_KEY || "REPLACE_ME_SECRETS";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const SYSTEM_INSTRUCTION = `Eres MSBross APP Generator, un Ingeniero Frontend Experto.

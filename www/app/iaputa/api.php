@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // CONFIGURATION
 // ──────────────────────────────────────────────
 $VAULT_FILE = __DIR__ . '/msbross_vault.json';
-$GEMINI_API_KEY = "AIzaSyAXuH24H9_K617kyY1BP2e4uVKn7keTrVo"; // User provided directly for prod
+// Obtenemos la clave de una variable de entorno para no dejarla expuesta en el código (GitHub detecta y revoca las hardcodeadas).
+$GEMINI_API_KEY = getenv('GEMINI_API_KEY') ?: "REPLACE_ME_SECRETS";
 
 function get_vault() {
     global $VAULT_FILE;
