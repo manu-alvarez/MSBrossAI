@@ -1,0 +1,101 @@
+name: MSBrossAI CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  lint-and-build:
+    name: Lint & Build All Apps
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - { name: 'iaputa-os', path: 'apps/iaputa-os/frontend' }
+          - { name: 'nikolina', path: 'apps/livekit-nikolina/frontend' }
+          - { name: 'traductor', path: 'apps/traductor' }
+          - { name: 'taskflow-pro', path: 'apps/taskflow-pro' }
+          - { name: 'logisearch', path: 'apps/logisearch' }
+          - { name: 'edelweiss', path: 'apps/edelweiss' }
+          - { name: 'moko-tools', path: 'apps/moko-tools' }
+          - { name: 'combipro', path: 'apps/combipro' }
+          - { name: 'app-generator', path: 'apps/app-generator' }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.app.path }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.app.path }}
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        working-directory: ${{ matrix.app.path }}
+        run: npm run build
+
+      - name: Upload build artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.app.name }}
+          path: ${{ matrix.app.path }}/dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Production
+    needs: lint-and-build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: builds
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: msbros.ftp.tb-hosting.com
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./www/
+          server-dir: /www/
+          exclude: |
+            **/.DS_Store
+            **/node_modules/**
+            **/.git/**
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying 10 apps..."
+          PASS=0
+          FAIL=0
+          for slug in iaputa nikolina traductor taskflow dohler logisearch edelweiss moko combipro app-generator; do
+            HTTP=$(curl -s -o /dev/null -w "%{http_code}" "https://msbross.me/app/$slug/")
+            if [ "$HTTP" = "200" ]; then
+              echo "  ✅ $slug: HTTP $HTTP"
+              PASS=$((PASS + 1))
+            else
+              echo "  ❌ $slug: HTTP $HTTP"
+              FAIL=$((FAIL + 1))
+            fi
+          done
+          echo ""
+          echo "Result: $PASS PASS / $FAIL FAIL"
+          if [ "$FAIL" -gt 0 ]; then exit 1; fi
