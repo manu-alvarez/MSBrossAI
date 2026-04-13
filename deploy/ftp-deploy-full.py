@@ -76,6 +76,12 @@ if __name__ == "__main__":
             with open(landing, 'rb') as f:
                 ftp.storbinary('STOR index.html', f)
             print("✅ Landing page uploaded")
+
+        # Upload assets directory
+        assets_dir = os.path.join(local_path, "assets")
+        if os.path.isdir(assets_dir):
+            print("\n📦 Deploying assets...")
+            upload_dir(ftp, assets_dir, "/www/assets")
         
         # Upload each app directory
         app_dir = os.path.join(local_path, "app")

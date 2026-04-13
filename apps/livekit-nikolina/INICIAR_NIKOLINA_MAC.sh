@@ -12,6 +12,11 @@ if [ ! -d "server" ] || [ ! -d "agent" ]; then
     exit 1
 fi
 
+if [ -f "$BASE_DIR/.env.local" ]; then
+    echo "📄 Cargando variables locales desde .env.local"
+    export $(grep -v '^#' "$BASE_DIR/.env.local" | xargs)
+fi
+
 echo "[1/2] Levantando el Motor Backend (FastAPI)..."
 cd "$BASE_DIR/server"
 if [ ! -d "../venv" ]; then
