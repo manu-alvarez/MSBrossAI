@@ -22,12 +22,12 @@ if [ ! -f ".env.local" ]; then
 LIVEKIT_API_KEY=devkey
 LIVEKIT_API_SECRET=secret
 LIVEKIT_URL=ws://127.0.0.1:7880
-GOOGLE_API_KEY=AIzaSyAcxj8QPinDydZ_-sny6AWB-3vSKXI1TKk
+GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY_HERE
 PORT=8001
 CORS_ORIGINS="https://msbross.me,http://127.0.0.1:5173,http://127.0.0.1:8001"
-JWT_SECRET=super-secret-ias-auth-key
+JWT_SECRET=$(openssl rand -hex 32)
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=password
+ADMIN_PASSWORD=$(openssl rand -base64 16)
 EOF
     echo "✅ .env.local inyectado con tus claves detectadas."
 fi

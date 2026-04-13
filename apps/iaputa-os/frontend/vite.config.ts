@@ -14,11 +14,11 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:8006',
         changeOrigin: true
       },
       '/status': {
-        target: 'http://localhost:8000/health',
+        target: 'http://localhost:8006/health',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/status/, '')
       }

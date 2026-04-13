@@ -581,30 +581,51 @@ async def get_agent_status(current_user: str = Depends(get_current_user)):
     except (ValueError, TypeError):
         uptime_seconds = 0
 
-    # Real System Metrics
+    # Real System Metrics (cross-platform: macOS + Linux)
+    import platform
+    is_mac = platform.system() == "Darwin"
+    
     cpu_usage = 0.0
     try:
-        cpu_usage = float(os.popen("top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'").read().strip() or 0)
+        if is_mac:
+            cpu_raw = os.popen("ps -A -o %cpu | awk '{s+=$1} END {print s}'").read().strip()
+            cpu_usage = min(float(cpu_raw or 0), 100.0)
+        else:
+            cpu_usage = float(os.popen("top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'").read().strip() or 0)
     except: pass
     
     mem_total, mem_used = 0.0, 0.0
     try:
-        mem_info = os.popen("free -g | grep Mem").read().split()
-        if len(mem_info) >= 3:
-            mem_total = float(mem_info[1])
-            mem_used = float(mem_info[2])
+        if is_mac:
+            import subprocess as _sp
+            page_size = int(_sp.check_output(["sysctl", "-n", "hw.pagesize"]).strip())
+            mem_total_bytes = int(_sp.check_output(["sysctl", "-n", "hw.memsize"]).strip())
+            vm_stat = _sp.check_output(["vm_stat"]).decode()
+            active = int([l for l in vm_stat.split('\n') if 'Pages active' in l][0].split(':')[1].strip().rstrip('.'))
+            wired = int([l for l in vm_stat.split('\n') if 'Pages wired' in l][0].split(':')[1].strip().rstrip('.'))
+            mem_total = round(mem_total_bytes / (1024**3), 1)
+            mem_used = round((active + wired) * page_size / (1024**3), 1)
+        else:
+            mem_info = os.popen("free -g | grep Mem").read().split()
+            if len(mem_info) >= 3:
+                mem_total = float(mem_info[1])
+                mem_used = float(mem_info[2])
     except: pass
 
     active_rooms = 0
     try:
-        # Count connections to port 7880 (LiveKit) as a proxy for active rooms/sessions
-        active_rooms = int(os.popen("netstat -an | grep :7880 | grep ESTABLISHED | wc -l").read().strip() or 0)
+        if is_mac:
+            active_rooms = int(os.popen("lsof -i :7880 2>/dev/null | grep ESTABLISHED | wc -l").read().strip() or 0)
+        else:
+            active_rooms = int(os.popen("netstat -an | grep :7880 | grep ESTABLISHED | wc -l").read().strip() or 0)
     except: pass
 
     api_latency = 0
     try:
-        # Ping localhost to get a baseline latency
-        api_latency = int(float(os.popen("ping -c 1 localhost | grep time= | sed 's/.*time=\\([0-9.]*\\) ms/\\1/'").read().strip() or 0))
+        import time as _t
+        _start = _t.monotonic()
+        urlopen("http://localhost:8001/api/health", timeout=2)
+        api_latency = int((_t.monotonic() - _start) * 1000)
     except: pass
 
     config = db.get_llm_config()

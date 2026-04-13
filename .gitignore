@@ -1,26 +1,50 @@
-.env.local
+# Environment files (NEVER version these)
 .env
+.env.local
+.env.production
+.env.*.local
+
+# Databases
 *.db
+
+# Dependencies
 node_modules/
+
+# Build outputs
 dist/
 build/
+
+# Python
 venv/
 __pycache__/
 *.pyc
+*.pyo
+
+# macOS
 .DS_Store
+
+# Logs
 *.log
-temp_audio/
-temp_vision/
-scripts/
-livekit-server
 logs/
-package-lock.json
+
+# Archives
 *.tar.gz
 *.zip
-*.log
-node_modules/
-dist/
-venv/
+
+# Binary artifacts
+livekit-server
+
+# IDE
+.vscode/
+.idea/
+
+# PM2
 .pm2/
 pm2/
-EOF/
+
+# TS build cache
+tsconfig.tsbuildinfo
+
+# Temp directories
+temp_audio/
+temp_vision/

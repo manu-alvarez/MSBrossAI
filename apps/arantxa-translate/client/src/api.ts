@@ -39,13 +39,17 @@ export interface ExtrasResult {
   provider?: string;
 }
 
-const API_BASE = '/api';
+/**
+ * API base URL: uses relative path for dev proxy,
+ * or full URL from env var for production.
+ */
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /**
- * Translate / Summarise text via the serverless PHP gateway.
+ * Translate / Summarise text via the Express backend.
  */
 export async function processText(payload: ProcessPayload): Promise<ProcessResult> {
-  const res = await fetch(`${API_BASE}?action=process`, {
+  const res = await fetch(`${API_BASE}/process`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -61,7 +65,7 @@ export async function processText(payload: ProcessPayload): Promise<ProcessResul
  * Run an "extras" tool (keywords, sentiment, entities, appbuilder).
  */
 export async function processExtras(payload: ExtrasPayload): Promise<ExtrasResult> {
-  const res = await fetch(`${API_BASE}?action=extras`, {
+  const res = await fetch(`${API_BASE}/extras`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -75,12 +79,11 @@ export async function processExtras(payload: ExtrasPayload): Promise<ExtrasResul
 
 /**
  * Extract text from an uploaded document (PDF, DOCX, TXT).
- * Uses multipart/form-data — the PHP gateway handles this serverlessly.
  */
 export async function extractText(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('file', file);
-  const res = await fetch(`${API_BASE}?action=extract`, {
+  const res = await fetch(`${API_BASE}/extract-text`, {
     method: 'POST',
     body: formData,
   });
