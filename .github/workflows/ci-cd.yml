@@ -40,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ matrix.app.path }}
-        run: npm ci --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Build
         working-directory: ${{ matrix.app.path }}
