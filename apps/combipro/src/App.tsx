@@ -248,9 +248,9 @@ export default function App() {
       <header style={{ padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #00ff88, #00d4ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>⚽</div>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #f97316, #fb923c)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>⚽</div>
             <div>
-              <h1 style={{ fontFamily: 'Space Grotesk, Inter, sans-serif', fontSize: '1.5rem', fontWeight: 700, background: 'linear-gradient(135deg, #00ff88, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CombiPro</h1>
+              <h1 style={{ fontFamily: 'Space Grotesk, Inter, sans-serif', fontSize: '1.5rem', fontWeight: 700, background: 'linear-gradient(135deg, #f97316, #fb923c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CombiPro</h1>
               <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
                 {apiLoading ? '⏳ Cargando cuotas...' : `📊 ${matches.length} partidos disponibles`}
               </p>
@@ -272,7 +272,7 @@ export default function App() {
                 padding: '0.5rem 1rem',
                 background: selectedLeagues.includes(league.key) ? 'rgba(0,255,136,0.15)' : 'rgba(255,255,255,0.03)',
                 border: `1px solid ${selectedLeagues.includes(league.key) ? 'rgba(0,255,136,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                borderRadius: 8, color: selectedLeagues.includes(league.key) ? '#00ff88' : 'rgba(255,255,255,0.5)',
+                borderRadius: 8, color: selectedLeagues.includes(league.key) ? '#f97316' : 'rgba(255,255,255,0.5)',
                 cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
               }}>
                 {league.name}
@@ -291,7 +291,7 @@ export default function App() {
                   flex: 1, padding: '0.75rem',
                   background: risk === key ? 'rgba(0,255,136,0.15)' : 'rgba(255,255,255,0.03)',
                   border: `1px solid ${risk === key ? 'rgba(0,255,136,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  borderRadius: 10, color: risk === key ? '#00ff88' : 'rgba(255,255,255,0.5)',
+                  borderRadius: 10, color: risk === key ? '#f97316' : 'rgba(255,255,255,0.5)',
                   cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
                 }}>{label}</button>
               ))}
@@ -308,7 +308,7 @@ export default function App() {
 
         {/* Generate Button */}
         <button onClick={generate} style={{
-          width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #00ff88, #00d4ff)', border: 'none',
+          width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #f97316, #fb923c)', border: 'none',
           borderRadius: 12, color: '#000', fontSize: '1.1rem', fontWeight: 800, cursor: 'pointer', marginBottom: '1.5rem',
         }}>⚡ GENERAR COMBINADAS</button>
 
@@ -320,31 +320,31 @@ export default function App() {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>Combinada #{i + 1} · {combo.picks.length} picks</span>
-              <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', background: combo.riskLevel === 'safe' ? 'rgba(0,255,136,0.15)' : combo.riskLevel === 'balanced' ? 'rgba(255,190,11,0.15)' : 'rgba(255,68,68,0.15)', borderRadius: 6, color: combo.riskLevel === 'safe' ? '#00ff88' : combo.riskLevel === 'balanced' ? '#ffbe0b' : '#ff4444', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', background: combo.riskLevel === 'safe' ? 'rgba(0,255,136,0.15)' : combo.riskLevel === 'balanced' ? 'rgba(255,190,11,0.15)' : 'rgba(255,68,68,0.15)', borderRadius: 6, color: combo.riskLevel === 'safe' ? '#f97316' : combo.riskLevel === 'balanced' ? '#fdba74' : '#ff4444', fontWeight: 600 }}>
                 {combo.riskLevel === 'safe' ? '🟢 Seguro' : combo.riskLevel === 'balanced' ? '🟡 Equilibrado' : '🔴 Turbo'}
               </span>
             </div>
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(0,255,136,0.05)', borderRadius: 10, textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>CUOTA</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#00ff88' }}>{combo.totalOdds}</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f97316' }}>{combo.totalOdds}</div>
               </div>
               <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(0,212,255,0.05)', borderRadius: 10, textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>PROBABILIDAD</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#00d4ff' }}>{combo.totalProbability}%</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fb923c' }}>{combo.totalProbability}%</div>
               </div>
               <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(255,190,11,0.05)', borderRadius: 10, textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>GANANCIA</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffbe0b' }}>{combo.potentialWin}€</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fdba74' }}>{combo.potentialWin}€</div>
               </div>
             </div>
             {combo.picks.map((pick, j) => (
               <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: 8, marginBottom: '0.5rem' }}>
                 <div>
                   <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{pick.match}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{pick.type}: <span style={{ color: '#00ff88', fontWeight: 600 }}>{pick.selection}</span></div>
+                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{pick.type}: <span style={{ color: '#f97316', fontWeight: 600 }}>{pick.selection}</span></div>
                 </div>
-                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#00d4ff' }}>{pick.odds}</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fb923c' }}>{pick.odds}</div>
               </div>
             ))}
           </div>
@@ -364,9 +364,9 @@ export default function App() {
               <span style={{ fontWeight: 600 }}>{match.awayTeam}</span>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,255,136,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#00ff88', fontWeight: 600 }}>1: {match.odds.home}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255,190,11,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#ffbe0b', fontWeight: 600 }}>X: {match.odds.draw}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,212,255,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#00d4ff', fontWeight: 600 }}>2: {match.odds.away}</span>
+              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,255,136,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#f97316', fontWeight: 600 }}>1: {match.odds.home}</span>
+              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255,190,11,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#fdba74', fontWeight: 600 }}>X: {match.odds.draw}</span>
+              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,212,255,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#fb923c', fontWeight: 600 }}>2: {match.odds.away}</span>
               <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255,68,68,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#ff4444', fontWeight: 600 }}>O2.5: {match.odds.over25}</span>
               <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(139,92,246,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#8b5cf6', fontWeight: 600 }}>BTTS: {match.odds.btts}</span>
             </div>

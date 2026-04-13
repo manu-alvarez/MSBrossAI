@@ -7,8 +7,8 @@ const theme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#00E5FF',     // Cyan más brillante y luminoso
-            light: '#99F6FF',
+            main: '#fca5a5',     // Cyan más brillante y luminoso
+            light: '#fecaca',
             dark: '#00B8D4',
             contrastText: '#000000', // Texto oscuro sobre botones cyan para max legibilidad
         },
@@ -213,10 +213,10 @@ const theme = createTheme({
                     fontSize: '0.9rem',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&.MuiButton-containedPrimary': {
-                        background: 'linear-gradient(135deg, #00E5FF, #00B8D4)',
+                        background: 'linear-gradient(135deg, #fca5a5, #00B8D4)',
                         color: '#000000',
                         '&:hover': {
-                            background: 'linear-gradient(135deg, #99F6FF, #00E5FF)',
+                            background: 'linear-gradient(135deg, #fecaca, #fca5a5)',
                             transform: 'translateY(-2px)',
                             boxShadow: '0 10px 30px rgba(0, 229, 255, 0.25)',
                         },
@@ -225,7 +225,7 @@ const theme = createTheme({
                         borderWidth: 2,
                         '&:hover': {
                             borderWidth: 2,
-                            background: alpha('#00B4D8', 0.08),
+                            background: alpha('#ef4444', 0.08),
                         },
                     },
                 },
@@ -248,7 +248,7 @@ const theme = createTheme({
                             borderColor: 'rgba(0, 180, 216, 0.4)',
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#00B4D8',
+                            borderColor: '#ef4444',
                             boxShadow: '0 0 0 4px rgba(0, 180, 216, 0.15)',
                         },
                     },
@@ -262,9 +262,9 @@ const theme = createTheme({
                     borderRadius: 20,
                 },
                 colorPrimary: {
-                    background: alpha('#00B4D8', 0.15),
-                    color: '#48CAE4',
-                    border: `1px solid ${alpha('#00B4D8', 0.3)}`,
+                    background: alpha('#ef4444', 0.15),
+                    color: '#f87171',
+                    border: `1px solid ${alpha('#ef4444', 0.3)}`,
                 },
                 colorSuccess: {
                     background: alpha('#10B981', 0.15),
@@ -304,7 +304,7 @@ const theme = createTheme({
                 },
                 bar: {
                     borderRadius: 3,
-                    background: 'linear-gradient(90deg, #00B4D8, #48CAE4)',
+                    background: 'linear-gradient(90deg, #ef4444, #f87171)',
                 },
             },
         },
@@ -330,7 +330,7 @@ const theme = createTheme({
                 root: {
                     color: 'rgba(255, 255, 255, 0.15)',
                     '&.Mui-active': {
-                        color: '#00B4D8',
+                        color: '#ef4444',
                     },
                     '&.Mui-completed': {
                         color: '#10B981',
@@ -366,7 +366,7 @@ const theme = createTheme({
                 indicator: {
                     height: 3,
                     borderRadius: '3px 3px 0 0',
-                    background: 'linear-gradient(90deg, #00B4D8, #48CAE4)',
+                    background: 'linear-gradient(90deg, #ef4444, #f87171)',
                 },
             },
         },
@@ -385,7 +385,7 @@ const theme = createTheme({
                     borderRadius: 10,
                     transition: 'all 0.2s ease',
                     '&:hover': {
-                        background: alpha('#00B4D8', 0.15),
+                        background: alpha('#ef4444', 0.15),
                     },
                 },
             },

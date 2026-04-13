@@ -37,7 +37,7 @@ export function exportRfqToPdf({ content, origin, destination, mode, date }: Rfq
     doc.setFillColor(0, 21, 46) // Navy #00152E
     doc.rect(0, 0, pageWidth, 35, 'F')
 
-    doc.setTextColor(0, 180, 216) // Cyan #00B4D8
+    doc.setTextColor(0, 180, 216) // Cyan #ef4444
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
     doc.text('LogiSearch AI', margin, 15)

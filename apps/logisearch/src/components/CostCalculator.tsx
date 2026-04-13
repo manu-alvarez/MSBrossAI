@@ -320,8 +320,8 @@ export default function CostCalculator({ defaultMode = 'mar' }: CostCalculatorPr
                                         p: 2,
                                         borderRadius: 2,
                                         border: '2px solid',
-                                        borderColor: alpha('#00E5FF', 0.5),
-                                        bgcolor: alpha('#00E5FF', 0.08),
+                                        borderColor: alpha('#fca5a5', 0.5),
+                                        bgcolor: alpha('#fca5a5', 0.08),
                                         textAlign: 'center',
                                     }}
                                 >
@@ -331,7 +331,7 @@ export default function CostCalculator({ defaultMode = 'mar' }: CostCalculatorPr
                                     <Typography
                                         variant="h4"
                                         sx={{
-                                            background: 'linear-gradient(135deg, #00E5FF, #99F6FF)',
+                                            background: 'linear-gradient(135deg, #fca5a5, #fecaca)',
                                             WebkitBackgroundClip: 'text',
                                             WebkitTextFillColor: 'transparent',
                                             fontWeight: 800,
@@ -369,7 +369,7 @@ export default function CostCalculator({ defaultMode = 'mar' }: CostCalculatorPr
                                                             variant="text"
                                                             href={carrier.website}
                                                             target="_blank"
-                                                            sx={{ justifyContent: 'flex-start', p: 0, minWidth: 0, fontSize: '0.75rem', color: '#00E5FF' }}
+                                                            sx={{ justifyContent: 'flex-start', p: 0, minWidth: 0, fontSize: '0.75rem', color: '#fca5a5' }}
                                                         >
                                                             {carrier.website.replace('https://www.', '')}
                                                         </Button>

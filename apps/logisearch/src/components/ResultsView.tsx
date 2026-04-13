@@ -67,7 +67,7 @@ const DOCUMENTS = [
 ]
 
 const MODE_CONFIG: Record<string, { icon: typeof ShipIcon; label: string; color: string }> = {
-  mar: { icon: ShipIcon, label: 'Marítimo', color: '#00B4D8' },
+  mar: { icon: ShipIcon, label: 'Marítimo', color: '#ef4444' },
   aire: { icon: PlaneIcon, label: 'Aéreo', color: '#A78BFA' },
   tierra: { icon: TruckIcon, label: 'Terrestre', color: '#34D399' },
 }
@@ -133,7 +133,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
           '& li': { mb: 1, '&::marker': { color: isExpert ? 'secondary.main' : '#34D399' } },
           '& strong': { color: 'white', fontWeight: 700 },
           '& code': { bgcolor: 'rgba(255,255,255,0.1)', px: 1, py: 0.2, borderRadius: 1, fontFamily: 'monospace', fontSize: '0.9em' },
-          '& a': { color: '#00E5FF', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
+          '& a': { color: '#fca5a5', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
         }}>
           <ReactMarkdown>{expertData}</ReactMarkdown>
         </Box>
@@ -215,7 +215,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
               sx={{
                 p: 2.5,
                 height: '100%',
-                ...(item.highlight && { borderColor: alpha('#00B4D8', 0.3) }),
+                ...(item.highlight && { borderColor: alpha('#ef4444', 0.3) }),
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
@@ -289,7 +289,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
                     <Typography
                       variant="h5"
                       sx={{
-                        background: 'linear-gradient(135deg, #00B4D8, #48CAE4)',
+                        background: 'linear-gradient(135deg, #ef4444, #f87171)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         fontWeight: 700,
@@ -496,9 +496,9 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
                       p: 2.5,
                       bgcolor: 'rgba(255,255,255,0.04)',
                       border: '1px solid',
-                      borderColor: idx === 0 ? alpha('#00B4D8', 0.3) : 'divider',
+                      borderColor: idx === 0 ? alpha('#ef4444', 0.3) : 'divider',
                       '&:hover': {
-                        borderColor: alpha('#00B4D8', 0.5),
+                        borderColor: alpha('#ef4444', 0.5),
                         transform: 'translateY(-2px)',
                         boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
                       },

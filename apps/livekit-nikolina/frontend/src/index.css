@@ -1,7 +1,7 @@
 :root {
   --bg: #0a0a12;
-  --gold: #d4af37;
-  --gold-light: #f0d060;
+  --gold: #06b6d4;
+  --gold-light: #22d3ee;
   --gold-dark: #a08020;
   --glass: rgba(20, 20, 35, 0.8);
   --glass-border: rgba(212, 175, 55, 0.2);
@@ -45,4 +45,4 @@ body {
 
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #d4af37, #a08020); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #06b6d4, #a08020); border-radius: 4px; }
