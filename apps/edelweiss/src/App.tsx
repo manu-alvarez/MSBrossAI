@@ -288,7 +288,9 @@ const ShapeFinder: React.FC = () => {
             }}
             onMouseEnter={e => (e.target as HTMLElement).style.transform = 'scale(1.1)'}
             onMouseLeave={e => (e.target as HTMLElement).style.transform = 'scale(1)'}
-          />
+          >
+            {shape}
+          </button>
         ))}
       </div>
     </div>
@@ -352,33 +354,39 @@ const HighContrast: React.FC = () => {
 
 // ---- GAME: Eye Patch Timer ----
 const EyePatchTimer: React.FC = () => {
-  const [minutes, setMinutes] = useState(15);
-  const [seconds, setSeconds] = useState(0);
+  const [selectedMinutes, setSelectedMinutes] = useState(15);
+  const [totalSeconds, setTotalSeconds] = useState(15 * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [totalSeconds, setTotalSeconds] = useState(0);
   const [done, setDone] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (!isRunning) return;
-    if (totalSeconds <= 0) {
-      setIsRunning(false);
-      setDone(true);
+    if (!isRunning) {
+      if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
-    const timer = setInterval(() => {
-      setTotalSeconds(s => s - 1);
+    timerRef.current = setInterval(() => {
+      setTotalSeconds(prev => {
+        if (prev <= 1) {
+          setIsRunning(false);
+          setDone(true);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
-    return () => clearInterval(timer);
-  }, [isRunning, totalSeconds]);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [isRunning]);
 
-  useEffect(() => {
-    setTotalSeconds(minutes * 60);
-  }, [minutes]);
+  const displayMinutes = Math.floor(totalSeconds / 60);
+  const displaySeconds = totalSeconds % 60;
 
-  useEffect(() => {
-    setMinutes(Math.floor(totalSeconds / 60));
-    setSeconds(totalSeconds % 60);
-  }, [totalSeconds]);
+  const selectPreset = (m: number) => {
+    setSelectedMinutes(m);
+    setTotalSeconds(m * 60);
+    setIsRunning(false);
+    setDone(false);
+  };
 
   const startTimer = () => {
     if (totalSeconds > 0) setIsRunning(true);
@@ -387,7 +395,7 @@ const EyePatchTimer: React.FC = () => {
   const resetTimer = () => {
     setIsRunning(false);
     setDone(false);
-    setTotalSeconds(minutes * 60);
+    setTotalSeconds(selectedMinutes * 60);
   };
 
   if (done) {
@@ -433,7 +441,7 @@ const EyePatchTimer: React.FC = () => {
         marginBottom: '1rem',
         animation: isRunning ? 'pulse 1s ease infinite' : 'none',
       }}>
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        {String(displayMinutes).padStart(2, '0')}:{String(displaySeconds).padStart(2, '0')}
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
         <button onClick={startTimer} disabled={isRunning} style={{
@@ -463,14 +471,14 @@ const EyePatchTimer: React.FC = () => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
         {[5, 10, 15, 20, 30].map(m => (
-          <button key={m} onClick={() => { setMinutes(m); setTotalSeconds(m * 60); setIsRunning(false); setDone(false); }} style={{
+          <button key={m} onClick={() => selectPreset(m)} style={{
             padding: '0.5rem 1rem',
             fontSize: '1rem',
             fontWeight: 700,
-            background: minutes === m ? '#34D399' : 'white',
+            background: selectedMinutes === m ? '#34D399' : 'white',
             border: '2px solid #34D399',
             borderRadius: '10px',
-            color: minutes === m ? 'white' : '#34D399',
+            color: selectedMinutes === m ? 'white' : '#34D399',
             cursor: 'pointer',
           }}>
             {m} min
