@@ -1,21 +1,21 @@
 :root {
-  --pink: #FF6B9D;
-  --purple: #C084FC;
-  --blue: #60A5FA;
-  --green: #34D399;
-  --yellow: #FBBF24;
-  --orange: #FB923C;
-  --red: #F87171;
-  --bg: #0A0A0A;
-  --card: #1A1A1A;
-  --text: #F3F4F6;
+  --pink: #e0829e;
+  --purple: #a78bda;
+  --blue: #7eaed4;
+  --green: #5fbf9e;
+  --yellow: #d4a836;
+  --orange: #d49060;
+  --red: #d48080;
+  --bg: #0e0e12;
+  --card: #1c1c22;
+  --text: #d4d4dc;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, #0A0A0F 0%, #171722 50%, #0F1A15 100%);
+  background: linear-gradient(135deg, #0c0c10 0%, #14141c 50%, #0e1612 100%);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
@@ -61,5 +61,5 @@ body {
 .animate-pop { animation: pop 0.3s ease forwards; }
 
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #FFF0F5; }
+::-webkit-scrollbar-track { background: #1a1a20; }
 ::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 10px; }

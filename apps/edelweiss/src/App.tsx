@@ -83,7 +83,7 @@ const FollowTheStar: React.FC = () => {
             position: 'absolute',
             width: '3px',
             height: '3px',
-            background: 'white',
+            background: 'rgba(255,255,255,0.06)',
             borderRadius: '50%',
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -124,12 +124,12 @@ const FollowTheStar: React.FC = () => {
 // ---- GAME: Color Match ----
 const ColorMatch: React.FC = () => {
   const colors = [
-    { name: 'Rojo', emoji: '🔴', hex: '#F87171' },
-    { name: 'Azul', emoji: '🔵', hex: '#60A5FA' },
-    { name: 'Verde', emoji: '🟢', hex: '#34D399' },
-    { name: 'Amarillo', emoji: '🟡', hex: '#FBBF24' },
-    { name: 'Morado', emoji: '🟣', hex: '#C084FC' },
-    { name: 'Naranja', emoji: '🟠', hex: '#FB923C' },
+    { name: 'Rojo', emoji: '🔴', hex: '#c06060' },
+    { name: 'Azul', emoji: '🔵', hex: '#5e8eb8' },
+    { name: 'Verde', emoji: '🟢', hex: '#4da88a' },
+    { name: 'Amarillo', emoji: '🟡', hex: '#b8982e' },
+    { name: 'Morado', emoji: '🟣', hex: '#9876c0' },
+    { name: 'Naranja', emoji: '🟠', hex: '#c08050' },
   ];
 
   const [targetColor, setTargetColor] = useState(colors[0]);
@@ -156,7 +156,7 @@ const ColorMatch: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#FB923C', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c09060', marginBottom: '0.5rem' }}>
         🎨 ¡Encuentra el Color!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -191,7 +191,7 @@ const ColorMatch: React.FC = () => {
               width: '100%',
               aspectRatio: '1',
               borderRadius: '20px',
-              border: '4px solid rgba(0,0,0,0.1)',
+              border: '4px solid rgba(255,255,255,0.08)',
               background: color.hex,
               cursor: 'pointer',
               transition: 'all 0.2s',
@@ -277,8 +277,8 @@ const ShapeFinder: React.FC = () => {
               width: '100%',
               aspectRatio: '1',
               borderRadius: '15px',
-              border: '3px solid rgba(0,0,0,0.1)',
-              background: 'white',
+              border: '3px solid rgba(255,255,255,0.08)',
+              background: '#2a2a30',
               cursor: 'pointer',
               fontSize: '2.5rem',
               transition: 'all 0.2s',
@@ -301,11 +301,11 @@ const ShapeFinder: React.FC = () => {
 const HighContrast: React.FC = () => {
   const [pattern, setPattern] = useState(0);
   const patterns = [
-    { bg: '#000', fg: '#FFF', emoji: '⚫⚪⚫⚪' },
-    { bg: '#FFF', fg: '#000', emoji: '⬛⬜⬛⬜' },
-    { bg: '#000', fg: '#FF0', emoji: '🟡⚫🟡⚫' },
-    { bg: '#000', fg: '#F00', emoji: '🔴⚫🔴⚫' },
-    { bg: '#FFF', fg: '#00F', emoji: '🔵⬜🔵⬜' },
+    { bg: '#1a1a1a', fg: '#c0c0c0', emoji: '⚫⚪⚫⚪' },
+    { bg: '#c0c0c0', fg: '#1a1a1a', emoji: '⬛⬜⬛⬜' },
+    { bg: '#1a1a1a', fg: '#b8982e', emoji: '🟡⚫🟡⚫' },
+    { bg: '#1a1a1a', fg: '#c06060', emoji: '🔴⚫🔴⚫' },
+    { bg: '#c0c0c0', fg: '#4060a0', emoji: '🔵⬜🔵⬜' },
   ];
 
   useEffect(() => {
@@ -317,7 +317,7 @@ const HighContrast: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#F87171', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c08080', marginBottom: '0.5rem' }}>
         👁️ Alto Contraste
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -413,10 +413,10 @@ const EyePatchTimer: React.FC = () => {
           padding: '1rem 2rem',
           fontSize: '1.2rem',
           fontWeight: 700,
-          background: 'linear-gradient(135deg, #34D399, #60A5FA)',
+          background: 'linear-gradient(135deg, #4da88a, #5e8eb8)',
           border: 'none',
           borderRadius: '15px',
-          color: 'white',
+          color: '#e8e8e0',
           cursor: 'pointer',
         }}>
           🔄 Jugar otra vez
@@ -437,7 +437,7 @@ const EyePatchTimer: React.FC = () => {
         fontSize: '5rem',
         fontWeight: 900,
         fontFamily: 'Fredoka One',
-        color: isRunning ? '#34D399' : '#666',
+        color: isRunning ? '#5fbf9e' : '#888',
         marginBottom: '1rem',
         animation: isRunning ? 'pulse 1s ease infinite' : 'none',
       }}>
@@ -448,10 +448,10 @@ const EyePatchTimer: React.FC = () => {
           padding: '1rem 2rem',
           fontSize: '1.2rem',
           fontWeight: 700,
-          background: isRunning ? '#ccc' : 'linear-gradient(135deg, #34D399, #60A5FA)',
+          background: isRunning ? '#444' : 'linear-gradient(135deg, #4da88a, #5e8eb8)',
           border: 'none',
           borderRadius: '15px',
-          color: 'white',
+          color: '#e8e8e0',
           cursor: isRunning ? 'not-allowed' : 'pointer',
         }}>
           ▶️ Empezar
@@ -460,10 +460,10 @@ const EyePatchTimer: React.FC = () => {
           padding: '1rem 2rem',
           fontSize: '1.2rem',
           fontWeight: 700,
-          background: 'linear-gradient(135deg, #F87171, #FB923C)',
+          background: 'linear-gradient(135deg, #c08080, #c09060)',
           border: 'none',
           borderRadius: '15px',
-          color: 'white',
+          color: '#e8e8e0',
           cursor: 'pointer',
         }}>
           🔄 Reiniciar
@@ -475,10 +475,10 @@ const EyePatchTimer: React.FC = () => {
             padding: '0.5rem 1rem',
             fontSize: '1rem',
             fontWeight: 700,
-            background: selectedMinutes === m ? '#34D399' : 'white',
-            border: '2px solid #34D399',
+            background: selectedMinutes === m ? '#4da88a' : '#2a2a30',
+            border: '2px solid #4da88a',
             borderRadius: '10px',
-            color: selectedMinutes === m ? 'white' : '#34D399',
+            color: selectedMinutes === m ? '#e8e8e0' : '#5fbf9e',
             cursor: 'pointer',
           }}>
             {m} min
@@ -521,7 +521,7 @@ const FindDifference: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#FBBF24', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c0a040', marginBottom: '0.5rem' }}>
         🔎 ¡Encuentra el Diferente!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -551,8 +551,8 @@ const FindDifference: React.FC = () => {
               width: '100%',
               aspectRatio: '1',
               borderRadius: '15px',
-              border: '3px solid rgba(0,0,0,0.1)',
-              background: found && emoji === state.diff ? '#34D399' : 'white',
+              border: '3px solid rgba(255,255,255,0.08)',
+              background: found && emoji === state.diff ? '#4da88a' : '#2a2a30',
               cursor: 'pointer',
               fontSize: '2.5rem',
               transition: 'all 0.2s',
@@ -574,11 +574,11 @@ const FindDifference: React.FC = () => {
 // ---- MAIN APP ----
 const games: Game[] = [
   { id: 'star', name: 'Sigue la Estrella', icon: '⭐', color: '#C084FC', description: '¡Toca la estrella!', component: FollowTheStar },
-  { id: 'color', name: 'Encuentra el Color', icon: '🎨', color: '#FB923C', description: '¿Cuál es el color?', component: ColorMatch },
-  { id: 'shape', name: 'Encuentra la Forma', icon: '🔍', color: '#60A5FA', description: '¡Busca la forma!', component: ShapeFinder },
-  { id: 'contrast', name: 'Alto Contraste', icon: '👁️', color: '#F87171', description: 'Observa los patrones', component: HighContrast },
-  { id: 'timer', name: 'Tiempo del Parche', icon: '⏱️', color: '#34D399', description: '¡Cuenta regresiva!', component: EyePatchTimer },
-  { id: 'diff', name: 'Encuentra el Diferente', icon: '🔎', color: '#FBBF24', description: '¿Cuál es diferente?', component: FindDifference },
+  { id: 'color', name: 'Encuentra el Color', icon: '🎨', color: '#c09060', description: '¿Cuál es el color?', component: ColorMatch },
+  { id: 'shape', name: 'Encuentra la Forma', icon: '🔍', color: '#7eaed4', description: '¡Busca la forma!', component: ShapeFinder },
+  { id: 'contrast', name: 'Alto Contraste', icon: '👁️', color: '#c08080', description: 'Observa los patrones', component: HighContrast },
+  { id: 'timer', name: 'Tiempo del Parche', icon: '⏱️', color: '#5fbf9e', description: '¡Cuenta regresiva!', component: EyePatchTimer },
+  { id: 'diff', name: 'Encuentra el Diferente', icon: '🔎', color: '#c0a040', description: '¿Cuál es diferente?', component: FindDifference },
 ];
 
 export default function App() {
