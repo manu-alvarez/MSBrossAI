@@ -1,7 +1,0 @@
-services:
-  combipro:
-    build: .
-    ports: ["5178:80"]
-    networks: [msbrossai-network]
-networks:
-  msbrossai-network: { driver: bridge }

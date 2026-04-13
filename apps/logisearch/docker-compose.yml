@@ -1,8 +1,0 @@
-services:
-  logisearch:
-    build: .
-    ports: ["5175:80"]
-    env_file: ../../.env.local
-    networks: [msbrossai-network]
-networks:
-  msbrossai-network: { driver: bridge }
