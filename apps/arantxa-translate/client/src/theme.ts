@@ -15,8 +15,8 @@ export const getAppTheme = () =>
     },
     palette: {
       mode: 'dark',
-      primary: { main: '#00f2fe' }, // Hologram Cyan
-      secondary: { main: '#4f46e5' }, // Neural Indigo
+      primary: { main: '#6ee7b7' }, // Hologram Cyan
+      secondary: { main: '#10b981' }, // Neural Indigo
       background: {
         default: '#050508',
         paper: 'transparent', // Using CSS glass panels

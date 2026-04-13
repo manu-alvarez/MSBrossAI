@@ -94,9 +94,9 @@ export default function App() {
       <header style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(212,175,55,0.1)', background: 'rgba(0,0,0,0.3)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #d4af37, #f0d060)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>🎙️</div>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #06b6d4, #22d3ee)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>🎙️</div>
             <div>
-              <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.5rem', fontWeight: 700, color: '#d4af37' }}>Nikolina Voice AI</h1>
+              <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.5rem', fontWeight: 700, color: '#06b6d4' }}>Nikolina Voice AI</h1>
               <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
                 {isConnectedBackend ? '🟢 DB Local Sincronizada' : '🔴 Standby'} · {restaurantInfo.name}
               </p>
@@ -107,7 +107,7 @@ export default function App() {
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
                 padding: '0.5rem 1rem', background: activeTab === tab.id ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
                 border: `1px solid ${activeTab === tab.id ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
-                borderRadius: 8, color: activeTab === tab.id ? '#d4af37' : 'rgba(255,255,255,0.5)',
+                borderRadius: 8, color: activeTab === tab.id ? '#06b6d4' : 'rgba(255,255,255,0.5)',
                 cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s', flex: '1 1 auto', textAlign: 'center'
               }}>{tab.icon} <span className="tab-label">{tab.label}</span></button>
             ))}
@@ -119,14 +119,14 @@ export default function App() {
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem' }}>
         {activeTab === 'assistant' && (
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#d4af37', marginBottom: '1rem' }}>Conecta con la IA</h2>
+            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>Conecta con la IA</h2>
             <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '3rem' }}>
               Motor WebRTC de baja latencia impulsado por Gemini 2.5 Flash Native.
             </p>
 
             {!token ? (
               <button onClick={connectToVoice} style={{
-                padding: '1rem 3rem', background: 'linear-gradient(135deg, #d4af37, #f0d060)',
+                padding: '1rem 3rem', background: 'linear-gradient(135deg, #06b6d4, #22d3ee)',
                 border: 'none', borderRadius: 30, color: '#000', fontSize: '1.2rem', fontWeight: 800, cursor: 'pointer',
                 boxShadow: '0 0 20px rgba(212,175,55,0.3)'
               }}>📻 Iniciar Canal Seguro (LiveKit)</button>
@@ -161,13 +161,13 @@ export default function App() {
         {/* CARTA TAB */}
         {activeTab === 'menu' && (
           <div>
-            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#d4af37', marginBottom: '1rem' }}>🍽️ La Carta</h2>
+            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>🍽️ La Carta</h2>
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
               {categories.map(cat => (
                 <button key={cat} onClick={() => setMenuFilter(cat)} style={{
                   padding: '0.5rem 1rem', background: menuFilter === cat ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
                   border: `1px solid ${menuFilter === cat ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
-                  borderRadius: 8, color: menuFilter === cat ? '#d4af37' : 'rgba(255,255,255,0.5)',
+                  borderRadius: 8, color: menuFilter === cat ? '#06b6d4' : 'rgba(255,255,255,0.5)',
                   cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
                 }}>{cat}</button>
               ))}
@@ -178,7 +178,7 @@ export default function App() {
                   <div key={item.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
                       <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{item.name}</h3>
-                      <span style={{ color: '#d4af37', fontWeight: 700, fontSize: '1.1rem' }}>{item.price}€</span>
+                      <span style={{ color: '#06b6d4', fontWeight: 700, fontSize: '1.1rem' }}>{item.price}€</span>
                     </div>
                     <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{item.description}</p>
                   </div>
@@ -191,14 +191,14 @@ export default function App() {
         {/* RESERVATIONS TAB */}
         {activeTab === 'reservations' && (
           <div>
-            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#d4af37', marginBottom: '1rem' }}>📅 Reservas en Tiempo Real</h2>
+            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>📅 Reservas en Tiempo Real</h2>
             {reservations.length === 0 ? <p style={{ color: '#666' }}>Sin reservas todavía.</p> :
               reservations.map((res: any) => (
                 <div key={res.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.25rem', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                   <div>
                     <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.25rem' }}>{res.customer_name}</h3>
                     <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' }}>📞 {res.customer_phone || 'Sin tel'} · 👥 {res.num_guests} personas · ID: {res.id}</p>
-                    {res.notes && <p style={{ fontSize: '0.8rem', color: '#d4af37', marginTop: '0.25rem' }}>📝 {res.notes}</p>}
+                    {res.notes && <p style={{ fontSize: '0.8rem', color: '#06b6d4', marginTop: '0.25rem' }}>📝 {res.notes}</p>}
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '1rem', fontWeight: 600 }}>{res.date}</div>
@@ -212,13 +212,13 @@ export default function App() {
         {/* CALLS TAB */}
         {activeTab === 'calls' && (
           <div>
-            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#d4af37', marginBottom: '1rem' }}>📞 Historial de Interacciones</h2>
+            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>📞 Historial de Interacciones</h2>
             {calls.length === 0 ? <p style={{ color: '#666' }}>Sin llamadas registradas.</p> :
               calls.map((c: any) => (
                 <div key={c.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.25rem', marginBottom: '0.75rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>Inicio: {c.started_at}</span>
-                    <span style={{ fontSize: '0.85rem', color: '#d4af37' }}>⏱️ {c.duration_seconds || '?'}s</span>
+                    <span style={{ fontSize: '0.85rem', color: '#06b6d4' }}>⏱️ {c.duration_seconds || '?'}s</span>
                   </div>
                   <p style={{ fontSize: '0.9rem', color: '#f8f8f0', lineHeight: 1.5 }}>{c.transcript_summary || 'Sin transcripción procesada.'}</p>
                 </div>
@@ -230,7 +230,7 @@ export default function App() {
         {/* ADMIN TAB */}
         {activeTab === 'admin' && (
           <div>
-            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#d4af37', marginBottom: '1rem' }}>⚙️ Estado de Base de Datos</h2>
+            <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>⚙️ Estado de Base de Datos</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
               <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>BACKEND LOCAL</h3>
@@ -238,11 +238,11 @@ export default function App() {
               </div>
               <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>RESERVAS TOTALES</h3>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#d4af37' }}>{reservations.length}</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#06b6d4' }}>{reservations.length}</div>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>LLAMADAS LOG</h3>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#d4af37' }}>{calls.length}</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#06b6d4' }}>{calls.length}</div>
               </div>
             </div>
             <p style={{ marginTop: '2rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', textAlign: 'center' }}>
@@ -266,7 +266,7 @@ function AssistantStatus() {
       background: `radial-gradient(circle at 30% 30%, ${
         roomState === ConnectionState.Connected ? '#06ff8f' :
         roomState === ConnectionState.Connecting ? '#00f5ff' :
-        '#d4af37'
+        '#06b6d4'
       }, transparent)`,
       boxShadow: `0 0 60px ${
         roomState === ConnectionState.Connected ? 'rgba(6,255,143,0.4)' :

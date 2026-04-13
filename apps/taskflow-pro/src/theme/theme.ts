@@ -4,15 +4,15 @@ export const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#00F5FF', // Neon Cyan
-      light: '#66FBFF',
-      dark: '#00B8C2',
+      main: '#f59e0b', // Amber
+      light: '#fbbf24',
+      dark: '#d97706',
       contrastText: '#000000',
     },
     secondary: {
-      main: '#FF00E4', // Neon Pink
-      light: '#FF66F0',
-      dark: '#C200AD',
+      main: '#8b5cf6', // Violet
+      light: '#a78bfa',
+      dark: '#7c3aed',
       contrastText: '#FFFFFF',
     },
     background: {
@@ -50,15 +50,15 @@ export const theme = createTheme({
           borderRadius: 100,
           padding: '10px 24px',
           '&.MuiButton-containedPrimary': {
-            boxShadow: '0 4px 14px 0 rgba(0, 245, 255, 0.39)',
+            boxShadow: '0 4px 14px 0 rgba(245, 158, 11, 0.39)',
             '&:hover': {
-              boxShadow: '0 6px 20px rgba(0, 245, 255, 0.5)',
+              boxShadow: '0 6px 20px rgba(245, 158, 11, 0.5)',
             },
           },
           '&.MuiButton-containedSecondary': {
-            boxShadow: '0 4px 14px 0 rgba(255, 0, 228, 0.39)',
+            boxShadow: '0 4px 14px 0 rgba(139, 92, 246, 0.39)',
             '&:hover': {
-              boxShadow: '0 6px 20px rgba(255, 0, 228, 0.5)',
+              boxShadow: '0 6px 20px rgba(139, 92, 246, 0.5)',
             },
           },
         },

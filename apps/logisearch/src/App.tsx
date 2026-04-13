@@ -277,7 +277,7 @@ function App() {
           <Box
             sx={{
               width: 40, height: 40, borderRadius: 2.5,
-              background: 'linear-gradient(135deg, #00B4D8, #0096C7)',
+              background: 'linear-gradient(135deg, #ef4444, #0096C7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               mr: 1.5,
             }}
