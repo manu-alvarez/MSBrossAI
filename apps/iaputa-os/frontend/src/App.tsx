@@ -135,7 +135,30 @@ export default function App() {
             timestamp: new Date()
           }]);
           
-          // Force use of browser's high-quality Google voices
+          // FORCE NEURAL BRIDGE (Level 3 Orchestration)
+          const lowerAssistant = assistantContent.toLowerCase();
+          if (lowerAssistant.includes('creando tarea') || lowerAssistant.includes('tarea creada') || lowerAssistant.includes('anotado en taskflow')) {
+            fetch(`${API_BASE}vault-update`, {
+              method: 'POST',
+              body: JSON.stringify({ 
+                notification: { type: 'TASK', content: `Nueva tarea desde IAPuta: ${transcript.slice(0,30)}...` },
+                app: 'taskflow',
+                data: { last_sync: Date.now() }
+              })
+            }).catch(() => {});
+          }
+
+          if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en dohler')) {
+              fetch(`${API_BASE}vault-update`, {
+                method: 'POST',
+                body: JSON.stringify({ 
+                  notification: { type: 'TIMER', content: `Timer iniciado desde IAPuta` },
+                  app: 'dohler',
+                  data: { timer_active: true }
+                })
+              }).catch(() => {});
+          }
+
           speak(assistantContent);
         } catch (err) {
           setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de conexión: ${String(err)}`, timestamp: new Date() }]);
@@ -204,7 +227,30 @@ export default function App() {
           timestamp: new Date()
         }]);
         
-        // Force use of browser's high-quality Google voices instead of backend's edge-tts
+        // FORCE NEURAL BRIDGE (Level 3 Orchestration)
+        const lowerAssistant = assistantContent.toLowerCase();
+        if (lowerAssistant.includes('creando tarea') || lowerAssistant.includes('tarea creada') || lowerAssistant.includes('anotado en taskflow')) {
+          fetch(`${API_BASE}vault-update`, {
+            method: 'POST',
+            body: JSON.stringify({ 
+              notification: { type: 'TASK', content: `Nueva tarea desde IAPuta: ${text.slice(0,30)}...` },
+              app: 'taskflow',
+              data: { last_sync: Date.now() }
+            })
+          }).catch(() => {});
+        }
+        
+        if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en dohler')) {
+            fetch(`${API_BASE}vault-update`, {
+              method: 'POST',
+              body: JSON.stringify({ 
+                notification: { type: 'TIMER', content: `Timer iniciado desde IAPuta` },
+                app: 'dohler',
+                data: { timer_active: true }
+              })
+            }).catch(() => {});
+        }
+
         speak(assistantContent);
       } catch (err) {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Host: Imposible conectar al backend local: ${String(err)}`, timestamp: new Date() }]);
