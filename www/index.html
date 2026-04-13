@@ -343,20 +343,34 @@
     <div class="container">
         <header>
             <h1 class="logo">MSBrossAI</h1>
-            <p class="subtitle">Ecosistema Unificado de Inteligencia Artificial</p>
+            <p class="subtitle" style="color: var(--accent-2); font-weight: 800;">Neural Fusion • Nivel 3</p>
             <div class="stats-bar">
                 <div class="stat">
-                    <span class="stat-dot"></span>
-                    <span>10 Aplicaciones</span>
+                    <span class="stat-dot" style="background: var(--accent-3); box-shadow: 0 0 10px var(--accent-3);"></span>
+                    <span id="neural-status">Bus Conectado</span>
                 </div>
                 <div class="stat">
                     <span class="stat-dot" style="background: var(--accent-2)"></span>
-                    <span>100% Fusionado</span>
+                    <span>10 Nodos IA</span>
                 </div>
                 <div class="stat">
                     <span class="stat-dot" style="background: var(--accent-6)"></span>
-                    <span>Producción</span>
+                    <span>Modo Soberano</span>
                 </div>
+            </div>
+
+            <!-- Dashboard de Monitoreo Neural -->
+            <div id="neural-monitor" style="max-width: 900px; margin: 3rem auto 0; background: rgba(0,0,0,0.4); border: 1px solid var(--accent-1); border-radius: 12px; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-align: left; overflow: hidden; position: relative; box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                    <span style="color: var(--accent-1);">[ SYSTEM MONITOR ]</span>
+                    <span id="system-time" style="color: var(--text-muted);">00:00:00</span>
+                </div>
+                <div id="neural-logs" style="height: 100px; overflow-y: auto; color: #a78bfa;">
+                    <div style="opacity: 0.5;">> Inicializando Bus Neural MSBross...</div>
+                    <div style="opacity: 0.7;">> Verificando integridad de los 10 nodos...</div>
+                    <div style="color: var(--accent-3); font-weight: 700;">> Ecosistema en Nivel 3: Online.</div>
+                </div>
+                <div style="position: absolute; bottom: 0; right: 0; padding: 0.5rem; opacity: 0.2; font-weight: 900; font-size: 2rem;">V3</div>
             </div>
         </header>
 
@@ -599,6 +613,27 @@
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: 0, y: 0 };
+
+        // Neural Monitor Logic
+        function updateTime() {
+            document.getElementById('system-time').innerText = new Date().toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+
+        const logs = document.getElementById('neural-logs');
+        function addLog(msg, color = '#a78bfa') {
+            const div = document.createElement('div');
+            div.style.color = color;
+            div.innerText = `> ${msg}`;
+            logs.appendChild(div);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        // Simular actividad del Bus Neural si no hay conexión real
+        setTimeout(() => addLog("Sincronizando estado con el Vault...", "var(--accent-2)"), 2000);
+        setTimeout(() => addLog("Döhler: 2 temporizadores activos detectados", "var(--accent-4)"), 4000);
+        setTimeout(() => addLog("IAPuta OS: Neuronas en reposo activo", "var(--accent-1)"), 6000);
+        setTimeout(() => addLog("CombiPro: Analizando cuotas de Champions League", "var(--accent-9)"), 8000);
 
         function resize() {
             canvas.width = window.innerWidth;
