@@ -79,9 +79,15 @@ export default function App() {
       };
 
       if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
+        let hasFired = false;
+        const fallbackCallback = () => {
+          if (hasFired) return;
+          hasFired = true;
+          setVoiceAndSpeak();
+        };
+        window.speechSynthesis.onvoiceschanged = fallbackCallback;
         // Fallback timeout in case onvoiceschanged never fires
-        setTimeout(setVoiceAndSpeak, 250);
+        setTimeout(fallbackCallback, 250);
       } else {
         setVoiceAndSpeak();
       }
@@ -128,6 +134,8 @@ export default function App() {
             content: assistantContent,
             timestamp: new Date()
           }]);
+          
+          // Force use of browser's high-quality Google voices
           speak(assistantContent);
         } catch (err) {
           setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de conexión: ${String(err)}`, timestamp: new Date() }]);
@@ -188,20 +196,16 @@ export default function App() {
           body: JSON.stringify({ text }),
         });
         const data = await res.json();
-        const assistantMsg: Message = {
+        const assistantContent = data.response || data.error || 'Sin respuesta';
+        setMessages(prev => [...prev, {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: data.response || data.error || 'Sin respuesta',
-          timestamp: new Date(),
-          audioUrl: data.audio_url,
-        };
-        setMessages(prev => [...prev, assistantMsg]);
+          content: assistantContent,
+          timestamp: new Date()
+        }]);
         
-        if (data.audio_url) {
-          new Audio(data.audio_url).play().catch(() => speak(data.response || ''));
-        } else {
-          speak(data.response || '');
-        }
+        // Force use of browser's high-quality Google voices instead of backend's edge-tts
+        speak(assistantContent);
       } catch (err) {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Host: Imposible conectar al backend local: ${String(err)}`, timestamp: new Date() }]);
         setOrbState('error');

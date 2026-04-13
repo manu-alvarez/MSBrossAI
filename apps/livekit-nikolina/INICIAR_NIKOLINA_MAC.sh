@@ -27,9 +27,10 @@ echo "✅ Backend lanzado en puerto 8000 (PID: $SERVER_PID)"
 sleep 2
 
 echo "[2/2] Conectando el Agente de Voz (LiveKit)..."
+export PYTHONPATH="$BASE_DIR/agent/src:$BASE_DIR/server/src"
 cd "$BASE_DIR/agent"
 pip install -r requirements.txt > /dev/null 2>&1
-python agent.py dev &
+python src/agent.py dev &
 AGENT_PID=$!
 echo "✅ Agente conectado al ecosistema (PID: $AGENT_PID)"
 

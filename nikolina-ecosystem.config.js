@@ -27,7 +27,7 @@ module.exports = {
     {
       name: 'nikolina-api-hub',
       script: './apps/livekit-nikolina/venv/bin/python3',
-      args: 'server/main.py',
+      args: 'src/main.py',
       cwd: './apps/livekit-nikolina',
       env: {
         PYTHONPATH: './agent/src:./server/src',
@@ -41,8 +41,8 @@ module.exports = {
     {
       name: 'nikolina-agent',
       script: './apps/livekit-nikolina/venv/bin/python3',
-      args: 'agent/src/agent.py start',
-      cwd: './apps/livekit-nikolina',
+      args: 'src/agent.py dev',
+      cwd: './apps/livekit-nikolina/agent',
       env: {
         PYTHONPATH: './agent/src:./server/src'
       },
