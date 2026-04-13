@@ -1426,43 +1426,211 @@
     {
       "id": "lowcode-hacking",
       "name": "Hacking & LowCode Free",
-      "icon": "🛡️",
+      "icon": "\ud83d\udee1\ufe0f",
       "tools": [
-        { "id": "supabase", "name": "Supabase", "url": "https://supabase.com", "description": "Backend Firebase alternativo Free Tier", "shortcut": "supabase" },
-        { "id": "shodan", "name": "Shodan", "url": "https://shodan.io", "description": "Buscador IoT OpenPorts", "shortcut": "shodan" },
-        { "id": "n8n", "name": "n8n", "url": "https://n8n.io", "description": "Automatización Workflow Integrada", "shortcut": "n8n" },
-        { "id": "virustotal", "name": "VirusTotal", "url": "https://virustotal.com", "description": "Análisis de Malware e IPs", "shortcut": "vt" },
-        { "id": "censys", "name": "Censys", "url": "https://search.censys.io", "description": "Escáner de superficie de ataque y certificados", "shortcut": "censys" },
-        { "id": "haveibeenpwned", "name": "Have I Been Pwned", "url": "https://haveibeenpwned.com", "description": "Verifica si tu email ha sido hackeado", "shortcut": "hibp" },
-        { "id": "urlscan", "name": "URLScan.io", "url": "https://urlscan.io", "description": "Escáner web con sandbox visual", "shortcut": "urlscan" },
-        { "id": "securityheaders", "name": "Security Headers", "url": "https://securityheaders.com", "description": "Auditoría de headers HTTP de seguridad", "shortcut": "secheaders" },
-        { "id": "cyberchef", "name": "CyberChef", "url": "https://gchq.github.io/CyberChef", "description": "Navaja suiza de encoding/decoding/crypto", "shortcut": "cyberchef" },
-        { "id": "retool", "name": "Retool", "url": "https://retool.com", "description": "Construye dashboards internos sin código", "shortcut": "retool" },
-        { "id": "appsmith", "name": "Appsmith", "url": "https://www.appsmith.com", "description": "LowCode open-source para apps internas", "shortcut": "appsmith" },
-        { "id": "make", "name": "Make", "url": "https://www.make.com", "description": "Automatización visual de workflows (Free Tier)", "shortcut": "make" },
-        { "id": "pipedream", "name": "Pipedream", "url": "https://pipedream.com", "description": "Workflows serverless con código", "shortcut": "pipedream" },
-        { "id": "pentest-tools", "name": "Pentest-Tools", "url": "https://pentest-tools.com", "description": "Suite de pentesting web con Free Tier", "shortcut": "pentest" },
-        { "id": "exploit-db", "name": "Exploit-DB", "url": "https://exploit-db.com", "description": "Base de datos de exploits y vulnerabilidades", "shortcut": "exploitdb" },
-        { "id": "webhook-site", "name": "Webhook.site", "url": "https://webhook.site", "description": "Captura y debug de webhooks", "shortcut": "webhook" }
+        {
+          "id": "supabase",
+          "name": "Supabase",
+          "url": "https://supabase.com",
+          "description": "Backend Firebase alternativo Free Tier",
+          "shortcut": "supabase"
+        },
+        {
+          "id": "shodan",
+          "name": "Shodan",
+          "url": "https://shodan.io",
+          "description": "Buscador IoT OpenPorts",
+          "shortcut": "shodan"
+        },
+        {
+          "id": "n8n",
+          "name": "n8n",
+          "url": "https://n8n.io",
+          "description": "Automatizaci\u00f3n Workflow Integrada",
+          "shortcut": "n8n"
+        },
+        {
+          "id": "virustotal",
+          "name": "VirusTotal",
+          "url": "https://virustotal.com",
+          "description": "An\u00e1lisis de Malware e IPs",
+          "shortcut": "vt"
+        },
+        {
+          "id": "censys",
+          "name": "Censys",
+          "url": "https://search.censys.io",
+          "description": "Esc\u00e1ner de superficie de ataque y certificados",
+          "shortcut": "censys"
+        },
+        {
+          "id": "haveibeenpwned",
+          "name": "Have I Been Pwned",
+          "url": "https://haveibeenpwned.com",
+          "description": "Verifica si tu email ha sido hackeado",
+          "shortcut": "hibp"
+        },
+        {
+          "id": "urlscan",
+          "name": "URLScan.io",
+          "url": "https://urlscan.io",
+          "description": "Esc\u00e1ner web con sandbox visual",
+          "shortcut": "urlscan"
+        },
+        {
+          "id": "securityheaders",
+          "name": "Security Headers",
+          "url": "https://securityheaders.com",
+          "description": "Auditor\u00eda de headers HTTP de seguridad",
+          "shortcut": "secheaders"
+        },
+        {
+          "id": "cyberchef",
+          "name": "CyberChef",
+          "url": "https://gchq.github.io/CyberChef",
+          "description": "Navaja suiza de encoding/decoding/crypto",
+          "shortcut": "cyberchef"
+        },
+        {
+          "id": "retool",
+          "name": "Retool",
+          "url": "https://retool.com",
+          "description": "Construye dashboards internos sin c\u00f3digo",
+          "shortcut": "retool"
+        },
+        {
+          "id": "appsmith",
+          "name": "Appsmith",
+          "url": "https://www.appsmith.com",
+          "description": "LowCode open-source para apps internas",
+          "shortcut": "appsmith"
+        },
+        {
+          "id": "make",
+          "name": "Make",
+          "url": "https://www.make.com",
+          "description": "Automatizaci\u00f3n visual de workflows (Free Tier)",
+          "shortcut": "make"
+        },
+        {
+          "id": "pipedream",
+          "name": "Pipedream",
+          "url": "https://pipedream.com",
+          "description": "Workflows serverless con c\u00f3digo",
+          "shortcut": "pipedream"
+        },
+        {
+          "id": "pentest-tools",
+          "name": "Pentest-Tools",
+          "url": "https://pentest-tools.com",
+          "description": "Suite de pentesting web con Free Tier",
+          "shortcut": "pentest"
+        },
+        {
+          "id": "exploit-db",
+          "name": "Exploit-DB",
+          "url": "https://exploit-db.com",
+          "description": "Base de datos de exploits y vulnerabilidades",
+          "shortcut": "exploitdb"
+        },
+        {
+          "id": "webhook-site",
+          "name": "Webhook.site",
+          "url": "https://webhook.site",
+          "description": "Captura y debug de webhooks",
+          "shortcut": "webhook"
+        }
       ]
     },
     {
       "id": "ai-free-tier",
       "name": "IA Gratis & Free Tier",
-      "icon": "🧠",
+      "icon": "\ud83e\udde0",
       "tools": [
-        { "id": "groq-cloud", "name": "Groq Cloud", "url": "https://console.groq.com", "description": "LLM ultra-rápido Free Tier", "shortcut": "groq" },
-        { "id": "huggingface-chat", "name": "HuggingFace Chat", "url": "https://huggingface.co/chat", "description": "Chat con modelos Open Source", "shortcut": "hf" },
-        { "id": "google-ai-studio", "name": "Google AI Studio", "url": "https://aistudio.google.com", "description": "Gemini 2.5 Flash/Pro Free Tier", "shortcut": "aistudio" },
-        { "id": "openrouter", "name": "OpenRouter", "url": "https://openrouter.ai", "description": "Gateway multi-modelo (Free Tier)", "shortcut": "openrouter" },
-        { "id": "together-ai", "name": "Together AI", "url": "https://together.ai", "description": "Modelos open-source APIs", "shortcut": "together" },
-        { "id": "replicate", "name": "Replicate", "url": "https://replicate.com", "description": "Ejecutar modelos IA con API", "shortcut": "replicate" },
-        { "id": "poe", "name": "Poe by Quora", "url": "https://poe.com", "description": "Acceso a diversos LLMs", "shortcut": "poe" },
-        { "id": "perplexity", "name": "Perplexity AI", "url": "https://perplexity.ai", "description": "Buscador IA", "shortcut": "perplexity" },
-        { "id": "bolt-new", "name": "Bolt.new", "url": "https://bolt.new", "description": "Generador de apps web", "shortcut": "bolt" },
-        { "id": "v0-dev", "name": "v0.dev", "url": "https://v0.dev", "description": "Generador de UI Tailwind", "shortcut": "v0" },
-        { "id": "elevenlabs", "name": "ElevenLabs", "url": "https://elevenlabs.io", "description": "Clonación voz (Free Tier)", "shortcut": "elevenlabs" },
-        { "id": "notebooklm", "name": "NotebookLM", "url": "https://notebooklm.google.com", "description": "Asistente notas IA", "shortcut": "notebooklm" }
+        {
+          "id": "groq-cloud",
+          "name": "Groq Cloud",
+          "url": "https://console.groq.com",
+          "description": "LLM ultra-r\u00e1pido Free Tier",
+          "shortcut": "groq"
+        },
+        {
+          "id": "huggingface-chat",
+          "name": "HuggingFace Chat",
+          "url": "https://huggingface.co/chat",
+          "description": "Chat con modelos Open Source",
+          "shortcut": "hf"
+        },
+        {
+          "id": "google-ai-studio",
+          "name": "Google AI Studio",
+          "url": "https://aistudio.google.com",
+          "description": "Gemini 2.5 Flash/Pro Free Tier",
+          "shortcut": "aistudio"
+        },
+        {
+          "id": "openrouter",
+          "name": "OpenRouter",
+          "url": "https://openrouter.ai",
+          "description": "Gateway multi-modelo (Free Tier)",
+          "shortcut": "openrouter"
+        },
+        {
+          "id": "together-ai",
+          "name": "Together AI",
+          "url": "https://together.ai",
+          "description": "Modelos open-source APIs",
+          "shortcut": "together"
+        },
+        {
+          "id": "replicate",
+          "name": "Replicate",
+          "url": "https://replicate.com",
+          "description": "Ejecutar modelos IA con API",
+          "shortcut": "replicate"
+        },
+        {
+          "id": "poe",
+          "name": "Poe by Quora",
+          "url": "https://poe.com",
+          "description": "Acceso a diversos LLMs",
+          "shortcut": "poe"
+        },
+        {
+          "id": "perplexity",
+          "name": "Perplexity AI",
+          "url": "https://perplexity.ai",
+          "description": "Buscador IA",
+          "shortcut": "perplexity"
+        },
+        {
+          "id": "bolt-new",
+          "name": "Bolt.new",
+          "url": "https://bolt.new",
+          "description": "Generador de apps web",
+          "shortcut": "bolt"
+        },
+        {
+          "id": "v0-dev",
+          "name": "v0.dev",
+          "url": "https://v0.dev",
+          "description": "Generador de UI Tailwind",
+          "shortcut": "v0"
+        },
+        {
+          "id": "elevenlabs",
+          "name": "ElevenLabs",
+          "url": "https://elevenlabs.io",
+          "description": "Clonaci\u00f3n voz (Free Tier)",
+          "shortcut": "elevenlabs"
+        },
+        {
+          "id": "notebooklm",
+          "name": "NotebookLM",
+          "url": "https://notebooklm.google.com",
+          "description": "Asistente notas IA",
+          "shortcut": "notebooklm"
+        }
       ]
     }
   ]
