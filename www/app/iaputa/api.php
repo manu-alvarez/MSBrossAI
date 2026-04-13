@@ -1,7 +1,8 @@
 <?php
 /**
- * MSBrossAI — MASTER NEURAL GATEWAY (Level 3 Orchestrator)
- * This file is the central 'nervous system' for the entire ecosystem.
+ * MSBrossAI — MASTER NEURAL GATEWAY v3.1
+ * Central orchestrator for the entire ecosystem.
+ * Handles: IAPuta OS status, Traductor proxy, Vault state, orchestration.
  */
 
 header("Access-Control-Allow-Origin: *");
@@ -14,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // ──────────────────────────────────────────────
-// CONFIGURATION & VAULT
+// CONFIGURATION
 // ──────────────────────────────────────────────
 $VAULT_FILE = __DIR__ . '/msbross_vault.json';
-$API_KEY = "iaputa_elite_2026"; // Clave interna de orquestación
+$GEMINI_API_KEY = "AIzaSyAXuH24H9_K617kyY1BP2e4uVKn7keTrVo"; // User provided directly for prod
 
 function get_vault() {
     global $VAULT_FILE;
@@ -36,21 +37,100 @@ function save_vault($data) {
     file_put_contents($VAULT_FILE, json_encode($data, JSON_PRETTY_PRINT));
 }
 
+/**
+ * Call Gemini 2.5 Flash API for LLM processing
+ */
+function call_gemini($system_prompt, $user_text) {
+    global $GEMINI_API_KEY;
+    
+    $ch = curl_init("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $GEMINI_API_KEY);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json'
+        ],
+        CURLOPT_POSTFIELDS => json_encode([
+            "system_instruction" => ["parts" => [["text" => $system_prompt]]],
+            "contents" => [["role" => "user", "parts" => [["text" => $user_text]]]],
+            "generationConfig" => ["temperature" => 0.3, "maxOutputTokens" => 1024]
+        ]),
+        CURLOPT_TIMEOUT => 30
+    ]);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode !== 200) {
+        return null;
+    }
+    
+    $data = json_decode($response, true);
+    return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+}
+
 // ──────────────────────────────────────────────
-// ROUTING LOGIC
+// ROUTING
 // ──────────────────────────────────────────────
 $action = $_GET['action'] ?? 'status';
 
 switch ($action) {
+    // ── IAPuta OS ──
     case 'status':
         echo json_encode([
             "status" => "online",
-            "version" => "3.0.0",
+            "version" => "3.1.0",
             "neural_bus" => "connected",
             "timestamp" => time()
         ]);
         break;
 
+    case 'text-command':
+        $input = json_decode(file_get_contents('php://input'), true);
+        $text = $input['text'] ?? '';
+        
+        $system = "Eres IAPuta OS, un asistente IA de élite en español. Responde de forma concisa, útil y directa. No uses markdown pesado ni emojis excesivos. Habla con naturalidad.";
+        $result = call_gemini($system, $text);
+        
+        if ($result) {
+            echo json_encode(["response" => $result, "emotion" => "neutral"]);
+        } else {
+            echo json_encode(["response" => "Modo offline: Mi backend no está conectado ahora mismo. Escribe 'ayuda' para ver qué puedo hacer en modo local.", "emotion" => "thinking"]);
+        }
+        break;
+
+    // ── Arantxa Translate ──
+    case 'process':
+        $input = json_decode(file_get_contents('php://input'), true);
+        $texto = $input['texto'] ?? '';
+        $origen = $input['origen'] ?? 'en';
+        $destino = $input['destino'] ?? 'es';
+        $modo = $input['modo'] ?? 'traducir_estandar';
+        
+        $modoLabel = match($modo) {
+            'traducir_profesional', 'profesional' => 'profesional y formal',
+            'traducir_coloquial', 'coloquial' => 'coloquial e informal',
+            'resumir' => 'resumido',
+            'traducir_resumir' => 'traducido y resumido',
+            default => 'estándar y natural'
+        };
+        
+        $system = "Eres un traductor profesional. Traduce del idioma '$origen' al idioma '$destino' con estilo $modoLabel. Devuelve SOLO la traducción, sin explicaciones ni notas.";
+        $result = call_gemini($system, $texto);
+        
+        if ($result) {
+            $resumen = '';
+            if (str_contains($modo, 'resumir')) {
+                $resumen = call_gemini("Resume este texto en 2-3 oraciones concisas en $destino:", $result) ?? '';
+            }
+            echo json_encode(["traduccion" => $result, "resumen" => $resumen, "provider" => "gemini"]);
+        } else {
+            echo json_encode(["error" => "El servicio de traducción no está disponible. Verifica la conexión."]);
+        }
+        break;
+
+    // ── Vault ──
     case 'vault-get':
         echo json_encode(get_vault());
         break;
@@ -59,45 +139,31 @@ switch ($action) {
         $input = json_decode(file_get_contents('php://input'), true);
         $vault = get_vault();
         if (isset($input['app'])) {
-            $vault['apps'][$input['app']] = array_merge($vault['apps'][$input['app']] ?? [], $input['data']);
+            $vault['apps'][$input['app']] = array_merge($vault['apps'][$input['app']] ?? [], $input['data'] ?? []);
         }
         if (isset($input['notification'])) {
             $vault['notifications'][] = array_merge($input['notification'], ["timestamp" => time(), "id" => uniqid()]);
-            // Keep only last 20
-            if (count($vault['notifications']) > 10) array_shift($vault['notifications']);
+            if (count($vault['notifications']) > 20) array_shift($vault['notifications']);
         }
         save_vault($vault);
-        echo json_encode(["status" => "updated", "vault" => $vault]);
+        echo json_encode(["status" => "updated"]);
         break;
 
-    case 'translate':
-        // Integration with Arantxa logic
-        $input = json_decode(file_get_contents('php://input'), true);
-        $text = $input['text'] ?? '';
-        $target = $input['target'] ?? 'es';
-        // Mock translation via simple rule or forward to Groq if key exists
-        echo json_encode(["translated" => "[Neural Echo]: " . $text, "mode" => "neural-bridge"]);
-        break;
-
+    // ── Orchestration ──
     case 'orchestrate':
-        // Logic for IAPuta OS to trigger events in other apps
         $input = json_decode(file_get_contents('php://input'), true);
         $intent = $input['intent'] ?? '';
-        $params = $input['params'] ?? [];
-        
         $vault = get_vault();
         $vault['notifications'][] = [
-            "type" => "COMMAND",
-            "source" => "IAPuta OS",
-            "content" => "Ejecutando intención: $intent",
-            "timestamp" => time()
+            "type" => "COMMAND", "source" => "IAPuta OS",
+            "content" => "Ejecutando: $intent", "timestamp" => time()
         ];
         save_vault($vault);
-        
-        echo json_encode(["status" => "dispatched", "intent" => $intent, "vault_alert" => true]);
+        echo json_encode(["status" => "dispatched", "intent" => $intent]);
         break;
 
     default:
-        echo json_encode(["error" => "Unknown action: $action"]);
+        http_response_code(404);
+        echo json_encode(["error" => "Acción desconocida: $action"]);
         break;
 }
