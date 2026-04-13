@@ -20,9 +20,9 @@ if [ ! -d "../venv" ]; then
 fi
 source ../venv/bin/activate
 pip install -r requirements.txt > /dev/null 2>&1
-uvicorn main:app --host 0.0.0.0 --port 8000 &
+uvicorn main:app --host 0.0.0.0 --port 8001 &
 SERVER_PID=$!
-echo "✅ Backend lanzado en puerto 8000 (PID: $SERVER_PID)"
+echo "✅ Backend lanzado en puerto 8001 (PID: $SERVER_PID)"
 
 sleep 2
 
