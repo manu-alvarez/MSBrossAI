@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import NeuralOrb from './components/NeuralOrb';
 import './index.css';
 
-const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8006/api';
 const API_KEY = (import.meta as any).env.VITE_API_KEY || '';
 
 interface Message {

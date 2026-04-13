@@ -67,13 +67,17 @@ def upload_dir(ftp, local_dir, remote_dir):
             upload_dir(ftp, local_path, f"{remote_dir_abs}/{item}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        pass_arg = "LaPasswordSiNoCogeManik87"
-    else:
+    if len(sys.argv) >= 3:
         pass_arg = sys.argv[2]
+    else:
+        pass_arg = os.environ.get("FTP_PASSWORD")
+    
+    if not pass_arg:
+        print("❌ Error: FTP password not provided. Use FTP_PASSWORD env var or pass as 2nd argument.")
+        sys.exit(1)
         
-    host = "msbros.ftp.tb-hosting.com"
-    user = "msbrossme@msbrossme"
+    host = os.environ.get("FTP_HOST", "msbros.ftp.tb-hosting.com")
+    user = os.environ.get("FTP_USER", "msbrossme@msbrossme")
     password = pass_arg
     
     local_path = "/Users/manu/Desktop/MSBrossAI/www"

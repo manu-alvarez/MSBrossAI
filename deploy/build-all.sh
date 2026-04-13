@@ -1,5 +1,7 @@
 #!/bin/bash
-export PATH="/Users/manu/.nvm/versions/node/v24.12.0/bin:$PATH"
+# Ensure NVM-managed node is available
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 echo "🔨 Construyendo todas las aplicaciones para msbross.me..."
 BASE_DIR="/Users/manu/Desktop/MSBrossAI"
