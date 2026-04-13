@@ -1,7 +1,0 @@
-services:
-  taskflow-pro:
-    build: .
-    ports: ["8887:80"]
-    networks: [msbrossai-network]
-networks:
-  msbrossai-network: { driver: bridge }

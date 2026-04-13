@@ -1,7 +1,0 @@
-services:
-  edelweiss:
-    build: .
-    ports: ["5176:80"]
-    networks: [msbrossai-network]
-networks:
-  msbrossai-network: { driver: bridge }
