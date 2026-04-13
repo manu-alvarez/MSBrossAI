@@ -19,7 +19,7 @@ jobs:
         app:
           - { name: 'iaputa-os', path: 'apps/iaputa-os/frontend' }
           - { name: 'nikolina', path: 'apps/livekit-nikolina/frontend' }
-          - { name: 'traductor', path: 'apps/traductor' }
+          - { name: 'traductor', path: 'apps/arantxa-translate/client' }
           - { name: 'taskflow-pro', path: 'apps/taskflow-pro' }
           - { name: 'logisearch', path: 'apps/logisearch' }
           - { name: 'edelweiss', path: 'apps/edelweiss' }
@@ -59,6 +59,7 @@ jobs:
     needs: lint-and-build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
