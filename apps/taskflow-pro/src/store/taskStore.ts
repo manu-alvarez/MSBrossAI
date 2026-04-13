@@ -217,9 +217,9 @@ export const useTaskStore = create<TaskStore>()(
       migrate: (persisted: any, version: number) => {
         if (version < 2) {
           return {
-            tasks: persisted.state?.tasks || [],
-            categories: persisted.state?.categories || defaultCategories,
-            settings: persisted.state?.settings || {
+            tasks: persisted?.tasks || persisted?.state?.tasks || [],
+            categories: persisted?.categories || persisted?.state?.categories || defaultCategories,
+            settings: persisted?.settings || persisted?.state?.settings || {
               soundEnabled: true,
               whatsappEnabled: false,
               whatsappPhone1: '',
@@ -229,7 +229,7 @@ export const useTaskStore = create<TaskStore>()(
             },
           };
         }
-        return persisted.state;
+        return persisted;
       },
     }
   )

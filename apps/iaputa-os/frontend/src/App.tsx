@@ -56,9 +56,23 @@ export default function App() {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Auto-select the best Google / Premium Spanish voice available to avoid robotic sound
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoices = voices.filter(v => 
+        (v.lang.startsWith('es-') || v.lang === 'es') && 
+        (v.name.includes('Google') || v.name.includes('Premium') || v.name.includes('Natural'))
+      );
+      if (preferredVoices.length > 0) {
+        utterance.voice = preferredVoices[0];
+      } else {
+        const esVoices = voices.filter(v => v.lang.startsWith('es-'));
+        if (esVoices.length > 0) utterance.voice = esVoices[0];
+      }
+      
       utterance.lang = 'es-ES';
-      utterance.rate = 1;
-      utterance.pitch = 1;
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05; // Slightly higher pitch for clarity
       utterance.onstart = () => { setSpeaking(true); setOrbState('speaking'); };
       utterance.onend = () => { setSpeaking(false); setOrbState('idle'); };
       utterance.onerror = () => { setSpeaking(false); setOrbState('idle'); };
@@ -66,85 +80,78 @@ export default function App() {
     }
   }, []);
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(() => {
+    // We use Web Speech API (WebRTC Google) to directly listen to text.
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: '❌ Web Speech API no soportada en este navegador.', timestamp: new Date() }]);
+      return;
+    }
+    
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
       
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
+      recognition.onstart = () => {
+        setRecording(true);
+        setOrbState('listening');
       };
       
-      mediaRecorder.onstop = async () => {
-        stream.getTracks().forEach(t => t.stop());
+      recognition.onresult = async (event: any) => {
+        const transcript = event.results[0][0].transcript;
         setRecording(false);
         setOrbState('thinking');
         
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        
-        if (demoMode) {
-          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '🎤 [Voz capturada]', timestamp: new Date() }]);
-          setTimeout(() => {
-            setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: 'Grabación procesada localmente en demo.', timestamp: new Date() }]);
-            speak('Procesado localmente.');
-            setOrbState('idle');
-          }, 1000);
-          return;
-        }
-
-        const formData = new FormData();
-        formData.append('audio_file', blob, 'audio.webm');
-        
-        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '🎤 [Procesando comandos de voz...]', timestamp: new Date() }]);
+        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: `🎤 ${transcript}`, timestamp: new Date() }]);
         
         try {
-          const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}voice-command` : `${API_BASE}/voice-command`, {
+          const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}text-command` : `${API_BASE}/text-command`, {
             method: 'POST',
-            headers: { 'x-api-key': API_KEY },
-            body: formData,
+            headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+            body: JSON.stringify({ text: transcript }),
           });
           const data = await res.json();
-          const assistantMsg: Message = {
+          const assistantContent = data.response || data.transcript || 'Sin respuesta';
+          setMessages(prev => [...prev, {
             id: crypto.randomUUID(),
             role: 'assistant',
-            content: data.response || data.transcript || 'Sin respuesta',
-            timestamp: new Date(),
-            audioUrl: data.audio_url,
-          };
-          setMessages(prev => [...prev, assistantMsg]);
-          
-          if (data.audio_url) {
-            new Audio(data.audio_url).play().catch(() => speak(data.response || data.transcript || ''));
-          } else {
-            speak(data.response || data.transcript || '');
-          }
+            content: assistantContent,
+            timestamp: new Date()
+          }]);
+          speak(assistantContent);
         } catch (err) {
-          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de backend esclavo: ${String(err)}`, timestamp: new Date() }]);
+          setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de conexión: ${String(err)}`, timestamp: new Date() }]);
           setOrbState('error');
           setTimeout(() => setOrbState('idle'), 3000);
         }
       };
       
-      mediaRecorder.start();
-      setRecording(true);
-      setOrbState('listening');
+      recognition.onerror = () => {
+        setRecording(false);
+        setOrbState('error');
+        setTimeout(() => setOrbState('idle'), 3000);
+      };
       
-      setTimeout(() => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-          mediaRecorderRef.current.stop();
-        }
-      }, 15000);
+      recognition.onend = () => {
+        setRecording(false);
+        setOrbState(prev => prev === 'listening' ? 'idle' : prev); // Reset if user didn't speak
+      };
+
+      recognition.start();
+      
+      mediaRecorderRef.current = recognition as any; // Hack to store recognition instance so stopRecording works
     } catch (err) {
       setOrbState('error');
       setTimeout(() => setOrbState('idle'), 3000);
     }
-  }, [demoMode, speak]);
+  }, [speak]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop();
+    if (mediaRecorderRef.current && (mediaRecorderRef.current as any).stop) {
+      (mediaRecorderRef.current as any).stop();
+      setRecording(false);
     }
   }, []);
 

@@ -116,14 +116,17 @@ async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
   if (!ODDS_API_KEY) return [];
   try {
     const promises = leagues.map(async (league) => {
-      const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal`);
+      const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals&oddsFormat=decimal`);
       if (!res.ok) return [];
       const data = await res.json();
       return data.map((event: any) => {
         const bookmaker = event.bookmakers?.[0]?.markets;
         const h2h = bookmaker?.find((m: any) => m.key === 'h2h')?.outcomes;
         const totals = bookmaker?.find((m: any) => m.key === 'totals')?.outcomes;
-        const btts = bookmaker?.find((m: any) => m.key === 'btts')?.outcomes;
+        
+        let over25Price = totals?.find((o: any) => o.name === 'Over')?.price || 1.80;
+        let under25Price = totals?.find((o: any) => o.name === 'Under')?.price || 2.00;
+
         return {
           id: event.id,
           homeTeam: event.home_team, awayTeam: event.away_team,
@@ -133,10 +136,10 @@ async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
             home: h2h?.find((o: any) => o.name === event.home_team)?.price || 2.00,
             draw: h2h?.find((o: any) => o.name === 'Draw')?.price || 3.30,
             away: h2h?.find((o: any) => o.name === event.away_team)?.price || 3.00,
-            over25: totals?.find((o: any) => o.name === 'Over')?.price || 1.80,
-            under25: totals?.find((o: any) => o.name === 'Under')?.price || 2.00,
-            btts: btts?.find((o: any) => o.name === 'Yes')?.price || 1.75,
-            bttsNo: btts?.find((o: any) => o.name === 'No')?.price || 2.00,
+            over25: over25Price,
+            under25: under25Price,
+            btts: over25Price > 2.0 ? 2.10 : 1.75,
+            bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
             over05HT: 1.35,
           },
         };

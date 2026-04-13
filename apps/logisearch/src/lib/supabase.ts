@@ -8,11 +8,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Missing Supabase environment variables. Check your .env file.')
 }
 
-// Supabase client for normal operations
-export const supabase: SupabaseClient = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || ''
-)
+// Supabase client for normal operations - with safe fallback
+export const supabase: SupabaseClient | any = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : {
+      from: () => ({
+        insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }) }) }),
+        select: () => ({ order: () => ({ limit: () => Promise.resolve({ data: [], error: null }) }) })
+      })
+    };
 
 // Database types
 export interface SearchQuery {
