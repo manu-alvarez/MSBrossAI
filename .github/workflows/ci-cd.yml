@@ -69,18 +69,13 @@ jobs:
         with:
           path: builds
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: msbros.ftp.tb-hosting.com
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: ./www/
-          server-dir: /www/
-          exclude: |
-            **/.DS_Store
-            **/node_modules/**
-            **/.git/**
+      - name: Deploy via custom FTP script
+        env:
+          FTP_HOST: msbros.ftp.tb-hosting.com
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASS }}
+          FTP_LOCAL_DIR: ./www
+        run: python3 deploy/ftp-deploy-full.py
 
       - name: Verify deployment
         run: |

@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     host = os.environ.get("FTP_HOST", "msbros.ftp.tb-hosting.com")
     user = os.environ.get("FTP_USER", "msbrossme@msbrossme")
-    local_path = "/Users/manu/Desktop/MSBrossAI/www"
+    local_path = os.environ.get("FTP_LOCAL_DIR", "./www")
     
     print(f"🔌 Connecting to {host}...")
     try:
