@@ -48,3 +48,46 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.3s ease forwards;
 }
+
+/* Responsive Layout App Generator */
+.app-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.panel-sidebar {
+  width: 400px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--bg-secondary);
+  z-index: 10;
+}
+
+.panel-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0b0f19;
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .panel-sidebar {
+    width: 100%;
+    height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-preview {
+    height: 50vh;
+  }
+}

@@ -109,10 +109,10 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: window.innerWidth < 768 ? 'column' : 'row', height: '100vh', width: '100vw', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflow: 'hidden' }}>
+    <div className="app-layout">
       
       {/* 🔴 CONTROL PANEL (Chat) */}
-      <div style={{ width: window.innerWidth < 768 ? '100%' : '400px', height: window.innerWidth < 768 ? '50vh' : '100%', display: 'flex', flexDirection: 'column', borderRight: window.innerWidth < 768 ? 'none' : '1px solid var(--border)', borderBottom: window.innerWidth < 768 ? '1px solid var(--border)' : 'none', background: 'var(--bg-secondary)', zIndex: 10 }}>
+      <div className="panel-sidebar">
         
         {/* Header */}
         <div style={{ padding: '20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -198,7 +198,7 @@ export default function App() {
       </div>
 
       {/* 🟢 PREVIEW OUTLET (Sandbox & Code) */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#0b0f19' }}>
+      <div className="panel-preview">
         
         {/* Sandbox Tabs */}
         <div style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
