@@ -48,3 +48,6 @@ tsconfig.tsbuildinfo
 # Temp directories
 temp_audio/
 temp_vision/
+
+# IAPuta env config (contains API keys)
+www/app/iaputa/env.php
