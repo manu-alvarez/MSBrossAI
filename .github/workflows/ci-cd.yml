@@ -26,6 +26,7 @@ jobs:
           - { name: 'moko-tools', path: 'apps/moko-tools' }
           - { name: 'combipro', path: 'apps/combipro' }
           - { name: 'app-generator', path: 'apps/app-generator' }
+          - { name: 'dohler', path: 'apps/dohler' }
 
     steps:
       - name: Checkout
