@@ -68,14 +68,14 @@ export default function SearchHistory({ open, onClose, onSelectSearch }: SearchH
             anchor="right"
             open={open}
             onClose={onClose}
-            PaperProps={{
+            slotProps={{ paper: {
                 sx: {
                     width: { xs: '100%', sm: 420 },
                     bgcolor: 'background.paper',
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                 },
-            }}
+            }}}
         >
             <Box sx={{ p: 3 }}>
                 {/* Header */}
@@ -148,7 +148,7 @@ export default function SearchHistory({ open, onClose, onSelectSearch }: SearchH
                                                 </Box>
                                             }
                                             secondary={
-                                                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
+                                                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 0.5 }}>
                                                     <Chip
                                                         label={MODE_LABELS[item.transport_mode] || item.transport_mode}
                                                         size="small"

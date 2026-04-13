@@ -177,7 +177,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
             </Box>
           </Box>
 
-          <Stack direction="row" spacing={1.5} alignItems="center">
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
             {hasRealData && (
               <Chip
                 icon={<WifiIcon sx={{ fontSize: 14 }} />}

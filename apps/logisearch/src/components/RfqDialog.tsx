@@ -74,9 +74,9 @@ export default function RfqDialog({ open, onClose, content, onSave, canSave, ori
             onClose={onClose}
             maxWidth="md"
             fullWidth
-            PaperProps={{
+            slotProps={{ paper: {
                 sx: { maxHeight: '85vh' },
-            }}
+            }}}
         >
             <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>

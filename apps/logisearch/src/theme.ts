@@ -212,21 +212,21 @@ const theme = createTheme({
                     fontWeight: 600,
                     fontSize: '0.9rem',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                },
-                containedPrimary: {
-                    background: 'linear-gradient(135deg, #00E5FF, #00B8D4)',
-                    color: '#000000', // Forzar contraste en botones hero
-                    '&:hover': {
-                        background: 'linear-gradient(135deg, #99F6FF, #00E5FF)',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 10px 30px rgba(0, 229, 255, 0.25)',
+                    '&.MuiButton-containedPrimary': {
+                        background: 'linear-gradient(135deg, #00E5FF, #00B8D4)',
+                        color: '#000000',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #99F6FF, #00E5FF)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 10px 30px rgba(0, 229, 255, 0.25)',
+                        },
                     },
-                },
-                outlinedPrimary: {
-                    borderWidth: 2,
-                    '&:hover': {
+                    '&.MuiButton-outlinedPrimary': {
                         borderWidth: 2,
-                        background: alpha('#00B4D8', 0.08),
+                        '&:hover': {
+                            borderWidth: 2,
+                            background: alpha('#00B4D8', 0.08),
+                        },
                     },
                 },
             },
