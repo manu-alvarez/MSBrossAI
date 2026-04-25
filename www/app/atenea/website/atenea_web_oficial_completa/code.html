@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Restaurante Atenea - Una Experiencia Gastronómica Única</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&amp;family=Noto+Serif:wght@300;400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#1e1b18",
+                        "on-surface-variant": "#4e453d",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#1b1c19",
+                        "surface-container-low": "#f3f3f4",
+                        "on-tertiary-fixed-variant": "#4b4642",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "secondary": "#5e5e5b",
+                        "inverse-primary": "#e1c1a2",
+                        "inverse-on-surface": "#f0f1f1",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#c5bdb9",
+                        "surface-variant": "#e2e2e2",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#474744",
+                        "on-tertiary-container": "#514c49",
+                        "surface-dim": "#dadada",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e9e1dc",
+                        "on-secondary-container": "#63635f",
+                        "background": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "on-primary-container": "#604931",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed-dim": "#cdc5c0",
+                        "secondary-container": "#e1dfdb",
+                        "primary-fixed": "#ffdcbd",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#d9b99b",
+                        "primary-fixed-dim": "#e1c1a2",
+                        "on-primary-fixed": "#291805",
+                        "primary": "#725a41",
+                        "tertiary": "#635d5a",
+                        "secondary-fixed": "#e4e2dd",
+                        "outline-variant": "#d2c4b9",
+                        "outline": "#80756c",
+                        "surface-tint": "#725a41",
+                        "on-primary-fixed-variant": "#59422b",
+                        "on-surface": "#1a1c1c",
+                        "secondary-fixed-dim": "#c8c6c2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "section-padding": "120px",
+                        "gutter": "32px",
+                        "container-max": "1200px",
+                        "element-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "label-caps": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "h3": ["Noto Serif"],
+                        "h1": ["Noto Serif"],
+                        "h2": ["Noto Serif"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "300" }],
+                        "h3": ["32px", { "lineHeight": "1.3", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "h1": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "h2": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .gentle-fade { transition: opacity 0.5s ease-in-out; }
+        .gentle-fade:hover { opacity: 0.8; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar Component -->
+<header class="bg-[#FDFCF0] dark:bg-stone-950 border-b border-[#D9B99B]/20 dark:border-stone-800 docked full-width top-0 sticky z-50 fade-in transition-opacity">
+<div class="max-w-7xl mx-auto px-12 h-24 flex justify-between items-center">
+<div class="text-2xl font-light tracking-[0.2em] text-[#D9B99B] dark:text-[#E5D5C5] font-h3">
+                Restaurante Atenea
+            </div>
+<nav class="hidden md:flex space-x-8 font-noto-serif tracking-widest uppercase text-xs">
+<a class="text-[#D9B99B] border-b border-[#D9B99B] pb-1" href="#inicio">Inicio</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#nosotros">Nosotros</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#el-restaurante">El Restaurante</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#nuestra-carta">Nuestra Carta</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#encuentranos">Encuéntranos</a>
+</nav>
+<button class="hidden md:block border border-[#D9B99B]/50 px-6 py-3 font-label-caps text-label-caps text-[#D9B99B] hover:bg-[#D9B99B]/10 transition-colors uppercase">
+                Reservar
+            </button>
+<button class="md:hidden text-[#D9B99B]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-screen min-h-[800px] flex items-center justify-center overflow-hidden" id="inicio">
+<div class="absolute inset-0 z-0">
+<img alt="Hero Background" class="w-full h-full object-cover object-center opacity-90" data-alt="Elegant fine dining table setup in a softly lit restaurant interior, warm atmospheric lighting, high-end gastronomy aesthetics" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArtN-SAxWbov0KJMdLbuWyh7VukMsnWTP7z6nXeN-Qyt2mO5M0-VLkdci7jFd7xnFaX4pbtee-nsJLedZj3aVNFbxOwfLUX1irRnM_lXHJZxEMHuDGCCDtpWxHqodvKgG4y6ZGURYPS-1cUi3p80RnwMBWr3rYDChkMJxShhLNBXNHc7WOPm6fh_2uXtzDaJfNAN-smR3mq7Lbcdz3usyF9YaKzhlBVAxrmS6P8F0V6_Hz_vclyUy_T-iQj3uIfz4FkYt3tQwqzdL0"/>
+<div class="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
+</div>
+<div class="relative z-10 text-center px-4 max-w-4xl mx-auto fade-in">
+<span class="font-label-caps text-label-caps text-primary-container tracking-[0.3em] uppercase mb-6 block">Bienvenidos</span>
+<h1 class="font-h1 text-h1 text-white mb-8 drop-shadow-sm">UNA EXPERIENCIA<br/>GASTRONÓMICA ÚNICA</h1>
+<div class="w-24 h-px bg-primary-container mx-auto mb-8 opacity-50"></div>
+<p class="font-body-lg text-body-lg text-surface-container-low max-w-2xl mx-auto">
+                    El arte de la buena mesa en el corazón de Torrente de Cinca.
+                </p>
+</div>
+</section>
+<!-- Nosotros Section -->
+<section class="py-section-padding bg-surface" id="nosotros">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="space-y-8">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Nosotros</span>
+<h2 class="font-h2 text-h2 text-on-surface">Pasión por la cocina</h2>
+<div class="w-12 h-px bg-outline-variant"></div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Ubicados en Torrente de Cinca (Huesca), Restaurante Atenea nace de una profunda reverencia por el entorno y sus frutos. Nuestra propuesta culinaria cabalga entre la innovación más respetuosa y la tradición más arraigada, utilizando siempre productos de temporada que dictan el ritmo de nuestros fogones.
+                        </p>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Acompañamos cada creación con una meticulosa selección de vinos, diseñada para ensalzar los sabores de nuestra tierra y ofrecer un maridaje perfecto en cada bocado.
+                        </p>
+<blockquote class="pl-6 border-l border-primary-container mt-12">
+<p class="font-h3 text-xl italic text-on-surface-variant mb-4">"No se puede cocinar bien si no se pone en ello el corazón, dado que, por encima de todo, se trata de una obra de amor."</p>
+<footer class="font-label-caps text-label-caps text-outline uppercase">— Fernand Point</footer>
+</blockquote>
+</div>
+<div class="relative h-[600px] w-full">
+<img alt="Chef at work" class="w-full h-full object-cover object-center absolute inset-0 z-10 shadow-sm border border-outline-variant/30" data-alt="Close up of a skilled chef delicately plating a high-end gastronomic dish in a modern kitchen, focused lighting, culinary artistry" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9tpzEwGJPJuhck-b0ic1-tgDsfDleKMK_eHQ0i7_v2dPXxw_yLNC8qSnFni_Rt3X0_ebkkU45_mNADK11xOqs6kC15Pvn6lSY3acGNNSAr0l5IfmSuqHxkcyB_TgtsvCpmWJKU5Fk9KV_TxDQaNCvZbJe8lHt0xxkQxtF_1V2hYnjclYxNmIClNH0O-pFqYYje19EwpRuVMnzjIJDT1vumAhwc4po1gJzsy3r3uyoJKJBHGHoVe9EH4Q0fBJMuElqUZ1VQgoijIEw"/>
+<div class="absolute -bottom-8 -left-8 w-64 h-64 bg-surface-container-high -z-10"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- El Restaurante Section -->
+<section class="py-section-padding bg-surface-container-lowest border-t border-outline-variant/20" id="el-restaurante">
+<div class="max-w-container-max mx-auto px-gutter text-center mb-24">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest block mb-4">El Restaurante</span>
+<h2 class="font-h2 text-h2 text-on-surface mb-8">Qué encontrarás</h2>
+<div class="w-16 h-px bg-primary-container mx-auto"></div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-element-gap mb-24">
+<div class="bg-surface border border-outline-variant/20 p-12 text-center group hover:bg-surface-container-low transition-colors duration-500">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-6 block" style="font-variation-settings: 'FILL' 0;">deck</span>
+<h3 class="font-h3 text-2xl mb-4 text-on-surface">Sala Exterior</h3>
+<p class="font-body-md text-on-surface-variant">Un ambiente dinámico y luminoso, ideal para disfrutar de nuestra propuesta de forma desenfadada y rápida sin renunciar a la calidad.</p>
+</div>
+<div class="bg-surface border border-outline-variant/20 p-12 text-center group hover:bg-surface-container-low transition-colors duration-500">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-6 block" style="font-variation-settings: 'FILL' 0;">restaurant</span>
+<h3 class="font-h3 text-2xl mb-4 text-on-surface">Sala Interior</h3>
+<p class="font-body-md text-on-surface-variant">Un remanso de paz y tranquilidad. Un espacio diseñado para la pausa, la conversación íntima y el disfrute pausado de cada plato.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 h-[500px]">
+<img alt="Restaurant Interior" class="w-full h-full object-cover object-center border border-outline-variant/20" data-alt="Elegant minimalist restaurant interior with warm lighting, wooden tables, and refined decor, high-end architectural photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhGqmFntCWg2O2lzQFPOlV-AfPeeeG0feM0Qzne7xS-qfFf44kcpKY62E7yajbbkMkaHfzRTMAtdVqvYxHsI3UWxQwOt0oBFC8PN8uSJkbrxNP_RVU4ZWLZMpRbdLw0B5ntRP5u2BImtg3hc5SC5KL_mLBImJTMIOy4qkjBmSj6ujOhtFPM9bSnA9KWzdULGzkMEiMOPPDTXZDS8tlMTnp2MJvKgSIGfuik9K7TnNUt4uJ-b2RQU8gk_Q7FWM6bn0rir0gsPC2i244"/>
+</div>
+<div class="lg:col-span-5 space-y-6">
+<h3 class="font-h3 text-3xl text-on-surface">Especialistas en Brasa</h3>
+<p class="font-body-md text-on-surface-variant">Entendemos la cocina como un estudio de arte donde las brasas son nuestros pinceles. Dominamos el fuego para extraer los matices más profundos de las carnes y vegetales de proximidad, ofreciendo comida confort casera elevada a su máxima expresión.</p>
+<blockquote class="mt-8 pt-8 border-t border-outline-variant/30">
+<p class="font-body-lg italic text-on-surface-variant mb-2">"No hay amor más sincero que el amor a la comida."</p>
+<footer class="font-label-caps text-label-caps text-outline uppercase">— George Bernard Shaw</footer>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+<!-- Nuestra Carta Section -->
+<section class="py-section-padding bg-surface" id="nuestra-carta">
+<div class="max-w-container-max mx-auto px-gutter text-center mb-24">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest block mb-4">Descubre</span>
+<h2 class="font-h2 text-h2 text-on-surface mb-8">Nuestra Carta</h2>
+<div class="w-16 h-px bg-primary-container mx-auto mb-12"></div>
+<blockquote class="max-w-2xl mx-auto">
+<p class="font-h3 text-xl italic text-on-surface-variant mb-4">"El descubrimiento de un nuevo plato hace más por la felicidad de la humanidad que el descubrimiento de una nueva estrella."</p>
+<footer class="font-label-caps text-label-caps text-outline uppercase">— Talleyrand</footer>
+</blockquote>
+</div>
+<!-- Bento Grid for Menu Preview -->
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 gap-6 mb-32 md:grid-cols-3">
+<div class="relative h-[400px] group overflow-hidden border border-outline-variant/20">
+<img alt="Grilled Meat" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Perfectly grilled premium steak on an elegant ceramic plate with subtle garnish, high-end food photography, dark moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCFqHC6PiOUegmscxG-GT0r-Yl2eNcRvfcVQ8asqWKbRDqHCOer_mw8EiWfTGQYkbw0GK4IMi4QcVqyPnp1ceqI9aZesCgR4sV2bjDsb53AQHjYzgYUugkVJfzlkNI6cmXa2FLOsNvEczXXEoPPou39oaj0whORUpUxGn1C8RP3MZBEVGbgKQf-w-BgoojXNGjCi-joEFVhDASd5cdh1BsI6WW5qpAiygH5daX1SLLFuRWiB4HL-mMuOo9Y_DshFsiOYSt5JdJW9gX"/>
+<div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent flex items-end p-8">
+<div>
+<span class="font-label-caps text-white/80 uppercase tracking-widest mb-2 block">Especialidad</span>
+<h3 class="font-h3 text-2xl text-white">Chuleta de Vaca a la Brasa</h3>
+</div>
+</div>
+</div>
+<div class="relative h-[400px] group overflow-hidden border border-outline-variant/20">
+<img alt="Entrantes" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC828t_hdwGMbEVtX_hUp7bORGz_YMdJDxxXzbLnQO6IlvmedJfUYf28Y99UnWAkoiQEK-o5DVWNkIiKCocfRi_B1jnQ5Igs9nQj5MkH1IBkKTBVTPmJ8L_SmIDRlLrtzvApa7bUhkuycCUc5vm0W-DsC47FImR_qw1zq4tDKagJK6LRj1666i4TJfdCPLqUdSuwplNGmVmtyBaTAK9RznliCDy0biQmbyBBVPIS4D7ZoTKPyBJku4TVH3Op_Zcby0tQiQ8zwiOyRYo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent flex items-end p-8">
+<div>
+<span class="font-label-caps text-white/80 uppercase tracking-widest mb-2 block">Entrantes</span>
+<h3 class="font-h3 text-2xl text-white">Delicias de Temporada</h3>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Menu List -->
+<div class="max-w-4xl mx-auto px-gutter">
+<div class="space-y-16">
+<!-- Entrantes -->
+<div>
+<h3 class="font-h3 text-3xl text-center text-on-surface border-b border-outline-variant/30 pb-4 mb-8">Para Comenzar</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:grid-cols-3">
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Calamares a la romana</span>
+</div>
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Croquetas de jamón ibérico</span>
+</div>
+</div>
+</div>
+<!-- Principales -->
+<div>
+<h3 class="font-h3 text-3xl text-center text-on-surface border-b border-outline-variant/30 pb-4 mb-8">Del Mar y la Tierra</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:grid-cols-3">
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Bacalao a la vizcaína</span>
+</div>
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Lomo de merluza de pincho</span>
+</div>
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Chuleta de vaca vieja a la brasa</span>
+</div>
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Ternasco de Aragón asado</span>
+</div>
+</div>
+</div>
+<!-- Postres -->
+<div>
+<h3 class="font-h3 text-3xl text-center text-on-surface border-b border-outline-variant/30 pb-4 mb-8">El Toque Dulce</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:grid-cols-3">
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Coulant de chocolate con helado</span>
+</div>
+<div class="flex justify-between items-baseline border-b border-outline-variant/10 pb-2">
+<span class="font-body-lg text-on-surface">Torrija caramelizada</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Vinos Section -->
+<section class="py-section-padding bg-[#1a1c1c] text-surface-container-lowest border-y border-outline/30">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="order-2 lg:order-1 relative h-[600px]">
+<img alt="Wine pouring" class="w-full h-full object-cover border border-surface-tint/30" data-alt="Elegant pouring of red wine into a crystal glass against a dark background, dramatic moody lighting, fine dining detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaS6RN7YIA0bVCQK2ax9JLHOArZFglDlJ0Q41nh4v_nQY_HMiM8t2pruCB3E2fsAIVGIMHIufBiys5ZELNl4aPjQB7IBsvZySetWRfWhVYSkSY2OYToeXUlGh9SeNaIolzOlWyYRHUj3ASCAQJKfuAWSDNTisGk0Iv4ZBh5YJ-w5bSY1kEBxhIR3pJ7rwkKzpCfSJP3rg3y1x79h7KU5wcF4p73PYDo6MSBtQxWtClaCx9yodINKg5RBjvl78e9Y5OU_KBKbUhznyd"/>
+</div>
+<div class="order-1 lg:order-2 space-y-8">
+<span class="font-label-caps text-label-caps text-primary-container uppercase tracking-widest">Bodega</span>
+<h2 class="font-h2 text-h2 text-white">Vinos y Cavas</h2>
+<div class="w-12 h-px bg-primary-container/50"></div>
+<p class="font-body-md text-surface-dim">
+                        Una selección pensada para elevar cada bocado. Nuestra bodega alberga referencias nobles, prestando especial atención a las denominaciones de origen cercanas y a clásicos atemporales.
+                    </p>
+<div class="grid grid-cols-2 gap-x-8 gap-y-4 pt-6 font-body-lg text-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Glárima
+                        </div>
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Viñas del Vero
+                        </div>
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Enate
+                        </div>
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Sommos
+                        </div>
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Ramón Bilbao
+                        </div>
+<div class="flex items-center gap-2">
+<div class="w-1 h-1 bg-primary-container rounded-full"></div>
+                            Protos
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Encuéntranos Section -->
+<section class="py-section-padding bg-surface" id="encuentranos">
+<div class="max-w-container-max mx-auto px-gutter text-center mb-16">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest block mb-4">Visítanos</span>
+<h2 class="font-h2 text-h2 text-on-surface mb-8">Encuéntranos</h2>
+<div class="w-16 h-px bg-primary-container mx-auto"></div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="bg-surface-container-lowest border border-outline-variant/20 p-12 flex flex-col justify-center items-center text-center space-y-6">
+<span class="material-symbols-outlined text-4xl text-primary-container" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<div>
+<h4 class="font-label-caps uppercase tracking-widest text-outline mb-2">Dirección</h4>
+<p class="font-body-lg text-on-surface">Calle la Vía s/n<br/>22590 Torrente de Cinca, Huesca</p>
+</div>
+<div class="w-8 h-px bg-outline-variant my-4"></div>
+<span class="material-symbols-outlined text-4xl text-primary-container mt-4" style="font-variation-settings: 'FILL' 0;">phone</span>
+<div>
+<h4 class="font-label-caps uppercase tracking-widest text-outline mb-2">Reservas</h4>
+<p class="font-body-lg text-on-surface">+34 609 917 007</p>
+</div>
+</div>
+<div class="h-[400px] md:h-auto border border-outline-variant/20 relative bg-surface-container-high overflow-hidden flex items-center justify-center">
+<!-- Placeholder for Map image representing the location -->
+<div class="text-center text-on-surface-variant p-8">
+<span class="material-symbols-outlined text-4xl mb-4" style="font-variation-settings: 'FILL' 0;">map</span>
+<p class="font-body-md" data-location="Torrente de Cinca, Huesca">Mapa Interactivo de Torrente de Cinca</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-[#FDFCF0] dark:bg-stone-950 border-t border-[#D9B99B]/10 dark:border-stone-800 full-width py-20 gentle-fade">
+<div class="max-w-7xl mx-auto px-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+<div>
+<div class="text-xl tracking-widest text-[#D9B99B] font-h3 mb-4">
+                    Restaurante Atenea
+                </div>
+<p class="font-noto-serif text-sm font-light text-stone-500">
+                    © 2024 Restaurante Atenea. Todos los derechos reservados.
+                </p>
+</div>
+<div class="md:col-span-2 flex justify-center md:justify-end">
+<nav class="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 font-noto-serif text-sm font-light text-stone-400">
+<a class="hover:text-[#D9B99B] underline underline-offset-4" href="#">Contacto</a>
+<a class="hover:text-[#D9B99B] underline underline-offset-4" href="#">Ubicación</a>
+<a class="hover:text-[#D9B99B] underline underline-offset-4" href="#">Aviso Legal</a>
+<a class="hover:text-[#D9B99B] underline underline-offset-4" href="#">Privacidad</a>
+</nav>
+</div>
+</div>
+</footer>
+</body></html>
