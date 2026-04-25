@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Restaurante Atenea - Reservas</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&amp;family=Noto+Serif:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#1e1b18",
+                        "on-surface-variant": "#4e453d",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#1b1c19",
+                        "surface-container-low": "#f3f3f4",
+                        "on-tertiary-fixed-variant": "#4b4642",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "secondary": "#5e5e5b",
+                        "inverse-primary": "#e1c1a2",
+                        "inverse-on-surface": "#f0f1f1",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#c5bdb9",
+                        "surface-variant": "#e2e2e2",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#474744",
+                        "on-tertiary-container": "#514c49",
+                        "surface-dim": "#dadada",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e9e1dc",
+                        "on-secondary-container": "#63635f",
+                        "background": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "on-primary-container": "#604931",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed-dim": "#cdc5c0",
+                        "secondary-container": "#e1dfdb",
+                        "primary-fixed": "#ffdcbd",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#d9b99b",
+                        "primary-fixed-dim": "#e1c1a2",
+                        "on-primary-fixed": "#291805",
+                        "primary": "#725a41",
+                        "tertiary": "#635d5a",
+                        "secondary-fixed": "#e4e2dd",
+                        "outline-variant": "#d2c4b9",
+                        "outline": "#80756c",
+                        "surface-tint": "#725a41",
+                        "on-primary-fixed-variant": "#59422b",
+                        "on-surface": "#1a1c1c",
+                        "secondary-fixed-dim": "#c8c6c2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "section-padding": "120px",
+                        "gutter": "32px",
+                        "container-max": "1200px",
+                        "element-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "label-caps": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "h3": ["Noto Serif"],
+                        "h1": ["Noto Serif"],
+                        "h2": ["Noto Serif"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "300" }],
+                        "h3": ["32px", { "lineHeight": "1.3", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "h1": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "h2": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-[#FDFCF0] dark:bg-stone-950 docked full-width top-0 sticky border-b border-[#D9B99B]/20 dark:border-stone-800 flat no shadows fade-in transition-opacity z-50">
+<div class="max-w-7xl mx-auto px-12 h-24 flex justify-between items-center">
+<a class="text-2xl font-light tracking-[0.2em] text-[#D9B99B] dark:text-[#E5D5C5]" href="#">
+                Restaurante Atenea
+            </a>
+<div class="hidden md:flex space-x-8">
+<a class="font-noto-serif tracking-widest uppercase text-xs text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#">Inicio</a>
+<a class="font-noto-serif tracking-widest uppercase text-xs text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#">Nosotros</a>
+<a class="font-noto-serif tracking-widest uppercase text-xs text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#">El Restaurante</a>
+<a class="font-noto-serif tracking-widest uppercase text-xs text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#">Nuestra Carta</a>
+<a class="font-noto-serif tracking-widest uppercase text-xs text-stone-500 dark:text-stone-400 hover:text-[#D9B99B] transition-colors duration-500" href="#">Encuéntranos</a>
+</div>
+<button class="font-noto-serif tracking-widest uppercase text-xs text-[#D9B99B] dark:text-[#E5D5C5] hover:text-[#D9B99B] transition-colors duration-500 border border-[#D9B99B] px-6 py-3">
+                Reservar
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="py-section-padding px-gutter max-w-container-max mx-auto">
+<div class="text-center mb-section-padding">
+<h1 class="font-h1 text-h1 text-primary mb-6">Su Mesa Le Espera</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">Complete los detalles a continuación para asegurar su experiencia gastronómica. Las reservas están disponibles con hasta 60 días de antelación.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-[80px]">
+<!-- Left Column: Form -->
+<div class="lg:col-span-7">
+<form class="space-y-[60px]">
+<!-- Step 1: Details -->
+<section>
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-8 block">01. Detalles de la Reserva</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-element-gap">
+<!-- Date -->
+<div class="relative group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="date">Fecha</label>
+<div class="relative">
+<input class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer appearance-none" id="date" type="date"/>
+<span class="material-symbols-outlined absolute right-0 top-0 text-secondary pointer-events-none" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+<!-- Time -->
+<div class="relative group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="time">Hora</label>
+<div class="relative">
+<select class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer appearance-none rounded-none" id="time">
+<option disabled="" selected="" value="">Seleccionar</option>
+<option value="13:30">13:30</option>
+<option value="14:00">14:00</option>
+<option value="14:30">14:30</option>
+<option value="20:30">20:30</option>
+<option value="21:00">21:00</option>
+<option value="21:30">21:30</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-0 text-secondary pointer-events-none" data-icon="schedule">schedule</span>
+</div>
+</div>
+<!-- Guests -->
+<div class="relative group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="guests">Personas</label>
+<div class="relative">
+<select class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer appearance-none rounded-none" id="guests">
+<option value="1">1 Persona</option>
+<option selected="" value="2">2 Personas</option>
+<option value="3">3 Personas</option>
+<option value="4">4 Personas</option>
+<option value="5">5 Personas</option>
+<option value="6">6 Personas</option>
+<option value="large">Más de 6 (Contactar)</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-0 text-secondary pointer-events-none" data-icon="group">group</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Step 2: Contact -->
+<section>
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-8 block">02. Información de Contacto</span>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-element-gap gap-y-12">
+<div class="group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="firstname">Nombre</label>
+<input class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:border-primary transition-colors rounded-none" id="firstname" placeholder="Su nombre" type="text"/>
+</div>
+<div class="group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="lastname">Apellidos</label>
+<input class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:border-primary transition-colors rounded-none" id="lastname" placeholder="Sus apellidos" type="text"/>
+</div>
+<div class="group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="email">Correo Electrónico</label>
+<input class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:border-primary transition-colors rounded-none" id="email" placeholder="ejemplo@correo.com" type="email"/>
+</div>
+<div class="group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="phone">Teléfono</label>
+<input class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:border-primary transition-colors rounded-none" id="phone" placeholder="+34 000 000 000" type="tel"/>
+</div>
+</div>
+</section>
+<!-- Step 3: Requests -->
+<section>
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-8 block">03. Peticiones Especiales</span>
+<div class="group">
+<label class="font-label-caps text-label-caps text-secondary block mb-2 uppercase" for="requests">Alergias o preferencias (Opcional)</label>
+<textarea class="w-full bg-transparent border-b border-outline-variant pb-2 font-body-md text-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:border-primary transition-colors resize-none rounded-none" id="requests" placeholder="Indique si hay alguna intolerancia alimentaria, motivo de celebración..." rows="3"></textarea>
+</div>
+</section>
+<div class="pt-8">
+<button class="w-full md:w-auto px-12 py-5 bg-primary-container text-on-primary-container font-label-caps text-label-caps tracking-widest uppercase hover:bg-primary hover:text-on-primary transition-colors duration-300" type="button">
+                            Confirmar Reserva
+                        </button>
+</div>
+</form>
+</div>
+<!-- Right Column: Visual & Summary -->
+<div class="lg:col-span-5 relative">
+<div class="sticky top-32 space-y-8">
+<!-- Image -->
+<div class="aspect-[4/5] w-full overflow-hidden bg-surface-container-low border border-outline-variant/30">
+<img alt="Ambiente del restaurante" class="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-105 transition-all duration-1000 ease-in-out" data-alt="close-up of elegant minimalist restaurant table setting with white linen, fine crystal wine glasses, silver cutlery, and soft warm ambient lighting reflecting off champagne gold accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB25FOz51RcE0Mxq2OQSFf9B1-MhB3Rg0dmeW6RrM2-TWkiBd63Qd1elFVXoGDvXA1Aj150w5QBecmKUbn4gV-l_YJx-yoT7T941o-ABa6BDe4yNzrEIyBNEYVZyXV4BtdfDnQe3Nkzb8cgEOEvow-p5aZMv_b56ey8tGWAQbwUftqDHi11UrBECDLMKK6RnQU87Ow-BUmxn1DKI0dSINvnJsViJEVkCAQWOBFuUZSOeFMdW3UmQFkR-QVhvm92022RW-_ReX3OM1VM"/>
+</div>
+<!-- Summary Box (Immediate Confirmation Placeholder) -->
+<div class="bg-surface-container-low border border-outline-variant/50 p-8">
+<h3 class="font-h3 text-h3 text-primary mb-6">Resumen</h3>
+<ul class="space-y-4 font-body-md text-body-md text-secondary">
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span>Fecha</span>
+<span class="text-on-surface">-- / -- / ----</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span>Hora</span>
+<span class="text-on-surface">--:--</span>
+</li>
+<li class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span>Comensales</span>
+<span class="text-on-surface">-</span>
+</li>
+</ul>
+<p class="font-label-caps text-label-caps text-tertiary mt-8 text-center uppercase tracking-widest">
+                            Se requerirá confirmación final por email.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#FDFCF0] dark:bg-stone-950 full-width py-20 border-t border-[#D9B99B]/10 dark:border-stone-800 flat no shadows gentle-fade">
+<div class="max-w-7xl mx-auto px-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left items-center">
+<div class="text-xl tracking-widest text-[#D9B99B]">
+                Restaurante Atenea
+            </div>
+<div class="flex flex-col md:flex-row justify-center gap-6 font-noto-serif text-sm font-light">
+<a class="text-stone-400 hover:text-[#D9B99B] underline underline-offset-4 transition-colors" href="#">Contacto</a>
+<a class="text-stone-400 hover:text-[#D9B99B] underline underline-offset-4 transition-colors" href="#">Ubicación</a>
+<a class="text-stone-400 hover:text-[#D9B99B] underline underline-offset-4 transition-colors" href="#">Aviso Legal</a>
+<a class="text-stone-400 hover:text-[#D9B99B] underline underline-offset-4 transition-colors" href="#">Privacidad</a>
+</div>
+<div class="font-noto-serif text-sm font-light text-stone-400 md:text-right">
+                © 2024 Restaurante Atenea. Todos los derechos reservados.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -18,7 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // CONFIGURATION
 // ──────────────────────────────────────────────
 $VAULT_FILE = __DIR__ . '/msbross_vault.json';
-// Obtenemos la clave de una variable de entorno para no dejarla expuesta en el código (GitHub detecta y revoca las hardcodeadas).
+$ENV_FILE = __DIR__ . '/.env';
+if (file_exists($ENV_FILE)) {
+    $lines = file($ENV_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        putenv(trim($name) . '=' . trim($value));
+    }
+}
 $GEMINI_API_KEY = getenv('GEMINI_API_KEY') ?: "REPLACE_ME_SECRETS";
 
 function get_vault() {
@@ -61,7 +69,7 @@ function call_gemini($system_prompt, $user_text) {
     
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+
     
     if ($httpCode !== 200) {
         return null;
