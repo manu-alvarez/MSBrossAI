@@ -97,12 +97,30 @@ dialog{background:transparent;border:none;padding:0;max-width:100vw;max-height:1
       <a href="#carta">Carta</a>
       <a href="#encuentranos">Encuéntranos</a>
     </nav>
-    <div class="hidden md:flex items-center gap-4">
+    <div class="flex items-center gap-2 md:gap-4">
       <button onclick="toggleTheme()" id="theme-toggle" class="btn-ghost flex items-center justify-center p-2 rounded-full" style="padding:0.5rem; border-radius:50%; min-width: 40px; min-height: 40px; border-color: transparent;" aria-label="Cambiar tema">
         <span class="material-symbols-outlined" style="font-size: 1.2rem;">light_mode</span>
       </button>
-      <button onclick="openReservationModal()" class="btn-primary">Reservar</button>
+      <button onclick="openReservationModal()" class="btn-primary hidden sm:block">Reservar</button>
+      <!-- Mobile Menu Button -->
+      <button onclick="toggleMobileMenu()" class="md:hidden flex items-center justify-center p-2" style="color:var(--gold)">
+        <span class="material-symbols-outlined" style="font-size: 1.8rem;" id="menu-icon">menu</span>
+      </button>
     </div>
+  </div>
+  <!-- Mobile Navigation Overlay -->
+  <div id="mobile-menu" class="fixed inset-0 bg-stone/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center gap-8 transition-all duration-500 opacity-0 pointer-events-none md:hidden">
+    <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-gold">
+      <span class="material-symbols-outlined" style="font-size: 2rem;">close</span>
+    </button>
+    <nav class="flex flex-col items-center gap-8 text-lg tracking-widest uppercase font-serif">
+      <a href="#inicio" onclick="toggleMobileMenu()">Inicio</a>
+      <a href="#nosotros" onclick="toggleMobileMenu()">Nosotros</a>
+      <a href="#brasa" onclick="toggleMobileMenu()">La Brasa</a>
+      <a href="#carta" onclick="toggleMobileMenu()">Carta</a>
+      <a href="#encuentranos" onclick="toggleMobileMenu()">Encuéntranos</a>
+    </nav>
+    <button onclick="openReservationModal(); toggleMobileMenu();" class="btn-primary mt-4">Reservar Mesa</button>
   </div>
 </header>
 
@@ -435,6 +453,20 @@ function toggleTheme() {
   // Force update header background if scrolled
   if(window.scrollY > 60) {
     document.getElementById('main-header').style.background = isLight ? 'rgba(245,239,232,.95)' : 'rgba(13,11,9,.95)';
+  }
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const isOpen = menu.classList.contains('opacity-100');
+  if(isOpen) {
+    menu.classList.remove('opacity-100');
+    menu.classList.add('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = '';
+  } else {
+    menu.classList.add('opacity-100');
+    menu.classList.remove('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = 'hidden';
   }
 }
 
