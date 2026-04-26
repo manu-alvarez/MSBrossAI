@@ -298,7 +298,7 @@ dialog{background:transparent;border:none;padding:0;max-width:100vw;max-height:1
 </footer>
 <!-- CONFIG Nikolina -->
 <script>
-  const NIKOLINA_SERVER = 'https://minda-unscolded-pyrochemically.ngrok-free.dev';
+  const NIKOLINA_SERVER = 'https://msbross.me';
 </script>
 
 <!-- MODAL -->
@@ -473,8 +473,8 @@ async function submitReservation(e){
   if(!name||!date||!time){showFeedback(fb,'error','Por favor complete nombre, fecha y hora.');return;}
   btn.disabled=true;btn.textContent='ENVIANDO...';fb.style.display='none';
   try{
-    const r=await fetch(`${NIKOLINA_SERVER}/api/public/reservations`,{
-      method:'POST',headers:{'Content-Type':'application/json', 'ngrok-skip-browser-warning': 'true'},
+    const r=await fetch(`${NIKOLINA_SERVER}/api.php?action=nikolina_reservations`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({customer_name:name,date,time,num_guests:guests,
         customer_phone:document.getElementById('phone').value.trim(),
         customer_email:document.getElementById('email').value.trim(),
@@ -485,7 +485,7 @@ async function submitReservation(e){
       showFeedback(fb,'success',`✦ Reserva confirmada — Mesa ${d.table_number} · ${guests} persona${guests>1?'s':''} · ${date} a las ${time}. ¡Le esperamos en Atenea!`);
       document.getElementById('reservation-form').reset();
     } else showFeedback(fb,'error',`${d.detail||'No hay disponibilidad para ese día y hora.'}`);
-  }catch(err){showFeedback(fb,'error','No se pudo conectar. Llámenos al +34 609 917 007.');}
+  }catch(err){ console.error('[Nikolina]', err); document.getElementById('nikolina-status-badge').textContent = 'ERR: ' + err.message;showFeedback(fb,'error','No se pudo conectar. Llámenos al +34 609 917 007.');}
   finally{btn.disabled=false;btn.textContent='CONFIRMAR RESERVA';}
 }
 function showFeedback(el,type,msg){
@@ -508,7 +508,7 @@ async function toggleNikolinaCall(){
   try{
     if(!window.LivekitClient)await loadScript('https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js');
     const name=document.getElementById('ai-caller-name').value.trim()||'Cliente Atenea';
-    const r=await fetch(`${NIKOLINA_SERVER}/api/public/token`,{method:'POST',headers:{'Content-Type':'application/json', 'ngrok-skip-browser-warning': 'true'},body:JSON.stringify({caller_name:name,source:'llamada_web'})});
+    const r=await fetch(`${NIKOLINA_SERVER}/api.php?action=nikolina_token`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({caller_name:name,source:'llamada_web'})});
     if(!r.ok)throw new Error('Token error');
     const{accessToken,livekitUrl}=await r.json();
     nikolinaRoom=new LivekitClient.Room({audioCaptureDefaults:{echoCancellation:true,noiseSuppression:true}});
@@ -522,7 +522,7 @@ async function toggleNikolinaCall(){
     document.getElementById('btn-ai-connect').style.background='#7f1d1d';
     document.getElementById('btn-ai-mute').style.display='flex';
     document.getElementById('nikolina-orb').style.animation='orbPulse 2s ease-in-out infinite';
-  }catch(err){
+  }catch(err){ console.error('[Nikolina]', err); document.getElementById('nikolina-status-badge').textContent = 'ERR: ' + err.message;
     setNikolinaStatus('ERROR','error');
     document.getElementById('btn-ai-label').textContent='REINTENTAR';
     document.getElementById('btn-ai-connect').disabled=false;nikolinaRoom=null;
