@@ -27,7 +27,7 @@ module.exports = {
     {
       name: 'nikolina-api-hub',
       script: './apps/livekit-nikolina/venv/bin/python3',
-      args: 'src/main.py',
+      args: 'server/main.py',
       cwd: './apps/livekit-nikolina',
       env: {
         PYTHONPATH: './agent/src:./server/src',
@@ -57,7 +57,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'dohler-backend',
-      script: 'python3',
+      script: "/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3",
       args: '-m uvicorn app:app --host 0.0.0.0 --port 8002',
       cwd: './apps/dohler/backend',
       out_file: './apps/dohler/backend/dohler.log',
@@ -71,9 +71,9 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'iaputa-backend',
-      script: 'python3',
-      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8006',
-      cwd: './apps/iaputa-os/backend',
+      script: "/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3",
+      args: '-m uvicorn main:app --host 0.0.0.0 --port 8006',
+      cwd: '/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend',
       out_file: './apps/iaputa-os/backend/iaputa.log',
       error_file: './apps/iaputa-os/backend/iaputa.error.log',
       autorestart: true,

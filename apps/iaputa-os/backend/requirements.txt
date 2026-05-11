@@ -1,32 +1,32 @@
 # Core framework
-fastapi==0.135.1
-uvicorn==0.41.0
-python-multipart==0.0.22
-aiofiles==25.1.0
-pydantic-settings==2.13.1
-python-dotenv==1.2.2
+fastapi
+uvicorn
+python-multipart
+aiofiles
+pydantic-settings
+python-dotenv
 
 # AI / LLM
-groq==1.1.1
+groq
 
 # Tools
-duckduckgo-search==8.1.1
-pyautogui==0.9.54
-pillow==12.1.1
-edge-tts==7.2.7
+duckduckgo-search
+pyautogui
+pillow
+edge-tts
 
 # Google Workspace
-google-api-python-client==2.192.0
-google-auth-httplib2==0.3.0
-google-auth-oauthlib==1.3.0
-httpx==0.27.0
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+httpx
 
 # Microsoft
-msal==1.31.0
-msal-extensions==1.2.0
+msal
+msal-extensions
 
 # Monitoring
-sentry-sdk[fastapi]==2.22.0
+sentry-sdk[fastapi]
 
 # Security
-slowapi==0.1.9
+slowapi
