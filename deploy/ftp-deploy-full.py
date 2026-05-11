@@ -95,6 +95,13 @@ if __name__ == "__main__":
                     upload_dir(ftp, app_local, f"/www/app/{app_name}")
                     print(f"✅ {app_name} deployed!")
         
+        # Upload newton directory (intermediate page)
+        newton_dir = os.path.join(local_path, "newton")
+        if os.path.isdir(newton_dir):
+            print("\n📦 Deploying newton (intermediate)...")
+            upload_dir(ftp, newton_dir, "/www/newton")
+            print("✅ newton deployed!")
+        
         ftp.quit()
         print("\n🚀 Full FTP deployment completed!")
         
