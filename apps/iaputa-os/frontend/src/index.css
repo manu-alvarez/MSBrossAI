@@ -68,9 +68,9 @@ body {
 
 .chat-glass-panel {
   flex: 1;
-  max-width: 600px;
-  min-height: 0; /* critical for flex children */
-  margin-left: auto;
+  max-width: 800px;
+  min-height: 0;
+  margin: auto;
 }
 
 /* ─── Header ─── */
