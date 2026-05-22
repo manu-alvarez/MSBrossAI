@@ -434,7 +434,7 @@ async def entrypoint(ctx: JobContext) -> None:
             pipeline_cfg = {
                 "name": "Gemini 2.5 Stable",
                 "architecture": "realtime",
-                "realtime_model": "gemini-2.5-flash-native-audio-latest",
+                "realtime_model": "gemini-1.5-flash",
                 "realtime_voice": "Aoede",
                 "llm_temperature": 0.7
             }
@@ -545,7 +545,7 @@ async def entrypoint(ctx: JobContext) -> None:
 
             # Gemini 2.5 Flash Native Audio - The proven high-reliability voice engine
             model = RealtimeModel(
-                model=pipeline_cfg.get("realtime_model", "gemini-2.5-flash-native-audio-latest"),
+                model=pipeline_cfg.get("realtime_model", "gemini-1.5-flash"),
                 api_key=api_key,
                 voice=pipeline_cfg.get("realtime_voice", "Aoede"),
                 instructions=system_prompt,
@@ -679,14 +679,24 @@ async def entrypoint(ctx: JobContext) -> None:
             if _greeted:
                 return
             _greeted = True
-            await asyncio.sleep(1.0)
-            logger.info("Nikolina sending proactive greeting...")
-            try:
-                await session.generate_reply(
-                    instructions="Greet the caller warmly. Introduce yourself as Nikolina, the virtual assistant for the restaurant. Ask how you can help them today with their reservation."
-                )
-            except Exception as e:
-                logger.warning(f"Greeting failed: {e}")
+            
+            # Use a robust retry loop for the initial greeting
+            for attempt in range(1, 6):
+                await asyncio.sleep(2.0 * attempt)
+                if not session.is_running:
+                    logger.warning(f"Nikolina greeting attempt {attempt}/5 failed: AgentSession isn't running yet")
+                    continue
+                
+                logger.info(f"Nikolina sending proactive greeting (attempt {attempt})...")
+                try:
+                    await session.generate_reply(
+                        instructions="Saluda cálidamente. Preséntate como Nikolina, la asistente virtual del restaurante. Pregunta cómo puedes ayudar con su reserva hoy."
+                    )
+                    return # Success
+                except Exception as e:
+                    logger.warning(f"Greeting attempt {attempt} failed: {e}")
+            
+            logger.error("All greeting attempts failed.")
 
         @ctx.room.on("participant_connected")
         def on_participant_connected(participant):

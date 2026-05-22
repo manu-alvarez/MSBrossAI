@@ -31,15 +31,17 @@ body {
 
 .luxury-orb-background {
   position: absolute;
-  top: 0; left: 0;
+  top: 50%; left: 50%;
   width: 100%; height: 100%;
+  max-width: 600px;
+  max-height: 600px;
   z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(0.85);
-  opacity: 0.8;
-  filter: blur(20px) saturate(1.5);
+  transform: translate(-50%, -50%) scale(0.65); /* Scaled down and perfectly centered */
+  opacity: 0.7;
+  filter: blur(10px) saturate(1.2);
   pointer-events: none;
 }
 
@@ -52,9 +54,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  pointer-events: none; /* Allows interacting with background if needed, but we override for children */
+  justify-content: center; /* Ensures vertical centering */
+  padding: 1rem;
+  pointer-events: none; 
 }
 
 /* ─── Glass Panel ─── */
@@ -74,12 +76,12 @@ body {
 }
 
 .chat-glass-panel {
-  width: 100%;
-  max-width: 900px;
+  width: 95%;
+  max-width: 850px;
   height: auto;
-  max-height: 85dvh;
-  margin: auto;
-  pointer-events: auto; /* Re-enable for the panel */
+  max-height: 80dvh; /* Limit height to prevent being too high on small screens */
+  margin: 0 auto;
+  pointer-events: auto;
 }
 
 /* ─── Header ─── */

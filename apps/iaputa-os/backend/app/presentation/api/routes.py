@@ -13,12 +13,13 @@ from app.infrastructure.audio.tts_stt_adapter import GroqEdgeAudioAdapter
 from app.application.use_cases.memory_service import clear_history
 from app.domain.entities import AIResponse
 from app.infrastructure.tools.toolbox import analyze_vision_image
+from app.infrastructure.llm.gemini_adapter import GeminiAdapter
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 def get_chat_usecase() -> ChatUseCase:
-    return ChatUseCase(llm_adapter=GroqAdapter(), audio_adapter=GroqEdgeAudioAdapter())
+    return ChatUseCase(llm_adapter=GeminiAdapter(), audio_adapter=GroqEdgeAudioAdapter())
 
 def get_audio_adapter() -> GroqEdgeAudioAdapter:
     return GroqEdgeAudioAdapter()
