@@ -70,18 +70,18 @@ if __name__ == "__main__":
         print(f"✅ Connected! PWD: {ftp.pwd()}")
         
         # Upload index.html (landing page) first
-        ftp.cwd("/")
+        ftp.cwd("/www")
         landing = os.path.join(local_path, "index.html")
         if os.path.isfile(landing):
             with open(landing, 'rb') as f:
                 ftp.storbinary('STOR index.html', f)
-            print("✅ Landing page uploaded")
+            print("✅ Landing page uploaded to /www")
 
         # Upload assets directory
         assets_dir = os.path.join(local_path, "assets")
         if os.path.isdir(assets_dir):
             print("\n📦 Deploying assets...")
-            upload_dir(ftp, assets_dir, "/assets")
+            upload_dir(ftp, assets_dir, "/www/assets")
         
         # Upload each app directory
         app_dir = os.path.join(local_path, "app")
@@ -92,14 +92,14 @@ if __name__ == "__main__":
                 app_local = os.path.join(app_dir, app_name)
                 if os.path.isdir(app_local):
                     print(f"\n📦 Deploying {app_name}...")
-                    upload_dir(ftp, app_local, f"/app/{app_name}")
+                    upload_dir(ftp, app_local, f"/www/app/{app_name}")
                     print(f"✅ {app_name} deployed!")
         
         # Upload newton directory (intermediate page)
         newton_dir = os.path.join(local_path, "newton")
         if os.path.isdir(newton_dir):
             print("\n📦 Deploying newton (intermediate)...")
-            upload_dir(ftp, newton_dir, "/newton")
+            upload_dir(ftp, newton_dir, "/www/newton")
             print("✅ newton deployed!")
         
         ftp.quit()
