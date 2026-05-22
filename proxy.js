@@ -56,7 +56,7 @@ for (const name of NEXT_APPS) {
 
   // SPA fallback: any path under /app/<name>/* that doesn't match a file
   // returns the app's index.html so client-side routing works correctly.
-  app.get(`${prefix}/*`, (req, res, next) => {
+  app.get(new RegExp(`^/app/${name}/(.*)$`), (req, res, next) => {
     const indexFile = path.join(appDir, 'index.html');
     res.sendFile(indexFile, err => {
       if (err) next(); // directory doesn't exist yet → fall through to portal

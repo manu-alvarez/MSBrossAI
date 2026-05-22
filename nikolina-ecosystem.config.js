@@ -140,6 +140,19 @@ module.exports = {
       autorestart: true,
       max_restarts: 10,
     },
+
+    // ──────────────────────────────────────────────
+    // REVERSE PROXY (Unified Portal & Routing, Port 8080)
+    // ──────────────────────────────────────────────
+    {
+      name: 'msbross-proxy',
+      script: 'proxy.js',
+      cwd: '/Users/manu/Desktop/MSBrossAI',
+      out_file: './logs/proxy.log',
+      error_file: './logs/proxy.error.log',
+      autorestart: true,
+      max_restarts: 10,
+    },
   ]
 };
 
