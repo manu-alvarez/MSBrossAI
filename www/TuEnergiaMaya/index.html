@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MSBrossAI — MSBrOSs Voice AI">
-    <title>MSBrossAI • MSBrOSs Voice AI</title>
+    <meta name="description" content="MSBrossAI — TuEnergiaMaya">
+    <title>MSBrossAI • TuEnergiaMaya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
             --card-hover: rgba(255,255,255,0.08); 
             --text: #f8fafc; 
             --text-muted: #64748b; 
-            --accent: #8b5cf6; 
-            --accent-glow: rgba(139,92,246,0.3);
+            --accent: #f59e0b; 
+            --accent-glow: rgba(245,158,11,0.3);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative; }
@@ -34,13 +34,13 @@
             z-index: 0;
         }
         .orb-1 { background: var(--accent); top: -200px; right: -200px; }
-        .orb-2 { background: #06b6d4; bottom: -200px; left: -200px; }
+        .orb-2 { background: #10b981; bottom: -200px; left: -200px; }
 
         .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
         .title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
-        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: white; }
+        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: #000; }
         .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px; color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
         .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
         .content { flex: 1; padding: 2rem 0; }
@@ -53,13 +53,13 @@
         
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
         .feature-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
-        .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(139,92,246,0.05); }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(245,158,11,0.05); }
         .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
         .feature-title { font-weight: 700; margin-bottom: 0.5rem; }
         .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
         
-        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #06b6d4); border: none; border-radius: 100px; color: white; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px var(--accent-glow); }
-        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(139,92,246,0.5); }
+        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #10b981); border: none; border-radius: 100px; color: #000; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px var(--accent-glow); }
+        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(245,158,11,0.5); }
         .run-btn svg { width: 24px; height: 24px; fill: currentColor; }
         
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -73,8 +73,8 @@
     <div class="container">
         <header class="header">
             <a href="/" class="logo">MSBrossAI</a>
-            <h1 class="title">MSBrOSs</h1>
-            <span class="badge">VOICE AI</span>
+            <h1 class="title">TuEnergiaMaya</h1>
+            <span class="badge">MAYAN AI</span>
         </header>
 
         <nav style="margin-bottom: 1.5rem;">
@@ -85,16 +85,16 @@
             <div class="status-card animate-in">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
                     <span class="status-dot"></span>
-                    <span style="font-weight: 600;">MSBrOSs AI Platform</span>
-                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v5.0</span>
+                    <span style="font-weight: 600;">TuEnergiaMaya</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v1.5</span>
                 </div>
                 <p style="color: var(--text-muted); line-height: 1.6;">
-                    Plataforma insignia de inteligencia artificial multimodelo. Integra sintetización de voz extremadamente realista y natural en español con la asistente Adele, sintonización de más de 24 modelos cognitivos y un panel de utilidades avanzadas de productividad.
+                    Calculadora y exploradora mística basada en la astrología y el calendario sagrado maya Tzolkin. Descubre tu Kin natal, el sello solar y tono galáctico que definen tu vibración, y accede al oráculo interactivo de la Quinta Fuerza de forma inmediata.
                 </p>
             </div>
 
             <div style="text-align: center; margin-bottom: 2rem;">
-                <a href="/app/msbross/" class="run-btn">
+                <a href="https://manu-alvarez.github.io/TuEnergiaMaya" target="_blank" rel="noopener noreferrer" class="run-btn">
                     <svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z"/></svg>
                     EJECUTAR APLICACIÓN
                 </a>
@@ -102,40 +102,40 @@
 
             <div class="feature-grid">
                 <div class="feature-card animate-in" style="animation-delay: 0.0s;">
-                    <div class="feature-icon">🎙️</div>
-                    <div class="feature-title">Voz Adele</div>
-                    <div class="feature-desc">Conversación de voz extremadamente natural y bidireccional integrada directamente en el chat.</div>
+                    <div class="feature-icon">🌞</div>
+                    <div class="feature-title">Cálculo del Kin Natal</div>
+                    <div class="feature-desc">Introduce tu fecha de nacimiento y obtén de inmediato tu firma galáctica, sello y tono.</div>
                 </div>
                 <div class="feature-card animate-in" style="animation-delay: 0.1s;">
-                    <div class="feature-icon">🧠</div>
-                    <div class="feature-title">Ecosistema Multimodelo</div>
-                    <div class="feature-desc">Alterna entre DeepSeek V3, Gemma, Qwen, GPT-4o y MiniMax de forma directa y gratuita.</div>
+                    <div class="feature-icon">🔮</div>
+                    <div class="feature-title">Oráculo Quinta Fuerza</div>
+                    <div class="feature-desc">Visualiza y comprende tus energías asociadas: el Kin Guía, Análogo, Antípoda y Oculto.</div>
                 </div>
                 <div class="feature-card animate-in" style="animation-delay: 0.2s;">
-                    <div class="feature-icon">🛠️</div>
-                    <div class="feature-title">Herramientas Pro</div>
-                    <div class="feature-desc">Módulos integrados de cálculo matemático, notas rápidas, gestor de tareas y consultas del clima.</div>
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-title">Navegador Tzolkin</div>
+                    <div class="feature-desc">Explora la matriz del tiempo sagrado con sus 260 combinaciones y ondas encantadas.</div>
                 </div>
                 <div class="feature-card animate-in" style="animation-delay: 0.3s;">
-                    <div class="feature-icon">🔌</div>
-                    <div class="feature-title">Control Total de Modelos</div>
-                    <div class="feature-desc">Historial interactivo completo, gestión dinámica de tokens consumidos y configuración de parámetros.</div>
+                    <div class="feature-icon">📜</div>
+                    <div class="feature-title">Afirmaciones Diarias</div>
+                    <div class="feature-desc">Generación inteligente de afirmaciones y decretos inspiradores según la energía maya del día.</div>
                 </div>
                 <div class="feature-card animate-in" style="animation-delay: 0.4s;">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Sincronización Total</div>
-                    <div class="feature-desc">Pensamiento, herramientas y conversaciones conectadas en una sola sesión continua e inteligente.</div>
+                    <div class="feature-icon">🌌</div>
+                    <div class="feature-title">Estética Espacial</div>
+                    <div class="feature-desc">Diseño galáctico oscuro inmersivo con iconos de simbología maya clásica y alta fluidez.</div>
                 </div>
                 <div class="feature-card animate-in" style="animation-delay: 0.5s;">
-                    <div class="feature-icon">💎</div>
-                    <div class="feature-title">Diseño de Vanguardia</div>
-                    <div class="feature-desc">Interfaz oscura premium con acentos neón violeta, animaciones fluidas y soporte responsive total.</div>
+                    <div class="feature-icon">📲</div>
+                    <div class="feature-title">Soporte PWA</div>
+                    <div class="feature-desc">Aplicación web progresiva lista para ser instalada en smartphones y tablets de forma instantánea.</div>
                 </div>
             </div>
         </main>
 
         <footer class="footer">
-            <p>MSBrossAI © 2026 — MSBrOSs Voice AI</p>
+            <p>MSBrossAI © 2026 — TuEnergiaMaya</p>
             <p style="margin-top: 0.5rem;">
                 <a href="/">Ecosistema</a> • 
                 <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>
