@@ -3,183 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="EliteScout - Buscador semántico de viajes mediante inteligencia artificial avanzada">
-    <title>EliteScout • MSBrossAI</title>
-    
+    <meta name="description" content="MSBrossAI — EliteScout">
+    <title>MSBrossAI • EliteScout</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --bg: #030712;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #06b6d4;
-            --accent-glow: rgba(6, 182, 212, 0.25);
+        :root { 
+            --bg: #030712; 
+            --card-bg: rgba(255,255,255,0.03); 
+            --card-border: rgba(255,255,255,0.06); 
+            --card-hover: rgba(255,255,255,0.08); 
+            --text: #f8fafc; 
+            --text-muted: #64748b; 
+            --accent: #f59e0b; 
+            --accent-cyan: #06b6d4;
+            --accent-glow: rgba(245,158,11,0.2);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Animated Ambient Orb */
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative; }
+        
+        /* Ambient Background Orbs */
         .orb {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            background: var(--accent);
             filter: blur(140px);
-            opacity: 0.15;
+            opacity: 0.08;
             pointer-events: none;
             z-index: 0;
-            animation: orbFloat 20s infinite alternate ease-in-out;
         }
+        .orb-1 { background: var(--accent-cyan); top: -200px; right: -200px; }
+        .orb-2 { background: var(--accent); bottom: -200px; left: -200px; }
 
-        @keyframes orbFloat {
-            0% { transform: translate(-30px, -30px) scale(1); }
-            100% { transform: translate(30px, 30px) scale(1.1); }
-        }
-
-        /* Glassmorphic Container */
-        .glass-card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 520px;
-            padding: 3rem 2.5rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 
-                        0 0 40px var(--accent-glow),
-                        inset 0 1px 1px rgba(255, 255, 255, 0.15);
-        }
-
-        .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.4s ease;
-        }
-
-        .glass-card:hover .icon-wrapper {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        p.desc {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border: none;
-            box-shadow: 0 10px 25px var(--accent-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px var(--accent-glow), 0 0 10px var(--accent);
-            filter: brightness(1.1);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-        }
+        .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent-cyan), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        .title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: #000; }
+        .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px; color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
+        .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
+        .content { flex: 1; padding: 2rem 0; }
+        .footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.8rem; }
+        .footer a { color: var(--accent-cyan); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .status-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .feature-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
+        .feature-card:hover { border-color: var(--accent-cyan); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(6,182,212,0.05); }
+        .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .feature-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 100px; color: var(--text-muted); text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; cursor: not-allowed; }
+        .run-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { opacity: 0; animation: fadeInUp 0.6s ease forwards; }
     </style>
 </head>
 <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-    <div class="orb"></div>
+    <div class="container">
+        <header class="header">
+            <a href="/" class="logo">MSBrossAI</a>
+            <h1 class="title">EliteScout</h1>
+            <span class="badge">MANTENIMIENTO</span>
+        </header>
 
-    <div class="glass-card">
-        <div class="icon-wrapper">✈️</div>
-        <div>
-            <h1>EliteScout</h1>
-            <div class="subtitle" style="color: #f59e0b;">En Mantenimiento</div>
-        </div>
-        <p class="desc">Actualmente estamos actualizando el motor semántico de búsqueda de viajes y optimizando el backend de inteligencia artificial. Estará operativo muy pronto.</p>
-        <span class="btn" style="background: rgba(255, 255, 255, 0.03); color: #64748b; border: 1px solid rgba(255, 255, 255, 0.05); cursor: not-allowed; box-shadow: none;">Próximamente</span>
-        <a href="/" class="btn btn-secondary">Volver al Portal</a>
+        <nav style="margin-bottom: 1.5rem;">
+            <a href="/" class="back-btn">← Volver al Ecosistema</a>
+        </nav>
+
+        <main class="content">
+            <div class="status-card animate-in">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <span class="status-dot"></span>
+                    <span style="font-weight: 600;">EliteScout</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent);">EN ACTUALIZACIÓN</span>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.6;">
+                    Actualmente estamos migrando el motor de búsqueda semántica de vuelos e integrando los modelos de IA de planificación de rutas multidestino. Esta herramienta estará disponible próximamente de forma unificada.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <span class="run-btn">
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    EN MANTENIMIENTO
+                </span>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card animate-in" style="animation-delay: 0.0s;">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Buscador Semántico</div>
+                    <div class="feature-desc">Búsqueda avanzada de vuelos usando descripciones naturales gracias a embeddings de IA.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-title">Comparativa Inteligente</div>
+                    <div class="feature-desc">Análisis cruzado inteligente de combinaciones de escalas, maletas y aerolíneas de forma automática.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">🔔</div>
+                    <div class="feature-title">Alertas en Tiempo Real</div>
+                    <div class="feature-desc">Notificaciones instantáneas automatizadas ante caídas repentinas de precios y ofertas.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">🛫</div>
+                    <div class="feature-title">Filtros Multidimensionales</div>
+                    <div class="feature-desc">Segmentación de vuelos por nivel de confort, duración real, aeropuertos y franja horaria exacta.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-title">IA Planner</div>
+                    <div class="feature-desc">Generación automática de itinerarios completos de viaje día a día combinados con el vuelo seleccionado.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.5s;">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">Multi-Provider Connect</div>
+                    <div class="feature-desc">Integración unificada y robusta con múltiples APIs globales líderes en el sector turístico.</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>MSBrossAI © 2026 — EliteScout</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="/">Ecosistema</a> • 
+                <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>
+            </p>
+        </footer>
     </div>
-
 </body>
 </html>

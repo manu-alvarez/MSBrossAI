@@ -3,183 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CuentosMágicos AI - Generador e ilustrador inteligente de cuentos infantiles personalizados">
-    <title>CuentosMágicos AI • MSBrossAI</title>
-    
+    <meta name="description" content="MSBrossAI — CuentosMágicos AI">
+    <title>MSBrossAI • CuentosMágicos AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --bg: #030712;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #ec4899;
-            --accent-glow: rgba(236, 72, 153, 0.25);
+        :root { 
+            --bg: #030712; 
+            --card-bg: rgba(255,255,255,0.03); 
+            --card-border: rgba(255,255,255,0.06); 
+            --card-hover: rgba(255,255,255,0.08); 
+            --text: #f8fafc; 
+            --text-muted: #64748b; 
+            --accent: #fbbf24; 
+            --accent-glow: rgba(251,191,36,0.3);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Animated Ambient Orb */
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative; }
+        
+        /* Ambient Background Orbs */
         .orb {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            background: var(--accent);
             filter: blur(140px);
-            opacity: 0.15;
+            opacity: 0.08;
             pointer-events: none;
             z-index: 0;
-            animation: orbFloat 20s infinite alternate ease-in-out;
         }
+        .orb-1 { background: var(--accent); top: -200px; right: -200px; }
+        .orb-2 { background: #ec4899; bottom: -200px; left: -200px; }
 
-        @keyframes orbFloat {
-            0% { transform: translate(-30px, -30px) scale(1); }
-            100% { transform: translate(30px, 30px) scale(1.1); }
-        }
-
-        /* Glassmorphic Container */
-        .glass-card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 520px;
-            padding: 3rem 2.5rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 
-                        0 0 40px var(--accent-glow),
-                        inset 0 1px 1px rgba(255, 255, 255, 0.15);
-        }
-
-        .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.4s ease;
-        }
-
-        .glass-card:hover .icon-wrapper {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        p.desc {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border: none;
-            box-shadow: 0 10px 25px var(--accent-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px var(--accent-glow), 0 0 10px var(--accent);
-            filter: brightness(1.1);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-        }
+        .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        .title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: #000; }
+        .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px; color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
+        .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
+        .content { flex: 1; padding: 2rem 0; }
+        .footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.8rem; }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .status-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .feature-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(251,191,36,0.05); }
+        .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .feature-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #f43f5e); border: none; border-radius: 100px; color: #000; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px var(--accent-glow); }
+        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(251,191,36,0.5); }
+        .run-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { opacity: 0; animation: fadeInUp 0.6s ease forwards; }
     </style>
 </head>
 <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-    <div class="orb"></div>
+    <div class="container">
+        <header class="header">
+            <a href="/" class="logo">MSBrossAI</a>
+            <h1 class="title">CuentosMágicos AI</h1>
+            <span class="badge">CREATIVE AI</span>
+        </header>
 
-    <div class="glass-card">
-        <div class="icon-wrapper">🔮</div>
-        <div>
-            <h1>CuentosMágicos AI</h1>
-            <div class="subtitle">Creative Story Teller</div>
-        </div>
-        <p class="desc">Crea, narra e ilustra cuentos infantiles mágicos y personalizados utilizando generación inteligente de texto, imágenes y audio.</p>
-        <a href="/app/cuentosmagicos/" class="btn btn-primary">Abrir Aplicación</a>
-        <a href="/" class="btn btn-secondary">Volver al Portal</a>
+        <nav style="margin-bottom: 1.5rem;">
+            <a href="/" class="back-btn">← Volver al Ecosistema</a>
+        </nav>
+
+        <main class="content">
+            <div class="status-card animate-in">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <span class="status-dot"></span>
+                    <span style="font-weight: 600;">CuentosMágicos AI</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v2.0</span>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.6;">
+                    Generador e ilustrador inteligente de cuentos infantiles personalizados. Crea, narra e ilustra cuentos mágicos utilizando generación inteligente de texto, imágenes de alta consistencia artística y narración de audio multilingüe de alta calidad.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <a href="/app/cuentosmagicos/" class="run-btn">
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z"/></svg>
+                    EJECUTAR APLICACIÓN
+                </a>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card animate-in" style="animation-delay: 0.0s;">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-title">Texto Mágico</div>
+                    <div class="feature-desc">Historias capituladas adaptadas y guiadas de forma interactiva con IA avanzada.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Ilustraciones Pro</div>
+                    <div class="feature-desc">Generación de dibujos consistentes, coloridos y de alta belleza adaptados al cuento.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">🧚</div>
+                    <div class="feature-title">Voz de Hada</div>
+                    <div class="feature-desc">Narración multilingüe y expresiva de cuentos con voces extremadamente realistas.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-title">Cine Animado</div>
+                    <div class="feature-desc">Imágenes animadas de forma secuencial que dan vida visual a los personajes de la historia.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-title">Modo Libro</div>
+                    <div class="feature-desc">Visualización de lectura premium en formato pergamino interactivo ideal para tablets.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.5s;">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">PWA Totalmente Offline</div>
+                    <div class="feature-desc">Acceso offline local nativo y posibilidad de instalación en dispositivos móviles.</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>MSBrossAI © 2026 — CuentosMágicos AI</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="/">Ecosistema</a> • 
+                <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>
+            </p>
+        </footer>
     </div>
-
 </body>
 </html>
