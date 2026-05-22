@@ -1,45 +1,1351 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Redireccionando a Newton...</title>
-    <meta http-equiv="refresh" content="0; url=https://kick-symantec-pat-elected.trycloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Newton Mequinenza — Sistema de Gestión Operativa Repsol">
+    <title>Newton Mequinenza • Control Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #07090e;
+            --panel-bg: rgba(13, 17, 26, 0.7);
+            --panel-border: rgba(255, 80, 0, 0.15);
+            --panel-border-glow: rgba(255, 80, 0, 0.3);
+            --repsol-orange: #ff5000;
+            --repsol-orange-glow: rgba(255, 80, 0, 0.4);
+            --repsol-red: #e30613;
+            --repsol-blue: #00508f;
+            --text-color: #f8fafc;
+            --text-muted: #8e9bb4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body {
-            background: #030712;
-            color: #f8fafc;
-            font-family: sans-serif;
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            overflow-x: hidden;
+            position: relative;
         }
-        .loader {
+
+        /* Ambient background glow orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.12;
+            animation: floatOrb 25s infinite alternate ease-in-out;
+        }
+
+        .orb-orange {
+            width: 500px;
+            height: 500px;
+            background: var(--repsol-orange);
+            top: -100px;
+            left: -150px;
+        }
+
+        .orb-red {
+            width: 450px;
+            height: 450px;
+            background: var(--repsol-red);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .orb-blue {
+            width: 400px;
+            height: 400px;
+            background: var(--repsol-blue);
+            top: 40%;
+            left: 60%;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.1); }
+            100% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1400px;
+            padding: 1.5rem;
+        }
+
+        /* Screen State: Login */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 3rem);
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .login-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255, 80, 0, 0.05);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--repsol-orange), var(--repsol-red));
+        }
+
+        .repsol-brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .repsol-logo-sim {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            width: 32px;
+        }
+        .repsol-bar {
+            height: 6px;
+            border-radius: 2px;
+        }
+        .repsol-bar.orange { background: var(--repsol-orange); }
+        .repsol-bar.red { background: var(--repsol-red); }
+        .repsol-bar.blue { background: var(--repsol-blue); }
+
+        .brand-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff, #99a2c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* PIN display dots */
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--panel-border-glow);
+            border-radius: 50%;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pin-dot.filled {
+            background: var(--repsol-orange);
+            border-color: var(--repsol-orange);
+            box-shadow: 0 0 12px var(--repsol-orange-glow);
+            transform: scale(1.15);
+        }
+
+        .pin-dot.error {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Numeric Keypad */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .key-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            height: 64px;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .key-btn:hover {
+            background: rgba(255, 80, 0, 0.08);
+            border-color: var(--panel-border-glow);
+            transform: translateY(-2px);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 80, 0, 0.15);
+        }
+
+        .key-btn.action {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .key-btn.clear {
+            color: var(--danger-color);
+        }
+
+        .key-btn.enter {
+            color: var(--success-color);
+        }
+
+        .hint-text {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 1.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Screen State: Dashboard */
+        .dashboard-screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Global Header styling */
+        .dash-header {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 1.25rem 2rem;
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--repsol-orange), var(--repsol-red));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 80, 0, 0.3);
+        }
+
+        .user-info .name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -0.01em;
+        }
+
+        .user-info .role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .header-widgets {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .widget-item {
+            text-align: right;
+        }
+
+        .widget-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .widget-val {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.85rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 100px;
+            color: var(--success-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        /* 3-Column Layout Grid */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 0.9fr;
+            gap: 1.5rem;
+        }
+
+        /* Base Card Styling */
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 80, 0, 0.25);
+        }
+
+        .card-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .card-title span.emoji {
+            font-size: 1.35rem;
+        }
+
+        /* Custom navigation tabs inside a card */
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.3rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tab-trigger {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-trigger.active {
+            background: var(--repsol-orange);
+            color: #fff;
+            box-shadow: 0 4px 12px var(--repsol-orange-glow);
+        }
+
+        /* Checklists elements */
+        .checklist-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-height: 250px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.9rem 1.1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 80, 0, 0.15);
+            transform: translateX(4px);
+        }
+
+        .checklist-item.checked {
+            background: rgba(16, 185, 129, 0.03);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--panel-border-glow);
+            border-radius: 6px;
+            margin-top: 0.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checklist-item.checked .checkbox-custom {
+            border-color: var(--success-color);
+            background: var(--success-color);
+        }
+
+        .checkbox-custom::after {
+            content: '✓';
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 900;
+            display: none;
+        }
+
+        .checklist-item.checked .checkbox-custom::after {
+            display: block;
+        }
+
+        .checklist-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .checklist-item.checked .checklist-text {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        /* Progress Bar wrapper */
+        .progress-section {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1.25rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--repsol-orange), var(--success-color));
+            border-radius: 100px;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Expiration Date Widget */
+        .expire-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .custom-select, .custom-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: var(--text-color);
+            padding: 0.85rem 1rem;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-select:focus, .custom-input:focus {
+            border-color: var(--repsol-orange);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 10px rgba(255, 80, 0, 0.15);
+        }
+
+        /* Custom options styling in dark mode */
+        .custom-select option {
+            background: #0f131a;
+            color: var(--text-color);
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, var(--repsol-orange), var(--repsol-red));
+            border: none;
+            color: white;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.95rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px var(--repsol-orange-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(255, 80, 0, 0.6);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .expire-result {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-height: 120px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .expire-result.success {
+            background: rgba(16, 185, 129, 0.03);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .expire-result.warning {
+            background: rgba(245, 158, 11, 0.03);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .expire-result.danger {
+            background: rgba(239, 68, 68, 0.03);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .result-status {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .result-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Retro sync logs terminal */
+        .logs-terminal {
+            background: #040508;
+            border: 1px solid rgba(255, 80, 0, 0.1);
+            border-radius: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 1rem;
+            height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            color: #38bdf8;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .log-entry {
+            line-height: 1.4;
+            white-space: pre-wrap;
+            animation: typeIn 0.1s ease-out;
+        }
+
+        .log-entry .time {
+            color: #64748b;
+            margin-right: 0.5rem;
+        }
+
+        .log-entry.info { color: #38bdf8; }
+        .log-entry.success { color: var(--success-color); }
+        .log-entry.warn { color: var(--warning-color); }
+        .log-entry.err { color: var(--danger-color); }
+
+        /* Stats items */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 1rem;
             text-align: center;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(249,115,22,0.1);
-            border-left-color: #f97316;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+
+        .stat-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--repsol-orange);
+            font-family: var(--font-mono);
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Scrollbars styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 80, 0, 0.25);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--repsol-orange);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes typeIn {
+            from { opacity: 0; transform: translateY(2px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating Repsol Signet on Desktop */
+        .repsol-float-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .back-portal {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .back-portal:hover {
+            color: var(--repsol-orange);
+            border-color: rgba(255, 80, 0, 0.2);
+            background: rgba(255, 80, 0, 0.03);
+            transform: translateX(-4px);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .dash-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dash-grid > *:last-child {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+            .dash-grid > *:last-child {
+                grid-column: span 1;
+            }
+            .dash-header {
+                flex-direction: column;
+                gap: 1.25rem;
+                align-items: flex-start;
+            }
+            .header-widgets {
+                width: 100%;
+                justify-content: space-between;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loader">
-        <div class="spinner"></div>
-        <p>Abriendo Newton Mequinenza...</p>
-        <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">Si no redirige automáticamente, <a href="https://kick-symantec-pat-elected.trycloudflare.com" style="color: #f97316;">haz clic aquí</a></p>
+    <!-- Background visual mesh effects -->
+    <div class="glow-orb orb-orange"></div>
+    <div class="glow-orb orb-red"></div>
+    <div class="glow-orb orb-blue"></div>
+
+    <div class="wrapper">
+        <!-- LOGIN SCREEN STATE -->
+        <section class="login-screen" id="loginScreen">
+            <div class="login-card">
+                <div class="repsol-brand">
+                    <div class="repsol-logo-sim">
+                        <div class="repsol-bar orange"></div>
+                        <div class="repsol-bar red"></div>
+                        <div class="repsol-bar blue"></div>
+                    </div>
+                    <span class="brand-title">NEWTON MEQUINENZA</span>
+                </div>
+                <div class="login-subtitle">Introduce tu PIN de empleado para validar el fichaje diario</div>
+
+                <div class="pin-dots">
+                    <div class="pin-dot" id="dot0"></div>
+                    <div class="pin-dot" id="dot1"></div>
+                    <div class="pin-dot" id="dot2"></div>
+                    <div class="pin-dot" id="dot3"></div>
+                </div>
+
+                <div class="keypad">
+                    <button class="key-btn" onclick="pressKey('1')">1</button>
+                    <button class="key-btn" onclick="pressKey('2')">2</button>
+                    <button class="key-btn" onclick="pressKey('3')">3</button>
+                    <button class="key-btn" onclick="pressKey('4')">4</button>
+                    <button class="key-btn" onclick="pressKey('5')">5</button>
+                    <button class="key-btn" onclick="pressKey('6')">6</button>
+                    <button class="key-btn" onclick="pressKey('7')">7</button>
+                    <button class="key-btn" onclick="pressKey('8')">8</button>
+                    <button class="key-btn" onclick="pressKey('9')">9</button>
+                    <button class="key-btn action clear" onclick="clearPin()">C</button>
+                    <button class="key-btn" onclick="pressKey('0')">0</button>
+                    <button class="key-btn action enter" onclick="submitPin()">OK</button>
+                </div>
+
+                <div class="hint-text">PIN demo: 1234 o 0000</div>
+                <div style="margin-top: 1.5rem;">
+                    <a href="https://msbross.me/newton/" class="back-portal">← Volver al Portal</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN DASHBOARD SCREEN STATE -->
+        <section class="dashboard-screen" id="dashboardScreen">
+            <!-- Header Block -->
+            <header class="dash-header">
+                <div class="user-profile">
+                    <div class="avatar" id="avatarText">MA</div>
+                    <div class="user-info">
+                        <div class="name">Manuel Álvarez</div>
+                        <div class="role">Encargado de Estación • Repsol Mequinenza</div>
+                    </div>
+                </div>
+                <div class="header-widgets">
+                    <div class="widget-item">
+                        <div class="widget-label">Hora del Servidor</div>
+                        <div class="widget-val" id="serverClock">10:55:58</div>
+                    </div>
+                    <div class="widget-item">
+                        <div class="widget-label">Sincronización Local</div>
+                        <div class="status-badge">
+                            <span class="dot"></span>
+                            <span>OFFLINE ACTIVO</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 3-Column Layout -->
+            <main class="dash-grid">
+                <!-- Column 1: Operating Checklists -->
+                <section class="card">
+                    <div class="card-header-icon">
+                        <h2 class="card-title">
+                            <span class="emoji">📋</span>
+                            <span>Tareas Operativas</span>
+                        </h2>
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--repsol-orange);">TURNO DIARIO</span>
+                    </div>
+
+                    <!-- Checklist shift selector tabs -->
+                    <div class="tabs">
+                        <button class="tab-trigger active" onclick="setShift('apertura', this)">Apertura</button>
+                        <button class="tab-trigger" onclick="setShift('mediodia', this)">Mediodía</button>
+                        <button class="tab-trigger" onclick="setShift('cierre', this)">Cierre</button>
+                    </div>
+
+                    <!-- Interactive Checklist Items wrapper -->
+                    <div class="checklist-content" id="checklistContainer">
+                        <!-- Filled dynamically by JavaScript -->
+                    </div>
+
+                    <!-- Checklist shift progress -->
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progreso del Turno</span>
+                            <span id="progressPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progressBar"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Column 2: Expirations Manager (Caducidades) -->
+                <section class="card">
+                    <div class="card-header-icon">
+                        <h2 class="card-title">
+                            <span class="emoji">🍎</span>
+                            <span>Control de Caducidades</span>
+                        </h2>
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--repsol-orange);">SEGURIDAD</span>
+                    </div>
+
+                    <div class="expire-form">
+                        <div class="input-group">
+                            <label for="productSelect">Seleccionar Producto</label>
+                            <select id="productSelect" class="custom-select" onchange="autoFillDate()">
+                                <option value="bocadillo">Bocadillo de Jamón Serrano (Fresco)</option>
+                                <option value="bolleria">Croissant Repsol (Panadería)</option>
+                                <option value="leche">Pack Leche Asturiana (Almacén)</option>
+                                <option value="custom">-- Introducir producto personalizado --</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="dateInput">Fecha de Vencimiento</label>
+                            <input type="date" id="dateInput" class="custom-input">
+                        </div>
+
+                        <button class="check-btn" onclick="checkExpiration()">Verificar Caducidad</button>
+
+                        <div class="expire-result" id="expireResult">
+                            <div class="result-status">Esperando análisis...</div>
+                            <div class="result-desc">Introduce o selecciona un producto para verificar su estado operativo.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Column 3: Sync logs & Stats -->
+                <section class="card">
+                    <div class="card-header-icon">
+                        <h2 class="card-title">
+                            <span class="emoji">⚡</span>
+                            <span>Sincronizador SQL</span>
+                        </h2>
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--repsol-orange);">LIVE METRICS</span>
+                    </div>
+
+                    <!-- Shift Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-num" id="totalChecksVal">0</div>
+                            <div class="stat-label">Revisiones</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num" id="syncQueueVal">0</div>
+                            <div class="stat-label">Cola Sync</div>
+                        </div>
+                    </div>
+
+                    <!-- Simulated Sync Logs Terminal Console -->
+                    <div style="display:flex; flex-direction:column; gap: 0.5rem; flex: 1;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Consola SQLite & PWA Cache</span>
+                        <div class="logs-terminal" id="terminalConsole">
+                            <!-- Filled dynamically by JavaScript logging -->
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap: 1rem; margin-top: 0.5rem;">
+                        <button class="check-btn" style="flex: 1; padding: 0.6rem; font-size: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); box-shadow: none;" onclick="clearLogs()">Limpiar Consola</button>
+                        <button class="check-btn" style="flex: 1; padding: 0.6rem; font-size: 0.8rem; background: var(--repsol-blue); box-shadow: none;" onclick="forceSync()">Forzar Sync</button>
+                    </div>
+
+                    <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                        <a href="https://msbross.me/" class="back-portal" style="width: 100%; justify-content: center;">← Salir al Ecosistema</a>
+                    </div>
+                </section>
+            </main>
+        </section>
     </div>
+
+    <!-- Core Javascript logic -->
     <script>
-        window.location.replace("https://kick-symantec-pat-elected.trycloudflare.com");
+        // PIN authentication state
+        let currentPin = "";
+        const correctPins = ["1234", "0000"];
+
+        function pressKey(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                updatePinDots();
+                addLog(`[TECLADO] Carácter '${num}' introducido.`);
+            }
+        }
+
+        function clearPin() {
+            currentPin = "";
+            updatePinDots();
+            addLog("[TECLADO] PIN borrado.");
+            // Reset any error status on dots
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`dot${i}`).classList.remove("error");
+            }
+        }
+
+        function updatePinDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                if (i < currentPin.length) {
+                    dot.classList.add("filled");
+                } else {
+                    dot.classList.remove("filled");
+                }
+            }
+        }
+
+        function submitPin() {
+            if (currentPin.length < 4) {
+                addLog("[SEGURIDAD] PIN incompleto. Debe tener 4 dígitos.", "warn");
+                shakeDots();
+                return;
+            }
+
+            if (correctPins.includes(currentPin)) {
+                addLog("[SEGURIDAD] Autenticación completada con éxito. PIN válido.", "success");
+                
+                // Set employee avatar based on PIN
+                if (currentPin === "0000") {
+                    document.getElementById("avatarText").innerText = "OP";
+                    document.querySelector(".user-info .name").innerText = "Operario de Turno";
+                } else {
+                    document.getElementById("avatarText").innerText = "MA";
+                    document.querySelector(".user-info .name").innerText = "Manuel Álvarez";
+                }
+
+                // Smoothly switch screen state
+                const loginScreen = document.getElementById("loginScreen");
+                const dashboardScreen = document.getElementById("dashboardScreen");
+                
+                loginScreen.style.display = "none";
+                dashboardScreen.style.display = "flex";
+                setTimeout(() => {
+                    dashboardScreen.style.opacity = "1";
+                }, 50);
+
+                // Initialize dashboard operations
+                startDashboard();
+            } else {
+                addLog("[SEGURIDAD] Error: PIN incorrecto. Acceso denegado.", "err");
+                shakeDots();
+            }
+        }
+
+        function shakeDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                dot.classList.add("error");
+            }
+            setTimeout(() => {
+                clearPin();
+            }, 600);
+        }
+
+        // Live Real-Time Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            const clockEl = document.getElementById("serverClock");
+            if (clockEl) clockEl.innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Simulated Sync Logs console
+        const terminalConsole = document.getElementById("terminalConsole");
+
+        function addLog(text, type = "info") {
+            const entry = document.createElement("div");
+            entry.className = `log-entry ${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="time">[${time}]</span>${text}`;
+            
+            if (terminalConsole) {
+                terminalConsole.appendChild(entry);
+                terminalConsole.scrollTop = terminalConsole.scrollHeight;
+            }
+        }
+
+        function clearLogs() {
+            if (terminalConsole) terminalConsole.innerHTML = "";
+            addLog("[CONSOLA] Registro purgado.");
+        }
+
+        // Checklist dataset
+        const checklists = {
+            apertura: [
+                { id: "ap1", text: "Encendido de máquinas de café y hornos de bollería" },
+                { id: "ap2", text: "Verificar precios en paneles de carburante Repsol" },
+                { id: "ap3", text: "Inspección de surtidores y estado de mangueras" },
+                { id: "ap4", text: "Apertura de caja principal e inicio de terminal TPV" },
+                { id: "ap5", text: "Comprobar stock de prensa y panadería fresca" }
+            ],
+            mediodia: [
+                { id: "md1", text: "Control de temperatura en vitrinas y cámaras refrigeradas" },
+                { id: "md2", text: "Reposición de bolsas de hielo y bebidas en nevera" },
+                { id: "md3", text: "Limpieza del área de tienda y aseos de clientes" },
+                { id: "md4", text: "Verificación de albaranes de reparto matutino" },
+                { id: "md5", text: "Control del nivel de depósitos de combustible" }
+            ],
+            cierre: [
+                { id: "ci1", text: "Cierre de caja ciega y arqueo del terminal TPV" },
+                { id: "ci2", text: "Limpieza de cafetera, filtros y hornos de bollería" },
+                { id: "ci3", text: "Bloqueo de surtidores de carburante exteriores" },
+                { id: "ci4", text: "Retirada de mermas y residuos orgánicos" },
+                { id: "ci5", text: "Activación del sistema de alarma volumétrica" }
+            ]
+        };
+
+        let currentShift = "apertura";
+        let checkedItems = new Set();
+        let totalChecksCount = 0;
+
+        function setShift(shiftName, tabBtn) {
+            currentShift = shiftName;
+            
+            // Toggle active class in triggers
+            const tabs = document.querySelectorAll(".tab-trigger");
+            tabs.forEach(t => t.classList.remove("active"));
+            tabBtn.classList.add("active");
+            
+            addLog(`[TURNO] Cargando checklist para turno: ${shiftName.toUpperCase()}`);
+            renderChecklist();
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById("checklistContainer");
+            if (!container) return;
+            
+            container.innerHTML = "";
+            const items = checklists[currentShift];
+            
+            items.forEach(item => {
+                const isChecked = checkedItems.has(item.id);
+                const itemEl = document.createElement("div");
+                itemEl.className = `checklist-item ${isChecked ? 'checked' : ''}`;
+                itemEl.onclick = () => toggleChecklistItem(item.id);
+                
+                itemEl.innerHTML = `
+                    <div class="checkbox-custom"></div>
+                    <div class="checklist-text">${item.text}</div>
+                `;
+                
+                container.appendChild(itemEl);
+            });
+            
+            updateProgress();
+        }
+
+        function toggleChecklistItem(id) {
+            if (checkedItems.has(id)) {
+                checkedItems.delete(id);
+                addLog(`[CHECKLIST] Tarea removida: ${id}`);
+            } else {
+                checkedItems.add(id);
+                totalChecksCount++;
+                document.getElementById("totalChecksVal").innerText = totalChecksCount;
+                addLog(`[CHECKLIST] Tarea completada: ${id}`, "success");
+                
+                // Add sync queue item
+                addSyncQueue();
+            }
+            renderChecklist();
+        }
+
+        function updateProgress() {
+            const items = checklists[currentShift];
+            let checkedCount = 0;
+            items.forEach(item => {
+                if (checkedItems.has(item.id)) checkedCount++;
+            });
+            
+            const pct = items.length > 0 ? Math.round((checkedCount / items.length) * 100) : 0;
+            
+            document.getElementById("progressPercentage").innerText = `${pct}%`;
+            document.getElementById("progressBar").style.width = `${pct}%`;
+        }
+
+        // SQLite Local Sync simulator
+        let syncQueueSize = 0;
+
+        function addSyncQueue() {
+            syncQueueSize++;
+            document.getElementById("syncQueueVal").innerText = syncQueueSize;
+            addLog(`[SQLITE] Cambios cacheados localmente. Cola actual: ${syncQueueSize} transacciones.`);
+        }
+
+        function forceSync() {
+            if (syncQueueSize === 0) {
+                addLog("[SINCRONIZADOR] No hay transacciones pendientes en la caché local SQLite.", "warn");
+                return;
+            }
+            
+            addLog(`[SINCRONIZADOR] Iniciando sincronización de ${syncQueueSize} transacciones con servidor central...`);
+            
+            setTimeout(() => {
+                addLog("[SINCRONIZADOR] Conectando con la base de datos remota MSBrossAI...", "info");
+                setTimeout(() => {
+                    addLog(`[SINCRONIZADOR] Sincronización exitosa: ${syncQueueSize} transacciones subidas correctamente.`, "success");
+                    syncQueueSize = 0;
+                    document.getElementById("syncQueueVal").innerText = "0";
+                }, 1000);
+            }, 500);
+        }
+
+        // Expiration Checker Logic (Caducidades)
+        function autoFillDate() {
+            const prod = document.getElementById("productSelect").value;
+            const dateInput = document.getElementById("dateInput");
+            if (!dateInput) return;
+            
+            const today = new Date();
+            
+            if (prod === "bocadillo") {
+                // Fresh product: expires in 1 day
+                today.setDate(today.getDate() + 1);
+                dateInput.value = today.toISOString().split('T')[0];
+                addLog("[PRODUCTO] Bocadillo fresco cargado (Expira en 24h).");
+            } else if (prod === "bolleria") {
+                // Bakery: expires today
+                dateInput.value = today.toISOString().split('T')[0];
+                addLog("[PRODUCTO] Croissant de panadería cargado (Expira hoy).");
+            } else if (prod === "leche") {
+                // Store product: expires in 6 months
+                today.setMonth(today.getMonth() + 6);
+                dateInput.value = today.toISOString().split('T')[0];
+                addLog("[PRODUCTO] Pack de leche cargado (Caducidad a largo plazo).");
+            } else {
+                dateInput.value = "";
+            }
+        }
+
+        function checkExpiration() {
+            const dateVal = document.getElementById("dateInput").value;
+            const resEl = document.getElementById("expireResult");
+            
+            if (!dateVal) {
+                addLog("[CADUCIDAD] Error: Por favor introduce una fecha de vencimiento válida.", "warn");
+                resEl.className = "expire-result danger";
+                resEl.innerHTML = `
+                    <div class="result-status">Fecha Inválida</div>
+                    <div class="result-desc">Introduce una fecha válida para realizar el escaneo de seguridad.</div>
+                `;
+                return;
+            }
+
+            const expireDate = new Date(dateVal);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            expireDate.setHours(0,0,0,0);
+            
+            const timeDiff = expireDate.getTime() - today.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            totalChecksCount++;
+            document.getElementById("totalChecksVal").innerText = totalChecksCount;
+
+            if (daysDiff < 0) {
+                // Expired
+                addLog(`[ALERTA] Caducidad superada hace ${Math.abs(daysDiff)} días. ¡RETIRAR PRODUCTO!`, "err");
+                resEl.className = "expire-result danger";
+                resEl.innerHTML = `
+                    <div class="result-status">⚠️ PRODUCTO EXPIRED</div>
+                    <div class="result-desc">Expiró hace ${Math.abs(daysDiff)} días. Retira el producto de la vitrina inmediatamente.</div>
+                `;
+            } else if (daysDiff === 0) {
+                // Expiring today
+                addLog("[ALERTA] Expira hoy. Consumir con prioridad máxima.", "warn");
+                resEl.className = "expire-result warning";
+                resEl.innerHTML = `
+                    <div class="result-status">⚠️ EXPIRA HOY</div>
+                    <div class="result-desc">Fecha de vencimiento alcanzada. Retirar o vender con descuento especial de turno.</div>
+                `;
+            } else if (daysDiff <= 2) {
+                // Expiring soon
+                addLog(`[ALERTA] Vence pronto. Quedan ${daysDiff} días. Vigilar reposición.`, "warn");
+                resEl.className = "expire-result warning";
+                resEl.innerHTML = `
+                    <div class="result-status">⚠️ CRÍTICO: ${daysDiff} DÍAS</div>
+                    <div class="result-desc">Quedan exactamente ${daysDiff} días de frescura comercial.</div>
+                `;
+            } else {
+                // OK
+                addLog(`[PRODUCTO] Estado óptimo. Quedan ${daysDiff} días para el vencimiento.`, "success");
+                resEl.className = "expire-result success";
+                resEl.innerHTML = `
+                    <div class="result-status">✅ ESTADO EXCELENTE</div>
+                    <div class="result-desc">El producto es seguro. Caduca en ${daysDiff} días.</div>
+                `;
+            }
+        }
+
+        // Initialize dashboard state logs & animations
+        function startDashboard() {
+            addLog("[SISTEMA] Newton PWA iniciado correctamente.");
+            addLog("[BASE_DATOS] Conectado a SQLite Local Cache.");
+            addLog("[SERVICE_WORKER] Cache estático PWA sincronizado.");
+            
+            // Set default selections
+            autoFillDate();
+            renderChecklist();
+            
+            // Simulate background offline logging
+            setInterval(() => {
+                if (document.getElementById("dashboardScreen").style.display !== "none") {
+                    const logs = [
+                        "[SISTEMA] Verificando integridad de tablas SQLite...",
+                        "[SQLITE] Guardando snapshot de auditoría de turno...",
+                        "[SERVICE_WORKER] Escaneando archivos en caché local...",
+                        "[SISTEMA] Señal de red estable. Canal HTTP activo.",
+                        "[BASE_DATOS] Limpieza automática de registros antiguos completada."
+                    ];
+                    const randLog = logs[Math.floor(Math.random() * logs.length)];
+                    addLog(randLog);
+                }
+            }, 18000);
+        }
+
+        // Default setup log
+        addLog("[TECLADO] Esperando entrada de PIN de empleado...");
     </script>
 </body>
 </html>

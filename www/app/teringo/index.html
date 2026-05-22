@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teringo ERP - Trading B2B & Perfumery Inventory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #090b11;
+            --panel-bg: rgba(17, 20, 28, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.12) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 45%);
+        }
+
+        /* Layout */
+        .workspace {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(13, 16, 23, 0.9);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-rose), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .brand-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 9999px;
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #fda4af;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(244, 63, 94, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-color: rgba(244, 63, 94, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            display: inline-flex;
+        }
+
+        /* Main Workspace Panel */
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .back-ecosystem {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-ecosystem:hover {
+            color: var(--text-color);
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            color: #f43f5e;
+            padding: 0.35rem 0.8rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f43f5e;
+            box-shadow: 0 0 8px #f43f5e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        /* Content Views */
+        .content-view {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 2rem;
+            gap: 1.5rem;
+        }
+
+        .content-view.active {
+            display: flex;
+        }
+
+        /* Grid Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-rose);
+        }
+
+        .kpi-card.amber::after { background: var(--accent-amber); }
+        .kpi-card.emerald::after { background: var(--accent-emerald); }
+        .kpi-card.blue::after { background: #3b82f6; }
+
+        .kpi-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .kpi-trend {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .data-table-container {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--glass-glow);
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.01);
+        }
+
+        .table-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Forms / Inputs */
+        .btn {
+            background: var(--accent-rose);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--accent-amber);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+
+        /* Trading Calculator / Columns */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .calculator-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            background: rgba(9, 11, 17, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-rose);
+        }
+
+        .calculator-results {
+            background: #0d1017;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: var(--glass-glow);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .result-row.total {
+            border-bottom: none;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--accent-amber);
+            padding-top: 0.5rem;
+        }
+
+        /* Printable Invoice Receipt */
+        .invoice-card {
+            background: white;
+            color: #0f172a;
+            border-radius: 12px;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 480px;
+            align-self: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .badge-status {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            text-transform: uppercase;
+        }
+
+        /* Price Chart mock */
+        .chart-svg {
+            width: 100%;
+            height: 180px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="workspace">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="/" class="brand">
+                <span class="brand-logo">Teringo</span>
+                <span class="brand-badge">B2B TRADING</span>
+            </a>
+
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <nav>
+                    <span class="section-title">Ecosistema ERP</span>
+                    <ul class="nav-list">
+                        <li>
+                            <div class="nav-item active" data-view="dashboard">
+                                <span class="nav-icon">📊</span>
+                                <span>Cuadro de Mando</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="nav-item" data-view="trading">
+                                <span class="nav-icon">💼</span>
+                                <span>Lista de Trading & Calc</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="nav-item" data-view="inventory">
+                                <span class="nav-icon">📦</span>
+                                <span>Inventario Maestro</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="nav-item" data-view="partners">
+                                <span class="nav-icon">🏢</span>
+                                <span>Registro de Partners</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="nav-item" data-view="invoicing">
+                                <span class="nav-icon">📄</span>
+                                <span>Invoicing Hub</span>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div style="font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    Monorepo MSBrossAI © 2026
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Panel -->
+        <main class="main-panel">
+            <div class="top-bar">
+                <a href="/teringo/" class="back-ecosystem">← Volver al Panel Intermedio</a>
+                <div class="system-status">
+                    <span class="status-pulse"></span>
+                    <span>Modo Demo Interactivo</span>
+                </div>
+            </div>
+
+            <!-- View 1: Dashboard -->
+            <section class="content-view active" id="view-dashboard">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-title">Ofertas de Trading (Bids)</span>
+                        <div class="kpi-value" id="kpi-offers">18</div>
+                        <div class="kpi-trend" style="color: var(--accent-emerald);">▲ +12% vs ayer</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <span class="kpi-title">Volumen Activo (Esencias)</span>
+                        <div class="kpi-value" id="kpi-volume">262 kg</div>
+                        <div class="kpi-trend" style="color: var(--accent-amber);">■ Estable</div>
+                    </div>
+                    <div class="kpi-card emerald">
+                        <span class="kpi-title">Proformas Facturadas</span>
+                        <div class="kpi-value" id="kpi-revenue">142.450 €</div>
+                        <div class="kpi-trend" style="color: var(--accent-emerald);">▲ +4.2% mensual</div>
+                    </div>
+                    <div class="kpi-card blue">
+                        <span class="kpi-title">Partners Registrados</span>
+                        <div class="kpi-value" id="kpi-partners">24</div>
+                        <div class="kpi-trend" style="color: var(--accent-emerald);">▲ +3 nuevos</div>
+                    </div>
+                </div>
+
+                <div class="split-grid">
+                    <div class="data-table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Inteligencia de Precios / Tendencias de Perfumería B2B</h3>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                <span>Índice Esencia Rosa Búlgara (€/kg)</span>
+                                <span style="color: var(--accent-rose); font-weight: 700;">Máx: 720 € / Mín: 410 €</span>
+                            </div>
+                            <svg class="chart-svg" viewBox="0 0 500 150">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--accent-rose)" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="var(--accent-rose)" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <polyline fill="none" stroke="var(--accent-rose)" stroke-width="3" points="0,120 50,110 100,130 150,90 200,80 250,95 300,60 350,75 400,45 450,55 500,25" />
+                                <polygon fill="url(#gradient)" points="0,150 0,120 50,110 100,130 150,90 200,80 250,95 300,60 350,75 400,45 450,55 500,25 500,150" />
+                                <circle cx="500" cy="25" r="4" fill="var(--accent-rose)" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="data-table-container">
+                        <div class="table-header">
+                            <h3 class="table-title">Últimas Transacciones de Corretaje</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Partner</th>
+                                    <th>Valor (€)</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-family: 'JetBrains Mono';">22-05-2026</td>
+                                    <td>Lux Perfume Group</td>
+                                    <td style="font-family: 'JetBrains Mono';">42.500 €</td>
+                                    <td><span class="badge-status">Completado</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: 'JetBrains Mono';">21-05-2026</td>
+                                    <td>Esencias Iberia S.L.</td>
+                                    <td style="font-family: 'JetBrains Mono';">18.200 €</td>
+                                    <td><span class="badge-status">Completado</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: 'JetBrains Mono';">19-05-2026</td>
+                                    <td>Milano Brokers</td>
+                                    <td style="font-family: 'JetBrains Mono';">81.750 €</td>
+                                    <td><span class="badge-status">Completado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View 2: Trading List & Calc -->
+            <section class="content-view" id="view-trading">
+                <div class="split-grid">
+                    <div class="calculator-panel">
+                        <h3 class="table-title" style="color: var(--accent-rose);">Calculador de Incoterms & Comisión de Trading</h3>
+                        <div class="form-group">
+                            <label class="form-label">Producto / Esencia</label>
+                            <select class="form-control" id="calcProduct">
+                                <option value="rosa" data-price="450">Esencia Rosa Búlgara (Stock: 120kg) - 450 €/kg</option>
+                                <option value="lirio" data-price="680">Esencia Lirio del Valle (Stock: 85kg) - 680 €/kg</option>
+                                <option value="sandalo" data-price="1200">Esencia Sándalo Mysore (Stock: 45kg) - 1200 €/kg</option>
+                                <option value="ambar" data-price="4800">Esencia Ámbar Gris (Stock: 12kg) - 4800 €/kg</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cantidad (kg)</label>
+                            <input type="number" class="form-control" id="calcQty" value="10" min="1" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Incoterm Seleccionado</label>
+                            <select class="form-control" id="calcIncoterm">
+                                <option value="EXW" data-cost="0">EXW (Recogida en origen) - +0 €</option>
+                                <option value="FOB" data-cost="250">FOB (Puerto origen) - +250 €</option>
+                                <option value="CIF" data-cost="780">CIF (Puerto destino + seguro) - +780 €</option>
+                                <option value="DDP" data-cost="1450">DDP (Entregado con aranceles) - +1450 €</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Margen de Broker (%)</label>
+                            <input type="number" class="form-control" id="calcMargin" value="5" min="0" max="100" />
+                        </div>
+                        <button class="btn" id="btnCalculate" style="width: 100%; justify-content: center;">Calcular Proforma</button>
+                    </div>
+
+                    <div class="calculator-results">
+                        <h3 class="table-title">Detalle de Proforma Estimada</h3>
+                        <div class="result-row">
+                            <span>Coste de Esencia Base</span>
+                            <span id="resBase" style="font-family: 'JetBrains Mono';">4.500,00 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Margen Aplicado (<span id="resMarginPct">5</span>%)</span>
+                            <span id="resMarginVal" style="font-family: 'JetBrains Mono';">225,00 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Gastos de Incoterm (<span id="resIncotermName">EXW</span>)</span>
+                            <span id="resIncotermVal" style="font-family: 'JetBrains Mono';">0,00 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Comisión de Trading MSBross (1.5%)</span>
+                            <span id="resCommission" style="font-family: 'JetBrains Mono';">70,88 €</span>
+                        </div>
+                        <div class="result-row total">
+                            <span>Importe Total</span>
+                            <span id="resTotal" style="font-family: 'JetBrains Mono';">4.795,88 €</span>
+                        </div>
+                        <button class="btn btn-outline" id="btnExportInvoice" style="margin-top: 1rem; justify-content: center;">Exportar a Invoicing Hub</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View 3: Inventory Master -->
+            <section class="content-view" id="view-inventory">
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Lotes Maestros e Inventario Multi-almacén</h3>
+                        <button class="btn" id="btnNewBatch">＋ Añadir Nuevo Lote</button>
+                    </div>
+                    <table class="data-table" id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Código Lote</th>
+                                <th>Nombre Esencia</th>
+                                <th>Almacén</th>
+                                <th>Stock Físico (kg)</th>
+                                <th>Coste Unitario (€/kg)</th>
+                                <th>Valor Total (€)</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-family: 'JetBrains Mono';">LOTE-ROS-04</td>
+                                <td>Esencia Rosa Búlgara</td>
+                                <td>Almacén Norte (Zaragoza)</td>
+                                <td style="font-family: 'JetBrains Mono'; font-weight: 700;">120 kg</td>
+                                <td style="font-family: 'JetBrains Mono';">450 €</td>
+                                <td style="font-family: 'JetBrains Mono';">54.000 €</td>
+                                <td><span class="badge-status">Disponible</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: 'JetBrains Mono';">LOTE-LIR-09</td>
+                                <td>Esencia Lirio del Valle</td>
+                                <td>Almacén Sur (Sevilla)</td>
+                                <td style="font-family: 'JetBrains Mono'; font-weight: 700;">85 kg</td>
+                                <td style="font-family: 'JetBrains Mono';">680 €</td>
+                                <td style="font-family: 'JetBrains Mono';">57.800 €</td>
+                                <td><span class="badge-status">Disponible</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: 'JetBrains Mono';">LOTE-SAN-12</td>
+                                <td>Esencia Sándalo Mysore</td>
+                                <td>Almacén Central (Madrid)</td>
+                                <td style="font-family: 'JetBrains Mono'; font-weight: 700;">45 kg</td>
+                                <td style="font-family: 'JetBrains Mono';">1.200 €</td>
+                                <td style="font-family: 'JetBrains Mono';">54.000 €</td>
+                                <td><span class="badge-status">Disponible</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: 'JetBrains Mono';">LOTE-AMB-01</td>
+                                <td>Esencia Ámbar Gris</td>
+                                <td>Caja Fuerte (Barcelona)</td>
+                                <td style="font-family: 'JetBrains Mono'; font-weight: 700;">12 kg</td>
+                                <td style="font-family: 'JetBrains Mono';">4.800 €</td>
+                                <td style="font-family: 'JetBrains Mono';">57.600 €</td>
+                                <td><span class="badge-status" style="background: rgba(245,158,11,0.1); color: var(--accent-amber); border-color: rgba(245,158,11,0.2);">Stock Crítico</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- View 4: Partners Registry -->
+            <section class="content-view" id="view-partners">
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Directorio Unificado de Proveedores, Clientes y Brokers</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre Comercial</th>
+                                <th>Tipo</th>
+                                <th>Ubicación</th>
+                                <th>Operaciones Realizadas</th>
+                                <th>Calificación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">Lux Perfume Group</td>
+                                <td>Cliente Mayorista</td>
+                                <td>París, Francia</td>
+                                <td style="font-family: 'JetBrains Mono';">12 transacciones</td>
+                                <td style="color: var(--accent-amber);">★★★★★</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Esencias Iberia S.L.</td>
+                                <td>Proveedor Maestro</td>
+                                <td>Murcia, España</td>
+                                <td style="font-family: 'JetBrains Mono';">18 transacciones</td>
+                                <td style="color: var(--accent-amber);">★★★★★</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Milano Brokers</td>
+                                <td>Corredor / Broker B2B</td>
+                                <td>Milán, Italia</td>
+                                <td style="font-family: 'JetBrains Mono';">8 transacciones</td>
+                                <td style="color: var(--accent-amber);">★★★★☆</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Grasse Bio Distillery</td>
+                                <td>Destilería / Proveedor</td>
+                                <td>Grasse, Francia</td>
+                                <td style="font-family: 'JetBrains Mono';">4 transacciones</td>
+                                <td style="color: var(--accent-amber);">★★★★★</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- View 5: Invoicing Hub -->
+            <section class="content-view" id="view-invoicing">
+                <div class="split-grid" style="grid-template-columns: 1fr 1.2fr; align-items: start;">
+                    <div class="calculator-panel">
+                        <h3 class="table-title" style="color: var(--accent-amber); margin-bottom: 0.5rem;">Proformas Emitidas</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="invoiceList">
+                            <!-- Pre-existing invoices -->
+                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; cursor: pointer;" onclick="showInvoice('Lux Perfume Group', 'Esencia Sándalo Mysore', 20, 24000, 'DDP', 25450)">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600; font-size: 0.9rem;">Lux Perfume Group</span>
+                                    <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent-amber);">#INV-2026-01</span>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">20 kg • Esencia Sándalo Mysore • DDP</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; cursor: pointer;" onclick="showInvoice('Esencias Iberia S.L.', 'Esencia Lirio del Valle', 15, 10200, 'EXW', 10353)">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600; font-size: 0.9rem;">Esencias Iberia S.L.</span>
+                                    <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent-amber);">#INV-2026-02</span>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">15 kg • Esencia Lirio del Valle • EXW</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Printable Invoice UI Frame -->
+                    <div class="invoice-card" id="invoiceReceipt">
+                        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 1rem;">
+                            <div>
+                                <div style="font-weight: 900; font-size: 1.25rem;">TERINGO ERP</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">MSBrossAI Monorepo B2B</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; font-size: 0.8rem;" id="recId">PROFORMA #INV-2026-01</div>
+                                <div style="font-size: 0.65rem; color: #64748b;">Fecha: 22-05-2026</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Partner Comercial</div>
+                            <div style="font-weight: 700; font-size: 0.9rem;" id="recPartner">Lux Perfume Group</div>
+                            <div style="font-size: 0.7rem; color: #64748b;" id="recLocation">París, Francia</div>
+                        </div>
+
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; margin-top: 0.5rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #cbd5e1;">
+                                    <th style="padding: 0.5rem 0;">Concepto</th>
+                                    <th style="padding: 0.5rem 0; text-align: right;">Cant (kg)</th>
+                                    <th style="padding: 0.5rem 0; text-align: right;">Precio</th>
+                                    <th style="padding: 0.5rem 0; text-align: right;">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #f1f5f9;">
+                                    <td style="padding: 0.5rem 0;" id="recItem">Esencia Sándalo Mysore</td>
+                                    <td style="padding: 0.5rem 0; text-align: right;" id="recQty">20 kg</td>
+                                    <td style="padding: 0.5rem 0; text-align: right;" id="recPrice">1.200 €</td>
+                                    <td style="padding: 0.5rem 0; text-align: right;" id="recBase">24.000 €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.75rem; border-top: 1px solid #cbd5e1; padding-top: 1rem; margin-top: auto;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Incoterm (<span id="recInco">DDP</span>)</span>
+                                <span id="recIncoVal">1.450,00 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Comisión Broker (1.5%)</span>
+                                <span id="recCommVal">381,75 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 0.95rem; border-top: 1px double #0f172a; padding-top: 0.5rem; color: #0f172a;">
+                                <span>TOTAL FACTURA</span>
+                                <span id="recTotal">25.831,75 €</span>
+                            </div>
+                        </div>
+                        <button class="btn" style="background: #0f172a; color: white; justify-content: center; font-size: 0.8rem;" onclick="window.print()">🖨️ Imprimir Proforma</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation Logic
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentViews = document.querySelectorAll('.content-view');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                contentViews.forEach(v => v.classList.remove('active'));
+
+                item.classList.add('active');
+                const targetViewId = 'view-' + item.getAttribute('data-view');
+                document.getElementById(targetViewId).classList.add('active');
+            });
+        });
+
+        // Trading Calculator Logic
+        const calcProduct = document.getElementById('calcProduct');
+        const calcQty = document.getElementById('calcQty');
+        const calcIncoterm = document.getElementById('calcIncoterm');
+        const calcMargin = document.getElementById('calcMargin');
+        const btnCalculate = document.getElementById('btnCalculate');
+        const btnExportInvoice = document.getElementById('btnExportInvoice');
+
+        // Results nodes
+        const resBase = document.getElementById('resBase');
+        const resMarginPct = document.getElementById('resMarginPct');
+        const resMarginVal = document.getElementById('resMarginVal');
+        const resIncotermName = document.getElementById('resIncotermName');
+        const resIncotermVal = document.getElementById('resIncotermVal');
+        const resCommission = document.getElementById('resCommission');
+        const resTotal = document.getElementById('resTotal');
+
+        let lastCalculation = null;
+
+        function calculate() {
+            const productSelect = calcProduct.options[calcProduct.selectedIndex];
+            const pricePerKg = parseFloat(productSelect.getAttribute('data-price'));
+            const qty = parseFloat(calcQty.value);
+            const incotermSelect = calcIncoterm.options[calcIncoterm.selectedIndex];
+            const incotermCost = parseFloat(incotermSelect.getAttribute('data-cost'));
+            const marginPct = parseFloat(calcMargin.value);
+
+            const baseCost = pricePerKg * qty;
+            const marginVal = baseCost * (marginPct / 100);
+            const subtotal = baseCost + marginVal + incotermCost;
+            const commission = subtotal * 0.015;
+            const total = subtotal + commission;
+
+            resBase.innerText = baseCost.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            resMarginPct.innerText = marginPct;
+            resMarginVal.innerText = marginVal.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            resIncotermName.innerText = incotermSelect.value;
+            resIncotermVal.innerText = incotermCost.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            resCommission.innerText = commission.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            resTotal.innerText = total.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+
+            lastCalculation = {
+                product: productSelect.text.split(' (')[0],
+                qty: qty,
+                price: pricePerKg,
+                base: baseCost,
+                incoterm: incotermSelect.value,
+                incotermCost: incotermCost,
+                commission: commission,
+                total: total
+            };
+        }
+
+        btnCalculate.addEventListener('click', calculate);
+
+        // Export Invoice
+        let invoiceCounter = 3;
+        btnExportInvoice.addEventListener('click', () => {
+            if (!lastCalculation) calculate();
+            
+            const invoiceList = document.getElementById('invoiceList');
+            const invId = `INV-2026-0${invoiceCounter}`;
+            
+            const invDiv = document.createElement('div');
+            invDiv.style.background = 'rgba(255,255,255,0.02)';
+            invDiv.style.border = '1px solid var(--border-color)';
+            invDiv.style.borderRadius = '1px';
+            invDiv.style.borderRadius = '12px';
+            invDiv.style.padding = '1rem';
+            invDiv.style.cursor = 'pointer';
+            invDiv.style.animation = 'fadeIn 0.5s ease';
+            
+            const partnerName = "Milano Brokers";
+            
+            invDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <span style="font-weight: 600; font-size: 0.9rem;">${partnerName}</span>
+                    <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent-amber);">#${invId}</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">${lastCalculation.qty} kg • ${lastCalculation.product} • ${lastCalculation.incoterm}</div>
+            `;
+
+            const currentCalc = { ...lastCalculation };
+            invDiv.onclick = () => {
+                showInvoice(partnerName, currentCalc.product, currentCalc.qty, currentCalc.base, currentCalc.incoterm, currentCalc.total, invId);
+            };
+
+            invoiceList.prepend(invDiv);
+            invoiceCounter++;
+
+            // Jump to invoicing tab
+            navItems.forEach(i => i.classList.remove('active'));
+            contentViews.forEach(v => v.classList.remove('active'));
+            document.querySelector('[data-view="invoicing"]').classList.add('active');
+            document.getElementById('view-invoicing').classList.add('active');
+
+            showInvoice(partnerName, currentCalc.product, currentCalc.qty, currentCalc.base, currentCalc.incoterm, currentCalc.total, invId);
+        });
+
+        // Show Invoice Receipt
+        function showInvoice(partner, item, qty, base, incoterm, total, invId = 'INV-2026-01') {
+            document.getElementById('recId').innerText = `PROFORMA #${invId}`;
+            document.getElementById('recPartner').innerText = partner;
+            document.getElementById('recItem').innerText = item;
+            document.getElementById('recQty').innerText = `${qty} kg`;
+            document.getElementById('recPrice').innerText = (base / qty).toLocaleString('es-ES') + ' €';
+            document.getElementById('recBase').innerText = base.toLocaleString('es-ES') + ' €';
+            document.getElementById('recInco').innerText = incoterm;
+            
+            const incotermCosts = { EXW: 0, FOB: 250, CIF: 780, DDP: 1450 };
+            const incotermCost = incotermCosts[incoterm] || 0;
+            document.getElementById('recIncoVal').innerText = incotermCost.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            
+            const commission = (base + incotermCost) * 0.015;
+            document.getElementById('recCommVal').innerText = commission.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+            document.getElementById('recTotal').innerText = total.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €';
+        }
+
+        // Add New Lote System
+        const btnNewBatch = document.getElementById('btnNewBatch');
+        const inventoryTable = document.getElementById('inventoryTable').getElementsByTagName('tbody')[0];
+        let batchCounter = 5;
+
+        btnNewBatch.addEventListener('click', () => {
+            const row = inventoryTable.insertRow(0);
+            row.style.animation = 'fadeIn 0.5s ease';
+            
+            const batchCode = `LOTE-NEW-0${batchCounter}`;
+            const esencias = ['Esencia de Vainilla Madagascar', 'Esencia de Jazmín Real', 'Esencia Oud de Camboya'];
+            const randomEsencia = esencias[Math.floor(Math.random() * esencias.length)];
+            const warehouses = ['Almacén Norte (Zaragoza)', 'Almacén Central (Madrid)', 'Almacén Sur (Sevilla)'];
+            const randomWarehouse = warehouses[Math.floor(Math.random() * warehouses.length)];
+            const randomQty = Math.floor(Math.random() * 80) + 20;
+            const randomPrice = Math.floor(Math.random() * 1500) + 300;
+            const randomTotal = randomQty * randomPrice;
+
+            row.innerHTML = `
+                <td style="font-family: 'JetBrains Mono';">${batchCode}</td>
+                <td>${randomEsencia}</td>
+                <td>${randomWarehouse}</td>
+                <td style="font-family: 'JetBrains Mono'; font-weight: 700;">${randomQty} kg</td>
+                <td style="font-family: 'JetBrains Mono';">${randomPrice} €</td>
+                <td style="font-family: 'JetBrains Mono';">${randomTotal.toLocaleString('es-ES')} €</td>
+                <td><span class="badge-status">Disponible</span></td>
+            `;
+
+            batchCounter++;
+
+            // Update stats
+            const kpiVolume = document.getElementById('kpi-volume');
+            const currentVol = parseInt(kpiVolume.innerText);
+            kpiVolume.innerText = (currentVol + randomQty) + ' kg';
+        });
+    </script>
+</body>
+</html>
