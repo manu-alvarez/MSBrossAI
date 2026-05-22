@@ -51,3 +51,4 @@ temp_vision/
 
 # IAPuta env config (contains API keys)
 www/app/iaputa/env.php
+.venv/
