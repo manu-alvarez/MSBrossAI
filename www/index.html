@@ -84,6 +84,37 @@
             position: relative;
         }
 
+        .header-hero {
+            position: relative;
+            display: inline-block;
+            padding: 3rem 4rem;
+            border-radius: 28px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .header-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://msbross.me/assets/img/cozy-dev-space.png') center / cover no-repeat;
+            opacity: 0.25;
+            z-index: 0;
+        }
+
+        .header-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 85%);
+            z-index: 1;
+        }
+
+        .header-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
         .logo {
             font-size: 4rem;
             font-weight: 900;
@@ -95,6 +126,7 @@
             background-clip: text;
             animation: gradientShift 8s ease infinite;
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 60px rgba(139, 92, 246, 0.3);
         }
 
         @keyframes gradientShift {
@@ -353,41 +385,10 @@
 
     <div class="container">
         <header>
-            <h1 class="logo">MSBrossAI</h1>
-            <p class="subtitle" style="color: var(--accent-2); font-weight: 800;">Ecosistema Digital Personal</p>
-            <div class="stats-bar">
-                <div class="stat">
-                    <span class="stat-dot" style="background: var(--accent-3); box-shadow: 0 0 10px var(--accent-3);"></span>
-                    <span id="neural-status">Canal de Pruebas</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-dot" style="background: var(--accent-2)"></span>
-                    <span>20 Experimentos</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-dot" style="background: var(--accent-6)"></span>
-                    <span>Persistencia Local</span>
-                </div>
+            <div class="header-hero">
+                <h1 class="logo">MSBrossAI</h1>
+                <p class="subtitle" style="color: var(--accent-2); font-weight: 800;">Ecosistema Digital Personal</p>
             </div>
-
-            <!-- Hero Definition Section -->
-            <div id="hero-definition" style="max-width: 900px; margin: 4rem auto 0; display: flex; flex-direction: column; align-items: center; gap: 2rem;">
-                <div style="position: relative; width: 280px; height: 280px; border-radius: 24px; padding: 6px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); box-shadow: 0 20px 80px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.1); animation: floatOrb 6s ease-in-out infinite; overflow: hidden;">
-                    <img src="./assets/img/cozy-dev-space.png" alt="Espacio Creativo de Desarrollo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 18px;" />
-                </div>
-                <div style="text-align: center; max-width: 700px; background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; color: var(--text); background: linear-gradient(90deg, #fff, var(--accent-2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Rincón de Aprendizaje y Desarrollo</h2>
-                    <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.6;">
-                        Una colección personal de herramientas, experimentos y pequeñas aplicaciones creadas para aprender nuevas tecnologías, automatizar tareas del día a día y explorar soluciones prácticas. Un espacio de constante crecimiento y evolución personal.
-                    </p>
-                </div>
-            </div>
-            <style>
-                @keyframes floatOrb {
-                    0%, 100% { transform: translateY(0) scale(1); filter: hue-rotate(0deg); }
-                    50% { transform: translateY(-15px) scale(1.02); filter: hue-rotate(15deg); }
-                }
-            </style>
         </header>
 
         <main class="app-grid">
@@ -429,6 +430,28 @@
                     <span class="tech-tag">React 19</span>
                     <span class="tech-tag">MUI 7</span>
                     <span class="tech-tag">Multi-Provider</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Cuentos Mágicos -->
+            <a href="https://msbross.me/app/cuentosmagicos/" class="app-card" style="--card-accent: #fbbf24; --card-accent-shadow: rgba(251,191,36,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🦄</div>
+                    <div>
+                        <div class="card-title">Cuentos Mágicos</div>
+                        <span class="card-badge">CREATIVE AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Narrador interactivo que genera cuentos personalizados en tiempo real con ilustraciones y audio usando IA.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Next.js 15</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">PWA</span>
+                    <span class="tech-tag">FastAPI</span>
                 </div>
                 <div class="card-footer">
                     <div class="card-status"><span class="status-dot"></span> Online</div>
@@ -480,6 +503,28 @@
                 </div>
             </a>
 
+            <!-- EliteScout -->
+            <a href="https://msbross.me/elitescout/" class="app-card" style="--card-accent: #06b6d4; --card-accent-shadow: rgba(6,182,212,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">✈️</div>
+                    <div>
+                        <div class="card-title">EliteScout</div>
+                        <span class="card-badge" style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3);">Mantenimiento</span>
+                    </div>
+                </div>
+                <p class="card-desc">Buscador semántico de viajes y productos mediante inteligencia artificial avanzada. Descubre destinos únicos y planifica viajes personalizados.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Next.js 15</span>
+                    <span class="tech-tag">Tavily API</span>
+                    <span class="tech-tag">Groq Llama</span>
+                    <span class="tech-tag">FastAPI</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span> Mantenimiento</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
             <!-- Edelweiss -->
             <a href="https://msbross.me/edelweiss/" class="app-card" style="--card-accent: var(--accent-6); --card-accent-shadow: rgba(236,72,153,0.3);">
                 <div class="card-header">
@@ -524,27 +569,6 @@
                 </div>
             </a>
 
-            <!-- GitHub Repositories -->
-            <a href="https://github.com/manu-alvarez" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #64748b; --card-accent-shadow: rgba(100,116,139,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🐙</div>
-                    <div>
-                        <div class="card-title">GitHub Portfolio</div>
-                        <span class="card-badge">SOURCE CODE</span>
-                    </div>
-                </div>
-                <p class="card-desc">Explora mis repositorios de código abierto, proyectos de inteligencia artificial, scripts y configuraciones completas del ecosistema MSBrossAI.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Git</span>
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">TypeScript</span>
-                    <span class="tech-tag">Bash</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
 
             <!-- IAPuta OS -->
             <a href="https://msbross.me/iaputa/" class="app-card" style="--card-accent: var(--accent-1); --card-accent-shadow: rgba(139,92,246,0.3);">
@@ -835,11 +859,6 @@
 
         <footer>
             <p>MSBrossAI © 2026 — Ecosistema unificado de 20 aplicaciones y recursos</p>
-            <p style="margin-top: 0.5rem;">
-                <a href="https://github.com/manu-alvarez/MSBrossAI" target="_blank">GitHub</a> • 
-                <a href="https://msbrossai.alvarezconsult.com/dashboard/" target="_blank">Dashboard Premium</a> • 
-                <a href="https://msbrossai.alvarezconsult.com/dev/" target="_blank">Dev Panel</a>
-            </p>
         </footer>
     </div>
 

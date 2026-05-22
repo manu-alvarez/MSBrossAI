@@ -89,12 +89,58 @@ module.exports = {
       args: 'dist/index.js',
       cwd: './apps/arantxa-translate/server',
       env: {
-        PORT: '3001'
+        PORT: '8004'
       },
       out_file: './apps/arantxa-translate/server/arantxa.log',
       error_file: './apps/arantxa-translate/server/arantxa.error.log',
       autorestart: true,
       max_restarts: 10,
     },
+
+    // ──────────────────────────────────────────────
+    // ELITESCOUT (Semantic Travel Finder Backend)
+    // ──────────────────────────────────────────────
+    /*
+    {
+      name: 'elitescout-backend',
+      script: '/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3',
+      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8003',
+      cwd: './apps/elitescout/backend',
+      out_file: 'elitescout.log',
+      error_file: 'elitescout.error.log',
+      autorestart: true,
+      max_restarts: 10,
+    },
+    */
+
+    // ──────────────────────────────────────────────
+    // MSBROSS ACTIVE ADELE VOICE SERVER
+    // ──────────────────────────────────────────────
+    {
+      name: 'msbross-backend',
+      script: '/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3',
+      args: 'server.py',
+      cwd: './apps/msbross',
+      out_file: 'msbross.log',
+      error_file: 'msbross.error.log',
+      autorestart: true,
+      max_restarts: 10,
+    },
+
+    // ──────────────────────────────────────────────
+    // CUENTOSMÁGICOS AI (Creative Story Teller Backend)
+    // ──────────────────────────────────────────────
+    {
+      name: 'cuentosmagicos-backend',
+      script: '/Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3',
+      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8007',
+      cwd: './apps/cuentosmagicos/backend',
+      out_file: 'cuentosmagicos.log',
+      error_file: 'cuentosmagicos.error.log',
+      autorestart: true,
+      max_restarts: 10,
+    },
   ]
 };
+
+
