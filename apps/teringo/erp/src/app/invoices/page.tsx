@@ -113,7 +113,7 @@ export default function InvoicesPage() {
     { key: 'dueDate', label: 'Vencimiento' },
     { key: 'actions', label: '', render: (item: Invoice) => (
       <div className="flex space-x-1">
-        <Link href={`/invoices/view/${item.id}`} className="p-1 hover:bg-[#EDEBE9] dark:hover:bg-[#333] rounded inline-flex" title="Ver proforma">
+        <Link href={`/invoices/view?id=${item.id}`} className="p-1 hover:bg-[#EDEBE9] dark:hover:bg-[#333] rounded inline-flex" title="Ver proforma">
           <Eye size={14} />
         </Link>
         <button className="p-1 hover:bg-[#EDEBE9] dark:hover:bg-[#333] rounded"><Download size={14} /></button>

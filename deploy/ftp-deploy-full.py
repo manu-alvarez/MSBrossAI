@@ -95,12 +95,16 @@ if __name__ == "__main__":
                     upload_dir(ftp, app_local, f"/www/app/{app_name}")
                     print(f"✅ {app_name} deployed!")
         
-        # Upload newton directory (intermediate page)
-        newton_dir = os.path.join(local_path, "newton")
-        if os.path.isdir(newton_dir):
-            print("\n📦 Deploying newton (intermediate)...")
-            upload_dir(ftp, newton_dir, "/www/newton")
-            print("✅ newton deployed!")
+        # Upload all subdirectories under ./www as intermediate pages (except app and assets)
+        print("\n📦 Deploying intermediate pages...")
+        for item in sorted(os.listdir(local_path)):
+            if item.startswith('.') or item in {'app', 'assets', 'logs', 'tmp'}:
+                continue
+            item_local = os.path.join(local_path, item)
+            if os.path.isdir(item_local):
+                print(f"  📦 Deploying intermediate page: {item}...")
+                upload_dir(ftp, item_local, f"/www/{item}")
+                print(f"  ✅ Intermediate page for {item} deployed!")
         
         ftp.quit()
         print("\n🚀 Full FTP deployment completed!")

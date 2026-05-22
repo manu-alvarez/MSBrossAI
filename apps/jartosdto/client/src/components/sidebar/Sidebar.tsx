@@ -34,7 +34,7 @@ export default function Sidebar() {
 
   const handleSelectConversation = (conv: Conversation) => {
     setConversationId(conv.id);
-    router.push(`/${conv.id}`);
+    router.push(`/?id=${conv.id}`);
   };
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {

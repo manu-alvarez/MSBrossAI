@@ -349,36 +349,34 @@
     <canvas id="bg-canvas"></canvas>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <div class="container">
+    <div class="orb orb-3"></di    <div class="container">
         <header>
             <h1 class="logo">MSBrossAI</h1>
-            <p class="subtitle" style="color: var(--accent-2); font-weight: 800;">Ecosistema Digital Unificado</p>
+            <p class="subtitle" style="color: var(--accent-2); font-weight: 800;">Ecosistema Digital Personal</p>
             <div class="stats-bar">
                 <div class="stat">
                     <span class="stat-dot" style="background: var(--accent-3); box-shadow: 0 0 10px var(--accent-3);"></span>
-                    <span id="neural-status">Bus Conectado</span>
+                    <span id="neural-status">Canal de Pruebas</span>
                 </div>
                 <div class="stat">
                     <span class="stat-dot" style="background: var(--accent-2)"></span>
-                    <span>20 Nodos Digitales</span>
+                    <span>20 Experimentos</span>
                 </div>
                 <div class="stat">
                     <span class="stat-dot" style="background: var(--accent-6)"></span>
-                    <span>Modo Soberano</span>
+                    <span>Persistencia Local</span>
                 </div>
             </div>
 
             <!-- Hero Definition Section -->
             <div id="hero-definition" style="max-width: 900px; margin: 4rem auto 0; display: flex; flex-direction: column; align-items: center; gap: 2rem;">
-                <div style="position: relative; width: 220px; height: 220px; border-radius: 50%; padding: 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); box-shadow: 0 0 80px rgba(6, 182, 212, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.2); animation: floatOrb 6s ease-in-out infinite;">
-                    <img src="./assets/img/logo-hielo.png" alt="Neural Frost Orb" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid rgba(255,255,255,0.1);" />
+                <div style="position: relative; width: 280px; height: 280px; border-radius: 24px; padding: 6px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); box-shadow: 0 20px 80px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.1); animation: floatOrb 6s ease-in-out infinite; overflow: hidden;">
+                    <img src="./assets/img/cozy-dev-space.png" alt="Espacio Creativo de Desarrollo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 18px;" />
                 </div>
                 <div style="text-align: center; max-width: 700px; background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; color: var(--text); background: linear-gradient(90deg, #fff, var(--accent-2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Centro de Control e Inteligencia</h2>
+                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; color: var(--text); background: linear-gradient(90deg, #fff, var(--accent-2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Rincón de Aprendizaje y Desarrollo</h2>
                     <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.6;">
-                        Bienvenido al núcleo de MSBrossAI. Un entorno unificado que interconecta 20 aplicaciones y recursos diseñados para potenciar el desarrollo, la gestión logística y la automatización inteligente bajo una arquitectura de alto rendimiento.
+                        Una colección personal de herramientas, experimentos y pequeñas aplicaciones creadas para aprender nuevas tecnologías, automatizar tareas del día a día y explorar soluciones prácticas. Un espacio de constante crecimiento y evolución personal.
                     </p>
                 </div>
             </div>
@@ -392,43 +390,21 @@
 
         <main class="app-grid">
 
-            <!-- IAPuta OS -->
-            <a href="https://msbross.me/iaputa/" class="app-card" style="--card-accent: var(--accent-1); --card-accent-shadow: rgba(139,92,246,0.3);">
+            <!-- App Generator -->
+            <a href="https://msbross.me/app-generator/" class="app-card" style="--card-accent: #f472b6; --card-accent-shadow: rgba(244,114,182,0.3);">
                 <div class="card-header">
-                    <div class="card-icon">🤖</div>
+                    <div class="card-icon">⚡</div>
                     <div>
-                        <div class="card-title">IAPuta OS</div>
-                        <span class="card-badge">CORE AI</span>
+                        <div class="card-title">App Generator</div>
+                        <span class="card-badge">DEV AI</span>
                     </div>
                 </div>
-                <p class="card-desc">Asistente IA soberano con orbe 3D reactivo, 12 herramientas integradas, visión computacional y multi-LLM fallback (Groq → Ollama → OpenRouter).</p>
+                <p class="card-desc">Constructor asimétrico (Split-View) que genera Single-Page Apps usando Gemini 2.5 Flash Native. Escríbele el prompt y previsualiza el render interactivo al vuelo.</p>
                 <div class="card-tech">
-                    <span class="tech-tag">FastAPI</span>
                     <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Three.js</span>
-                    <span class="tech-tag">Clean Arch</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- LIVEKIT Nikolina -->
-            <a href="https://msbross.me/nikolina/" class="app-card" style="--card-accent: var(--accent-2); --card-accent-shadow: rgba(6,182,212,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🎙️</div>
-                    <div>
-                        <div class="card-title">LIVEKIT Nikolina</div>
-                        <span class="card-badge">VOICE AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio, gestión de reservas, carta interactiva y logging de llamadas.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">LiveKit</span>
-                    <span class="tech-tag">Gemini 2.5</span>
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">React 18</span>
+                    <span class="tech-tag">Vite</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">Iframe CodeSandbox</span>
                 </div>
                 <div class="card-footer">
                     <div class="card-status"><span class="status-dot"></span> Online</div>
@@ -445,122 +421,12 @@
                         <span class="card-badge">TRANSLATION</span>
                     </div>
                 </div>
-                <p class="card-desc">Traductor neural con 4 modos (estándar, profesional, coloquial, resumen), 4 providers (Groq, OpenAI, Gemini, OpenRouter) y OCR con Tesseract.js.</p>
+                <p class="card-desc">Traductor neural con 4 modos (estándar, profesional, coloquial, resumen), 4 providers (Groq, OpenAI, Gemini, OpenRouter) and OCR con Tesseract.js.</p>
                 <div class="card-tech">
                     <span class="tech-tag">Express</span>
                     <span class="tech-tag">React 19</span>
                     <span class="tech-tag">MUI 7</span>
                     <span class="tech-tag">Multi-Provider</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- TaskFlowPro -->
-            <a href="https://msbross.me/taskflow/" class="app-card" style="--card-accent: var(--accent-4); --card-accent-shadow: rgba(245,158,11,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">✅</div>
-                    <div>
-                        <div class="card-title">TaskFlowPro</div>
-                        <span class="card-badge">PRODUCTIVITY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Gestión de tareas con alarmas, categorías, integración WhatsApp, export/import, búsqueda y drag-and-drop. Persistencia en localStorage.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 18</span>
-                    <span class="tech-tag">MUI 5</span>
-                    <span class="tech-tag">Zustand</span>
-                    <span class="tech-tag">PWA</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- DOHLER -->
-            <a href="https://msbross.me/dohler/" class="app-card" style="--card-accent: var(--accent-7); --card-accent-shadow: rgba(59,130,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">📋</div>
-                    <div>
-                        <div class="card-title">DOHLER</div>
-                        <span class="card-badge">TASK MANAGER</span>
-                    </div>
-                </div>
-                <p class="card-desc">Gestor de tareas con temporizador Pomodoro, estadísticas de productividad, checklists anidadas y diseño neón glassmorphism.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">SQLite</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- LogiSearch -->
-            <a href="https://msbross.me/logisearch/" class="app-card" style="--card-accent: var(--accent-5); --card-accent-shadow: rgba(239,68,68,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🔍</div>
-                    <div>
-                        <div class="card-title">LogiSearch</div>
-                        <span class="card-badge">LOGISTICS AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Buscador logístico con IA, análisis de rutas, comparador de transportistas, calculadora de costes y generación de RFQs con PDF.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">TypeScript</span>
-                    <span class="tech-tag">Supabase</span>
-                    <span class="tech-tag">Tavily</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- Edelweiss -->
-            <a href="https://msbross.me/edelweiss/" class="app-card" style="--card-accent: var(--accent-6); --card-accent-shadow: rgba(236,72,153,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">👶</div>
-                    <div>
-                        <div class="card-title">Edelweiss</div>
-                        <span class="card-badge">VISION PLAY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Estimulación visual infantil con 5 modos (alto contraste, seguimiento, enfoque, descanso, formas), parental lock e i18n ES/EN.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 18</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">Framer Motion</span>
-                    <span class="tech-tag">PWA</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- Moko-Tools -->
-            <a href="https://msbross.me/moko/" class="app-card" style="--card-accent: var(--accent-8); --card-accent-shadow: rgba(20,184,166,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🛠️</div>
-                    <div>
-                        <div class="card-title">Moko-Tools</div>
-                        <span class="card-badge">DEV TOOLS</span>
-                    </div>
-                </div>
-                <p class="card-desc">Directorio curado de 189 herramientas de desarrollo en 14 categorías con búsqueda semántica, favoritos y bento grid navigation.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Vite 7</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">189 Tools</span>
                 </div>
                 <div class="card-footer">
                     <div class="card-status"><span class="status-dot"></span> Online</div>
@@ -590,193 +456,43 @@
                 </div>
             </a>
 
-            <!-- App Generator -->
-            <a href="https://msbross.me/app-generator/" class="app-card" style="--card-accent: #f472b6; --card-accent-shadow: rgba(244,114,182,0.3);">
+            <!-- DOHLER -->
+            <a href="https://msbross.me/dohler/" class="app-card" style="--card-accent: var(--accent-7); --card-accent-shadow: rgba(59,130,246,0.3);">
                 <div class="card-header">
-                    <div class="card-icon">⚡</div>
+                    <div class="card-icon">📋</div>
                     <div>
-                        <div class="card-title">App Generator</div>
-                        <span class="card-badge">DEV AI</span>
+                        <div class="card-title">DOHLER</div>
+                        <span class="card-badge">TASK MANAGER</span>
                     </div>
                 </div>
-                <p class="card-desc">Constructor asimétrico (Split-View) que genera Single-Page Apps usando Gemini 2.5 Flash Native. Escríbele el prompt y previsualiza el render interactivo al vuelo.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Vite</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">Iframe CodeSandbox</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Web Restaurante Atenea -->
-            <a href="https://msbross.me/app/atenea/" class="app-card" style="--card-accent: #c4b5fd; --card-accent-shadow: rgba(196,181,253,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🏛️</div>
-                    <div>
-                        <div class="card-title">Web Restaurante Atenea</div>
-                        <span class="card-badge">GASTRONOMY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Experiencia culinaria de alta gastronomía con sistema de reservas integrado, menú interactivo y diseño premium.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">HTML5</span>
-                    <span class="tech-tag">CSS3</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">Reservas</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Newton Mequinenza -->
-            <a href="https://msbross.me/newton/" class="app-card" style="--card-accent: #f97316; --card-accent-shadow: rgba(249,115,22,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">⛽</div>
-                    <div>
-                        <div class="card-title">Newton Mequinenza</div>
-                        <span class="card-badge">OPS PWA</span>
-                    </div>
-                </div>
-                <p class="card-desc">App PWA de gestión operativa para Estación de Servicio Repsol: checklists de tareas, control de caducidades, fichaje de horarios e incidencias.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">PWA</span>
-                    <span class="tech-tag">Express</span>
-                    <span class="tech-tag">SQLite</span>
-                    <span class="tech-tag">Service Worker</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Manuel Alvarez CV -->
-            <a href="https://manu-alvarez.github.io" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #3b82f6; --card-accent-shadow: rgba(59,130,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">👨‍💻</div>
-                    <div>
-                        <div class="card-title">Manuel Alvarez CV</div>
-                        <span class="card-badge">PORTFOLIO</span>
-                    </div>
-                </div>
-                <p class="card-desc">Portfolio profesional de Manuel Alvarez Dianez. Técnico de Sistemas, Soporte IT Multiplataforma e Implementación práctica de Inteligencia Artificial.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Sistemas</span>
-                    <span class="tech-tag">IT Support</span>
-                    <span class="tech-tag">DevOps</span>
-                    <span class="tech-tag">Agile</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- GitHub Repositories -->
-            <a href="https://github.com/manu-alvarez" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #64748b; --card-accent-shadow: rgba(100,116,139,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🐙</div>
-                    <div>
-                        <div class="card-title">GitHub Portfolio</div>
-                        <span class="card-badge">SOURCE CODE</span>
-                    </div>
-                </div>
-                <p class="card-desc">Explora mis repositorios de código abierto, proyectos de inteligencia artificial, scripts y configuraciones completas del ecosistema MSBrossAI.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Git</span>
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">TypeScript</span>
-                    <span class="tech-tag">Bash</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- Mano Eléctrica Azul -->
-            <a href="https://play.google.com/store/apps/details?id=com.manoelectricaazul.app" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #10b981; --card-accent-shadow: rgba(16,185,129,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">📱</div>
-                    <div>
-                        <div class="card-title">Mano Eléctrica Azul</div>
-                        <span class="card-badge">MOBILE APP</span>
-                    </div>
-                </div>
-                <p class="card-desc">Aplicación multiplataforma disponible en Google Play Store para la exploración de contenido interactivo, aprendizaje personal y seguimiento Tzolkin.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React Native</span>
-                    <span class="tech-tag">Expo Go</span>
-                    <span class="tech-tag">Android</span>
-                    <span class="tech-tag">Google Play</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- Tu Energía Maya -->
-            <a href="https://manu-alvarez.github.io/TuEnergiaMaya" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #f59e0b; --card-accent-shadow: rgba(245,158,11,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🌀</div>
-                    <div>
-                        <div class="card-title">Tu Energía Maya</div>
-                        <span class="card-badge">WEB APP</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma interactiva sobre la sabiduría y energía Maya. Calcula y descubre tu kin, tu oráculo de destino y tu firma galáctica diaria de forma visual.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Web App</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">Tzolkin</span>
-                    <span class="tech-tag">Cosmología</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-
-            <!-- LogiTrack Almacén -->
-            <a href="https://trello.com/b/IRVpzuUt/logitrack-operaciones-de-almacen" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #0ea5e9; --card-accent-shadow: rgba(14,165,233,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">📦</div>
-                    <div>
-                        <div class="card-title">LogiTrack Almacén</div>
-                        <span class="card-badge">LOGISTICS</span>
-                    </div>
-                </div>
-                <p class="card-desc">Tablero ágil y sistema de gestión integral de operaciones de almacén. Control de stock, seguimiento de pedidos, expedición y optimización logística.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Trello</span>
-                    <span class="tech-tag">Kanban</span>
-                    <span class="tech-tag">Operaciones</span>
-                    <span class="tech-tag">Supply Chain</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- JartosDTo -->
-            <a href="https://msbross.me/jartosdto/" class="app-card" style="--card-accent: #8b5cf6; --card-accent-shadow: rgba(139,92,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🧠</div>
-                    <div>
-                        <div class="card-title">JartosDTo</div>
-                        <span class="card-badge">AI CHAT PLATFORM</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma unificada de chat de IA con soporte RAG, backend escalable, base de datos vectorial y túnel Cloudflare para acceso móvil nativo iOS.</p>
+                <p class="card-desc">Gestor de tareas con temporizador Pomodoro, estadísticas de productividad, checklists anidadas y diseño neón glassmorphism.</p>
                 <div class="card-tech">
                     <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">LangChain</span>
-                    <span class="tech-tag">pgvector</span>
-                    <span class="tech-tag">iOS Native</span>
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">SQLite</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Edelweiss -->
+            <a href="https://msbross.me/edelweiss/" class="app-card" style="--card-accent: var(--accent-6); --card-accent-shadow: rgba(236,72,153,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">👶</div>
+                    <div>
+                        <div class="card-title">Edelweiss</div>
+                        <span class="card-badge">VISION PLAY</span>
+                    </div>
+                </div>
+                <p class="card-desc">Estimulación visual infantil con 5 modos (alto contraste, seguimiento, enfoque, descanso, formas), parental lock e i18n ES/EN.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 18</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">Framer Motion</span>
+                    <span class="tech-tag">PWA</span>
                 </div>
                 <div class="card-footer">
                     <div class="card-status"><span class="status-dot"></span> Online</div>
@@ -806,6 +522,248 @@
                 </div>
             </a>
 
+            <!-- GitHub Repositories -->
+            <a href="https://github.com/manu-alvarez" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #64748b; --card-accent-shadow: rgba(100,116,139,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🐙</div>
+                    <div>
+                        <div class="card-title">GitHub Portfolio</div>
+                        <span class="card-badge">SOURCE CODE</span>
+                    </div>
+                </div>
+                <p class="card-desc">Explora mis repositorios de código abierto, proyectos de inteligencia artificial, scripts y configuraciones completas del ecosistema MSBrossAI.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Git</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Bash</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- IAPuta OS -->
+            <a href="https://msbross.me/iaputa/" class="app-card" style="--card-accent: var(--accent-1); --card-accent-shadow: rgba(139,92,246,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🤖</div>
+                    <div>
+                        <div class="card-title">IAPuta OS</div>
+                        <span class="card-badge">CORE AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Asistente IA soberano con orbe 3D reactivo, 12 herramientas integradas, visión computacional y multi-LLM fallback (Groq → Ollama → OpenRouter).</p>
+                <div class="card-tech">
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">Three.js</span>
+                    <span class="tech-tag">Clean Arch</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- JartosDTo -->
+            <a href="https://msbross.me/jartosdto/" class="app-card" style="--card-accent: #8b5cf6; --card-accent-shadow: rgba(139,92,246,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🧠</div>
+                    <div>
+                        <div class="card-title">JartosDTo</div>
+                        <span class="card-badge">AI CHAT PLATFORM</span>
+                    </div>
+                </div>
+                <p class="card-desc">Plataforma unificada de chat de IA con soporte RAG, backend escalable, base de datos vectorial y túnel Cloudflare para acceso móvil nativo iOS.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">LangChain</span>
+                    <span class="tech-tag">pgvector</span>
+                    <span class="tech-tag">iOS Native</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- LIVEKIT Nikolina -->
+            <a href="https://msbross.me/nikolina/" class="app-card" style="--card-accent: var(--accent-2); --card-accent-shadow: rgba(6,182,212,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🎙️</div>
+                    <div>
+                        <div class="card-title">LIVEKIT Nikolina</div>
+                        <span class="card-badge">VOICE AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio, gestión de reservas, carta interactiva y logging de llamadas.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">LiveKit</span>
+                    <span class="tech-tag">Gemini 2.5</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">React 18</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- LogiSearch -->
+            <a href="https://msbross.me/logisearch/" class="app-card" style="--card-accent: var(--accent-5); --card-accent-shadow: rgba(239,68,68,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div>
+                        <div class="card-title">LogiSearch</div>
+                        <span class="card-badge">LOGISTICS AI</span>
+                    </div>
+                </div>
+                <p class="card-desc">Buscador logístico con IA, análisis de rutas, comparador de transportistas, calculadora de costes y generación de RFQs con PDF.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Supabase</span>
+                    <span class="tech-tag">Tavily</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- LogiTrack Almacén -->
+            <a href="https://trello.com/b/IRVpzuUt/logitrack-operaciones-de-almacen" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #0ea5e9; --card-accent-shadow: rgba(14,165,233,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">📦</div>
+                    <div>
+                        <div class="card-title">LogiTrack Almacén</div>
+                        <span class="card-badge">LOGISTICS</span>
+                    </div>
+                </div>
+                <p class="card-desc">Tablero ágil y sistema de gestión integral de operaciones de almacén. Control de stock, seguimiento de pedidos, expedición y optimización logística.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Trello</span>
+                    <span class="tech-tag">Kanban</span>
+                    <span class="tech-tag">Operaciones</span>
+                    <span class="tech-tag">Supply Chain</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Mano Eléctrica Azul -->
+            <a href="https://play.google.com/store/apps/details?id=com.manoelectricaazul.app" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #10b981; --card-accent-shadow: rgba(16,185,129,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                    <div>
+                        <div class="card-title">Mano Eléctrica Azul</div>
+                        <span class="card-badge">MOBILE APP</span>
+                    </div>
+                </div>
+                <p class="card-desc">Aplicación multiplataforma disponible en Google Play Store para la exploración de contenido interactivo, aprendizaje personal y seguimiento Tzolkin.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Expo Go</span>
+                    <span class="tech-tag">Android</span>
+                    <span class="tech-tag">Google Play</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Manuel Alvarez CV -->
+            <a href="https://manu-alvarez.github.io" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #3b82f6; --card-accent-shadow: rgba(59,130,246,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">👨‍💻</div>
+                    <div>
+                        <div class="card-title">Manuel Alvarez CV</div>
+                        <span class="card-badge">PORTFOLIO</span>
+                    </div>
+                </div>
+                <p class="card-desc">Portfolio profesional de Manuel Alvarez Dianez. Técnico de Sistemas, Soporte IT Multiplataforma e Implementación práctica de Inteligencia Artificial.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Sistemas</span>
+                    <span class="tech-tag">IT Support</span>
+                    <span class="tech-tag">DevOps</span>
+                    <span class="tech-tag">Agile</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Moko-Tools -->
+            <a href="https://msbross.me/moko/" class="app-card" style="--card-accent: var(--accent-8); --card-accent-shadow: rgba(20,184,166,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🛠️</div>
+                    <div>
+                        <div class="card-title">Moko-Tools</div>
+                        <span class="card-badge">DEV TOOLS</span>
+                    </div>
+                </div>
+                <p class="card-desc">Directorio curado de 189 herramientas de desarrollo en 14 categorías con búsqueda semántica, favoritos y bento grid navigation.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">Vite 7</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">189 Tools</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Newton Mequinenza -->
+            <a href="https://msbross.me/newton/" class="app-card" style="--card-accent: #f97316; --card-accent-shadow: rgba(249,115,22,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">⛽</div>
+                    <div>
+                        <div class="card-title">Newton Mequinenza</div>
+                        <span class="card-badge">OPS PWA</span>
+                    </div>
+                </div>
+                <p class="card-desc">App PWA de gestión operativa para Estación de Servicio Repsol: checklists de tareas, control de caducidades, fichaje de horarios e incidencias.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">PWA</span>
+                    <span class="tech-tag">Express</span>
+                    <span class="tech-tag">SQLite</span>
+                    <span class="tech-tag">Service Worker</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- TaskFlowPro -->
+            <a href="https://msbross.me/taskflow/" class="app-card" style="--card-accent: var(--accent-4); --card-accent-shadow: rgba(245,158,11,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div>
+                        <div class="card-title">TaskFlowPro</div>
+                        <span class="card-badge">PRODUCTIVITY</span>
+                    </div>
+                </div>
+                <p class="card-desc">Gestión de tareas con alarmas, categorías, integración WhatsApp, export/import, búsqueda y drag-and-drop. Persistencia en localStorage.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">React 18</span>
+                    <span class="tech-tag">MUI 5</span>
+                    <span class="tech-tag">Zustand</span>
+                    <span class="tech-tag">PWA</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
             <!-- Teringo ERP -->
             <a href="https://msbross.me/teringo/" class="app-card" style="--card-accent: #f43f5e; --card-accent-shadow: rgba(244,63,94,0.3);">
                 <div class="card-header">
@@ -821,6 +779,50 @@
                     <span class="tech-tag">Supabase</span>
                     <span class="tech-tag">PostgreSQL</span>
                     <span class="tech-tag">B2B Trading</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Tu Energía Maya -->
+            <a href="https://manu-alvarez.github.io/TuEnergiaMaya" target="_blank" rel="noopener noreferrer" class="app-card" style="--card-accent: #f59e0b; --card-accent-shadow: rgba(245,158,11,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🌀</div>
+                    <div>
+                        <div class="card-title">Tu Energía Maya</div>
+                        <span class="card-badge">WEB APP</span>
+                    </div>
+                </div>
+                <p class="card-desc">Plataforma interactiva sobre la sabiduría y energía Maya. Calcula y descubre tu kin, tu oráculo de destino y tu firma galáctica diaria de forma visual.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">Web App</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Tzolkin</span>
+                    <span class="tech-tag">Cosmología</span>
+                </div>
+                <div class="card-footer">
+                    <div class="card-status"><span class="status-dot"></span> Online</div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+
+            <!-- Web Restaurante Atenea -->
+            <a href="https://msbross.me/atenea/" class="app-card" style="--card-accent: #c4b5fd; --card-accent-shadow: rgba(196,181,253,0.3);">
+                <div class="card-header">
+                    <div class="card-icon">🏛️</div>
+                    <div>
+                        <div class="card-title">Web Restaurante Atenea</div>
+                        <span class="card-badge">GASTRONOMY</span>
+                    </div>
+                </div>
+                <p class="card-desc">Experiencia culinaria de alta gastronomía con sistema de reservas integrado, menú interactivo y diseño premium.</p>
+                <div class="card-tech">
+                    <span class="tech-tag">HTML5</span>
+                    <span class="tech-tag">CSS3</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Reservas</span>
                 </div>
                 <div class="card-footer">
                     <div class="card-status"><span class="status-dot"></span> Online</div>
