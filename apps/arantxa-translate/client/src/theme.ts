@@ -1,77 +1,64 @@
 import { createTheme } from '@mui/material/styles';
 
-/**
- * moko-Translate_PRO v.0 (HOLOGRAPHIC THEME)
- * High-Tech, Glassmorphism, Sophisticated Dark
- */
 export const getAppTheme = () =>
   createTheme({
     typography: {
-      fontFamily: '"Outfit", sans-serif',
-      h1: { fontWeight: 900, textTransform: 'uppercase' },
-      h2: { fontWeight: 900, textTransform: 'uppercase' },
-      h3: { fontWeight: 700, textTransform: 'uppercase' },
-      button: { fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px' },
+      fontFamily: '"Inter", "Outfit", sans-serif',
+      h3: { fontWeight: 800 },
+      h6: { fontWeight: 700 },
+      button: { fontWeight: 700, textTransform: 'none' },
     },
     palette: {
       mode: 'dark',
-      primary: { main: '#6ee7b7' }, // Hologram Cyan
-      secondary: { main: '#10b981' }, // Neural Indigo
-      background: {
-        default: '#050508',
-        paper: 'transparent', // Using CSS glass panels
-      },
-      text: {
-        primary: '#ffffff',
-        secondary: 'rgba(255,255,255,0.6)',
-      },
+      primary: { main: '#6ee7b7' },
+      secondary: { main: '#10b981' },
+      background: { default: '#050508', paper: 'transparent' },
+      text: { primary: '#ffffff', secondary: 'rgba(255,255,255,0.6)' },
     },
-    shape: { borderRadius: 20 },
+    shape: { borderRadius: 12 },
     components: {
       MuiButton: {
         styleOverrides: {
-          root: {
-            borderRadius: 12,
-            transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
+          containedPrimary: {
+            background: 'linear-gradient(135deg, #10b981, #6ee7b7)',
+            '&:hover': { background: 'linear-gradient(135deg, #059669, #34d399)' },
           },
         },
       },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            backgroundColor: 'rgba(255,255,255,0.03)',
+            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(110,231,183,0.5)' },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#6ee7b7' },
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          select: { backgroundColor: 'rgba(255,255,255,0.05)' },
+        },
+      },
       MuiPaper: {
-        styleOverrides: { 
-          root: { 
+        styleOverrides: {
+          root: {
+            backgroundColor: 'rgba(11,11,16,0.98)',
             backgroundImage: 'none',
-            backgroundColor: '#0b0b10', // Ultra-Opaque
-            borderRadius: 16,
-          } 
+          },
         },
       },
       MuiMenu: {
         styleOverrides: {
           paper: {
-            backgroundColor: 'rgba(11, 11, 16, 0.98)', // 98% Opacity
-            border: '1px solid rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 20px 60px rgba(0,0,0,1)',
-            backdropFilter: 'none', // Disable blur for maximum clarity
-          }
-        }
+          },
+        },
       },
-      MuiSelect: {
+      MuiDrawer: {
         styleOverrides: {
-          select: {
-            backgroundColor: 'rgba(255,255,255,0.08)',
-            '&:focus': {
-              backgroundColor: 'rgba(255,255,255,0.12)',
-            }
-          }
-        }
+          paper: { backgroundImage: 'none' },
+        },
       },
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            paddingLeft: '24px',
-            paddingRight: '24px',
-          }
-        }
-      }
     },
   });

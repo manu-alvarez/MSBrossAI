@@ -1,6 +1,7 @@
-# DOHLER Task Manager - Backend Requirements
 fastapi
 uvicorn
 pydantic
 python-multipart
 aiosqlite
+pyjwt
+passlib[bcrypt]

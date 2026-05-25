@@ -1,70 +1,143 @@
-import React from 'react';
-import { Container, Box, Typography, Tabs, Tab, Fade } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Container, Box, Typography, Tabs, Tab, Chip, Drawer, List, ListItemButton, ListItemText, IconButton, Badge, Avatar, Tooltip } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
+import TranslateIcon from '@mui/icons-material/Translate';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ConstructionIcon from '@mui/icons-material/Construction';
-import TranslateIcon from '@mui/icons-material/Translate';
+import HistoryIcon from '@mui/icons-material/History';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import TraducirTab from './components/TraducirTab';
 import ResumirTab from './components/ResumirTab';
 import ExtrasTab from './components/ExtrasTab';
-import { Provider } from './api';
+import { Provider, PROVIDERS, HistoryEntry } from './api';
 
-const App: React.FC = () => {
-  const [tab, setTab] = React.useState(0);
-  const provider: Provider = 'groq';
+export default function App() {
+  const [tab, setTab] = useState(0);
+  const [provider, setProvider] = useState<Provider>('groq');
+  const [history, setHistory] = useState<HistoryEntry[]>(() => {
+    try { return JSON.parse(localStorage.getItem('arantxa_history') || '[]'); } catch { return []; }
+  });
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('arantxa_history', JSON.stringify(history));
+  }, [history]);
+
+  const addToHistory = (input: string, output: string, type: string) => {
+    if (!output) return;
+    setHistory(prev => [{
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      type: type as any,
+      input: input.slice(0, 200),
+      output: output.slice(0, 300),
+      provider,
+    }, ...prev].slice(0, 100));
+  };
+
+  const clearHistory = () => setHistory([]);
+
+  const tabs = [
+    { id: 0, icon: <TranslateIcon />, label: 'Traducir' },
+    { id: 1, icon: <AutoAwesomeIcon />, label: 'Resumir' },
+    { id: 2, icon: <ConstructionIcon />, label: 'Extras' },
+  ];
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <Container maxWidth="lg" sx={{
-        py: { xs: 4, md: 8 },
-        px: { xs: 2, md: 4 },
-        pb: { xs: 20, md: 10 },
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}>
-
-        {/* Neon Logo & Brand */}
-        <Box sx={{ position: 'relative', mb: { xs: 2, md: 4 } }}>
-          <Typography
-            variant="h1"
-            className="neural-title reflector-neon"
-            data-text="Traductor PRO v3.0"
-            sx={{ fontSize: { xs: '2rem', md: '3.5rem' }, textAlign: 'center' }}
-          >
-            Traductor <b>PRO</b> v3.0
-          </Typography>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, md: 4 }, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Header */}
+        <Box sx={{ textAlign: 'center', mb: 3 }}>
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+            <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: 2 }}>
+              Traductor <span style={{ color: '#6ee7b7' }}>PRO</span>
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Traducción y resumen multi-proveedor AI</Typography>
+          </motion.div>
         </Box>
 
-        {/* Centered Main Panel Area */}
-        <Box sx={{ width: '100%', maxWidth: 1000, display: 'flex', justifyContent: 'center' }}>
-          <Fade in key={tab} timeout={800}>
-            <Box sx={{ width: '100%' }}>
-              {tab === 0 && <TraducirTab provider={provider} />}
-              {tab === 1 && <ResumirTab provider={provider} />}
-              {tab === 2 && <ExtrasTab provider={provider} />}
-            </Box>
-          </Fade>
+        {/* Provider Selector */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3, flexWrap: 'wrap' }}>
+          {PROVIDERS.map(p => (
+            <Tooltip key={p.id} title={`Usar ${p.label}`}>
+              <Chip
+                label={p.label}
+                onClick={() => setProvider(p.id)}
+                variant={provider === p.id ? 'filled' : 'outlined'}
+                sx={{
+                  px: 2, py: 2.5, fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+                  bgcolor: provider === p.id ? p.color : 'transparent',
+                  borderColor: p.color,
+                  color: provider === p.id ? '#fff' : p.color,
+                  '&:hover': { bgcolor: provider === p.id ? p.color : `${p.color}22` },
+                }}
+              />
+            </Tooltip>
+          ))}
         </Box>
 
-        {/* Command Dock */}
-        <Box className="neural-dock reflector-cyan">
-          <Tabs
-            value={tab}
-            onChange={(_, v) => setTab(v)}
-            variant="scrollable"
-            scrollButtons={false}
-            sx={{ '& .MuiTabs-indicator': { display: 'none' } }}
-          >
-            <Tab icon={<TranslateIcon />} label="TRADUCIR" />
-            <Tab icon={<AutoAwesomeIcon />} label="RESUMIR" />
-            <Tab icon={<ConstructionIcon />} label="EXTRAS" />
+        {/* Tab Content */}
+        <Box sx={{ width: '100%', maxWidth: 900, mx: 'auto', flex: 1 }}>
+          <AnimatePresence mode="wait">
+            <motion.div key={tab} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+              {tab === 0 && <TraducirTab provider={provider} onResult={addToHistory} />}
+              {tab === 1 && <ResumirTab provider={provider} onResult={addToHistory} />}
+              {tab === 2 && <ExtrasTab provider={provider} onResult={addToHistory} />}
+            </motion.div>
+          </AnimatePresence>
+        </Box>
+
+        {/* Bottom Dock */}
+        <Box sx={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 1000,
+          bgcolor: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(30px)', borderRadius: 100,
+          border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px rgba(0,0,0,1)' }}>
+          <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons={false}
+            sx={{ '& .MuiTabs-indicator': { display: 'none' }, '& .MuiTab-root': { minWidth: 80, py: 1.5 } }}>
+            {tabs.map(t => <Tab key={t.id} icon={t.icon} label={t.label} />)}
           </Tabs>
         </Box>
 
+        {/* History FAB */}
+        <IconButton onClick={() => setHistoryOpen(true)}
+          sx={{ position: 'fixed', top: 16, right: 16, zIndex: 1000, bgcolor: 'rgba(255,255,255,0.05)' }}>
+          <Badge badgeContent={history.length} color="primary" max={99}>
+            <HistoryIcon />
+          </Badge>
+        </IconButton>
       </Container>
+
+      {/* History Drawer */}
+      <Drawer anchor="right" open={historyOpen} onClose={() => setHistoryOpen(false)}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 380 }, bgcolor: '#0a0a0f', p: 2 } }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" fontWeight={700}>Historial</Typography>
+          <Box>
+            <IconButton onClick={clearHistory} size="small"><DeleteSweepIcon /></IconButton>
+            <IconButton onClick={() => setHistoryOpen(false)} size="small"><CloseIcon /></IconButton>
+          </Box>
+        </Box>
+        {history.length === 0 ? (
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>Sin historial</Typography>
+        ) : (
+          <List>
+            {history.map(entry => (
+              <ListItemButton key={entry.id} sx={{ borderRadius: 2, mb: 0.5, flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5 }}>
+                  <Chip size="small" label={entry.type.split(':')[0]} variant="outlined" />
+                  <Chip size="small" label={entry.provider} variant="outlined" />
+                </Box>
+                <ListItemText
+                  primary={entry.input}
+                  secondary={entry.output}
+                  primaryTypographyProps={{ variant: 'caption', noWrap: true, color: 'text.secondary' }}
+                  secondaryTypographyProps={{ variant: 'caption', noWrap: true, sx: { opacity: 0.6 } }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        )}
+      </Drawer>
     </Box>
   );
-};
-
-export default App;
+}

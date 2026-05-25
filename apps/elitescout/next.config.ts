@@ -1,24 +1,19 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  basePath: '/app/elitescout',
   reactStrictMode: true,
-  turbopack: {},
+  trailingSlash: true,
+  output: process.env.NEXT_SERVER_MODE === "true" ? undefined : "export",
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "**" },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-        ],
-      },
-    ];
+  turbopack: {
+    root: __dirname,
   },
 };
 

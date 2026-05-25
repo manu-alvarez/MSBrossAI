@@ -36,6 +36,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <script id="msbross-config" type="application/json">{`{"apiBase":"__TUNNEL_URL__","NIKOLINA_SERVER":"__TUNNEL_URL__/_atenea","LIVEKIT_URL":"wss://nikolina-1jg7t00i.livekit.cloud"}`}</script>
       </head>
       <body className="antialiased">
         <Providers>

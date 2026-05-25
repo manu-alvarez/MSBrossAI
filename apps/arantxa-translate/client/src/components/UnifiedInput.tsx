@@ -1,66 +1,50 @@
-import React, { useState } from 'react';
-import {
-  Box, Typography, TextField, IconButton, CircularProgress, Alert, Tooltip, Stack,
-} from '@mui/material';
+import { useState } from 'react';
+import { Box, TextField, IconButton, CircularProgress, Alert, Tooltip, Stack, Typography } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ImageIcon from '@mui/icons-material/Image';
 import { extractText } from '../api';
 
-interface UnifiedInputProps {
+interface Props {
   value: string;
   onChange: (val: string) => void;
   disabled?: boolean;
 }
 
-/**
- * Unified text input with document upload (serverless) and client-side OCR.
- */
-const UnifiedInput: React.FC<UnifiedInputProps> = ({ value, onChange, disabled }) => {
+export default function UnifiedInput({ value, onChange, disabled }: Props) {
   const [extracting, setExtracting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  /** Upload a document and extract text via the PHP gateway. */
   const handleDocumentChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setErrorMsg('');
     setExtracting(true);
-
     try {
       const texto = await extractText(file);
-      if (texto.trim()) {
-        onChange(texto);
-      } else {
-        setErrorMsg('No se pudo extraer texto del documento.');
-      }
+      if (texto.trim()) onChange(texto);
+      else setErrorMsg('No se pudo extraer texto del documento.');
     } catch (err: any) {
-      setErrorMsg(err?.message || 'Error desconocido al extraer texto');
+      setErrorMsg(err?.message || 'Error al extraer texto');
     } finally {
       setExtracting(false);
       e.target.value = '';
     }
   };
 
-  /** Client-side OCR using Tesseract.js (no server needed). */
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setErrorMsg('');
     setExtracting(true);
-
     try {
       const { createWorker } = await import('tesseract.js');
       const worker = await createWorker('spa+eng', 1, { logger: () => {} });
       const { data } = await worker.recognize(file);
       await worker.terminate();
-
-      if (data.text.trim()) {
-        onChange(data.text);
-      } else {
-        setErrorMsg('No se pudo extraer texto de la imagen.');
-      }
+      if (data.text.trim()) onChange(data.text);
+      else setErrorMsg('No se pudo extraer texto de la imagen.');
     } catch (err: any) {
-      setErrorMsg(err?.message || 'Error en OCR de la imagen');
+      setErrorMsg(err?.message || 'Error en OCR');
     } finally {
       setExtracting(false);
       e.target.value = '';
@@ -70,69 +54,34 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({ value, onChange, disabled }
   return (
     <Box sx={{ position: 'relative' }}>
       <TextField
-        fullWidth
-        multiline
-        minRows={12}
-        maxRows={25}
-        label="FLUJO_DE_ENTRADA_DATOS"
+        fullWidth multiline minRows={8} maxRows={20}
+        label="Texto de entrada"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         disabled={disabled || extracting}
-        className="hologram-panel hologram-input"
-        sx={{
-          '& .MuiInputLabel-root': {
-            color: 'var(--hologram-cyan)',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: 2,
-            fontSize: '0.9rem',
-          },
-          '& .MuiOutlinedInput-root': {
-            p: { xs: 2, md: 4 },
-          },
-        }}
+        sx={{ '& .MuiOutlinedInput-root': { p: { xs: 2, md: 3 } } }}
       />
 
-      {/* Floating Action Buttons */}
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ position: 'absolute', bottom: 12, right: 12, zIndex: 1 }}
-      >
-        {extracting && <CircularProgress size={24} sx={{ mr: 1, alignSelf: 'center' }} />}
-
-        <Tooltip title="Subir Documento (PDF, DOCX, TXT)">
-          <IconButton
-            color="primary"
-            component="label"
-            disabled={disabled || extracting}
-            sx={{ bgcolor: 'background.paper', boxShadow: 1, '&:hover': { bgcolor: 'background.default' } }}
-          >
+      <Stack direction="row" spacing={1} sx={{ position: 'absolute', bottom: 12, right: 12, zIndex: 1, alignItems: 'center' }}>
+        {extracting && <CircularProgress size={24} />}
+        <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
+          {value.length} caracteres
+        </Typography>
+        <Tooltip title="Subir documento (PDF, DOCX, TXT)">
+          <IconButton color="primary" component="label" disabled={disabled || extracting} size="small">
             <input type="file" accept=".pdf,.docx,.txt" hidden onChange={handleDocumentChange} />
             <FileUploadIcon />
           </IconButton>
         </Tooltip>
-
-        <Tooltip title="Subir Imagen (OCR Automático)">
-          <IconButton
-            color="secondary"
-            component="label"
-            disabled={disabled || extracting}
-            sx={{ bgcolor: 'background.paper', boxShadow: 1, '&:hover': { bgcolor: 'background.default' } }}
-          >
+        <Tooltip title="Subir imagen (OCR)">
+          <IconButton color="secondary" component="label" disabled={disabled || extracting} size="small">
             <input type="file" accept="image/*" hidden onChange={handleImageChange} />
             <ImageIcon />
           </IconButton>
         </Tooltip>
       </Stack>
 
-      {errorMsg && (
-        <Alert severity="warning" sx={{ mt: 2, borderRadius: 3 }}>
-          {errorMsg}
-        </Alert>
-      )}
+      {errorMsg && <Alert severity="warning" sx={{ mt: 2 }}>{errorMsg}</Alert>}
     </Box>
   );
-};
-
-export default UnifiedInput;
+}

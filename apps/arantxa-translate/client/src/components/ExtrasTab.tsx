@@ -1,88 +1,65 @@
-import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Stack, Box, Typography } from '@mui/material';
+import { useState } from 'react';
+import { FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Box, Card, CardContent, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 import UnifiedInput from './UnifiedInput';
 import ResultPanel from './ResultPanel';
-import { ProcessResult, Provider, processExtras } from '../api';
-
-const HERRAMIENTAS = [
-  { id: 'keywords',   label: '🏷️ Palabras Clave / Etiquetas',  desc: 'Extrae conceptos y términos clave para SEO o clasificación.' },
-  { id: 'sentiment',  label: '🎭 Sentimiento y Tono',           desc: 'Analiza la actitud (positiva/negativa) y el estilo del mensaje.' },
-  { id: 'entities',   label: '👥 Extracción de Entidades',      desc: 'Identifica personas, lugares, fechas y organizaciones mencionadas.' },
-  { id: 'appbuilder', label: '🚀 Generador de Apps/PWA',        desc: 'Crea el código de una web o app funcional desde tu descripción.' },
-];
+import { Provider, processExtras, EXTRA_TOOLS } from '../api';
 
 interface Props {
   provider: Provider;
+  onResult: (input: string, output: string, type: string) => void;
 }
 
-const ExtrasTab: React.FC<Props> = ({ provider }) => {
+export default function ExtrasTab({ provider, onResult }: Props) {
   const [texto, setTexto] = useState('');
   const [herramienta, setHerramienta] = useState('keywords');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<ProcessResult>({ traduccion: '', resumen: '' });
+  const [result, setResult] = useState({ traduccion: '', resumen: '' });
   const [error, setError] = useState('');
+
+  const tool = EXTRA_TOOLS.find(t => t.id === herramienta);
 
   const handleProcesar = async () => {
     if (!texto.trim()) return;
     setLoading(true);
     setError('');
-
     try {
       const data = await processExtras({ texto, herramienta, provider });
       setResult({ traduccion: '', resumen: data.resultado });
+      onResult(texto, data.resultado, `extras:${herramienta}`);
     } catch (e: any) {
-      setError(e?.message || 'Error desconocido');
+      setError(e?.message || 'Error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box className="neural-bridge-container">
-      <Box className="hologram-panel reflector-cyan" sx={{ mb: 4, width: '100%', maxWidth: 800 }}>
-        <Stack spacing={3}>
-          <FormControl fullWidth size="small">
-            <InputLabel sx={{ color: 'var(--neon-cyan)' }}>Herramienta Extra</InputLabel>
-            <Select
-              label="Herramienta Extra"
-              value={herramienta}
-              onChange={(e) => setHerramienta(e.target.value)}
-            >
-              {HERRAMIENTAS.map((h) => (
-                <MenuItem key={h.id} value={h.id}>{h.label}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel>Herramienta</InputLabel>
+          <Select label="Herramienta" value={herramienta} onChange={e => setHerramienta(e.target.value)}>
+            {EXTRA_TOOLS.map(t => <MenuItem key={t.id} value={t.id}>{t.label}</MenuItem>)}
+          </Select>
+        </FormControl>
 
-          <Box sx={{ p: 2, background: 'rgba(255,255,255,0.03)', borderRadius: 2, border: '1px solid rgba(255,255,255,0.05)' }}>
-            <Typography variant="caption" sx={{ color: 'var(--neon-cyan)', display: 'block', mb: 1, fontWeight: 700, letterSpacing: 2 }}>
-              SISTEMA_CORE_INFO
-            </Typography>
-            <Typography variant="body2" sx={{ fontFamily: "'JetBrains Mono', monospace", opacity: 0.8 }}>
-              {HERRAMIENTAS.find((h) => h.id === herramienta)?.desc}
-            </Typography>
-          </Box>
+        {tool && (
+          <Card variant="outlined" sx={{ bgcolor: 'rgba(255,255,255,0.02)' }}>
+            <CardContent sx={{ py: 1.5 }}>
+              <Typography variant="caption" color="text.secondary">{tool.desc}</Typography>
+            </CardContent>
+          </Card>
+        )}
 
-          <Box sx={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleProcesar}
-              disabled={loading}
-              className="btn-neural"
-            >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'EJECUTAR COMANDO'}
-            </Button>
-          </Box>
-        </Stack>
+        <Button variant="contained" size="large" onClick={handleProcesar} disabled={loading || !texto.trim()}
+          sx={{ alignSelf: 'center', px: 6, py: 1.5, borderRadius: 100, fontWeight: 700, fontSize: '1rem' }}>
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Ejecutar'}
+        </Button>
       </Box>
 
-      <Box sx={{ width: '100%', maxWidth: 1000 }}>
-        <UnifiedInput value={texto} onChange={setTexto} disabled={loading} />
-        <ResultPanel result={result} error={error} />
-      </Box>
-    </Box>
+      <UnifiedInput value={texto} onChange={setTexto} disabled={loading} />
+      <ResultPanel result={result} error={error} provider={provider} />
+    </motion.div>
   );
-};
-
-export default ExtrasTab;
+}

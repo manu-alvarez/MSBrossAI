@@ -10,8 +10,12 @@ import { ConnectionState } from 'livekit-client';
 import '@livekit/components-styles';
 
 // URLs for Local Backend Slave running on the Mac
-const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || 'http://127.0.0.1:8001/api';
-const LIVEKIT_URL = (import.meta as any).env.VITE_LIVEKIT_URL || 'ws://127.0.0.1:7880';
+const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || '/_nikolina/api';
+
+const LIVEKIT_URL = (import.meta as any).env.VITE_LIVEKIT_URL || 
+  (typeof window !== 'undefined' && window.location.protocol === 'https:'
+    ? `wss://${window.location.host}/rtc`
+    : 'ws://127.0.0.1:7880');
 
 type TabType = 'assistant' | 'menu' | 'reservations' | 'calls' | 'admin';
 
@@ -165,22 +169,60 @@ export default function App() {
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
               {categories.map(cat => (
                 <button key={cat} onClick={() => setMenuFilter(cat)} style={{
-                  padding: '0.5rem 1rem', background: menuFilter === cat ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${menuFilter === cat ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
-                  borderRadius: 8, color: menuFilter === cat ? '#06b6d4' : 'rgba(255,255,255,0.5)',
-                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
+                  padding: '0.5rem 1rem', background: menuFilter === cat ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${menuFilter === cat ? 'rgba(6,182,212,0.3)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 8, color: menuFilter === cat ? '#22d3ee' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s'
                 }}>{cat}</button>
               ))}
             </div>
             {menuItems.length === 0 ? <p style={{ color: '#666' }}>No hay platos en la DB.</p> : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {filteredMenu.map((item: any) => (
-                  <div key={item.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
-                      <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{item.name}</h3>
-                      <span style={{ color: '#06b6d4', fontWeight: 700, fontSize: '1.1rem' }}>{item.price}€</span>
+                  <div key={item.id} style={{ 
+                    background: 'rgba(255,255,255,0.02)', 
+                    border: '1px solid rgba(255,255,255,0.06)', 
+                    borderRadius: 16, 
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(5px)'
+                  }}>
+                    {item.image_url && (
+                      <div style={{ height: 180, overflow: 'hidden', position: 'relative', background: 'rgba(0,0,0,0.3)' }}>
+                        <img 
+                          src={`/app/nikolina${item.image_url}`} 
+                          alt={item.name} 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem', gap: '0.5rem' }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>{item.name}</h3>
+                        <span style={{ color: '#22d3ee', fontWeight: 800, fontSize: '1.1rem', whiteSpace: 'nowrap' }}>{item.price}€</span>
+                      </div>
+                      <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, margin: '0 0 1rem 0', flexGrow: 1 }}>{item.description}</p>
+                      {item.allergens && (
+                        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
+                          {item.allergens.split(',').map((allergen: string) => (
+                            <span key={allergen} style={{ 
+                              fontSize: '0.65rem', 
+                              background: 'rgba(239, 68, 68, 0.1)', 
+                              border: '1px solid rgba(239, 68, 68, 0.2)', 
+                              borderRadius: 4, 
+                              padding: '0.15rem 0.4rem', 
+                              color: '#f87171' 
+                            }}>⚠️ {allergen.trim() || 'alérgenos'}</span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{item.description}</p>
                   </div>
                 ))}
               </div>

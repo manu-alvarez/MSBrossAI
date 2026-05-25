@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MSBrossAI — Arantxa Translate PRO">
-    <title>MSBrossAI • Arantxa Translate PRO</title>
+    <meta name="description" content="MSBrossAI — Traductor AI">
+    <title>MSBrossAI • Traductor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,9 +14,9 @@
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
         .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
         .title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
-        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: white; }
+        .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: #030712; }
         .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px; color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
         .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
         .content { flex: 1; padding: 2rem 0; }
@@ -24,7 +24,7 @@
         .footer a { color: var(--accent); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
         .status-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
         .feature-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
@@ -32,8 +32,8 @@
         .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
         .feature-title { font-weight: 700; margin-bottom: 0.5rem; }
         .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #06b6d4); border: none; border-radius: 100px; color: white; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3); }
-        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5); }
+        .run-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent), #34d399); border: none; border-radius: 100px; color: #030712; text-decoration: none; font-size: 1.1rem; font-weight: 800; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3); }
+        .run-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
         .run-btn svg { width: 24px; height: 24px; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .animate-in { animation: fadeInUp 0.6s ease forwards; }
@@ -43,8 +43,8 @@
     <div class="container">
         <header class="header">
             <a href="/" class="logo">MSBrossAI</a>
-            <h1 class="title">Arantxa Translate PRO</h1>
-            <span class="badge">TRANSLATION</span>
+            <h1 class="title">Traductor</h1>
+            <span class="badge">AI</span>
         </header>
 
         <nav style="margin-bottom: 1.5rem;">
@@ -55,11 +55,11 @@
             <div class="status-card animate-in">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
                     <span class="status-dot"></span>
-                    <span style="font-weight: 600;">Arantxa Translate PRO</span>
-                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v2.0</span>
+                    <span style="font-weight: 600;">Traductor Automático con IA</span>
+                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v1.0</span>
                 </div>
                 <p style="color: var(--text-muted); line-height: 1.6;">
-                    Traductor neural con 4 modos (estándar, profesional, coloquial, resumen), 4 providers (Groq, OpenAI, Gemini, OpenRouter) y OCR con Tesseract.js.
+                    Traducción neuronal multilingüe con detección automática de idioma, transcripción por voz y entrada por imagen. Motor basado en modelos transformer de última generación.
                 </p>
             </div>
 
@@ -72,35 +72,40 @@
 
             <div class="feature-grid">
                 <div class="feature-card animate-in" style="animation-delay: 0.0s;">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">4 Modos de Traducción</div>
-                    <div class="feature-desc">Estándar, profesional, coloquial y resumen adaptativo.</div>
-                </div>                <div class="feature-card animate-in" style="animation-delay: 0.1s;">
-                    <div class="feature-icon">🤖</div>
-                    <div class="feature-title">4 Providers IA</div>
-                    <div class="feature-desc">Groq, OpenAI, Gemini, OpenRouter con fallback automático.</div>
-                </div>                <div class="feature-card animate-in" style="animation-delay: 0.2s;">
-                    <div class="feature-icon">📄</div>
-                    <div class="feature-title">Extracción de Documentos</div>
-                    <div class="feature-desc">PDF, DOCX, TXT con OCR integrado (Tesseract.js).</div>
-                </div>                <div class="feature-card animate-in" style="animation-delay: 0.30000000000000004s;">
-                    <div class="feature-icon">🔑</div>
-                    <div class="feature-title">Keywords Extraction</div>
-                    <div class="feature-desc">Extracción automática de palabras clave del texto.</div>
-                </div>                <div class="feature-card animate-in" style="animation-delay: 0.4s;">
-                    <div class="feature-icon">💭</div>
-                    <div class="feature-title">Análisis de Sentimiento</div>
-                    <div class="feature-desc">Detección de tono y sentimiento del texto original.</div>
-                </div>                <div class="feature-card animate-in" style="animation-delay: 0.5s;">
-                    <div class="feature-icon">🏷️</div>
-                    <div class="feature-title">NER (Named Entities)</div>
-                    <div class="feature-desc">Reconocimiento de entidades nombradas en el texto.</div>
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Traducción Multilingüe</div>
+                    <div class="feature-desc">Soporta más de 30 idiomas con detección automática y precisión contextual.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-title">Entrada por Voz</div>
+                    <div class="feature-desc">Reconocimiento de voz en múltiples idiomas con transcripción en tiempo real.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">📷</div>
+                    <div class="feature-title">OCR por Imagen</div>
+                    <div class="feature-desc">Extrae texto de imágenes y lo traduce al instante con IA.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">Historial y Favoritos</div>
+                    <div class="feature-desc">Guarda traducciones recientes y marca favoritos para acceso rápido.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">🖥️</div>
+                    <div class="feature-title">Interfaz Intuitiva</div>
+                    <div class="feature-desc">Diseño dual con vista lado a lado y modo oscuro nativo.</div>
+                </div>
+                <div class="feature-card animate-in" style="animation-delay: 0.5s;">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Tiempo Real</div>
+                    <div class="feature-desc">Traducción instantánea mientras escribes sin recargar la página.</div>
                 </div>
             </div>
         </main>
 
         <footer class="footer">
-            <p>MSBrossAI © 2026 — Arantxa Translate PRO</p>
+            <p>MSBrossAI © 2026 — Traductor Automático con IA</p>
             <p style="margin-top: 0.5rem;">
                 <a href="/">Ecosistema</a> • 
                 <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>

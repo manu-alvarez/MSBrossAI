@@ -52,3 +52,8 @@ temp_vision/
 # IAPuta env config (contains API keys)
 www/app/iaputa/env.php
 .venv/
+
+# Next.js build cache and static exports
+.next/
+out/
+www/app/

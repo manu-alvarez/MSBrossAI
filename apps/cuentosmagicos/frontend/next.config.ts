@@ -45,6 +45,7 @@ const withPWA = withPWAInit({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  trailingSlash: true,
   output: "export",
   basePath: "/app/cuentosmagicos",
   images: {
