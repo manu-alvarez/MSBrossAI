@@ -26,6 +26,7 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
   return res.json();
 }
 
+
 export const api = {
   login: (name: string, pin: string) => req<{ token: string; user: any }>('POST', '/auth/login', { name, pin }),
   register: (data: any) => req('POST', '/auth/register', data),

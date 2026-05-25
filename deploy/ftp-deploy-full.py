@@ -61,8 +61,32 @@ if __name__ == "__main__":
     host = os.environ.get("FTP_HOST", "msbros.ftp.tb-hosting.com")
     user = os.environ.get("FTP_USER", "msbrossme@msbrossme")
     local_path = os.environ.get("FTP_LOCAL_DIR", "./www")
-    
-    print(f"🔌 Connecting to {host}...")
+
+    # ── INJECT TUNNEL URL INTO COMPILED JS ──
+    print("🔍 Checking for active Cloudflare Tunnel...")
+    import subprocess
+    tunnel_url = ""
+    log_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../LOGS/tunnel.log")
+    try:
+        if os.path.isfile(log_path):
+            with open(log_path, "r") as f:
+                import re
+                log_content = f.read()
+                m = re.search(r'https://[a-z0-9.-]+\.trycloudflare\.com', log_content)
+                if m:
+                    tunnel_url = m.group(0)
+    except Exception as e:
+        print(f"⚠️ Warning: Could not read tunnel.log ({e})")
+        
+    if tunnel_url:
+        print(f"✅ Found tunnel: {tunnel_url}")
+        print("🛠️  Patching compiled JS files...")
+        patch_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patch-js.py")
+        subprocess.run([sys.executable, patch_script, tunnel_url])
+    else:
+        print("⚠️ No active tunnel URL found. Deploying static frontend AS IS.")
+
+    print(f"\n🔌 Connecting to {host}...")
     try:
         ftp = ftplib.FTP(host, timeout=30)
         ftp.login(user, password)

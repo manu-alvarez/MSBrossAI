@@ -43,10 +43,6 @@ export default function App() {
     }
   }, []);
 
-  if (checking) return null;
-
-  if (!user) return <LoginScreen onLogin={u => setUser(u)} />;
-
   const renderView = () => {
     switch (view) {
       case 'dashboard': return <Dashboard user={user} onNavigate={v => { setView(v); setDrawerOpen(false); }} />;
@@ -62,7 +58,10 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      {checking ? null : !user ? (
+        <LoginScreen onLogin={u => setUser(u)} />
+      ) : (
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
         <AppBar position="fixed" sx={{ bgcolor: 'background.paper', borderBottom: '1px solid rgba(255,102,0,0.2)', boxShadow: 'none' }}>
           <Toolbar>
             <IconButton edge="start" onClick={() => setDrawerOpen(true)} sx={{ mr: 1 }}>
@@ -99,7 +98,8 @@ export default function App() {
         <Box component="main" sx={{ flex: 1, mt: '64px', p: { xs: 2, md: 3 }, maxWidth: 1200, mx: 'auto', width: '100%' }}>
           {renderView()}
         </Box>
-      </Box>
+        </Box>
+      )}
     </ThemeProvider>
   );
 }
