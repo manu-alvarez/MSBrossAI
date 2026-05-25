@@ -3,7 +3,7 @@ import { Grid, FormControl, InputLabel, Select, MenuItem, Button, CircularProgre
 import { motion } from 'framer-motion';
 import UnifiedInput from './UnifiedInput';
 import ResultPanel from './ResultPanel';
-import { processText, Modo, Provider, LANGUAGES, TRANSLATION_MODES } from '../api';
+import { processText, Modo, Provider, LANGUAGES, TRANSLATION_MODES, ProcessResult } from '../api';
 
 interface Props {
   provider: Provider;
@@ -16,7 +16,7 @@ export default function TraducirTab({ provider, onResult }: Props) {
   const [destino, setDestino] = useState('es');
   const [modo, setModo] = useState('normal');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState({ traduccion: '', resumen: '' });
+  const [result, setResult] = useState<ProcessResult>({ traduccion: '', resumen: '' });
   const [error, setError] = useState('');
 
   const handleProcesar = async () => {
@@ -25,7 +25,7 @@ export default function TraducirTab({ provider, onResult }: Props) {
     setError('');
     try {
       const data = await processText({ texto, origen, destino, modo: modo as Modo, nivelResumen: 'normal', provider });
-      setResult({ traduccion: data.traduccion, resumen: '' });
+      setResult({ traduccion: data.traduccion, resumen: '', provider: data.provider });
       onResult(texto, data.traduccion, 'traduccion');
     } catch (e: any) {
       setError(e?.message || 'Error en la traducción');
@@ -75,7 +75,7 @@ export default function TraducirTab({ provider, onResult }: Props) {
       </Box>
 
       <UnifiedInput value={texto} onChange={setTexto} disabled={loading} />
-      <ResultPanel result={result} error={error} provider={provider} />
+      <ResultPanel result={result} error={error} provider={result.provider} />
     </motion.div>
   );
 }

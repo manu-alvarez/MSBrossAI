@@ -51,9 +51,9 @@ export default function CheckListView() {
     if (!templateName.trim()) return;
     try {
       if (editTemplate) {
-        await api.updateTemplate(editTemplate.id, { name: templateName, phase });
+        await api.updateTemplate(editTemplate.id, { task_name: templateName, phase });
       } else {
-        await api.createTemplate({ name: templateName, phase });
+        await api.createTemplate({ task_name: templateName, phase });
       }
       setDialog(null);
       setTemplateName('');
@@ -113,7 +113,7 @@ export default function CheckListView() {
             <motion.div key={template.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}>
               <Card sx={{ opacity: completed ? 0.7 : 1 }}>
                 <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 1.5, '&:last-child': { pb: 1.5 } }}>
-                  <Chip label={template.name} sx={{ flex: 1, justifyContent: 'flex-start', bgcolor: completed ? 'success.main' : 'background.paper', color: completed ? '#fff' : 'text.primary', fontWeight: 500, borderRadius: 1 }} />
+                  <Chip label={template.task_name} sx={{ flex: 1, justifyContent: 'flex-start', bgcolor: completed ? 'success.main' : 'background.paper', color: completed ? '#fff' : 'text.primary', fontWeight: 500, borderRadius: 1 }} />
                   {entry ? (
                     <FormControlLabel control={<Checkbox checked={completed} onChange={() => toggleEntry(entry)} sx={{ '&.Mui-checked': { color: 'success.main' } }} />} label="" sx={{ m: 0 }} />
                   ) : (
@@ -121,7 +121,7 @@ export default function CheckListView() {
                   )}
                   <IconButton size="small" onClick={() => moveTemplate(template.id, 'up')} disabled={i === 0}><ArrowUpwardIcon fontSize="small" /></IconButton>
                   <IconButton size="small" onClick={() => moveTemplate(template.id, 'down')} disabled={i === filteredTemplates.length - 1}><ArrowDownwardIcon fontSize="small" /></IconButton>
-                  <IconButton size="small" onClick={() => { setEditTemplate(template); setTemplateName(template.name); setDialog('template'); }}><EditIcon fontSize="small" /></IconButton>
+                  <IconButton size="small" onClick={() => { setEditTemplate(template); setTemplateName(template.task_name); setDialog('template'); }}><EditIcon fontSize="small" /></IconButton>
                   <IconButton size="small" color="error" onClick={() => deleteTemplate(template.id)}><DeleteIcon fontSize="small" /></IconButton>
                 </CardContent>
               </Card>

@@ -510,16 +510,80 @@ def delete_timesheet(tid: str, user: dict = Depends(get_token_user)):
     conn.commit()
     return {"ok": True}
 
+import calendar
+from datetime import date
+
+def get_expected_work_days(year: int, month: int):
+    cycle_pattern = [True]*7 + [False]*3 + [True]*7 + [False]*4
+    cycle_start = date(2026, 1, 5) # Monday, Jan 5 2026
+    days_in_month = calendar.monthrange(year, month)[1]
+    work_days = []
+    for day in range(1, days_in_month + 1):
+        current = date(year, month, day)
+        diff_days = (current - cycle_start).days
+        cycle_day = diff_days % 21
+        if cycle_pattern[cycle_day]:
+            work_days.append(current.strftime("%Y-%m-%d"))
+    return work_days
+
 @app.get("/api/timesheet/summary")
 def timesheet_summary(month: int, year: int, user: dict = Depends(get_token_user)):
     conn = get_db()
     prefix = f"{year:04d}-{month:02d}"
     rows = conn.execute("SELECT * FROM timesheet WHERE user_id=? AND date LIKE ?", (user["id"], f"{prefix}%")).fetchall()
+    
     total_hours = sum(r["total_hours"] for r in rows)
-    total_entries = len(rows)
+    total_worked = round(total_hours, 2)
+    days_worked = len(rows)
+    days_in_month = calendar.monthrange(year, month)[1]
+    
     cfg = conn.execute("SELECT * FROM timesheet_config WHERE user_id=?", (user["id"],)).fetchone()
-    missing_hours = (cfg["contract_hours_month"] - total_hours) if cfg else 0
-    return {"total_hours": round(total_hours, 2), "total_entries": total_entries, "missing_hours": round(max(0, missing_hours), 2)}
+    contract_hours_month = cfg["contract_hours_month"] if cfg else 160
+    gross_annual = cfg["gross_annual_salary"] if cfg else 17878.95
+    
+    monthly_gross = round(gross_annual / 12, 2)
+    hourly_rate = round(monthly_gross / contract_hours_month, 2) if contract_hours_month else 0
+    estimated_salary = round(total_worked * hourly_rate, 2)
+    difference = round(total_worked - contract_hours_month, 2)
+    
+    expected_work_days = get_expected_work_days(year, month)
+    expected_hours = round(len(expected_work_days) * 7, 2)
+    
+    morning_entries = [r for r in rows if r["shift_type"] == "mañana"]
+    afternoon_entries = [r for r in rows if r["shift_type"] == "tarde"]
+    special_entries = [r for r in rows if r["shift_type"] == "especial"]
+    descanso_entries = [r for r in rows if r["shift_type"] == "descanso"]
+    
+    return {
+        "month": month,
+        "year": year,
+        "daysInMonth": days_in_month,
+        "daysWorked": days_worked,
+        "totalWorked": total_worked,
+        "contractHoursMonth": contract_hours_month,
+        "difference": difference,
+        "expectedWorkDays": len(expected_work_days),
+        "expectedHours": expected_hours,
+        "salary": {
+            "grossAnnual": gross_annual,
+            "monthlyGross": monthly_gross,
+            "hourlyRate": hourly_rate,
+            "estimated": estimated_salary,
+            "full": monthly_gross
+        },
+        "shifts": {
+            "morning": {"count": len(morning_entries), "hours": round(sum(r["total_hours"] for r in morning_entries), 2)},
+            "afternoon": {"count": len(afternoon_entries), "hours": round(sum(r["total_hours"] for r in afternoon_entries), 2)},
+            "special": {"count": len(special_entries), "hours": round(sum(r["total_hours"] for r in special_entries), 2)},
+            "descanso": {"count": len(descanso_entries)}
+        },
+        "rotation": expected_work_days,
+        "config": dict(cfg) if cfg else None,
+        # Legacy compat
+        "total_hours": total_worked,
+        "total_entries": days_worked,
+        "missing_hours": round(max(0, -difference), 2)
+    }
 
 @app.get("/api/timesheet/config")
 def get_timesheet_config(user: dict = Depends(get_token_user)):

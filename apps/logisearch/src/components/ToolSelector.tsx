@@ -10,6 +10,7 @@ import {
   Email as EmailIcon,
   Public as GlobeIcon,
   School as ExpertIcon,
+  Brush as BrushIcon,
 } from '@mui/icons-material'
 import { motion } from 'framer-motion'
 
@@ -34,6 +35,7 @@ const TOOLS: ToolDef[] = [
   { id: 'cost', label: 'Coste por Unidad', desc: 'Pallet, caja o unidad', icon: MoneyIcon, color: '#10B981' },
   { id: 'dunnage', label: 'Guía de Estiba', desc: 'Void fill y sujeción', icon: WarningIcon, color: '#EF4444' },
   { id: 'email', label: 'Plantillas Email', desc: 'Correos profesionales', icon: EmailIcon, color: '#8B5CF6' },
+  { id: 'creative', label: 'Estudio Creativo', desc: 'Generar banners e imágenes', icon: BrushIcon, color: '#EC4899', badge: 'AI' },
 ]
 
 interface ToolSelectorProps {

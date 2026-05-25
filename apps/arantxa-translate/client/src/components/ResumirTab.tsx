@@ -3,7 +3,7 @@ import { Grid, FormControl, InputLabel, Select, MenuItem, Button, CircularProgre
 import { motion } from 'framer-motion';
 import UnifiedInput from './UnifiedInput';
 import ResultPanel from './ResultPanel';
-import { processText, Nivel, Provider, LANGUAGES, SUMMARY_LEVELS } from '../api';
+import { processText, Nivel, Provider, LANGUAGES, SUMMARY_LEVELS, ProcessResult } from '../api';
 
 interface Props {
   provider: Provider;
@@ -16,7 +16,7 @@ export default function ResumirTab({ provider, onResult }: Props) {
   const [destino, setDestino] = useState('es');
   const [traducir, setTraducir] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState({ traduccion: '', resumen: '' });
+  const [result, setResult] = useState<ProcessResult>({ traduccion: '', resumen: '' });
   const [error, setError] = useState('');
 
   const handleProcesar = async () => {
@@ -26,7 +26,7 @@ export default function ResumirTab({ provider, onResult }: Props) {
     try {
       const mode = traducir ? 'traducir_resumir' : 'resumir';
       const data = await processText({ texto, origen: 'auto', destino, modo: mode as any, nivelResumen: nivel as Nivel, provider });
-      setResult({ traduccion: data.traduccion, resumen: data.resumen });
+      setResult({ traduccion: data.traduccion, resumen: data.resumen, provider: data.provider });
       onResult(texto, data.resumen || data.traduccion, 'resumen');
     } catch (e: any) {
       setError(e?.message || 'Error en el resumen');
@@ -71,7 +71,7 @@ export default function ResumirTab({ provider, onResult }: Props) {
       </Box>
 
       <UnifiedInput value={texto} onChange={setTexto} disabled={loading} />
-      <ResultPanel result={result} error={error} provider={provider} />
+      <ResultPanel result={result} error={error} provider={result.provider} />
     </motion.div>
   );
 }

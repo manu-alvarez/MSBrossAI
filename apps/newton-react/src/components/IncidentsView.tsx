@@ -31,7 +31,7 @@ export default function IncidentsView() {
 
   useEffect(() => { load(); }, []);
 
-  const openNew = () => { setEditItem(null); setForm({ title: '', description: '', status: 'abierta', severity: 'media' }); setDialog(true); };
+  const openNew = () => { setEditItem(null); setForm({ category: '', description: '', status: 'abierta', urgency: 'media' }); setDialog(true); };
   const openEdit = (inc: any) => { setEditItem(inc); setForm({ ...inc }); setDialog(true); };
   const openDetail = async (inc: any) => {
     try {
@@ -101,10 +101,10 @@ export default function IncidentsView() {
           {incidents.map((inc, i) => (
             <motion.tr key={inc.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}>
               <TableCell sx={{ cursor: 'pointer' }} onClick={() => openDetail(inc)}>
-                <Typography variant="body2" fontWeight={500}>{inc.title}</Typography>
+                <Typography variant="body2" fontWeight={500}>{inc.category}</Typography>
                 <Typography variant="caption" color="text.secondary">{inc.description?.substring(0, 60)}{inc.description?.length > 60 ? '...' : ''}</Typography>
               </TableCell>
-              <TableCell><Chip size="small" label={inc.severity} color={severityColor(inc.severity) as any} /></TableCell>
+              <TableCell><Chip size="small" label={inc.urgency} color={severityColor(inc.urgency) as any} /></TableCell>
               <TableCell><Chip size="small" label={inc.status} color={statusColor(inc.status) as any} /></TableCell>
               <TableCell><Typography variant="caption">{inc.created_at?.split('T')[0] || '-'}</Typography></TableCell>
               <TableCell align="right">
@@ -121,11 +121,11 @@ export default function IncidentsView() {
       <Dialog open={dialog} onClose={() => setDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editItem ? 'Editar Incidencia' : 'Nueva Incidencia'}</DialogTitle>
         <DialogContent>
-          <TextField autoFocus fullWidth label="Título" value={form.title || ''} onChange={e => setForm({...form, title: e.target.value})} sx={{ mt: 2 }} />
+          <TextField autoFocus fullWidth label="Categoría" value={form.category || ''} onChange={e => setForm({...form, category: e.target.value})} sx={{ mt: 2 }} />
           <TextField fullWidth label="Descripción" multiline rows={3} value={form.description || ''} onChange={e => setForm({...form, description: e.target.value})} sx={{ mt: 2 }} />
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel>Severidad</InputLabel>
-            <Select value={form.severity || 'media'} onChange={e => setForm({...form, severity: e.target.value})} label="Severidad">
+            <InputLabel>Urgencia</InputLabel>
+            <Select value={form.urgency || 'media'} onChange={e => setForm({...form, urgency: e.target.value})} label="Urgencia">
               {severities.map(s => <MenuItem key={s} value={s}>{s}</MenuItem>)}
             </Select>
           </FormControl>
@@ -143,13 +143,13 @@ export default function IncidentsView() {
       </Dialog>
 
       <Dialog open={detailDialog} onClose={() => setDetailDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{detailItem?.title}</DialogTitle>
+        <DialogTitle>{detailItem?.category}</DialogTitle>
         <DialogContent>
           {detailItem && (
             <Box>
               <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-wrap' }}>{detailItem.description}</Typography>
               <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                <Chip size="small" label={`Severidad: ${detailItem.severity}`} color={severityColor(detailItem.severity) as any} />
+                <Chip size="small" label={`Urgencia: ${detailItem.urgency}`} color={severityColor(detailItem.urgency) as any} />
                 <Chip size="small" label={`Estado: ${detailItem.status}`} color={statusColor(detailItem.status) as any} />
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>

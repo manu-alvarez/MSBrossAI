@@ -8,8 +8,8 @@ import { TravelSearchForm } from "@/components/search/TravelSearchForm";
 
 const CATEGORIES = [
   { label: "Viajes", icon: "🌍", query: "ofertas viaje pack completo", color: "gold", description: "Vuelos + Hotel + Transporte" },
-  { label: "Viajes Familiares", icon: "👨‍👩‍👧", query: "family-travel", color: "gold", description: "Family Travel Finder IA | Tavily + Groq + Gemini", isFamily: true },
   { label: "Tecnología", icon: "🚀", query: "gadgets ultima hora", color: "cyan", description: "Lanzamientos y ofertas" },
+  { label: "Family Travel", icon: "✈️", query: "family-travel", color: "gold", description: "Family Travel Finder IA | Tavily + Groq + Gemini", isFamily: true, isHighlight: true },
   { label: "Moda", icon: "💎", query: "luxury fashion deals", color: "gold", description: "Firmas exclusivas" },
   { label: "Hogar", icon: "🏰", query: "smart home elite", color: "cyan", description: "Diseño y domótica" },
 ];
@@ -36,7 +36,20 @@ export default function HomePage() {
 
   const handleTravelSearch = (data: any) => {
     const travelQuery = `Viaje de ${data.origin} a ${data.destination} en ${data.mode}`;
-    router.push(`/results?q=${encodeURIComponent(travelQuery)}&type=travel&origin=${data.origin}&dest=${data.destination}&mode=${data.mode}`);
+    const params = new URLSearchParams({
+      q: travelQuery,
+      type: "travel",
+      origin: data.origin,
+      dest: data.destination,
+      mode: data.mode,
+      depart: data.departDate,
+      return: data.returnDate || "",
+      adults: String(data.adults),
+      children: String(data.children),
+      infants: String(data.infants),
+      tripType: data.tripType,
+    });
+    router.push(`/results?${params.toString()}`);
   };
 
   return (
@@ -140,7 +153,9 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * idx + 0.5 }}
               onClick={() => cat.isFamily ? router.push('/family-travel') : handleSearch(cat.query)}
-              className="group relative flex flex-col items-start p-6 glass rounded-3xl text-left hover:border-gold/30 transition-all duration-500 overflow-hidden h-48"
+              className={`group relative flex flex-col items-start p-6 glass rounded-3xl text-left hover:border-gold/30 transition-all duration-500 overflow-hidden h-48 ${
+                (cat as any).isHighlight ? 'ring-2 ring-gold/40 border-gold/30 scale-105 shadow-[0_0_30px_rgba(218,165,32,0.15)]' : ''
+              }`}
             >
               <div className={`absolute -right-4 -bottom-4 text-7xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`}>
                 {cat.icon}

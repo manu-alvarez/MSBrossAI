@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { motion } from 'framer-motion';
 import { api } from '../api/client';
 
-const entryTypes = ['turno', 'extra', 'formacion', 'baja', 'vacaciones'];
+const entryTypes = ['mañana', 'tarde', 'noche', 'descanso', 'vacaciones', 'baja', 'formacion', 'especial'];
 
 export default function TimesheetView() {
   const now = new Date();
@@ -37,13 +37,13 @@ export default function TimesheetView() {
 
   const openNew = () => {
     setEditItem(null);
-    setForm({ entry_date: new Date().toISOString().split('T')[0], entry_type: 'turno', start_time: '', end_time: '', break_minutes: 0, notes: '' });
+    setForm({ date: new Date().toISOString().split('T')[0], shift_type: 'turno', start_time: '', end_time: '', break_minutes: 0, notes: '' });
     setDialog(true);
   };
 
   const openEdit = (e: any) => {
     setEditItem(e);
-    setForm({ ...e, entry_date: e.entry_date?.split('T')[0] || e.entry_date });
+    setForm({ ...e, date: e.date?.split('T')[0] || e.date });
     setDialog(true);
   };
 
@@ -73,6 +73,8 @@ export default function TimesheetView() {
     return acc;
   }, 0);
 
+  const workedDays = entries.filter(e => !['descanso', 'vacaciones', 'baja'].includes(e.shift_type)).length;
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
@@ -86,28 +88,43 @@ export default function TimesheetView() {
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      {summary && (
-        <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
-          <Card sx={{ flex: 1, minWidth: 120 }}>
-            <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
-              <Typography variant="h5" fontWeight={700}>{summary.total_hours?.toFixed(1) || totalHours.toFixed(1)}</Typography>
-              <Typography variant="caption">Horas totales</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1, minWidth: 120 }}>
-            <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
-              <Typography variant="h5" fontWeight={700}>{summary.total_days || entries.length}</Typography>
-              <Typography variant="caption">Días trabajados</Typography>
-            </CardContent>
-          </Card>
-          {summary.salary !== undefined && (
-            <Card sx={{ flex: 1, minWidth: 120 }}>
+      {summary && summary.salary && (
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)' }, gap: 2, mb: 2 }}>
+            <Card sx={{ bgcolor: summary.difference >= 0 ? '#ecfdf5' : '#fef2f2', border: `1px solid ${summary.difference >= 0 ? '#10b981' : '#ef4444'}` }}>
               <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
-                <Typography variant="h5" fontWeight={700} color="primary">{summary.salary.toFixed(2)}€</Typography>
-                <Typography variant="caption">Salario estimado</Typography>
+                <Typography variant="h5" fontWeight={700} color={summary.difference >= 0 ? '#059669' : '#dc2626'}>
+                  {summary.difference > 0 ? '+' : ''}{summary.difference?.toFixed(1)}h
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>Diferencia Contrato</Typography>
               </CardContent>
             </Card>
-          )}
+            <Card>
+              <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
+                <Typography variant="h5" fontWeight={700}>{summary.totalWorked?.toFixed(1)}</Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>Horas Trabajadas</Typography>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
+                <Typography variant="h5" fontWeight={700}>{workedDays} / {summary.expectedWorkDays}</Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>Días (Reales / Previstos)</Typography>
+              </CardContent>
+            </Card>
+            <Card sx={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(59,130,246,0.1) 100%)', border: '1px solid rgba(16,185,129,0.2)' }}>
+              <CardContent sx={{ textAlign: 'center', py: 1.5 }}>
+                <Typography variant="h5" fontWeight={700} color="success.main">{summary.salary.estimated?.toFixed(2)}€</Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>Salario Estimado</Typography>
+              </CardContent>
+            </Card>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1, typography: 'caption', color: 'text.secondary' }}>
+            <Typography variant="caption">☀️ Mañana: {summary.shifts?.morning?.count}</Typography>
+            <Typography variant="caption">🌅 Tarde: {summary.shifts?.afternoon?.count}</Typography>
+            <Typography variant="caption">⭐ Especial: {summary.shifts?.special?.count}</Typography>
+            <Typography variant="caption">🏖️ Descanso: {summary.shifts?.descanso?.count}</Typography>
+            <Typography variant="caption">💰 Base: {summary.salary.hourlyRate}€/h</Typography>
+          </Box>
         </Box>
       )}
 
@@ -131,8 +148,8 @@ export default function TimesheetView() {
             const hours = Math.max(0, mins / 60);
             return (
               <motion.tr key={e.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}>
-                <TableCell>{e.entry_date?.split('T')[0] || e.entry_date}</TableCell>
-                <TableCell><Chip size="small" label={e.entry_type} variant="outlined" /></TableCell>
+                <TableCell>{e.date?.split('T')[0] || e.date}</TableCell>
+                <TableCell><Chip size="small" label={e.shift_type} variant="outlined" /></TableCell>
                 <TableCell>{e.start_time || '-'}</TableCell>
                 <TableCell>{e.end_time || '-'}</TableCell>
                 <TableCell>{e.break_minutes ? `${e.break_minutes}min` : '-'}</TableCell>
@@ -151,11 +168,11 @@ export default function TimesheetView() {
       <Dialog open={dialog} onClose={() => setDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editItem ? 'Editar Registro' : 'Nuevo Registro'}</DialogTitle>
         <DialogContent>
-          <TextField fullWidth label="Fecha" type="date" value={form.entry_date || ''} onChange={e => setForm({...form, entry_date: e.target.value})} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} />
+          <TextField fullWidth label="Fecha" type="date" value={form.date || ''} onChange={e => setForm({...form, date: e.target.value})} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} />
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Tipo</InputLabel>
-            <Select value={form.entry_type || 'turno'} onChange={e => setForm({...form, entry_type: e.target.value})} label="Tipo">
-              {entryTypes.map(t => <MenuItem key={t} value={t}>{t}</MenuItem>)}
+            <Select value={form.shift_type || 'mañana'} onChange={e => setForm({...form, shift_type: e.target.value})} label="Tipo">
+              {entryTypes.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
             </Select>
           </FormControl>
           <TextField fullWidth label="Hora Entrada" type="time" value={form.start_time || ''} onChange={e => setForm({...form, start_time: e.target.value})} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} />

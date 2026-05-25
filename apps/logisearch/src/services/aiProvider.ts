@@ -21,23 +21,38 @@ interface SendOptions {
 
 function getGeminiKeys(): string[] {
     const keys: string[] = []
-    // Support VITE_GEMINI_API_KEY and VITE_GEMINI_API_KEY_1, _2, _3, etc.
     const mainKey = import.meta.env.VITE_GEMINI_API_KEY
     if (mainKey) keys.push(mainKey)
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 20; i++) {
         const key = import.meta.env[`VITE_GEMINI_API_KEY_${i}`]
         if (key && !keys.includes(key)) keys.push(key)
     }
     return keys
 }
 
-function getOpenRouterKey(): string {
-    return import.meta.env.VITE_OPENROUTER_API_KEY || ''
+function getOpenRouterKeys(): string[] {
+    const keys: string[] = []
+    const mainKey = import.meta.env.VITE_OPENROUTER_API_KEY
+    if (mainKey) keys.push(mainKey)
+
+    for (let i = 1; i <= 15; i++) {
+        const key = import.meta.env[`VITE_OPENROUTER_API_KEY_${i}`]
+        if (key && !keys.includes(key)) keys.push(key)
+    }
+    return keys
 }
 
-function getGroqKey(): string {
-    return import.meta.env.VITE_GROQ_API_KEY || ''
+function getGroqKeys(): string[] {
+    const keys: string[] = []
+    const mainKey = import.meta.env.VITE_GROQ_API_KEY
+    if (mainKey) keys.push(mainKey)
+
+    for (let i = 1; i <= 10; i++) {
+        const key = import.meta.env[`VITE_GROQ_API_KEY_${i}`]
+        if (key && !keys.includes(key)) keys.push(key)
+    }
+    return keys
 }
 
 // ─── Provider configs ───
@@ -110,6 +125,8 @@ const GROQ_CONFIG: AIProviderConfig = {
 // ─── Key rotation state ───
 
 let geminiKeyIndex = 0
+let openRouterKeyIndex = 0
+let groqKeyIndex = 0
 
 // ─── Core: send with retry + backoff ───
 
@@ -182,20 +199,23 @@ async function sendWithRetry(
 
 export async function sendToAI(prompt: string): Promise<string> {
     const geminiKeys = getGeminiKeys()
-    const openRouterKey = getOpenRouterKey()
-    const groqKey = getGroqKey()
+    const openRouterKeys = getOpenRouterKeys()
+    const groqKeys = getGroqKeys()
 
     const errors: string[] = []
 
     // ─── Phase 1: Try all Gemini keys ───
     if (geminiKeys.length > 0) {
         for (let i = 0; i < geminiKeys.length; i++) {
-            const keyIdx = (geminiKeyIndex + i) % geminiKeys.length
+            // Synchronously claim the current key and advance the index to prevent concurrent requests using the same key
+            const keyIdx = geminiKeyIndex
+            geminiKeyIndex = (geminiKeyIndex + 1) % geminiKeys.length
             const key = geminiKeys[keyIdx]
 
             try {
+                // Add a small random jitter to avoid instant parallel hits
+                await sleep(Math.random() * 800)
                 const result = await sendWithRetry(GEMINI_CONFIG, key, prompt)
-                geminiKeyIndex = (keyIdx + 1) % geminiKeys.length // Rotate for next call
                 return result
             } catch (error) {
                 const msg = (error as Error).message
@@ -207,26 +227,41 @@ export async function sendToAI(prompt: string): Promise<string> {
     }
 
     // ─── Phase 2: Try OpenRouter ───
-    if (openRouterKey) {
-        try {
-            console.log('🔄 Falling back to OpenRouter...')
-            const result = await sendWithRetry(OPENROUTER_CONFIG, openRouterKey, prompt)
-            return result
-        } catch (error) {
-            errors.push(`OpenRouter: ${(error as Error).message}`)
-            console.warn(`⚠️ OpenRouter failed: ${(error as Error).message}`)
+    if (openRouterKeys.length > 0) {
+        for (let i = 0; i < openRouterKeys.length; i++) {
+            const keyIdx = openRouterKeyIndex
+            openRouterKeyIndex = (openRouterKeyIndex + 1) % openRouterKeys.length
+            const key = openRouterKeys[keyIdx]
+            try {
+                console.log('🔄 Falling back to OpenRouter...')
+                await sleep(Math.random() * 800)
+                const result = await sendWithRetry(OPENROUTER_CONFIG, key, prompt)
+                return result
+            } catch (error) {
+                const msg = (error as Error).message
+                errors.push(`OpenRouter key ${keyIdx + 1}: ${msg}`)
+                console.warn(`⚠️ OpenRouter key ${keyIdx + 1}/${openRouterKeys.length} failed: ${msg}`)
+            }
         }
+        console.warn('⚠️ All OpenRouter keys exhausted, trying Groq...')
     }
 
     // ─── Phase 3: Try Groq ───
-    if (groqKey) {
-        try {
-            console.log('🔄 Falling back to Groq...')
-            const result = await sendWithRetry(GROQ_CONFIG, groqKey, prompt)
-            return result
-        } catch (error) {
-            errors.push(`Groq: ${(error as Error).message}`)
-            console.warn(`⚠️ Groq failed: ${(error as Error).message}`)
+    if (groqKeys.length > 0) {
+        for (let i = 0; i < groqKeys.length; i++) {
+            const keyIdx = groqKeyIndex
+            groqKeyIndex = (groqKeyIndex + 1) % groqKeys.length
+            const key = groqKeys[keyIdx]
+            try {
+                console.log('🔄 Falling back to Groq...')
+                await sleep(Math.random() * 800)
+                const result = await sendWithRetry(GROQ_CONFIG, key, prompt)
+                return result
+            } catch (error) {
+                const msg = (error as Error).message
+                errors.push(`Groq key ${keyIdx + 1}: ${msg}`)
+                console.warn(`⚠️ Groq key ${keyIdx + 1}/${groqKeys.length} failed: ${msg}`)
+            }
         }
     }
 

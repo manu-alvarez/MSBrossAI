@@ -50,31 +50,13 @@ export default function App() {
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-            <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: 2 }}>
+            <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: 2 }}>
               Traductor <span style={{ color: '#6ee7b7' }}>PRO</span>
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Traducción y resumen multi-proveedor AI</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              Traducción y resumen inteligente con alta disponibilidad automática
+            </Typography>
           </motion.div>
-        </Box>
-
-        {/* Provider Selector */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3, flexWrap: 'wrap' }}>
-          {PROVIDERS.map(p => (
-            <Tooltip key={p.id} title={`Usar ${p.label}`}>
-              <Chip
-                label={p.label}
-                onClick={() => setProvider(p.id)}
-                variant={provider === p.id ? 'filled' : 'outlined'}
-                sx={{
-                  px: 2, py: 2.5, fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
-                  bgcolor: provider === p.id ? p.color : 'transparent',
-                  borderColor: p.color,
-                  color: provider === p.id ? '#fff' : p.color,
-                  '&:hover': { bgcolor: provider === p.id ? p.color : `${p.color}22` },
-                }}
-              />
-            </Tooltip>
-          ))}
         </Box>
 
         {/* Tab Content */}
@@ -111,7 +93,7 @@ export default function App() {
       <Drawer anchor="right" open={historyOpen} onClose={() => setHistoryOpen(false)}
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 380 }, bgcolor: '#0a0a0f', p: 2 } }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" fontWeight={700}>Historial</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>Historial</Typography>
           <Box>
             <IconButton onClick={clearHistory} size="small"><DeleteSweepIcon /></IconButton>
             <IconButton onClick={() => setHistoryOpen(false)} size="small"><CloseIcon /></IconButton>
@@ -128,10 +110,8 @@ export default function App() {
                   <Chip size="small" label={entry.provider} variant="outlined" />
                 </Box>
                 <ListItemText
-                  primary={entry.input}
-                  secondary={entry.output}
-                  primaryTypographyProps={{ variant: 'caption', noWrap: true, color: 'text.secondary' }}
-                  secondaryTypographyProps={{ variant: 'caption', noWrap: true, sx: { opacity: 0.6 } }}
+                  primary={<Typography variant="caption" noWrap color="text.secondary">{entry.input}</Typography>}
+                  secondary={<Typography variant="caption" noWrap sx={{ opacity: 0.6 }}>{entry.output}</Typography>}
                 />
               </ListItemButton>
             ))}

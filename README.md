@@ -1,61 +1,69 @@
-# MSBrossAI — Nivel 3: Fusión Neural Soberana 🚀
+# MSBrossAI — Suite de Aplicaciones de Software
 
-> **Ecosistema de 10 aplicaciones IA unificadas** bajo una arquitectura de orquestación centralizada. De herramientas aisladas a un **Sistema Operativo Neural**.
+MSBrossAI es un ecosistema consolidado de 18 aplicaciones empresariales y de uso interno, estructuradas sobre una arquitectura de microservicios con un proxy centralizado.
 
-[![GitHub](https://img.shields.io/github/stars/manu-alvarez/MSBrossAI?style=for-the-badge)](https://github.com/manu-alvarez/MSBrossAI)
-[![Version](https://img.shields.io/badge/Version-3.0.0--Elite-purple?style=for-the-badge)]()
-[![Status](https://img.shields.io/badge/Neural--Bus-Connected-green?style=for-the-badge)]()
+## Arquitectura del Sistema
 
----
+El ecosistema está construido bajo un entorno Node.js (PM2) y aplicaciones desarrolladas principalmente en **React 19** para el frontend, y **FastAPI/Python** o **Express/Node** para el backend. 
 
-## 🏗️ Arquitectura Nivel 3 (Soberanía Autónoma)
-- **Neural Gateway**: La `api.php` maestra en el core de IAPuta OS actúa como sistema nervioso central.
-- **The Brain**: Dashboard de monitoreo en tiempo real integrado en la Landing Page (V3).
-- **Neural Bridge**: IAPuta OS detecta intenciones y orquesta acciones cruzadas en TaskFlowPro y Döhler.
-- **MSBross Vault**: Almacenamiento seguro basado en JSON para persistencia cross-app sin dependencias de terceros.
+- **Proxy Central (`proxy.js`)**: Enruta todas las peticiones a los respectivos puertos internos de cada microservicio, exponiendo el ecosistema en un único punto de entrada (`localhost:8080`).
+- **Gestión de Procesos (PM2)**: El archivo `ecosystem.config.js` orquesta la ejecución paralela y la recuperación automática (Alta Disponibilidad) de todos los backends.
+- **Bases de Datos Locales**: Persistencia mediante bases de datos SQLite nativas por microservicio y almacenamiento de estado en cliente (Zustand/LocalStorage).
 
----
+## Aplicaciones Incluidas (18)
 
-## 📱 Aplicaciones Fusionadas (10/10)
+| Directorio (`apps/`) | Aplicación | Descripción | Stack Tecnológico |
+|----------------------|------------|-------------|-------------------|
+| **`iaputa-os`** | **Panel de Control Central** | Dashboard de administración y monitoreo en tiempo real de todos los servicios. | FastAPI, React 19, Three.js |
+| **`livekit-nikolina`** | **Asistente de Voz** | Agente IA de voz conversacional y procesamiento de lenguaje. | LiveKit, Gemini 2.5, Python |
+| **`arantxa-translate`**| **Traductor PRO** | Motor de traducción neural y procesamiento OCR de documentos. | Express, React 19, OCR |
+| **`taskflow-pro`** | **TaskFlow Pro** | Gestor de productividad, tareas y programación de alarmas (PWA). | React 18, Zustand, PWA |
+| **`dohler`** | **Döhler** | Temporizadores y control de procesos industriales ligeros. | React 19, Tailwind |
+| **`logisearch`** | **LogiSearch** | Motor de búsqueda e inteligencia de datos aplicado al entorno logístico. | React 19, Supabase |
+| **`edelweiss`** | **Edelweiss** | Plataforma interactiva de estimulación visual e infantil. | React 18, Framer Motion |
+| **`moko-tools`** | **Moko-Tools** | Toolkit de utilidades para desarrolladores y APIs FreeTier. | React 19, Vite 7 |
+| **`combipro`** | **CombiPro** | Algoritmo estadístico para análisis y predicción de resultados deportivos. | React 19, API-Football |
+| **`app-generator`** | **App Gen** | Interfaz para la auto-generación de micro-aplicaciones mediante IA. | React 19, Gemini API |
+| **`newton-react`** | **Newton Mequinenza** | ERP vertical para gestión de estación de servicio (Checklists, Horarios).| React 19, FastAPI, SQLite |
+| **`elitescout`** | **EliteScout** | Aplicación de gestión y scouting de jugadores de fútbol (CRM).| React 19, FastAPI, SQLite |
+| **`jartosdto`** | **JartoSDTO** | Gestión integral de flotas de transporte, rutas y cargas. | React 19 |
+| **`cuentosmagicos`** | **Cuentos Mágicos** | Generador automático de cuentos infantiles combinando texto y audio. | React 19, FastAPI |
+| **`atenea-backend`** | **Atenea Backend** | Sistema backend centralizado para gestión de conocimiento base. | Python, FastAPI |
+| **`expositator`** | **Expositator** | Aplicación de cartelería digital y presentaciones interactivas. | React 19 |
+| **`teringo`** | **Teringo** | Plataforma educativa tipo trivia y cuestionarios interactivos. | React 19 |
+| **`msbross`** | **Adele Voice Server** | Backend alternativo de motor de voz IA. | Python, FastAPI |
 
-| App | Rol en el Ecosistema | Tech Stack |
-|-----|----------------------|------------|
-| **🤖 IAPuta OS** | **Cerebro Central / Orquestador** | FastAPI + React 19 + Three.js |
-| **🎙️ Nikolina** | Asistente de Voz Nativo (MacOS) | LiveKit + Gemini 2.5 + Python |
-| **🌐 Traductor** | Puente Lingüístico | Express + React 19 + OCR |
-| **✅ TaskFlow** | Productividad y Alarmas | React 18 + Zustand + PWA |
-| **📋 DOHLER** | Control Industrial y Timers | React + Tailwind + LocalStorage |
-| **🔍 LogiSearch** | Inteligencia de Datos Logísticos | React 19 + Supabase + Tavily |
-| **👶 Edelweiss** | Visión y Estimulación Infantil | React 18 + Framer Motion |
-| **🛠️ Moko-Tools** | Toolkit Dev & AI FreeTier | React 19 + Vite 7 |
-| **⚽ CombiPro** | Sports AI & Betting Algorithm | React 19 + API-Football |
-| **⚡ App Gen** | Constructor de Micro-Apps | React 19 + Gemini API |
+## Guía de Despliegue Local
 
----
+Para levantar el entorno completo de desarrollo en un sistema macOS/Linux:
 
-## 📁 Guía de Orquestación
-- **Ruta de la API Maestra**: `apps/iaputa-os/frontend/public/api.php`
-- **Dashboards**:
-  - `msbross.me/` (Monitor Neural en tiempo real)
-  - `msbross.me/iaputa` (Consola de comandos global)
-- **Scripts de Arranque Local (Mac)**:
-  - `bash apps/livekit-nikolina/INICIAR_NIKOLINA_MAC.sh`
-
----
-
-## 🛠️ Pipeline de Despliegue
 ```bash
-# Construye y despliega las 10 aplicaciones sincronizadamente
-bash deploy/build-all.sh
+# 1. Instalar dependencias e iniciar todos los servicios mediante PM2
+./START_SYSTEM.sh
 ```
 
----
+El script `START_SYSTEM.sh` detendrá procesos huérfanos, leerá el manifiesto `ecosystem.config.js`, lanzará los backends de cada aplicación y expondrá el proxy en el puerto 8080.
 
-## 🔐 Seguridad Nivel 3
-- **Vault Encrypted Storage**: Persistencia cifrada en local.
-- **Zero-Prose Logic**: Los agentes actúan bajo protocolos de ejecución directa.
-- **Autonomous Recovery**: Reintentos automáticos en fallos de API de terceros.
+- **Panel Principal:** `http://localhost:8080/`
+- **Consola de Administración:** `http://localhost:8080/iaputa/`
+- **Resto de Aplicaciones:** Accesibles mediante `http://localhost:8080/app/<nombre-app>/`
 
----
+Comandos útiles de mantenimiento:
+```bash
+pm2 status    # Comprobar el estado de los servicios
+pm2 monit     # Ver telemetría de CPU/Memoria y registros en tiempo real
+pm2 stop all  # Apagar todo el entorno de desarrollo
+```
 
-*Última actualización: 13 de Abril de 2026 — MSBross Professional Services*
+## Producción y CI/CD
+
+El ecosistema utiliza scripts propios para la compilación de todos los clientes React y un despliegue vía FTP automatizado.
+
+```bash
+# Compilación secuencial de todos los proyectos frontend
+bash deploy/build-all.sh
+
+# Despliegue de los binarios al servidor FTP en producción
+export FTP_PASSWORD="tu-password"
+python3 deploy/ftp-deploy-full.py
+```

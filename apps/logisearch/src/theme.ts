@@ -7,8 +7,8 @@ const theme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#fca5a5',     // Cyan más brillante y luminoso
-            light: '#fecaca',
+            main: '#00E5FF',     // Cyan más brillante y luminoso
+            light: '#84FFFF',
             dark: '#00B8D4',
             contrastText: '#000000', // Texto oscuro sobre botones cyan para max legibilidad
         },
@@ -213,10 +213,10 @@ const theme = createTheme({
                     fontSize: '0.9rem',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&.MuiButton-containedPrimary': {
-                        background: 'linear-gradient(135deg, #fca5a5, #00B8D4)',
+                        background: 'linear-gradient(135deg, #00E5FF, #00B8D4)',
                         color: '#000000',
                         '&:hover': {
-                            background: 'linear-gradient(135deg, #fecaca, #fca5a5)',
+                            background: 'linear-gradient(135deg, #84FFFF, #00E5FF)',
                             transform: 'translateY(-2px)',
                             boxShadow: '0 10px 30px rgba(0, 229, 255, 0.25)',
                         },
@@ -225,7 +225,7 @@ const theme = createTheme({
                         borderWidth: 2,
                         '&:hover': {
                             borderWidth: 2,
-                            background: alpha('#ef4444', 0.08),
+                            background: alpha('#00E5FF', 0.08),
                         },
                     },
                 },
@@ -304,7 +304,7 @@ const theme = createTheme({
                 },
                 bar: {
                     borderRadius: 3,
-                    background: 'linear-gradient(90deg, #ef4444, #f87171)',
+                    background: 'linear-gradient(90deg, #00E5FF, #00B8D4)',
                 },
             },
         },
@@ -366,7 +366,7 @@ const theme = createTheme({
                 indicator: {
                     height: 3,
                     borderRadius: '3px 3px 0 0',
-                    background: 'linear-gradient(90deg, #ef4444, #f87171)',
+                    background: 'linear-gradient(90deg, #00E5FF, #00B8D4)',
                 },
             },
         },
@@ -385,7 +385,7 @@ const theme = createTheme({
                     borderRadius: 10,
                     transition: 'all 0.2s ease',
                     '&:hover': {
-                        background: alpha('#ef4444', 0.15),
+                        background: alpha('#00E5FF', 0.15),
                     },
                 },
             },

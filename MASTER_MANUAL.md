@@ -1,0 +1,238 @@
+# 📖 MSBrossAI — Manual Maestro de Arquitectura y Operaciones (Nivel 3)
+> **Guía oficial de referencia técnica de alta ingeniería.** Arquitectura unificada, administración de microservicios, enrutamiento reverso, DNS, túneles persistentes y flujos de despliegue.
+
+---
+
+## 🏗️ 1. Estructura y Scaffolding del Ecosistema
+
+El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modular donde los frontends estáticos, los servicios backend y la capa de proxy residen bajo la misma estructura del espacio de trabajo.
+
+```
+/Users/manu/Desktop/MSBrossAI
+├── apps/                        # Aplicaciones nativas de desarrollo
+│   ├── elitescout/              # Next.js Travel & Price Scraper Finder (Puerto 8003)
+│   ├── arantxa-translate/       # Traductor PRO Client & Server (Puerto 8004)
+│   │   ├── client/              # React 18 / Vite (Ventanilla de Traducción)
+│   │   └── server/              # Express AI Translation Proxy (Fallback Secuencial)
+│   ├── newton-react/            # Newton Mequinenza ERP (Puerto 3005)
+│   ├── livekit-nikolina/        # Voice AI Nikolina Frontend & Backend (Puerto 8001)
+│   └── ... (resto de las 18 aplicaciones integradas)
+│
+├── www/                         # Repositorio de recursos estáticos servidos por el proxy
+│   ├── index.html               # Landing Portal principal de MSBrossAI
+│   └── app/                     # Compilaciones de producción listas para servir
+│       ├── elitescout/          # Build estático Next.js (SSG/Out)
+│       ├── traductor/           # Build estático Vite (React/TypeScript)
+│       └── ...
+│
+├── logs/                        # Logs consolidados de ejecución de servicios
+├── deploy/                      # Scripts auxiliares de empaquetado y subida
+│   └── build-all.sh             # Compilador maestro de las 18 aplicaciones
+│
+├── START_SYSTEM.sh              # Orquestador local macOS de inicio y monitorización
+├── proxy.js                     # Servidor Express, Reverse Proxy y SSL
+└── ecosystem.config.js          # Configuración maestra PM2 (Orquestador de Resiliencia)
+```
+
+---
+
+## 🔌 2. Capa de Enrutamiento Reverso (proxy.js)
+
+Toda petición (WAN o LAN local) converge en el proxy central en el puerto **8080** (HTTP) o **8443** (HTTPS con certificados auto-generados efímeros para Secure Context de micrófonos en LAN).
+
+### Funciones del Proxy:
+1. **Servicio Estático de SPAs:**
+   - La landing page se sirve en la raíz `/` desde `/www/index.html`.
+   - Las 18 aplicaciones se montan estáticamente en la ruta `/app/<nombre-app>` mapeando el contenido de `/www/app/<nombre-app>`.
+   - Configura enrutamiento SPA automático: cualquier ruta de navegación del cliente (ej. `/app/elitescout/family-travel`) realiza fallback a `/app/elitescout/index.html` en caso de recarga.
+
+2. **Puertos API Dedicados:**
+
+| Contexto URL | Puerto Interno | Servicio Backend |
+|:---|:---:|:---|
+| `/_nikolina` | **8001** | API Hub Nikolina (FastAPI + JWT) |
+| `/_dohler` | **8002** | Dohler Backend (FastAPI Task Manager) |
+| `/_elitescout` | **8003** | EliteScout API (FastAPI Finder) |
+| `/_arantxa` | **8004** | Arantxa Translate Server (Express AI) |
+| `/_msbross` | **8005** | MSBrOSs (Adele Voice Server) |
+| `/_iaputa` | **8006** | IAPuta OS (FastAPI AI Assistant) |
+| `/_cuentos` | **8007** | CuentosMágicos (FastAPI Story Backend) |
+| `/_atenea` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
+
+---
+
+## ⚡ 3. Configuración PM2 (ecosystem.config.js)
+
+Los servicios backend no se ejecutan directamente en segundo plano mediante terminales aisladas. Se orquestan de manera robusta y permanente mediante **PM2** con políticas estrictas de auto-recuperación.
+
+### Comando de Control Rápido:
+* **Iniciar todo el sistema:** `pm2 start ecosystem.config.js`
+* **Guardar configuración para reinicios del OS:** `pm2 save`
+* **Ver estado en vivo:** `pm2 status`
+* **Monitorear recursos y CPU:** `pm2 monit`
+* **Ver logs unificados:** `pm2 logs` o `pm2 logs <service-name>`
+* **Reiniciar un servicio específico actualizando variables de entorno:**
+  ```bash
+  pm2 restart arantxa-server --update-env
+  ```
+
+### Políticas de Resiliencia implementadas:
+* **`max_memory_restart`**: Límites estrictos de memoria por servicio (ej. 300M para Express, 800M para Next.js/FastAPI) para mitigar fugas de memoria.
+* **`exp_backoff_delay`**: Retardo exponencial de reinicio (arranca en 1000ms) para evitar bucles infinitos en caso de caídas persistentes.
+* **`min_uptime`**: El proceso debe durar al menos 15s levantado para ser considerado estable.
+
+---
+
+## 🛠️ 4. Flujo de Desarrollo y Actualizaciones
+
+Cuando se realiza un cambio en una aplicación, se debe seguir estrictamente este flujo de construcción y distribución local.
+
+### Paso 1: Modificar el código fuente
+Los cambios se hacen directamente bajo `apps/<nombre-app>/`.
+
+### Paso 2: Construir el Frontend
+* **Para aplicaciones basadas en Vite** (`apps/arantxa-translate/client`):
+  ```bash
+  npm run build
+  # Esto genera la carpeta 'dist/'
+  ```
+* **Para aplicaciones basadas en Next.js** (`apps/elitescout`):
+  ```bash
+  npm run build
+  # Esto genera la carpeta 'out/' mediante SSG (Static Site Generation)
+  ```
+
+### Paso 3: Sincronizar el directorio servidor
+El contenido compilado se copia a `/www/app/<nombre-app>/`:
+```bash
+# Limpiar destino anterior
+rm -rf www/app/traductor/*
+# Copiar nueva compilación
+cp -r apps/arantxa-translate/client/dist/* www/app/traductor/
+```
+
+### Paso 4: Reiniciar Servidores de Backend (si hubo cambios lógicos en API)
+```bash
+pm2 restart arantxa-server --update-env
+```
+
+---
+
+## ✈️ 5. Despliegue en Servidor de Producción (FTP Sync)
+
+Para sincronizar de manera automatizada las actualizaciones de los clientes estáticos con el hosting de Nominalia (`msbross.me`), se cuenta con un script automatizado en Python:
+
+`python3 /Users/manu/.gemini/antigravity-ide/brain/d91d13f5-8316-45bc-b248-52bd3715c1ef/scratch/ftp_deploy_fixes.py`
+
+### Qué realiza este script:
+1. Conexión pasiva cifrada FTP a `msbros.ftp.tb-hosting.com`.
+2. Autenticación con las credenciales maestras.
+3. Carga automática de la landing principal `www/index.html`.
+4. Sincronización recursiva del build de **EliteScout** (`/www/app/elitescout`).
+5. Sincronización recursiva del build de **Traductor PRO** (`/www/app/traductor`).
+
+> [!NOTE]
+> Al modificar cualquier frontend estático, simplemente compila la app localmente, sincroniza la carpeta en `/www/app/<app>` y ejecuta el script FTP para subirla a producción en segundos.
+
+---
+
+## ☁️ 6. Red y DNS en Cloudflare (Túnel msbross-main)
+
+Para permitir que los backends locales en el Mac de Manu respondan peticiones desde el exterior sin necesidad de abrir puertos ni exponer la IP doméstica, se implementa un **Túnel Nombrado Permanente** de Cloudflare.
+
+### Detalles del Túnel Permanente:
+* **Nombre del Túnel:** `msbross-main`
+* **ID de Túnel:** `e77340ca-e206-4542-8feb-781cb6df27fe`
+* **Archivo de Credenciales:** `/Users/manu/.cloudflared/e77340ca-e206-4542-8feb-781cb6df27fe.json`
+* **Configuración global (`~/.cloudflared/config.yml`):**
+  ```yaml
+  tunnel: e77340ca-e206-4542-8feb-781cb6df27fe
+  credentials-file: /Users/manu/.cloudflared/e77340ca-e206-4542-8feb-781cb6df27fe.json
+
+  ingress:
+    - hostname: msbross.me
+      service: http://localhost:8080
+    - hostname: "*.msbross.me"
+      service: http://localhost:8080
+    - service: http_status:404
+  ```
+
+### Enrutamiento DNS en Cloudflare:
+El dominio principal `msbross.me` tiene un registro **CNAME** activo apuntando directamente al endpoint del túnel nombrado:
+```
+msbross.me  CNAME  e77340ca-e206-4542-8feb-781cb6df27fe.cfargotunnel.com
+```
+
+### Auto-Arranque del Túnel tras Reinicio del Mac:
+El túnel se ejecuta de fondo consumiendo la configuración establecida. Se puede añadir a PM2 o mediante un LaunchAgent local para asegurar que se actualice e inicie solo:
+```bash
+cloudflared tunnel run msbross-main > /Users/manu/Desktop/MSBrossAI/LOGS/tunnel-named.log 2>&1 &
+```
+
+---
+
+## 🧠 7. Arquitectura de Alta Disponibilidad de APIs (Estrategia de Fallback)
+
+El sistema operativo neural de **MSBrossAI** se rige por un principio de auto-recuperación y tolerancia a fallos. Si un backend o proveedor de IA no tiene cuota gratuita o disponibilidad, el sistema conmuta automáticamente.
+
+### Patrón de Fallback Secuencial (Implementado en Traductor PRO):
+```
+[Petición del Cliente]
+          │
+          ▼
+[1. Intentar Groq llama-3.3-70b] ──(Éxito)──→ [Retornar Resultado + 'groq']
+          │
+      (Error)
+          ▼
+[2. Intentar Gemini gemini-2.0-flash] ──(Éxito)──→ [Retornar Resultado + 'gemini']
+          │
+      (Error)
+          ▼
+[3. Intentar OpenRouter Llama-3.3] ──(Éxito)──→ [Retornar Resultado + 'openrouter']
+          │
+      (Error)
+          ▼
+[4. Intentar OpenAI gpt-4o] ──(Éxito)──→ [Retornar Resultado + 'openai']
+          │
+      (Error)
+          ▼
+[Error 502: Todos los proveedores fallaron]
+```
+
+### Código Maestro de Fallback (Express Backend):
+```typescript
+const providersToTry = ['groq', 'gemini', 'openrouter', 'openai'];
+let lastError: any = null;
+let successfulProvider = '';
+let parsed: any = null;
+
+for (const providerName of providersToTry) {
+  try {
+    const aiProvider = ProviderFactory.create(providerName);
+    const completion = await aiProvider.chat.completions.create({
+      model: aiProvider.getDefaultModel(),
+      temperature: 0.2,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: texto },
+      ],
+    });
+    parsed = JSON.parse(completion.choices[0].message.content);
+    successfulProvider = providerName;
+    break; // Se detiene en el primer éxito
+  } catch (err: any) {
+    lastError = err; // Almacena el error y salta al siguiente
+  }
+}
+```
+
+---
+
+## 📝 8. Directivas para Futuros Agentes / Desarrolladores
+
+Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
+1. **Nunca expongas claves en Frontend:** Todo consumo de IA (OpenAI, Claude, Gemini, Groq) se hace **SIEMPRE** a través de llamadas al backend o proxy local. Jamás utilices prefijos `NEXT_PUBLIC_` para tokens sensibles.
+2. **Cero-Prose en Terminales:** Toda automatización debe estar estructurada, libre de interacciones humanas (usa banderas `-y`, `--no-interactive` y scripts dedicados).
+3. **Persistencia de Puertos:** Respeta el mapa de puertos en `ecosystem.config.js` y `proxy.js` para asegurar que el enrutador local no sufra de fallos de conexión (HTTP 502/404).
+4. **Resiliencia de SQLite:** Al instanciar bases de datos SQLite en Python, añade siempre `check_same_thread=False` y un timeout elevado (`timeout=20.0`) para evitar bloqueos por transacciones concurrentes de los agentes de voz y la web.

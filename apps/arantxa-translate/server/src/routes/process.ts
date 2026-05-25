@@ -20,22 +20,17 @@ router.post('/process', async (req, res) => {
       destino = 'es',
       modo = 'traducir_resumir',
       nivelResumen = 'normal',
-      provider: providerName = 'groq',
     }: {
       texto: string;
       origen?: string;
       destino?: string;
       modo?: Modo;
       nivelResumen?: Nivel;
-      provider?: string;
     } = req.body;
 
     if (!texto || !texto.trim()) {
       return res.status(400).json({ error: 'Texto vacío' });
     }
-
-    // Multi-provider support via ProviderFactory
-    const aiProvider = ProviderFactory.create(providerName);
 
     const detalleMap: Record<Nivel, string> = {
       breve: 'muy breve (1-3 frases)',
@@ -78,27 +73,51 @@ Instrucción específica: ${systemPrompt}
 - No añadas explicaciones fuera del JSON.
     `.trim();
 
-    const completion = await aiProvider.chat.completions.create({
-      model: aiProvider.getDefaultModel(),
-      temperature: 0.2,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: system },
-        {
-          role: 'user',
-          content: JSON.stringify({ texto, origen, destino, modo, nivelResumen }),
-        },
-      ],
-    });
+    const providersToTry = ['groq', 'gemini', 'openrouter', 'openai'];
+    let lastError: any = null;
+    let successfulProvider = '';
+    let parsed: any = null;
 
-    const raw = completion.choices[0]?.message?.content || '{}';
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
+    for (const providerName of providersToTry) {
+      try {
+        console.log(`[process] Intentando proveedor: ${providerName}`);
+        const aiProvider = ProviderFactory.create(providerName);
+        const completion = await aiProvider.chat.completions.create({
+          model: aiProvider.getDefaultModel(),
+          temperature: 0.2,
+          response_format: { type: 'json_object' },
+          messages: [
+            { role: 'system', content: system },
+            {
+              role: 'user',
+              content: JSON.stringify({ texto, origen, destino, modo, nivelResumen }),
+            },
+          ],
+        });
+
+        const raw = completion.choices[0]?.message?.content || '{}';
+        const jsonMatch = raw.match(/\{[\s\S]*\}/);
+        parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
+        successfulProvider = providerName;
+        console.log(`[process] Completado con éxito usando proveedor: ${providerName}`);
+        break;
+      } catch (err: any) {
+        console.warn(`[process] Proveedor ${providerName} falló:`, err?.message || err);
+        lastError = err;
+      }
+    }
+
+    if (!parsed) {
+      return res.status(502).json({
+        error: 'Todos los proveedores de IA fallaron',
+        details: lastError?.message || lastError,
+      });
+    }
 
     return res.json({
       traduccion: parsed.traduccion ?? '',
       resumen: parsed.resumen ?? '',
-      provider: providerName,
+      provider: successfulProvider,
     });
   } catch (err: any) {
     console.error(err);

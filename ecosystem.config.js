@@ -238,5 +238,20 @@ module.exports = {
       min_uptime: '15s',
       max_memory_restart: '400M'
     },
+
+    // ──────────────────────────────────────────────
+    // CLOUDFLARE TUNNEL (Exposes proxy on boot)
+    // ──────────────────────────────────────────────
+    {
+      name: 'cloudflare-tunnel',
+      script: 'cloudflared',
+      args: 'tunnel run msbross-main',
+      cwd: __dirname,
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '200M'
+    },
   ]
 };

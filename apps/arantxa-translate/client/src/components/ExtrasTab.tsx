@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Bo
 import { motion } from 'framer-motion';
 import UnifiedInput from './UnifiedInput';
 import ResultPanel from './ResultPanel';
-import { Provider, processExtras, EXTRA_TOOLS } from '../api';
+import { Provider, processExtras, EXTRA_TOOLS, ProcessResult } from '../api';
 
 interface Props {
   provider: Provider;
@@ -14,7 +14,7 @@ export default function ExtrasTab({ provider, onResult }: Props) {
   const [texto, setTexto] = useState('');
   const [herramienta, setHerramienta] = useState('keywords');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState({ traduccion: '', resumen: '' });
+  const [result, setResult] = useState<ProcessResult>({ traduccion: '', resumen: '' });
   const [error, setError] = useState('');
 
   const tool = EXTRA_TOOLS.find(t => t.id === herramienta);
@@ -25,7 +25,7 @@ export default function ExtrasTab({ provider, onResult }: Props) {
     setError('');
     try {
       const data = await processExtras({ texto, herramienta, provider });
-      setResult({ traduccion: '', resumen: data.resultado });
+      setResult({ traduccion: '', resumen: data.resultado, provider: data.provider as any });
       onResult(texto, data.resultado, `extras:${herramienta}`);
     } catch (e: any) {
       setError(e?.message || 'Error');
@@ -59,7 +59,7 @@ export default function ExtrasTab({ provider, onResult }: Props) {
       </Box>
 
       <UnifiedInput value={texto} onChange={setTexto} disabled={loading} />
-      <ResultPanel result={result} error={error} provider={provider} />
+      <ResultPanel result={result} error={error} provider={result.provider as any} />
     </motion.div>
   );
 }

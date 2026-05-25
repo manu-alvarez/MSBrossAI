@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, Typography, Box, Chip, CircularProgress, Button, Alert } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, Chip, CircularProgress, Button, Alert, IconButton, ButtonGroup } from '@mui/material';
 import { motion } from 'framer-motion';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import TodayIcon from '@mui/icons-material/Today';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import WbTwilightIcon from '@mui/icons-material/WbTwilight';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import { api } from '../api/client';
 
 interface Props {
@@ -18,6 +21,8 @@ export default function Dashboard({ user, onNavigate }: Props) {
   const [stats, setStats] = useState<any>({});
   const [summary, setSummary] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const currentHour = new Date().getHours();
+  const [shift, setShift] = useState<'mañana'|'tarde'>(currentHour < 14 ? 'mañana' : 'tarde');
 
   useEffect(() => {
     Promise.all([
@@ -44,11 +49,29 @@ export default function Dashboard({ user, onNavigate }: Props) {
 
   return (
     <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4">Bienvenido, {user?.name}</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
-          <TodayIcon fontSize="small" /> {today}
-        </Typography>
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
+        <Box>
+          <Typography variant="h4">Bienvenido, {user?.name}</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+            <TodayIcon fontSize="small" /> {today}
+          </Typography>
+        </Box>
+        <ButtonGroup variant="outlined" size="small">
+          <Button 
+            variant={shift === 'mañana' ? 'contained' : 'outlined'} 
+            onClick={() => setShift('mañana')}
+            startIcon={<WbSunnyIcon />}
+          >
+            Mañana (07-14h)
+          </Button>
+          <Button 
+            variant={shift === 'tarde' ? 'contained' : 'outlined'} 
+            onClick={() => setShift('tarde')}
+            startIcon={<WbTwilightIcon />}
+          >
+            Tarde (14-21h)
+          </Button>
+        </ButtonGroup>
       </Box>
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -102,9 +125,15 @@ export default function Dashboard({ user, onNavigate }: Props) {
         <Grid size={{ xs: 12, md: 6 }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>Checklists - Hoy</Typography>
-              {summary.entries?.length > 0 ? summary.entries.map((e: any, i: number) => (
-                <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5, borderBottom: i < summary.entries.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>Checklists - {shift === 'mañana' ? 'Apertura' : 'Cierre'}</Typography>
+              {summary.entries?.length > 0 ? summary.entries
+                .filter((e: any) => {
+                  const n = e.template_name?.toLowerCase() || '';
+                  if (shift === 'mañana') return n.includes('apertura') || n.includes('cambio');
+                  return n.includes('cierre') || n.includes('cambio');
+                })
+                .map((e: any, i: number) => (
+                <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.5, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <Typography variant="body2">{e.template_name}</Typography>
                   <Chip size="small" label={e.completed ? '✅' : '⏳'} color={e.completed ? 'success' : 'warning'} />
                 </Box>
@@ -113,6 +142,32 @@ export default function Dashboard({ user, onNavigate }: Props) {
           </Card>
         </Grid>
       </Grid>
+
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>Acciones Rápidas</Typography>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Button fullWidth variant="outlined" startIcon={<AccessTimeIcon />} onClick={() => onNavigate('timesheet')} sx={{ py: 1.5 }}>
+              Registrar Turno
+            </Button>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Button fullWidth variant="outlined" startIcon={<ChecklistIcon />} onClick={() => onNavigate('checklist')} sx={{ py: 1.5 }}>
+              Hacer Checklist
+            </Button>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Button fullWidth variant="outlined" startIcon={<WarningAmberIcon />} onClick={() => onNavigate('expiry')} sx={{ py: 1.5 }}>
+              Añadir Caducidad
+            </Button>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Button fullWidth variant="outlined" startIcon={<ReportProblemIcon />} onClick={() => onNavigate('incidents')} sx={{ py: 1.5 }}>
+              Añadir Incidencia
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
     </Box>
   );
 }

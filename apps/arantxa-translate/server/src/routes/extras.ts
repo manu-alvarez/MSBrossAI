@@ -1,12 +1,7 @@
 import { Router } from 'express';
-import OpenAI from 'openai';
+import { ProviderFactory } from '../providers/index.js';
 
 const router = Router();
-
-const openai = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1',
-});
 
 const prompts: Record<string, string> = {
   keywords: 'Eres un experto analista SEO y de contenido. Tu tarea es extraer de 5 a 10 palabras clave o etiquetas (keywords) principales del texto proporcionado. Devuélvelas en una lista con viñetas separada por comas, sin explicaciones adicionales.',
@@ -28,22 +23,47 @@ router.post('/extras', async (req, res) => {
       return res.status(400).json({ error: 'Herramienta no válida' });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      temperature: 0.3,
-      messages: [
-        { role: 'system', content: system },
-        {
-          role: 'user',
-          content: texto,
-        },
-      ],
-    });
+    const providersToTry = ['groq', 'gemini', 'openrouter', 'openai'];
+    let lastError: any = null;
+    let successfulProvider = '';
+    let content = '';
 
-    const content = completion.choices[0]?.message?.content || '';
+    for (const providerName of providersToTry) {
+      try {
+        console.log(`[extras] Intentando proveedor: ${providerName}`);
+        const aiProvider = ProviderFactory.create(providerName);
+        const completion = await aiProvider.chat.completions.create({
+          model: aiProvider.getDefaultModel(),
+          temperature: 0.3,
+          messages: [
+            { role: 'system', content: system },
+            {
+              role: 'user',
+              content: texto,
+            },
+          ],
+        });
+
+        content = completion.choices[0]?.message?.content || '';
+        successfulProvider = providerName;
+        console.log(`[extras] Completado con éxito usando proveedor: ${providerName}`);
+        break;
+      } catch (err: any) {
+        console.warn(`[extras] Proveedor ${providerName} falló:`, err?.message || err);
+        lastError = err;
+      }
+    }
+
+    if (!content) {
+      return res.status(502).json({
+        error: 'Todos los proveedores de IA fallaron para extras',
+        details: lastError?.message || lastError,
+      });
+    }
 
     return res.json({
       resultado: content.trim(),
+      provider: successfulProvider,
     });
   } catch (err: any) {
     console.error(err);

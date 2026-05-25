@@ -86,12 +86,14 @@ export default function ExpiryView() {
             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
               <WarningAmberIcon color="warning" /> {alerts.length} producto{alerts.length > 1 ? 's' : ''} próximo{alerts.length > 1 ? 's' : ''} a caducar
             </Typography>
-            {alerts.map((a: any, i: number) => (
+            {alerts.map((a: any, i: number) => {
+              const aDaysLeft = a.expiry_date ? Math.ceil((new Date(a.expiry_date).getTime() - Date.now()) / 86400000) : null;
+              return (
               <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', py: 0.3 }}>
-                <Typography variant="body2">{a.product_name} - {a.batch_code || 'Lote #' + a.batch_id}</Typography>
-                <Chip size="small" label={a.days_left !== undefined ? `${a.days_left} días` : a.expiry_date} color={a.days_left <= 7 ? 'error' : 'warning'} />
+                <Typography variant="body2">{a.product_name} - {'Lote #' + a.id?.substring(0,6)}</Typography>
+                <Chip size="small" label={aDaysLeft !== null ? `${aDaysLeft} días` : a.expiry_date} color={aDaysLeft !== null && aDaysLeft <= 7 ? 'error' : 'warning'} />
               </Box>
-            ))}
+            )})}
           </CardContent>
         </Card>
       )}
@@ -144,7 +146,7 @@ export default function ExpiryView() {
               return (
                 <motion.tr key={b.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}>
                   <TableCell>{getProductName(b.product_id)}</TableCell>
-                  <TableCell>{b.batch_code || '-'}</TableCell>
+                  <TableCell>{b.id?.substring(0,6) || '-'}</TableCell>
                   <TableCell>{b.quantity}</TableCell>
                   <TableCell>{b.expiry_date || '-'}</TableCell>
                   <TableCell>
@@ -181,7 +183,6 @@ export default function ExpiryView() {
                   {products.map(p => <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>)}
                 </Select>
               </FormControl>
-              <TextField fullWidth label="Código de Lote" value={form.batch_code || ''} onChange={e => setForm({...form, batch_code: e.target.value})} sx={{ mt: 2 }} />
               <TextField fullWidth label="Cantidad" type="number" value={form.quantity || ''} onChange={e => setForm({...form, quantity: parseInt(e.target.value) || 0})} sx={{ mt: 2 }} />
               <TextField fullWidth label="Fecha de Caducidad" type="date" value={form.expiry_date || ''} onChange={e => setForm({...form, expiry_date: e.target.value})} sx={{ mt: 2 }} InputLabelProps={{ shrink: true }} />
             </>
