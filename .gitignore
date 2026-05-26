@@ -57,3 +57,4 @@ www/app/iaputa/env.php
 .next/
 out/
 www/app/
+api_keys_vault.json
