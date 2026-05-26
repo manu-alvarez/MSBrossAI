@@ -327,7 +327,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
 
   if (isProcessing) {
     return (
-      <div className="max-w-2xl mx-auto rounded-3xl border-4 border-dashed border-purple-500/40 bg-purple-950/40 backdrop-blur-xl p-8 md:p-12 text-center shadow-[0_0_50px_rgba(168,85,247,0.3)] relative overflow-hidden">
+      <div className="max-w-2xl mx-auto rounded-3xl border-4 border-dashed border-amber-500/40 bg-amber-950/40 backdrop-blur-xl p-8 md:p-12 text-center shadow-[0_0_50px_rgba(245,158,11,0.3)] relative overflow-hidden">
         {/* Decorative sparkles */}
         <div className="absolute top-4 left-4 text-2xl animate-pulse">✨</div>
         <div className="absolute top-12 right-6 text-xl animate-bounce">⭐</div>
@@ -335,19 +335,19 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
         <div className="absolute bottom-4 right-4 text-2xl animate-pulse delay-500">🌟</div>
 
         {/* Wizard Mascot Animation */}
-        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-yellow-300 via-pink-400 to-purple-500 rounded-full flex items-center justify-center text-5xl shadow-[0_8px_30px_rgba(236,72,153,0.4)] border-2 border-white animate-bounce-gentle">
+        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-yellow-300 via-orange-400 to-amber-500 rounded-full flex items-center justify-center text-5xl shadow-[0_8px_30px_rgba(245,158,11,0.4)] border-2 border-white animate-bounce-gentle">
           🧙‍♂️✨
         </div>
 
         <h2 className="text-2xl md:text-3xl font-black font-kid-title text-amber-300 mb-2 tracking-tight">
           ¡Creando tu Cuento Mágico!
         </h2>
-        <p className="text-purple-100/80 font-kid-body text-sm md:text-base max-w-md mx-auto mb-8">
+        <p className="text-amber-100/80 font-kid-body text-sm md:text-base max-w-md mx-auto mb-8">
           La IA y los duendes mágicos están tejiendo las páginas del cuento personalizado para <span className="font-bold text-white">&quot;{story.child_name}&quot;</span>.
         </p>
 
         {/* Fun Rotating Tip Box */}
-        <div className="bg-purple-900/40 border border-purple-500/20 rounded-2xl p-4 max-w-md mx-auto mb-8 min-h-[70px] flex items-center justify-center transition-all duration-500 transform hover:scale-102">
+        <div className="bg-amber-900/40 border border-amber-500/20 rounded-2xl p-4 max-w-md mx-auto mb-8 min-h-[70px] flex items-center justify-center transition-all duration-500 transform hover:scale-102">
           <p className="text-xs md:text-sm text-amber-200/90 font-medium font-kid-body leading-relaxed">
             {magicalTips[tipIndex]}
           </p>
@@ -355,22 +355,22 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
 
         {progress && (
           <div className="space-y-4 max-w-md mx-auto">
-            <div className="flex justify-between text-xs font-bold text-purple-200/80 font-kid-title">
+            <div className="flex justify-between text-xs font-bold text-amber-200/80 font-kid-title">
               <span>PROGRESO DE LA AVENTURA</span>
               <span className="text-amber-300">{progress.status}</span>
             </div>
 
             {/* Glowing Custom Progress Bar */}
-            <div className="w-full bg-slate-900/60 border border-purple-500/20 rounded-full h-4 overflow-hidden p-0.5 shadow-inner">
+            <div className="w-full bg-slate-900/60 border border-amber-500/20 rounded-full h-4 overflow-hidden p-0.5 shadow-inner">
               <div
-                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-300 rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(236,72,153,0.6)] animate-pulse"
+                className="h-full bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-300 rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(245,158,11,0.6)] animate-pulse"
                 style={{
                   width: `${progress.chapters_total > 0 ? (progress.chapters_completed / progress.chapters_total) * 100 : 0}%`,
                 }}
               />
             </div>
 
-            <div className="flex justify-between text-[11px] text-purple-200/50 font-bold font-kid-title">
+            <div className="flex justify-between text-[11px] text-amber-200/50 font-bold font-kid-title">
               <span>{progress.chapters_completed} de {progress.chapters_total} Capítulos</span>
               {progress.estimated_remaining_seconds && progress.estimated_remaining_seconds > 0 && (
                 <span className="text-amber-200/70">
@@ -381,19 +381,19 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
 
             {/* Status Checklist Grids */}
             <div className="grid grid-cols-2 gap-3 pt-3 text-xs font-bold font-kid-title max-w-sm mx-auto">
-              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.text_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-purple-500/10 text-purple-300/40"}`}>
+              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.text_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
                 <span>{story.text_generated ? "✅" : "⏳"}</span>
                 <span>Texto del Cuento</span>
               </div>
-              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.images_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-purple-500/10 text-purple-300/40"}`}>
+              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.images_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
                 <span>{story.images_generated ? "✅" : "⏳"}</span>
                 <span>Dibujos de la IA</span>
               </div>
-              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.audio_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-purple-500/10 text-purple-300/40"}`}>
+              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.audio_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
                 <span>{story.audio_generated ? "✅" : "⏳"}</span>
                 <span>Voz Narradora</span>
               </div>
-              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.video_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-purple-500/10 text-purple-300/40"}`}>
+              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.video_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
                 <span>{story.video_generated ? "✅" : "⏳"}</span>
                 <span>Cine Animado</span>
               </div>
@@ -404,7 +404,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
         <div className="mt-8 flex justify-center">
           <div className="relative w-12 h-12">
             <div className="absolute inset-0 rounded-full border-4 border-amber-300/20 border-t-amber-300 animate-spin" />
-            <div className="absolute inset-2 rounded-full border-4 border-pink-400/20 border-t-pink-400 animate-spin" style={{ animationDirection: "reverse" }} />
+            <div className="absolute inset-2 rounded-full border-4 border-orange-400/20 border-t-orange-400 animate-spin" style={{ animationDirection: "reverse" }} />
           </div>
         </div>
       </div>
@@ -416,7 +416,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
       <div className="max-w-2xl mx-auto rounded-3xl border border-rose-500/30 bg-slate-950/40 backdrop-blur-xl p-8 md:p-12 text-center">
         <div className="text-6xl mb-4 animate-bounce">😔</div>
         <h2 className="text-2xl md:text-3xl font-black font-kid-title text-rose-300 mb-2">¡Oh no! El hechizo ha fallado</h2>
-        <p className="text-purple-100/70 font-kid-body text-sm md:text-base mb-6 max-w-md mx-auto">
+        <p className="text-amber-100/70 font-kid-body text-sm md:text-base mb-6 max-w-md mx-auto">
           {story.error_message || "Ha ocurrido un error inesperado al intentar dar vida a tu historia."}
         </p>
         <div className="flex gap-4 justify-center">
@@ -429,7 +429,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
           </button>
           <button
             onClick={() => window.history.back()}
-            className="px-6 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 font-bold text-sm text-white hover:scale-103 active:scale-97 transition cursor-pointer"
+            className="px-6 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 font-bold text-sm text-white hover:scale-103 active:scale-97 transition cursor-pointer"
           >
             Volver
           </button>
@@ -440,14 +440,14 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
 
   if (!current) {
     return (
-      <div className="max-w-2xl mx-auto rounded-3xl border border-purple-500/30 bg-black/30 backdrop-blur-xl p-8 text-center">
-        <p className="text-purple-100/60 font-kid-body">No hay capítulos disponibles en este libro mágico.</p>
+      <div className="max-w-2xl mx-auto rounded-3xl border border-amber-500/30 bg-black/30 backdrop-blur-xl p-8 text-center">
+        <p className="text-amber-100/60 font-kid-body">No hay capítulos disponibles en este libro mágico.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto rounded-3xl border border-purple-500/20 bg-slate-950/40 backdrop-blur-xl shadow-[0_0_80px_rgba(168,85,247,0.15)] p-4 md:p-8 relative" suppressHydrationWarning>
+    <div className="max-w-5xl mx-auto rounded-3xl border border-amber-500/20 bg-slate-950/40 backdrop-blur-xl shadow-[0_0_80px_rgba(245,158,11,0.15)] p-4 md:p-8 relative" suppressHydrationWarning>
       {/* Retry banner for stories with failed chapters */}
       {hasFailedChapters && !isProcessing && (
         <div className="mb-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -465,12 +465,12 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
       )}
 
       {/* Header */}
-      <header className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-purple-500/10 pb-4">
+      <header className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-amber-500/10 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Link
               href="/stories"
-              className="no-print inline-flex items-center gap-1 text-xs font-bold text-purple-300 hover:text-purple-200 transition"
+              className="no-print inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200 transition"
               onClick={playBubble}
             >
               📚 Mis Cuentos
@@ -479,7 +479,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
           <h1 className="text-2xl md:text-3xl font-black font-kid-title tracking-tight text-white">
             {story.title || "Tu cuento mágico"}
           </h1>
-          <p className="text-sm font-kid-body text-purple-200/60 mt-0.5">
+          <p className="text-sm font-kid-body text-amber-200/60 mt-0.5">
             Una maravillosa aventura para <span className="font-bold text-amber-200">{story.child_name}</span> ({story.child_age} años)
           </p>
         </div>
@@ -487,13 +487,13 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
         {/* Action Toggles */}
         <div className="flex flex-wrap items-center gap-3 no-print">
           {/* Media Selector */}
-          <div className="flex items-center bg-slate-900/60 rounded-full border border-purple-500/20 p-1 text-xs">
+          <div className="flex items-center bg-slate-900/60 rounded-full border border-amber-500/20 p-1 text-xs">
             <button
               onClick={() => handleMediaToggle("image")}
               className={`px-3 py-1.5 rounded-full font-bold font-kid-title transition ${
                 mediaMode === "image"
-                  ? "bg-purple-500 text-white shadow-md"
-                  : "text-purple-200/60 hover:text-white"
+                  ? "bg-amber-500 text-white shadow-md"
+                  : "text-amber-200/60 hover:text-white"
               }`}
             >
               🖼️ Ilustración
@@ -502,8 +502,8 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               onClick={() => handleMediaToggle("video")}
               className={`px-3 py-1.5 rounded-full font-bold font-kid-title transition ${
                 mediaMode === "video"
-                  ? "bg-indigo-500 text-white shadow-md"
-                  : "text-purple-200/60 hover:text-white"
+                  ? "bg-orange-500 text-white shadow-md"
+                  : "text-amber-200/60 hover:text-white"
               }`}
             >
               🎬 Cine IA
@@ -511,13 +511,13 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
           </div>
 
           {/* View Mode Selector */}
-          <div className="flex items-center bg-slate-900/60 rounded-full border border-purple-500/20 p-1 text-xs">
+          <div className="flex items-center bg-slate-900/60 rounded-full border border-amber-500/20 p-1 text-xs">
             <button
               onClick={() => handleViewToggle("book")}
               className={`px-3 py-1.5 rounded-full font-bold font-kid-title transition ${
                 viewMode === "book"
                   ? "bg-amber-500 text-slate-950 shadow-md"
-                  : "text-purple-200/60 hover:text-white"
+                  : "text-amber-200/60 hover:text-white"
               }`}
             >
               📖 Modo Libro
@@ -527,7 +527,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               className={`px-3 py-1.5 rounded-full font-bold font-kid-title transition ${
                 viewMode === "theater"
                   ? "bg-yellow-400 text-slate-950 shadow-md"
-                  : "text-purple-200/60 hover:text-white"
+                  : "text-amber-200/60 hover:text-white"
               }`}
             >
               🎭 Modo Teatro
@@ -541,12 +541,12 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                 playBubble();
                 setPrintOpen(!printOpen);
               }}
-              className="px-4 py-2 rounded-full border border-slate-700 bg-slate-900/60 hover:bg-slate-800 text-xs font-bold text-purple-200 transition cursor-pointer flex items-center gap-1"
+              className="px-4 py-2 rounded-full border border-slate-700 bg-slate-900/60 hover:bg-slate-800 text-xs font-bold text-amber-200 transition cursor-pointer flex items-center gap-1"
             >
               🖨️ Imprimir ▾
             </button>
             {printOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-purple-500/20 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-amber-500/20 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden">
                 <Link
                   href={`/stories/print?id=${story.id}`}
                   target="_blank"
@@ -554,7 +554,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                     playChime();
                     setPrintOpen(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-purple-100 hover:bg-purple-500/20 transition"
+                  className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 transition"
                 >
                   🖼️ Texto + Dibujos
                 </Link>
@@ -565,7 +565,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                     playChime();
                     setPrintOpen(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-purple-100 hover:bg-purple-500/20 border-t border-purple-500/10 transition"
+                  className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 border-t border-amber-500/10 transition"
                 >
                   📝 Solo texto
                 </Link>
@@ -585,17 +585,17 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               📥 Descargar ▾
             </button>
             {downloadOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-purple-500/20 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-amber-500/20 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden">
                 <button
                   onClick={() => downloadAll("story")}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-purple-100 hover:bg-purple-500/20 transition text-left"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 transition text-left"
                 >
                   📖 Texto + Audio + Imágenes
                 </button>
                 {story.url_video && (
                   <button
                     onClick={() => downloadAll("video")}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-purple-100 hover:bg-purple-500/20 border-t border-purple-500/10 transition text-left"
+                    className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 border-t border-amber-500/10 transition text-left"
                   >
                     🎬 Vídeo Completo del Cuento
                   </button>
@@ -607,7 +607,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
       </header>
 
       {/* Glowing Star Chapter Indicators */}
-      <div className="flex justify-center flex-wrap gap-3 md:gap-4 my-4 py-2.5 px-6 rounded-2xl bg-purple-950/20 border border-purple-500/10 backdrop-blur-sm max-w-md mx-auto no-print">
+      <div className="flex justify-center flex-wrap gap-3 md:gap-4 my-4 py-2.5 px-6 rounded-2xl bg-amber-950/20 border border-amber-500/10 backdrop-blur-sm max-w-md mx-auto no-print">
         {localChapters.map((ch, i) => {
           const isCurrent = i === currentIndex;
           return (
@@ -620,7 +620,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               className={`relative group text-2xl md:text-3xl transition-all duration-300 transform active:scale-90 cursor-pointer ${
                 isCurrent
                   ? "text-amber-300 scale-130 filter drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]"
-                  : "text-purple-300/30 hover:text-purple-300 hover:scale-110"
+                  : "text-amber-300/30 hover:text-amber-300 hover:scale-110"
               }`}
               title={`Capítulo ${ch.chapter_number}`}
               aria-label={`Ir al Capítulo ${ch.chapter_number}`}
@@ -629,7 +629,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               {isCurrent && (
                 <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-amber-400/20 opacity-70 scale-150" />
               )}
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 border border-purple-500/30 text-white text-[10px] py-0.5 px-2 rounded-md opacity-0 group-hover:opacity-100 transition duration-200 pointer-events-none whitespace-nowrap z-20 font-bold">
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 border border-amber-500/30 text-white text-[10px] py-0.5 px-2 rounded-md opacity-0 group-hover:opacity-100 transition duration-200 pointer-events-none whitespace-nowrap z-20 font-bold">
                 Cap. {ch.chapter_number}
               </span>
             </button>
@@ -661,14 +661,14 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                       return (
                         <div className="text-center p-6">
                           <div className="text-4xl mb-2 animate-bounce">🎨</div>
-                          <p className="text-xs font-bold font-kid-title text-purple-200/60">Los duendes mágicos están pintando la ilustración...</p>
+                          <p className="text-xs font-bold font-kid-title text-amber-200/60">Los duendes mágicos están pintando la ilustración...</p>
                         </div>
                       );
                     }
                     return (
                       <div className="text-center p-6">
                         <div className="text-4xl mb-2">🖼️</div>
-                        <p className="text-xs font-bold font-kid-title text-purple-200/40">Sin dibujo en esta página</p>
+                        <p className="text-xs font-bold font-kid-title text-amber-200/40">Sin dibujo en esta página</p>
                       </div>
                     );
                   })()
@@ -687,7 +687,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                     return (
                       <div className="text-center p-6">
                         <div className="text-4xl mb-2 animate-pulse">🎬</div>
-                        <p className="text-xs font-bold font-kid-title text-purple-200/60">Generando la película animada del cuento completo...</p>
+                        <p className="text-xs font-bold font-kid-title text-amber-200/60">Generando la película animada del cuento completo...</p>
                       </div>
                     );
                   }
@@ -712,7 +712,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                   return (
                     <div className="text-center p-6">
                       <div className="text-4xl mb-2">📺</div>
-                      <p className="text-xs font-bold font-kid-title text-purple-200/40">Sin contenido multimedia</p>
+                      <p className="text-xs font-bold font-kid-title text-amber-200/40">Sin contenido multimedia</p>
                     </div>
                   );
                 })()}
@@ -742,12 +742,12 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                     const audioUrl = resolveMediaUrl(current.url_audio);
                     if (audioUrl) {
                       return (
-                        <div className="flex items-center gap-3 bg-amber-900/15 border border-amber-950/10 rounded-2xl p-2.5">
+                        <div className="flex items-center gap-3 bg-amber-900/15 border border-amber-955/10 rounded-2xl p-2.5">
                           <button
                             onClick={toggleAudio}
                             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
                               isPlaying
-                                ? "bg-purple-600 text-white scale-105 shadow-[0_0_12px_rgba(147,51,234,0.4)] border border-purple-400 cursor-pointer"
+                                ? "bg-amber-600 text-white scale-105 shadow-[0_0_12px_rgba(245,158,11,0.4)] border border-amber-400 cursor-pointer"
                                 : "bg-amber-100 border border-amber-200 hover:bg-amber-200 text-amber-900 cursor-pointer"
                             }`}
                             aria-label={isPlaying ? "Pausar" : "Escuchar narrador"}
@@ -882,17 +882,17 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
             </div>
 
             {/* Movie Caption Box / Subtitles */}
-            <div className="bg-slate-950/80 border border-purple-500/20 rounded-3xl p-4 md:p-8 text-center shadow-2xl relative">
+            <div className="bg-slate-950/80 border border-amber-500/20 rounded-3xl p-4 md:p-8 text-center shadow-2xl relative">
               <div className="text-xs text-amber-300 font-bold uppercase tracking-widest mb-2 font-kid-title">
                 Capítulo {current.chapter_number}: {current.chapter_title}
               </div>
-              <div className="max-h-[150px] md:max-h-[220px] overflow-y-auto pr-1 mb-4 scrollbar-thin scrollbar-thumb-purple-500/20">
-                <p className="font-kid-body text-base md:text-lg lg:text-xl text-purple-100 font-semibold leading-relaxed max-w-3xl mx-auto whitespace-pre-line break-words">
+              <div className="max-h-[150px] md:max-h-[220px] overflow-y-auto pr-1 mb-4 scrollbar-thin scrollbar-thumb-amber-500/20">
+                <p className="font-kid-body text-base md:text-lg lg:text-xl text-amber-100 font-semibold leading-relaxed max-w-3xl mx-auto whitespace-pre-line break-words">
                   {current.chapter_text}
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-purple-500/10 pt-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-amber-500/10 pt-4">
                 {/* Audio Narrator */}
                 {(() => {
                   const audioUrl = resolveMediaUrl(current.url_audio);
@@ -903,7 +903,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                           onClick={toggleAudio}
                           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                             isPlaying
-                              ? "bg-purple-500 text-white scale-105"
+                              ? "bg-amber-500 text-white scale-105"
                               : "bg-white/10 border border-white/20 hover:bg-white/20 text-white"
                           }`}
                           aria-label={isPlaying ? "Pausar" : "Escuchar narrador"}
@@ -916,7 +916,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                           onEnded={() => setIsPlaying(false)}
                           className="hidden"
                         />
-                        <span className="text-xs font-bold font-kid-title text-purple-300/70">
+                        <span className="text-xs font-bold font-kid-title text-amber-300/70">
                           {isPlaying ? "Escuchando narrador..." : "Reproducir voz de cine"}
                         </span>
                       </div>

@@ -8,8 +8,8 @@ import { playBubble, playSpell, playChime } from "@/lib/sound";
 type ContentKey = "text" | "images" | "audio" | "video";
 
 const FEATURES: { key: ContentKey; icon: string; label: string; desc: string; color: string }[] = [
-  { key: "text", icon: "📖", label: "Texto Mágico", desc: "La historia capitulada", color: "from-amber-400 to-orange-500" },
-  { key: "images", icon: "🎨", label: "Ilustraciones", desc: "Dibujos hechos con IA", color: "from-pink-400 to-purple-500" },
+  { key: "text", icon: "📖", label: "Texto Mágico", desc: "La historia capitulada", color: "from-amber-500 to-orange-600" },
+  { key: "images", icon: "🎨", label: "Ilustraciones", desc: "Dibujos hechos con IA", color: "from-yellow-400 to-amber-500" },
   { key: "audio", icon: "🎙️", label: "Voz de Hada", desc: "Narración de cuento", color: "from-cyan-400 to-blue-500" },
   { key: "video", icon: "🎬", label: "Cine Animado", desc: "Las imágenes cobran vida", color: "from-emerald-400 to-teal-500" },
 ];
@@ -131,7 +131,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row items-center gap-6 relative z-20">
           <button
             onClick={handleCreate}
-            className="magic-glow-gold px-10 py-5 rounded-[2rem] bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 font-black text-xl shadow-[0_15px_40px_rgba(251,191,36,0.6)] hover:brightness-110 hover:scale-[1.04] transition duration-300 active:scale-95 cursor-pointer flex items-center gap-2.5"
+            className="magic-glow-gold px-10 py-5 rounded-[2rem] bg-gradient-to-r from-yellow-400 via-orange-500 to-amber-600 font-black text-xl shadow-[0_15px_40px_rgba(251,191,36,0.6)] hover:brightness-110 hover:scale-[1.04] transition duration-300 active:scale-95 cursor-pointer flex items-center gap-2.5"
           >
             <span>🪄</span>
             <span>¡Crear Cuento Mágico!</span>

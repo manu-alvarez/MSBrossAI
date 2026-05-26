@@ -70,9 +70,9 @@ export default function AsistenteMascota({ customMessage }: MascotProps) {
       }`}
     >
       {/* Speech Bubble */}
-      <div className="relative max-w-xs p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-medium text-xs md:text-sm shadow-[0_10px_25px_rgba(168,85,247,0.4)] border border-purple-300/40 pointer-events-auto transition-transform hover:scale-105">
+      <div className="relative max-w-xs p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium text-xs md:text-sm shadow-[0_10px_25px_rgba(249,115,22,0.4)] border border-amber-300/40 pointer-events-auto transition-transform hover:scale-105">
         {/* Triangle arrow */}
-        <div className="absolute bottom-4 -right-2 w-4 h-4 bg-indigo-500 transform rotate-45 border-r border-t border-purple-300/20" />
+        <div className="absolute bottom-4 -right-2 w-4 h-4 bg-orange-500 transform rotate-45 border-r border-t border-amber-300/20" />
         
         <p className="leading-relaxed">{message}</p>
         
@@ -88,7 +88,7 @@ export default function AsistenteMascota({ customMessage }: MascotProps) {
       {/* Animated Mascot Figure */}
       <button
         onClick={handleMascotClick}
-        className={`w-16 h-16 rounded-full bg-gradient-to-br from-yellow-300 via-pink-400 to-purple-500 p-0.5 shadow-[0_10px_30px_rgba(236,72,153,0.5)] border-2 border-white pointer-events-auto hover:brightness-110 active:scale-95 transition cursor-pointer flex items-center justify-center text-3xl ${
+        className={`w-16 h-16 rounded-full bg-gradient-to-br from-yellow-300 via-orange-400 to-amber-500 p-0.5 shadow-[0_10px_30px_rgba(249,115,22,0.5)] border-2 border-white pointer-events-auto hover:brightness-110 active:scale-95 transition cursor-pointer flex items-center justify-center text-3xl ${
           isWiggling ? "wiggle" : "asistente-float"
         }`}
         aria-label="Hablar con Varita"

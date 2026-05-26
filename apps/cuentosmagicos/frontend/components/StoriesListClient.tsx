@@ -28,14 +28,14 @@ function getBookAesthetics(title: string) {
   
   if (t.includes("espacio") || t.includes("estrella") || t.includes("astronauta") || t.includes("cohete") || t.includes("galaxia") || t.includes("luna") || t.includes("marte") || t.includes("universo")) {
     emoji = "🚀";
-    gradient = "from-indigo-900 via-purple-800 to-indigo-950";
+    gradient = "from-amber-950 via-orange-900 to-yellow-950";
     borderGold = "border-cyan-300/30";
     textBadge = "text-cyan-200 bg-cyan-950/40";
   } else if (t.includes("unicornio") || t.includes("fantasia") || t.includes("magia") || t.includes("hechizo") || t.includes("varita") || t.includes("arcoiris") || t.includes("arco iris")) {
     emoji = "🦄";
-    gradient = "from-pink-600 via-purple-500 to-indigo-600";
-    borderGold = "border-pink-300/40";
-    textBadge = "text-pink-200 bg-pink-950/40";
+    gradient = "from-orange-500 via-amber-500 to-yellow-500";
+    borderGold = "border-orange-300/40";
+    textBadge = "text-orange-200 bg-orange-950/40";
   } else if (t.includes("dinosaurio") || t.includes("dino") || t.includes("t-rex") || t.includes("triceratops") || t.includes("jurásico")) {
     emoji = "🦖";
     gradient = "from-emerald-700 via-green-600 to-emerald-800";
@@ -53,12 +53,12 @@ function getBookAesthetics(title: string) {
     textBadge = "text-lime-200 bg-lime-950/40";
   } else if (t.includes("superhéroe") || t.includes("superheroe") || t.includes("poder") || t.includes("capa") || t.includes("misión") || t.includes("valiente")) {
     emoji = "🦸‍♂️";
-    gradient = "from-rose-600 via-red-500 to-purple-700";
+    gradient = "from-red-700 via-orange-600 to-yellow-700";
     borderGold = "border-yellow-300/40";
     textBadge = "text-rose-200 bg-rose-950/40";
   } else if (t.includes("pez") || t.includes("mar") || t.includes("oceano") || t.includes("delfin") || t.includes("tiburón") || t.includes("agua") || t.includes("colores") || t.includes("coral")) {
     emoji = "🐠";
-    gradient = "from-cyan-600 via-blue-500 to-indigo-700";
+    gradient = "from-cyan-600 via-blue-500 to-sky-700";
     borderGold = "border-sky-300/30";
     textBadge = "text-sky-200 bg-sky-950/40";
   } else if (t.includes("princesa") || t.includes("caballero") || t.includes("castillo") || t.includes("rey") || t.includes("reina") || t.includes("dragón") || t.includes("dragon")) {
@@ -68,11 +68,11 @@ function getBookAesthetics(title: string) {
     textBadge = "text-amber-200 bg-amber-950/40";
   } else {
     const colors = [
-      "from-purple-700 via-pink-600 to-indigo-800",
+      "from-amber-700 via-orange-600 to-yellow-800",
       "from-amber-600 via-orange-500 to-amber-800",
-      "from-indigo-700 via-purple-600 to-pink-700",
-      "from-teal-700 via-cyan-600 to-indigo-800",
-      "from-rose-700 via-pink-600 to-purple-800",
+      "from-orange-700 via-amber-600 to-yellow-700",
+      "from-yellow-700 via-orange-600 to-amber-800",
+      "from-orange-800 via-red-700 to-amber-800",
       "from-emerald-700 via-teal-600 to-green-800"
     ];
     const index = Math.abs(title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)) % colors.length;
@@ -81,7 +81,7 @@ function getBookAesthetics(title: string) {
     const emojis = ["📖", "🌟", "📚", "🎨", "🌈", "🧸"];
     emoji = emojis[index % emojis.length];
     borderGold = "border-yellow-400/30";
-    textBadge = "text-purple-200 bg-purple-950/40";
+    textBadge = "text-amber-200 bg-amber-950/40";
   }
   
   return { emoji, gradient, borderGold, textBadge };
@@ -113,8 +113,8 @@ function getStatusBadgeClass(status: string) {
     ready: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
     text_ready: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     processing: "bg-blue-500/20 text-blue-300 border-blue-500/40 animate-pulse",
-    text_pending: "bg-purple-500/20 text-purple-300 border-purple-500/40",
-    pending: "bg-purple-500/20 text-purple-300 border-purple-500/40",
+    text_pending: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+    pending: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     failed: "bg-rose-500/20 text-rose-300 border-rose-500/40",
   };
   return styles[status] || "bg-slate-500/20 text-slate-300 border-slate-500/40";
@@ -144,7 +144,7 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
   return (
     <div className="space-y-8 font-kid-body">
       {/* Search & Filter Dashboard */}
-      <div className="bg-purple-900/10 border border-purple-500/20 rounded-3xl p-5 md:p-6 backdrop-blur-md space-y-4 max-w-4xl mx-auto shadow-lg">
+      <div className="bg-amber-900/10 border border-amber-500/20 rounded-3xl p-5 md:p-6 backdrop-blur-md space-y-4 max-w-4xl mx-auto shadow-lg">
         <div className="flex flex-col md:flex-row gap-4 items-center">
           {/* Search Box */}
           <div className="relative w-full md:flex-1">
@@ -152,7 +152,7 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
             <input
               type="text"
               placeholder="Buscar por título o el nombre del héroe..."
-              className="w-full pl-12 pr-4 py-3 rounded-2xl bg-purple-950/60 border-2 border-purple-500/30 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-400/15 text-white placeholder-purple-300/40 text-sm font-bold transition"
+              className="w-full pl-12 pr-4 py-3 rounded-2xl bg-amber-950/60 border-2 border-amber-500/30 focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-400/15 text-white placeholder-amber-300/40 text-sm font-bold transition"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -164,8 +164,8 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
               onClick={() => { playBubble(); setStatusFilter("all"); }}
               className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition cursor-pointer select-none ${
                 statusFilter === "all"
-                  ? "bg-purple-500 border-purple-400 text-white shadow-md shadow-purple-500/20"
-                  : "bg-white/5 border-white/10 text-purple-200 hover:bg-white/10"
+                  ? "bg-amber-500 border-amber-400 text-white shadow-md shadow-amber-500/20"
+                  : "bg-white/5 border-white/10 text-amber-200 hover:bg-white/10"
               }`}
             >
               📚 Todos ({initialStories.length})
@@ -206,18 +206,18 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
 
       {/* No stories found */}
       {filteredStories.length === 0 ? (
-        <div className="text-center py-20 bg-purple-900/5 rounded-3xl border border-purple-500/10 max-w-lg mx-auto">
+        <div className="text-center py-20 bg-amber-900/5 rounded-3xl border border-amber-500/10 max-w-lg mx-auto">
           <div className="text-6xl mb-4 animate-bounce">🧙‍♂️💨</div>
-          <h2 className="text-xl font-black font-kid-title text-purple-200 mb-2">
+          <h2 className="text-xl font-black font-kid-title text-amber-200 mb-2">
             No se encontraron cuentos
           </h2>
-          <p className="text-purple-200/60 text-sm max-w-xs mx-auto mb-6">
+          <p className="text-amber-200/60 text-sm max-w-xs mx-auto mb-6">
             Intenta cambiar los filtros o busca un nombre diferente. ¡O crea un nuevo cuento mágico!
           </p>
           <Link
             href="/create"
             onClick={playChime}
-            className="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-sm font-black shadow-lg hover:brightness-110 active:scale-95 transition"
+            className="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-sm font-black shadow-lg hover:brightness-110 active:scale-95 transition"
           >
             + Crear Cuento
           </Link>
@@ -296,7 +296,7 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
 
       {/* Footer stats badge */}
       {filteredStories.length > 0 && (
-        <footer className="text-center py-8 text-xs font-bold text-purple-300/40 mt-8">
+        <footer className="text-center py-8 text-xs font-bold text-amber-300/40 mt-8">
           <p>
             Mostrando {filteredStories.length} de {totalCount} cuentos en la estantería mágica
           </p>

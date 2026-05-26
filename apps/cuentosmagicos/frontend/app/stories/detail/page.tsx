@@ -37,27 +37,27 @@ function StoryDetailContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white p-3 md:p-6 flex items-center justify-center">
-        <p className="text-purple-300">Cargando cuento...</p>
+      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950 text-white p-3 md:p-6 flex items-center justify-center">
+        <p className="text-amber-300">Cargando cuento...</p>
       </main>
     );
   }
 
   if (error || !storyData) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white p-3 md:p-6 flex flex-col items-center justify-center">
+      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950 text-white p-3 md:p-6 flex flex-col items-center justify-center">
         <p className="text-red-400 mb-4">No se pudo cargar el cuento.</p>
-        <button onClick={() => router.push("/")} className="text-purple-300 hover:underline">Volver al inicio</button>
+        <button onClick={() => router.push("/")} className="text-amber-300 hover:underline">Volver al inicio</button>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white p-3 md:p-6">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950 text-white p-3 md:p-6">
       <div className="mb-4">
         <a
           href="/"
-          className="inline-flex items-center gap-1 text-sm text-purple-300 hover:text-purple-200 transition"
+          className="inline-flex items-center gap-1 text-sm text-amber-300 hover:text-amber-200 transition"
         >
           ← Volver al inicio
         </a>
@@ -70,8 +70,8 @@ function StoryDetailContent() {
 export default function StoryDetailPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white p-3 md:p-6 flex items-center justify-center">
-        <p className="text-purple-300">Cargando...</p>
+      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950 text-white p-3 md:p-6 flex items-center justify-center">
+        <p className="text-amber-300">Cargando...</p>
       </main>
     }>
       <StoryDetailContent />

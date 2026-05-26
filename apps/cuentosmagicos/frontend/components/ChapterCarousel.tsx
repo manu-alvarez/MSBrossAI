@@ -25,7 +25,7 @@ export default function ChapterCarousel({
           onClick={() => onSelect(i)}
           className={`flex-shrink-0 w-16 h-16 rounded-xl border-2 overflow-hidden transition ${
             i === currentIndex
-              ? "border-purple-400 ring-2 ring-purple-400/40"
+              ? "border-amber-400 ring-2 ring-amber-400/40"
               : "border-white/10 hover:border-white/30"
           }`}
         >

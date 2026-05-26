@@ -99,7 +99,7 @@ export default function AudioControls({
         onClick={togglePlay}
         className={`w-10 h-10 rounded-full flex items-center justify-center transition flex-shrink-0 ${
           isPlaying
-            ? "bg-purple-500 text-white"
+            ? "bg-amber-500 text-white"
             : "bg-white/10 border border-white/20 hover:bg-white/20"
         }`}
         aria-label={isPlaying ? "Pausar" : "Reproducir"}
@@ -115,7 +115,7 @@ export default function AudioControls({
           max={duration || 0}
           value={currentTime}
           onChange={handleSeek}
-          className="flex-1 h-1 rounded-full appearance-none bg-white/10 accent-purple-500 cursor-pointer"
+          className="flex-1 h-1 rounded-full appearance-none bg-white/10 accent-amber-500 cursor-pointer"
           aria-label="Seek"
         />
         <span className="text-[10px] text-slate-400 w-8">{formatTime(duration)}</span>

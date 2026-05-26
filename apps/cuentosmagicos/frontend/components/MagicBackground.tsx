@@ -33,7 +33,7 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
     setSmoke(newSmoke);
 
     // Generate floating emojis - use array to avoid splitting multi-byte emojis
-    const emojis = ["✨", "⭐", "💫", "", "🔮", "🌟", "🌈", "💜"];
+    const emojis = ["✨", "⭐", "💫", "🧸", "🔮", "🌟", "🌈", "🧡"];
     const newEmojis = Array.from({ length: 15 }, (_, i) => ({
       id: i,
       emoji: emojis[i % emojis.length],
@@ -159,7 +159,7 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
       {/* Music toggle button */}
       <button
         onClick={toggleMusic}
-        className="fixed bottom-4 left-4 z-50 w-10 h-10 rounded-full bg-purple-500/30 border border-purple-400/50 backdrop-blur-sm flex items-center justify-center text-lg hover:bg-purple-500/50 transition magic-glow"
+        className="fixed bottom-4 left-4 z-50 w-10 h-10 rounded-full bg-amber-500/30 border border-amber-400/50 backdrop-blur-sm flex items-center justify-center text-lg hover:bg-amber-500/50 transition magic-glow"
         aria-label={musicEnabled ? "Silenciar música" : "Activar música"}
         title={musicEnabled ? "Silenciar música" : "Activar música mágica"}
       >

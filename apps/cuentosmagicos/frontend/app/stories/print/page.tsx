@@ -73,7 +73,7 @@ function StoryPrintContent() {
     return (
       <div className="max-w-4xl mx-auto bg-white text-black p-8 md:p-12 font-serif min-h-screen flex flex-col items-center justify-center">
         <p className="text-red-500 mb-4">No se pudo cargar el cuento para imprimir.</p>
-        <button onClick={() => router.push("/")} className="text-purple-600 hover:underline">Volver al inicio</button>
+        <button onClick={() => router.push("/")} className="text-amber-600 hover:underline">Volver al inicio</button>
       </div>
     );
   }

@@ -19,7 +19,7 @@ export default function MediaToggle({
         onClick={() => onChange("image")}
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
           mode === "image"
-            ? "bg-purple-500 text-white shadow-sm"
+            ? "bg-amber-500 text-white shadow-sm"
             : "text-slate-300 hover:text-white hover:bg-white/5"
         }`}
       >
@@ -33,7 +33,7 @@ export default function MediaToggle({
           !videoAvailable
             ? "text-slate-500 cursor-not-allowed"
             : mode === "video"
-            ? "bg-indigo-500 text-white shadow-sm"
+            ? "bg-orange-500 text-white shadow-sm"
             : "text-slate-300 hover:text-white hover:bg-white/5"
         }`}
       >
