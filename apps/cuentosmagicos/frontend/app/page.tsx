@@ -74,7 +74,7 @@ export default function HomePage() {
         </h1>
         
         <p className="text-lg md:text-2xl text-amber-100/90 max-w-3xl mb-12 font-medium leading-relaxed">
-          ¡Crea cuentos fantásticos personalizados donde <span className="underline decoration-orange-400 decoration-wavy decoration-3 underline-offset-4 text-orange-300">tu hijo es el héroe principal</span>!
+          ¡Crea cuentos fantásticos personalizados donde <span className="text-orange-300">tu hijo/a es el protagonista principal</span>!
           Genera texto, bellos dibujos, voces y películas animadas con pura magia.
         </p>
 
