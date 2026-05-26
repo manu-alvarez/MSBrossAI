@@ -16,7 +16,7 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 │   │   └── server/              # Express AI Translation Proxy (Fallback Secuencial)
 │   ├── newton-react/            # Newton Mequinenza ERP (Puerto 3005)
 │   ├── livekit-nikolina/        # Voice AI Nikolina Frontend & Backend (Puerto 8001)
-│   └── ... (resto de las 18 aplicaciones integradas)
+│   └── ... (resto de las 22 aplicaciones integradas)
 │
 ├── www/                         # Repositorio de recursos estáticos servidos por el proxy
 │   ├── index.html               # Landing Portal principal de MSBrossAI
@@ -27,7 +27,7 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 │
 ├── logs/                        # Logs consolidados de ejecución de servicios
 ├── deploy/                      # Scripts auxiliares de empaquetado y subida
-│   └── build-all.sh             # Compilador maestro de las 18 aplicaciones
+│   └── build-all.sh             # Compilador maestro de las aplicaciones del ecosistema
 │
 ├── START_SYSTEM.sh              # Orquestador local macOS de inicio y monitorización
 ├── proxy.js                     # Servidor Express, Reverse Proxy y SSL
@@ -43,7 +43,7 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
 ### Funciones del Proxy:
 1. **Servicio Estático de SPAs:**
    - La landing page se sirve en la raíz `/` desde `/www/index.html`.
-   - Las 18 aplicaciones se montan estáticamente en la ruta `/app/<nombre-app>` mapeando el contenido de `/www/app/<nombre-app>`.
+   - Las 22 aplicaciones se montan estáticamente en la ruta `/app/<nombre-app>` mapeando el contenido de `/www/app/<nombre-app>`.
    - Configura enrutamiento SPA automático: cualquier ruta de navegación del cliente (ej. `/app/elitescout/family-travel`) realiza fallback a `/app/elitescout/index.html` en caso de recarga.
 
 2. **Puertos API Dedicados:**

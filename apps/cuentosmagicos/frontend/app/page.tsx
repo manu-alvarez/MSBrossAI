@@ -59,8 +59,8 @@ export default function HomePage() {
   return (
     <main className="min-h-screen text-white relative overflow-hidden font-kid-body">
       {/* Decorative large light orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-20 left-10 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center min-h-[90vh] px-4 pt-16 text-center relative z-10">
@@ -73,14 +73,14 @@ export default function HomePage() {
           Cuentos<span className="shimmer-text">Magicos</span> AI
         </h1>
         
-        <p className="text-lg md:text-2xl text-purple-100/90 max-w-3xl mb-12 font-medium leading-relaxed">
-          ¡Crea cuentos fantásticos personalizados donde <span className="underline decoration-pink-400 decoration-wavy decoration-3 underline-offset-4 text-pink-300">tu hijo es el héroe principal</span>!
+        <p className="text-lg md:text-2xl text-amber-100/90 max-w-3xl mb-12 font-medium leading-relaxed">
+          ¡Crea cuentos fantásticos personalizados donde <span className="underline decoration-orange-400 decoration-wavy decoration-3 underline-offset-4 text-orange-300">tu hijo es el héroe principal</span>!
           Genera texto, bellos dibujos, voces y películas animadas con pura magia.
         </p>
 
         {/* Content type selector */}
-        <div className="w-full max-w-4xl mb-12 bg-black/40 border border-purple-500/20 backdrop-blur-xl p-6 md:p-8 rounded-[2.5rem] shadow-[0_15px_50px_rgba(168,85,247,0.2)]">
-          <p className="text-base md:text-lg text-purple-200 font-bold mb-6 flex items-center justify-center gap-2">
+        <div className="w-full max-w-4xl mb-12 bg-black/40 border border-amber-500/20 backdrop-blur-xl p-6 md:p-8 rounded-[2.5rem] shadow-[0_15px_50px_rgba(245,158,11,0.2)]">
+          <p className="text-base md:text-lg text-amber-200 font-bold mb-6 flex items-center justify-center gap-2">
             ⭐ ¿Qué ingredientes llevará tu cuento mágico? ⭐
           </p>
           
@@ -93,7 +93,7 @@ export default function HomePage() {
                   onClick={() => toggle(f.key)}
                   className={`group relative rounded-[2rem] border-3 p-4 md:p-5 backdrop-blur-sm transition duration-300 text-left cursor-pointer select-none flex flex-col justify-between min-h-[10rem] h-full ${
                     isOn
-                      ? "bg-purple-500/20 border-purple-400 shadow-[0_0_25px_rgba(168,85,247,0.5)] scale-[1.03] magic-glow"
+                      ? "bg-amber-500/20 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.5)] scale-[1.03] magic-glow"
                       : "bg-white/5 border-white/10 opacity-60 hover:opacity-100 hover:border-white/20"
                   }`}
                 >
@@ -103,14 +103,14 @@ export default function HomePage() {
                   <div>
                     <div className="text-4xl mb-2 filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] transform group-hover:scale-110 transition-transform">{f.icon}</div>
                     <div className="font-extrabold text-sm md:text-base font-kid-title text-white">{f.label}</div>
-                    <div className="text-xs text-purple-200/80 leading-tight mt-1">{f.desc}</div>
+                    <div className="text-xs text-amber-200/80 leading-tight mt-1">{f.desc}</div>
                   </div>
 
                   <div className="mt-3">
                     {f.key !== "text" ? (
                       <span className={`inline-block text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border ${
                         isOn 
-                          ? "bg-purple-400/20 border-purple-300 text-purple-200" 
+                          ? "bg-amber-400/20 border-amber-300 text-amber-200" 
                           : "bg-white/5 border-white/10 text-white/50"
                       }`}>
                         {isOn ? "✨ Activo" : "✕ Inactivo"}
@@ -141,14 +141,14 @@ export default function HomePage() {
           <Link
             href="/stories"
             onClick={handleLibraryClick}
-            className="theme-card px-8 py-5 rounded-[2rem] border-3 border-purple-400/30 bg-purple-950/40 font-extrabold text-lg flex items-center gap-2 hover:bg-purple-950/80 transition duration-300"
+            className="theme-card px-8 py-5 rounded-[2rem] border-3 border-amber-400/30 bg-amber-950/40 font-extrabold text-lg flex items-center gap-2 hover:bg-amber-950/80 transition duration-300"
           >
             <span>📚</span>
             <span>Ver Mis Cuentos</span>
           </Link>
         </div>
 
-        <p className="mt-6 text-sm text-purple-200/60 font-semibold italic">
+        <p className="mt-6 text-sm text-amber-200/60 font-semibold italic">
           {selected.video
             ? "🪄 Hechizo actual: Generarás Texto + Bellos Dibujos + Voz + Película Animada"
             : selected.audio && selected.images
@@ -168,7 +168,7 @@ export default function HomePage() {
         </h2>
         
         {/* Connective dots background decorator for large screens */}
-        <div className="absolute top-[40%] left-[10%] right-[10%] h-1 border-t-4 border-dashed border-purple-500/20 z-0 hidden md:block" />
+        <div className="absolute top-[40%] left-[10%] right-[10%] h-1 border-t-4 border-dashed border-amber-500/20 z-0 hidden md:block" />
 
         <div className="grid md:grid-cols-3 gap-8 relative z-10">
           {[
@@ -177,16 +177,16 @@ export default function HomePage() {
               icon: "🎨",
               title: "1. Elige los ingredientes",
               desc: "Escribe el nombre de tu niño/a, elige a su héroe favorito (¡como un explorador o unicornio!), la temática y la gran lección que aprenderá hoy.",
-              color: "border-purple-400 shadow-purple-500/10",
-              iconBg: "bg-purple-500/20 text-purple-300"
+              color: "border-amber-400 shadow-amber-500/10",
+              iconBg: "bg-amber-500/20 text-amber-300"
             },
             {
               step: "2",
               icon: "🧙‍♂️",
               title: "2. La IA crea la magia",
               desc: "Nuestros elfos digitales se ponen a trabajar: escriben la historia, pintan preciosas ilustraciones consistentes, graban la narración y animan los dibujos.",
-              color: "border-pink-400 shadow-pink-500/10",
-              iconBg: "bg-pink-500/20 text-pink-300"
+              color: "border-orange-400 shadow-orange-500/10",
+              iconBg: "bg-orange-500/20 text-orange-300"
             },
             {
               step: "3",
@@ -206,10 +206,10 @@ export default function HomePage() {
                   {s.icon}
                 </div>
                 <h3 className="font-black text-xl md:text-2xl mb-4 font-kid-title text-white">{s.title}</h3>
-                <p className="text-sm md:text-base text-purple-100/80 leading-relaxed font-medium">{s.desc}</p>
+                <p className="text-sm md:text-base text-amber-100/80 leading-relaxed font-medium">{s.desc}</p>
               </div>
               
-              <div className="mt-6 text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
+              <div className="mt-6 text-xs font-black uppercase text-amber-300 flex items-center gap-1.5">
                 <span>🚀 Paso</span>
                 <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-bold">{s.step}</span>
               </div>
@@ -219,13 +219,13 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="text-center py-12 text-sm text-purple-200/50 relative z-10 border-t border-purple-500/10 bg-black/20">
+      <footer className="text-center py-12 text-sm text-amber-200/50 relative z-10 border-t border-amber-500/10 bg-black/20">
         <p className="font-bold flex items-center justify-center gap-1.5">
           <span>✨</span>
           <span>CuentosMagicos AI &mdash; Creado con amor y magia para todos los niños del universo</span>
           <span>✨</span>
         </p>
-        <p className="text-xs text-purple-200/30 mt-2">Versión 2.0 ✨ PWA Totalmente Offline</p>
+        <p className="text-xs text-amber-200/30 mt-2">Versión 2.0 ✨ PWA Totalmente Offline</p>
       </footer>
     </main>
   );

@@ -1,37 +1,41 @@
 # MSBrossAI — Suite de Aplicaciones de Software
 
-MSBrossAI es un ecosistema consolidado de 18 aplicaciones empresariales y de uso interno, estructuradas sobre una arquitectura de microservicios con un proxy centralizado.
+MSBrossAI es un ecosistema consolidado de 22 aplicaciones avanzadas de inteligencia artificial, productividad, gestión empresarial y herramientas interconectadas mediante un proxy centralizado.
 
-## Arquitectura del Sistema
+## Arquitectura del Ecosistema
 
-El ecosistema está construido bajo un entorno Node.js (PM2) y aplicaciones desarrolladas principalmente en **React 19** para el frontend, y **FastAPI/Python** o **Express/Node** para el backend. 
+El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS** (y compatible con Linux/Bash), estructurada en:
+- **Proxy Central Reverso (`proxy.js`)**: Gestiona toda la capa de routing inverso y sirve las Single Page Applications desde `/www/app/<nombre-app>`. Mapea endpoints internos de API en puertos dedicados (`/_traductor`, `/_nikolina`, etc.).
+- **Orquestación PM2 (`ecosystem.config.js`)**: Proporciona alta disponibilidad, auto-recovery exponencial y limitación de memoria a todos los microservicios en NodeJS, FastAPI y Express.
+- **Túnel Nombrado de Cloudflare (`msbross-main`)**: Habilita acceso WAN cifrado continuo hacia los backends locales de forma segura.
+- **Bases de Datos Locales**: Instancias de SQLite independientes para garantizar la modularidad y resiliencia de datos, con bases de datos en memoria y almacenamiento local en frontend.
 
-- **Proxy Central (`proxy.js`)**: Enruta todas las peticiones a los respectivos puertos internos de cada microservicio, exponiendo el ecosistema en un único punto de entrada (`localhost:8080`).
-- **Gestión de Procesos (PM2)**: El archivo `ecosystem.config.js` orquesta la ejecución paralela y la recuperación automática (Alta Disponibilidad) de todos los backends.
-- **Bases de Datos Locales**: Persistencia mediante bases de datos SQLite nativas por microservicio y almacenamiento de estado en cliente (Zustand/LocalStorage).
+## Aplicaciones Incluidas (22)
 
-## Aplicaciones Incluidas (18)
-
-| Directorio (`apps/`) | Aplicación | Descripción | Stack Tecnológico |
-|----------------------|------------|-------------|-------------------|
-| **`iaputa-os`** | **Panel de Control Central** | Dashboard de administración y monitoreo en tiempo real de todos los servicios. | FastAPI, React 19, Three.js |
-| **`livekit-nikolina`** | **Asistente de Voz** | Agente IA de voz conversacional y procesamiento de lenguaje. | LiveKit, Gemini 2.5, Python |
-| **`arantxa-translate`**| **Traductor PRO** | Motor de traducción neural y procesamiento OCR de documentos. | Express, React 19, OCR |
-| **`taskflow-pro`** | **TaskFlow Pro** | Gestor de productividad, tareas y programación de alarmas (PWA). | React 18, Zustand, PWA |
-| **`dohler`** | **Döhler** | Temporizadores y control de procesos industriales ligeros. | React 19, Tailwind |
-| **`logisearch`** | **LogiSearch** | Motor de búsqueda e inteligencia de datos aplicado al entorno logístico. | React 19, Supabase |
-| **`edelweiss`** | **Edelweiss** | Plataforma interactiva de estimulación visual e infantil. | React 18, Framer Motion |
-| **`moko-tools`** | **Moko-Tools** | Toolkit de utilidades para desarrolladores y APIs FreeTier. | React 19, Vite 7 |
-| **`combipro`** | **CombiPro** | Algoritmo estadístico para análisis y predicción de resultados deportivos. | React 19, API-Football |
-| **`app-generator`** | **App Gen** | Interfaz para la auto-generación de micro-aplicaciones mediante IA. | React 19, Gemini API |
-| **`newton-react`** | **Newton Mequinenza** | ERP vertical para gestión de estación de servicio (Checklists, Horarios).| React 19, FastAPI, SQLite |
-| **`elitescout`** | **EliteScout** | Aplicación de gestión y scouting de jugadores de fútbol (CRM).| React 19, FastAPI, SQLite |
-| **`jartosdto`** | **JartoSDTO** | Gestión integral de flotas de transporte, rutas y cargas. | React 19 |
-| **`cuentosmagicos`** | **Cuentos Mágicos** | Generador automático de cuentos infantiles combinando texto y audio. | React 19, FastAPI |
-| **`atenea-backend`** | **Atenea Backend** | Sistema backend centralizado para gestión de conocimiento base. | Python, FastAPI |
-| **`expositator`** | **Expositator** | Aplicación de cartelería digital y presentaciones interactivas. | React 19 |
-| **`teringo`** | **Teringo** | Plataforma educativa tipo trivia y cuestionarios interactivos. | React 19 |
-| **`msbross`** | **Adele Voice Server** | Backend alternativo de motor de voz IA. | Python, FastAPI |
+| Aplicación | Directorio (`apps/` o `www/`) | Descripción | Stack Tecnológico |
+| :--- | :--- | :--- | :--- |
+| **App Generator** | `/apps/app-generator` | Constructor asimétrico en tiempo real (Split-View) que genera SPAs usando prompts e inferencia native de LLM. | React 19, Vite, Gemini API, Iframe |
+| **CombiPro** | `/apps/combipro` | Algoritmo estadístico predictivo y generador de combinadas deportivas con perfiles de riesgo y stake. | React 19, Material-UI, Framer Motion, API-Football |
+| **Cuentos Mágicos** | `/apps/cuentosmagicos` | Generador e ilustrador infantil de cuentos interactivos en pergamino o cine con voz y animación por IA (Tema Amarillo/Naranja). | Next.js 15, FastAPI, Gemini API, OpenAI TTS, Luma |
+| **DOHLER** | `/apps/dohler` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
+| **Edelweiss** | `/apps/edelweiss` | Plataforma de estimulación visual infantil con modos de alto contraste y parental lock. | React 18, Tailwind, Framer Motion, PWA |
+| **EliteScout** | `/apps/elitescout` | Buscador semántico inteligente de viajes y CRM de scouting/precios con integración de scraping logístico. | Next.js 16, FastAPI, SQLite, Tavily API, Groq, Gemini |
+| **EXPOSITATOR RTE**| `/apps/expositator` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
+| **IAPuta OS** | `/apps/iaputa-os` | Asistente IA centralizado con orbe 3D reactivo, multi-LLM fallback y utilidades integradas. | FastAPI, React 19, Three.js, Groq, Gemini |
+| **JartosDTo** | `/apps/jartosdto` | Chat con IA corporativo y base de datos vectorial con túnel seguro de datos para acceso nativo iOS. | React 19, FastAPI, pgvector, LangChain, iOS |
+| **LIVEKIT Nikolina**| `/apps/livekit-nikolina`| Asistente telefónico de voz inteligente de restaurante con voz e inferencia nativa en tiempo real. | LiveKit, Gemini 2.5 Flash Audio, FastAPI, React 18 |
+| **LogiSearch** | `/apps/logisearch` | Motor logístico inteligente: cotizador de rutas, comparador de tarifas de transportistas y generador de RFQs. | React 19, TypeScript, Supabase, Tavily API |
+| **LogiTrack Almacén**| `/www/logitrack` | Tablero Kanban interactivo para el control ágil de inventarios, expedición y operaciones de almacén. | HTML5, Trello API, Tailwind, JavaScript |
+| **Mano Eléctrica Azul**| `/www/ManoElectricaAzul`| App multiplataforma (Google Play Store) de exploración, meditación y sincronario maya Tzolkin. | React Native, Expo Go, Android SDK |
+| **Manuel Alvarez CV**| `/www/Portfolio` | CV digital y portfolio profesional de Manuel Alvarez (Sistemas, Cloud & IA). | HTML5, CSS3, JS, responsive premium |
+| **Moko-Tools** | `/apps/moko-tools` | Suite de 189 herramientas de desarrollo organizadas en 14 categorías con búsqueda bento. | React 19, Vite 7, Tailwind, Client-Side |
+| **MSBrOSs** | `/apps/msbross` | Motor de asistente conversacional multimodal de voz y suite de herramientas integradas. | Python, FastAPI, Gemini API, Voice Adele |
+| **Newton Mequinenza**| `/apps/newton-react` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
+| **TaskFlowPro** | `/apps/taskflow-pro` | PWA de productividad premium con notificaciones automáticas de alarmas e integración de mensajería. | React 18, MUI, Zustand, PWA LocalStorage |
+| **Teringo ERP** | `/apps/teringo` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
+| **Traductor PRO** | `/apps/arantxa-translate`| Traductor neural con 4 modos estilísticos, multi-provider fallback secuencial y OCR de imágenes. | React 19, Express, Tesseract.js, Groq, Gemini, OpenAI |
+| **Tu Energía Maya** | `/www/TuEnergiaMaya` | Suite interactiva de cosmología y cálculo de Kin y firma galáctica galáctica diaria. | HTML5, Canvas, CSS3, Tzolkin Algorithm |
+| **Web Rest. Atenea**| `/www/atenea` | Frontend estático elegante e interactivo para restauración con motor de reservas y menú premium. | HTML5, CSS3, JavaScript, SQLite |
 
 ## Guía de Despliegue Local
 
