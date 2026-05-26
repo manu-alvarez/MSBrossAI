@@ -1,7 +1,7 @@
 #!/bin/bash
 # MSBrossAI — Full Deployment Script
 # 1. Build all apps
-# 2. Start proxy.js + backends
+# 2. Start proxy_server.js + backends
 # 3. Start Cloudflare Tunnel
 # 4. Upload static files to nominalia via FTP
 # 5. Update config.js with tunnel URL on nominalia
@@ -25,7 +25,7 @@ echo "✅ Build completado."
 
 # ── Step 2: Start local services ──
 echo ""
-echo "🔧 [2/5] Iniciando proxy.js y backends..."
+echo "🔧 [2/5] Iniciando proxy_server.js y backends..."
 # Kill existing processes
 lsof -ti :8080 | xargs kill -9 2>/dev/null || true
 lsof -ti :8001 | xargs kill -9 2>/dev/null || true
@@ -33,10 +33,10 @@ lsof -ti :8001 | xargs kill -9 2>/dev/null || true
 # Start proxy
 cd "$BASE_DIR"
 npm install --silent 2>/dev/null
-node proxy.js &
+node proxy_server.js &
 PROXY_PID=$!
 sleep 2
-echo "✅ proxy.js corriendo (PID: $PROXY_PID) en :8080"
+echo "✅ proxy_server.js corriendo (PID: $PROXY_PID) en :8080"
 
 # ── Step 3: Start backends (START_SYSTEM.sh does all) ──
 echo ""

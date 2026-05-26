@@ -1,6 +1,7 @@
 'use strict';
 
 const path    = require('path');
+const fs      = require('fs');
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
@@ -47,6 +48,57 @@ app.get('/__config', (req, res) => {
 // ── Health check ──
 app.get('/__health', (req, res) => {
   res.json({ status: 'ok', service: 'msbross-proxy', uptime: process.uptime() });
+});
+
+// ── Visit Tracking ──
+const visitsFile = path.join(__dirname, 'visits.json');
+let visitsData = { total: 0, today: 0, lastDate: new Date().toDateString() };
+if (fs.existsSync(visitsFile)) {
+  try { visitsData = JSON.parse(fs.readFileSync(visitsFile, 'utf8')); } catch(e){}
+}
+function updateVisits() {
+  const now = new Date().toDateString();
+  if (visitsData.lastDate !== now) {
+    visitsData.today = 0;
+    visitsData.lastDate = now;
+  }
+  visitsData.total++;
+  visitsData.today++;
+  fs.writeFileSync(visitsFile, JSON.stringify(visitsData));
+}
+
+app.get('/api/track-visit', (req, res) => {
+  updateVisits();
+  const buf = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  res.writeHead(200, {
+    'Content-Type': 'image/gif',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, private'
+  });
+  res.end(buf);
+});
+
+app.get('/api/visits', (req, res) => {
+  const now = new Date().toDateString();
+  if (visitsData.lastDate !== now) {
+    visitsData.today = 0;
+    visitsData.lastDate = now;
+  }
+  res.json(visitsData);
+});
+
+app.get('/api/visits-badge', (req, res) => {
+  updateVisits();
+  const text = `Visits: ${visitsData.total} | Today: ${visitsData.today}`;
+  const width = text.length * 7 + 20;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="20">
+    <linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
+    <rect width="${width}" height="20" fill="#4c1d95" rx="3"/>
+    <rect width="${width}" height="20" fill="url(#b)" rx="3"/>
+    <text x="${width/2}" y="14" fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-size="11">${text}</text>
+  </svg>`;
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.send(svg);
 });
 
 // ── Static SPAs ──

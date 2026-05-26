@@ -27,7 +27,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Dev/demo mode: allow access without auth
+  // Dev/local mode: allow access without auth
   if (process.env.NODE_ENV === 'development' || process.env.SKIP_AUTH === 'true' || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
     return NextResponse.next();
   }

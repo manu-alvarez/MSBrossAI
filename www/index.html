@@ -878,12 +878,25 @@
             </a>
         </main>
 
-        <footer>
+        <footer style="text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border);">
             <p>MSBrossAI © 2026 — Ecosistema unificado de 20 aplicaciones y recursos</p>
+            <div id="visit-counter" style="margin-top: 1rem; display: inline-flex; gap: 1rem; background: var(--card-bg); padding: 0.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--card-border); font-size: 0.9rem; color: var(--text-muted);">
+                <span>Visitas hoy: <strong id="visits-today" style="color: var(--accent-1);">...</strong></span>
+                <span style="opacity: 0.5;">|</span>
+                <span>Visitas totales: <strong id="visits-total" style="color: var(--accent-1);">...</strong></span>
+            </div>
         </footer>
     </div>
 
     <script>
+        // Fetch and display visits
+        fetch('/api/track-visit').then(() => {
+            fetch('/api/visits').then(r => r.json()).then(data => {
+                document.getElementById('visits-today').textContent = data.today;
+                document.getElementById('visits-total').textContent = data.total;
+            }).catch(console.error);
+        }).catch(console.error);
+
         // Animated Background Canvas
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');

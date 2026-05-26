@@ -266,7 +266,7 @@ export default function TradingPage() {
                   icon={DollarSign}
                   className="w-full"
                   onClick={() => {
-                    // Demo: store to localStorage as a draft offer
+                    // Offline fallback: store to localStorage as a draft offer
                     const draft = {
                       id: Date.now(),
                       type: 'Offer' as const,

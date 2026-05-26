@@ -30,13 +30,13 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 │   └── build-all.sh             # Compilador maestro de las aplicaciones del ecosistema
 │
 ├── START_SYSTEM.sh              # Orquestador local macOS de inicio y monitorización
-├── proxy.js                     # Servidor Express, Reverse Proxy y SSL
+├── proxy_server.js              # Servidor Express, Reverse Proxy y SSL
 └── ecosystem.config.js          # Configuración maestra PM2 (Orquestador de Resiliencia)
 ```
 
 ---
 
-## 🔌 2. Capa de Enrutamiento Reverso (proxy.js)
+## 🔌 2. Capa de Enrutamiento Reverso (proxy_server.js)
 
 Toda petición (WAN o LAN local) converge en el proxy central en el puerto **8080** (HTTP) o **8443** (HTTPS con certificados auto-generados efímeros para Secure Context de micrófonos en LAN).
 
@@ -46,7 +46,15 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
    - Las 22 aplicaciones se montan estáticamente en la ruta `/app/<nombre-app>` mapeando el contenido de `/www/app/<nombre-app>`.
    - Configura enrutamiento SPA automático: cualquier ruta de navegación del cliente (ej. `/app/elitescout/family-travel`) realiza fallback a `/app/elitescout/index.html` en caso de recarga.
 
-2. **Puertos API Dedicados:**
+2. **Contador Global de Visitas e Integración de Analytics:**
+   - Registra de forma consolidada e inmune a fallos las visitas al portal principal, páginas internas del ecosistema y recursos externos (como GitHub o Trello).
+   - Endpoints expuestos:
+     - `POST /api/track-visit`: Incrementa el contador (admite `referer` y `page` opcionales en el body).
+     - `GET /api/visits`: Obtiene estadísticas de hoy y visitas totales en formato JSON (`{ today: N, total: M }`).
+     - `GET /api/visits-badge`: Retorna el contador renderizado en formato SVG dinámico como Badge.
+   - Persistencia: Archivo local `/Users/manu/Desktop/MSBrossAI/visits.json` con backups atómicos.
+
+3. **Puertos API Dedicados:**
 
 | Contexto URL | Puerto Interno | Servicio Backend |
 |:---|:---:|:---|
@@ -232,7 +240,10 @@ for (const providerName of providersToTry) {
 ## 📝 8. Directivas para Futuros Agentes / Desarrolladores
 
 Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
-1. **Nunca expongas claves en Frontend:** Todo consumo de IA (OpenAI, Claude, Gemini, Groq) se hace **SIEMPRE** a través de llamadas al backend o proxy local. Jamás utilices prefijos `NEXT_PUBLIC_` para tokens sensibles.
-2. **Cero-Prose en Terminales:** Toda automatización debe estar estructurada, libre de interacciones humanas (usa banderas `-y`, `--no-interactive` y scripts dedicados).
-3. **Persistencia de Puertos:** Respeta el mapa de puertos en `ecosystem.config.js` y `proxy.js` para asegurar que el enrutador local no sufra de fallos de conexión (HTTP 502/404).
-4. **Resiliencia de SQLite:** Al instanciar bases de datos SQLite en Python, añade siempre `check_same_thread=False` y un timeout elevado (`timeout=20.0`) para evitar bloqueos por transacciones concurrentes de los agentes de voz y la web.
+1. **PROHIBIDOS LOS ENTORNOS DEMO/OFFLINE:** Todo el software del ecosistema debe estar 100% conectado e integrado con los servidores de base de datos reales y backends en producción. No crees fallbacks o mocks locales en frontend que oculten fallos de conexión de red; en su lugar, implementa flujos limpios de reconexión y levanta estados de error explícitos.
+2. **Nunca expongas claves en Frontend:** Todo consumo de IA (OpenAI, Claude, Gemini, Groq) se hace **SIEMPRE** a través de llamadas al backend o proxy local. Jamás utilices prefijos `NEXT_PUBLIC_` para tokens sensibles de backend.
+3. **Cero-Prose en Terminales:** Toda automatización debe estar estructurada, libre de interacciones humanas (usa banderas `-y`, `--no-interactive` y scripts dedicados).
+4. **Persistencia de Puertos:** Respeta el mapa de puertos en `ecosystem.config.js` y `proxy_server.js` para asegurar que el enrutador local no sufra de fallos de conexión (HTTP 502/404).
+5. **Resiliencia de SQLite:** Al instanciar bases de datos SQLite en Python, añade siempre `check_same_thread=False` y un timeout elevado (`timeout=20.0`) para evitar bloqueos por transacciones concurrentes de los agentes de voz y la web.
+6. **Compilaciones Next.js / SSG:** Al usar `output: export`, asegúrate de mover funciones como `generateStaticParams()` a componentes de servidor o archivos `layout.tsx` si el archivo `page.tsx` utiliza la directiva `'use client'`, garantizando la correcta compilación y exportación de archivos HTML estáticos.
+

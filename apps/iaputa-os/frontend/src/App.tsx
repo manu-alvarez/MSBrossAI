@@ -20,18 +20,18 @@ interface Message {
   audioUrl?: string;
 }
 
-const DEMO: Record<string, string> = {
+const OFFLINE_REPLIES: Record<string, string> = {
   hola: '¡Hola! Soy IAPuta OS, tu asistente IA personal de élite. ¿En qué puedo ayudarte hoy?',
   hello: 'Hello! I am IAPuta OS, your luxury AI assistant. How can I act for you?',
   ayuda: 'Tengo acceso a:\n• 📷 Análisis de visión y pantalla\n• 🌐 Búsquedas avanzadas\n• 💻 Shell y manipulación local\n• 🧠 Multi-LLM en fallback (Groq → Ollama → OpenRouter)',
-  default: 'Entendido. En modo demo puro no conecto con el backend esclavo en local, por favor levanta la API de FastAPI.',
+  default: 'Entendido. El backend local no está accesible en este momento. Por favor levanta la API de FastAPI para funcionalidad completa.',
 };
 
 export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [demoMode, setDemoMode] = useState(false);
+  const [offlineMode, setOfflineMode] = useState(false);
   const [visionImage, setVisionImage] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
   const [speaking, setSpeaking] = useState(false);
@@ -44,8 +44,8 @@ export default function App() {
   useEffect(() => {
     const statusUrl = USE_PHP_GATEWAY ? `${API_BASE}status` : `${API_BASE}/status`;
     fetch(statusUrl, { signal: AbortSignal.timeout(3000) })
-      .then(r => { if (!r.ok) setDemoMode(true); })
-      .catch(() => setDemoMode(true));
+      .then(r => { if (!r.ok) setOfflineMode(true); })
+      .catch(() => setOfflineMode(true));
   }, []);
 
   useEffect(() => {
@@ -200,10 +200,10 @@ export default function App() {
     setOrbState('thinking');
     setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date() }]);
 
-    if (demoMode) {
+    if (offlineMode) {
       const lower = text.toLowerCase();
-      let response = DEMO.default;
-      for (const [key, value] of Object.entries(DEMO)) {
+      let response = OFFLINE_REPLIES.default;
+      for (const [key, value] of Object.entries(OFFLINE_REPLIES)) {
         if (lower.includes(key)) { response = value; break; }
       }
       setTimeout(() => {
@@ -259,7 +259,7 @@ export default function App() {
       }
       setLoading(false);
     }
-  }, [demoMode, speak]);
+  }, [offlineMode, speak]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -281,7 +281,7 @@ export default function App() {
                <span className="brand-logo">🤖</span>
                <div className="brand-text">
                   <h1>IAPuta OS</h1>
-                  <span className={`status-badge ${demoMode ? 'demo' : 'online'}`}>{demoMode ? 'Host Only' : 'Host + Local'}</span>
+                  <span className={`status-badge ${offlineMode ? 'offline' : 'online'}`}>{offlineMode ? 'Host Only' : 'Host + Local'}</span>
                </div>
             </div>
           </header>

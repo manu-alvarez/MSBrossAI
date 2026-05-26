@@ -1,4 +1,4 @@
-/** API client for communicating with the FastAPI backend or simulating in Demo Mode. */
+/** API client for communicating with the FastAPI backend or simulating in Offline Local Mode. */
 
 import { API_URL } from "./utils";
 import type { ChatMessage, StreamChunk, Source, ModelInfo, Agent, User } from "../types/chat";
@@ -22,16 +22,8 @@ export function clearToken() {
   if (typeof window !== "undefined") localStorage.removeItem("token");
 }
 
-/** Check if running in offline demo mode. */
-export function isDemoMode(): boolean {
-  if (typeof window === "undefined") return true;
-  // If host is msbross.me, or no API_URL is specified (or is default dev port and we are in prod)
-  return (
-    window.location.hostname === "msbross.me" ||
-    window.location.hostname.endsWith(".me") ||
-    !process.env.NEXT_PUBLIC_API_URL ||
-    localStorage.getItem("demo_mode") === "true"
-  );
+export function isOfflineMode(): boolean {
+  return false;
 }
 
 // ── Local Storage Helper for Mock DB ─────────────────────────
@@ -45,7 +37,7 @@ function getMockConversations(): any[] {
     const defaultConvs = [
       {
         id: "conv-1",
-        title: "Bienvenido a JartosDTo Demo",
+        title: "Bienvenido a JartosDTo Offline Local",
         model_id: "gpt-4o",
         created_at: new Date().toISOString(),
         message_count: 2,
@@ -64,7 +56,7 @@ function getMockConversations(): any[] {
         {
           id: "m-2",
           role: "assistant",
-          content: "¡Hola! JartosDTo es la plataforma de chat de IA más avanzada del ecosistema MSBross. En este modo demo, puedes interactuar de forma 100% interactiva sin coste ni necesidad de configurar backends externos.",
+          content: "¡Hola! JartosDTo es la plataforma de chat de IA más avanzada del ecosistema MSBross. En este modo offline local, puedes interactuar de forma 100% interactiva sin coste ni necesidad de configurar backends externos.",
           created_at: new Date().toISOString(),
         },
       ],
@@ -114,12 +106,12 @@ async function apiFetch(path: string, opts: RequestInit = {}): Promise<Response>
 // ── Auth ──────────────────────────────────────────────────
 
 export async function login(email: string, password: string) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     setToken("mock-jwt-token-jartosdto");
     return {
       access_token: "mock-jwt-token-jartosdto",
       token_type: "bearer",
-      user: { id: "demo-user", email, display_name: email.split("@")[0], role: "admin" },
+      user: { id: "offline-user", email, display_name: email.split("@")[0], role: "admin" },
     };
   }
   const res = await apiFetch("/auth/login", {
@@ -133,12 +125,12 @@ export async function login(email: string, password: string) {
 }
 
 export async function register(email: string, password: string, displayName?: string) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     setToken("mock-jwt-token-jartosdto");
     return {
       access_token: "mock-jwt-token-jartosdto",
       token_type: "bearer",
-      user: { id: "demo-user", email, display_name: displayName || email.split("@")[0], role: "admin" },
+      user: { id: "offline-user", email, display_name: displayName || email.split("@")[0], role: "admin" },
     };
   }
   const res = await apiFetch("/auth/register", {
@@ -152,10 +144,10 @@ export async function register(email: string, password: string, displayName?: st
 }
 
 export async function getMe() {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return {
-      id: "demo-user",
-      email: "demo@msbross.me",
+      id: "offline-user",
+      email: "offline-local@msbross.me",
       display_name: "Orquestador MSBross",
       role: "admin",
     };
@@ -168,7 +160,7 @@ export async function getMe() {
 // ── Conversations ─────────────────────────────────────────
 
 export async function getConversations() {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return getMockConversations();
   }
   const res = await apiFetch("/conversations/");
@@ -176,7 +168,7 @@ export async function getConversations() {
 }
 
 export async function getMessages(convId: string) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return getMockMessages(convId);
   }
   const res = await apiFetch(`/conversations/${convId}/messages`);
@@ -184,7 +176,7 @@ export async function getMessages(convId: string) {
 }
 
 export async function deleteConversation(convId: string) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     const convs = getMockConversations().filter(c => c.id !== convId);
     saveMockConversations(convs);
     
@@ -202,7 +194,7 @@ export async function deleteConversation(convId: string) {
 // ── Models ────────────────────────────────────────────────
 
 export async function getModels(): Promise<ModelInfo[]> {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return [
       { id: "gpt-4o", provider: "OpenAI", display_name: "GPT-4o (Acceso Rápido)", is_vision: true, is_thinking: false },
       { id: "claude-3-5-sonnet", provider: "Anthropic", display_name: "Claude 3.5 Sonnet", is_vision: true, is_thinking: false },
@@ -216,7 +208,7 @@ export async function getModels(): Promise<ModelInfo[]> {
 // ── Agents ────────────────────────────────────────────────
 
 export async function getAgents(): Promise<Agent[]> {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return [
       {
         id: "orchestrator",
@@ -235,7 +227,7 @@ export async function getAgents(): Promise<Agent[]> {
 // ── Documents ─────────────────────────────────────────────
 
 export async function uploadDocument(file: File) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return {
       name: file.name,
       type: file.type,
@@ -252,7 +244,7 @@ export async function uploadDocument(file: File) {
 // ── Search ────────────────────────────────────────────────
 
 export async function webSearch(query: string) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return [
       { title: "MSBross Ecosistema", url: "https://msbross.me", snippet: "Plataforma unificada que hospeda y ejecuta las 20 aplicaciones y herramientas inteligentes de MSBross.", relevance_score: 0.98 },
       { title: "JartosDTo Docs", url: "https://msbross.me/jartosdto/", snippet: "Guía oficial de integración RAG y APIs conversacionales en iOS nativo.", relevance_score: 0.91 }
@@ -268,7 +260,7 @@ export async function webSearch(query: string) {
 // ── Sandbox ───────────────────────────────────────────────
 
 export async function executeCode(code: string, language = "python") {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return {
       success: true,
       output: `Python Local Sandbox [MSBross Kernel v2026]:\n---------------------------------------\n>> Compiling standard execution pipeline...\n>> Run complete. Return Code: 0\n>> Output:\n   Ejecutando de forma simulada en entorno de pruebas local.\n   Resultado analítico: Éxito total. Código compilado correctamente.`,
@@ -284,7 +276,7 @@ export async function executeCode(code: string, language = "python") {
 // ── Admin ─────────────────────────────────────────────────
 
 export async function getAdminStats() {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     return {
       active_users: 20,
       total_messages: 5800,
@@ -306,7 +298,7 @@ export function streamChat(body: {
   temperature?: number;
   max_tokens?: number;
 }) {
-  if (isDemoMode()) {
+  if (isOfflineMode()) {
     const encoder = new TextEncoder();
     const targetConvId = body.conversation_id || `conv-${Date.now()}`;
     const userQuery = body.messages[body.messages.length - 1]?.content || "";
@@ -354,7 +346,7 @@ export function streamChat(body: {
         await new Promise(r => setTimeout(r, 600));
 
         // Step 3: Stream main response text
-        const responseText = `¡Saludos, colega! Esta respuesta es generada de forma 100% dinámica en modo demo client-side. JartosDTo está perfectamente optimizado para un rendimiento de latencia ultrabaja en static exports.\n\nHe recibido tu mensaje:\n> "${userQuery}"\n\nToda la funcionalidad del ecosistema MSBrossAI está simulada localmente y lista para su despliegue definitivo.`;
+        const responseText = `¡Saludos, colega! Esta respuesta es generada de forma 100% dinámica en modo offline local client-side. JartosDTo está perfectamente optimizado para un rendimiento de latencia ultrabaja en static exports.\n\nHe recibido tu mensaje:\n> "${userQuery}"\n\nToda la funcionalidad del ecosistema MSBrossAI está simulada localmente y lista para su despliegue definitivo.`;
         
         const words = responseText.split(" ");
         let fullGeneratedText = "";

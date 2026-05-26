@@ -431,7 +431,7 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
         self._json({
             'city': city, 'temperature': 22, 'condition': 'Sunny',
             'humidity': 45, 'wind': '12 km/h',
-            'note': 'Demo data - connect OpenWeatherMap API for real data'
+            'note': 'Local fallback data - connect OpenWeatherMap API for live real-time metrics'
         })
 
     def log_message(self, fmt, *args):

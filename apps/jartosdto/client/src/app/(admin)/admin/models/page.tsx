@@ -8,7 +8,15 @@ export default function ModelsPage() {
   const [models, setModels] = useState<ModelInfo[]>([]);
 
   useEffect(() => {
-    getModels().then(d => setModels(d.models || [])).catch(() => {});
+    getModels().then(d => {
+      if (Array.isArray(d)) {
+        setModels(d);
+      } else if (d && typeof d === 'object' && 'models' in d && Array.isArray((d as any).models)) {
+        setModels((d as any).models);
+      } else {
+        setModels([]);
+      }
+    }).catch(() => {});
   }, []);
 
   const grouped = models.reduce<Record<string, ModelInfo[]>>((acc, m) => {

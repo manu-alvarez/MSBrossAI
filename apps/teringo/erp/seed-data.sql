@@ -1,5 +1,5 @@
 -- =====================================================
--- Perfume Trading ERP — Seed Data para Demo
+-- Perfume Trading ERP — Seed Data inicial
 -- Ejecutar DESPUÉS de schema.sql en Supabase SQL Editor
 -- =====================================================
 

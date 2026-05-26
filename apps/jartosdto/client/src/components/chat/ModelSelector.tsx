@@ -16,7 +16,15 @@ export default function ModelSelector() {
   const { selectedModel, setSelectedModel } = useChatStore();
 
   useEffect(() => {
-    getModels().then(d => setModels(d.models || [])).catch(() => {});
+    getModels().then(d => {
+      if (Array.isArray(d)) {
+        setModels(d);
+      } else if (d && typeof d === 'object' && 'models' in d && Array.isArray((d as any).models)) {
+        setModels((d as any).models);
+      } else {
+        setModels([]);
+      }
+    }).catch(() => {});
   }, []);
 
   const current = models.find(m => m.id === selectedModel);

@@ -75,7 +75,7 @@ function LoginForm() {
                 {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
               </Button>
               <p className="text-[10px] text-center text-[#605E5C] dark:text-[#888]">
-                Demo: admin@teringo.app / admin123
+                Admin: admin@teringo.app / admin123
               </p>
             </form>
           </CardContent>

@@ -43,7 +43,7 @@ const LEAGUES = [
   { key: 'soccer_france_ligue_one', name: '🇫🇷 Ligue 1', icon: '🇫🇷' },
 ];
 
-// Realistic demo data with REAL teams
+// Realistic offline data with REAL teams
 function generateRealisticMatches(): Match[] {
   const now = new Date();
   const matches: Match[] = [];
@@ -222,12 +222,11 @@ export default function App() {
     const realMatches = await fetchRealOdds(selectedLeagues);
     if (realMatches.length > 0) {
       setMatches(realMatches);
-      setApiLoading(false);
     } else {
-      // Use realistic demo data
-      setMatches(generateRealisticMatches());
-      setApiLoading(false);
+      console.warn("API falló o no devolvió partidos. MODO OFFLINE DESHABILITADO.");
+      setMatches([]);
     }
+    setApiLoading(false);
     setLoading(false);
   }, [selectedLeagues]);
 

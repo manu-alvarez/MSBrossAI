@@ -13,7 +13,7 @@ declare -a NEXT_APPS=(
     "apps/teringo/erp:teringo"
 )
 PROJECT_ROOT="/Users/manu/Desktop/MSBrossAI"
-DMZ_PATH="$PROJECT_ROOT/www/app" # Ruta real de la DMZ servida por proxy.js
+DMZ_PATH="$PROJECT_ROOT/www/app" # Ruta real de la DMZ servida por proxy_server.js
 
 for ENTRY in "${NEXT_APPS[@]}"; do
     APP_PATH="${ENTRY%%:*}"

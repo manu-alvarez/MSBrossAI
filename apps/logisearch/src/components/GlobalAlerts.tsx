@@ -14,7 +14,7 @@ export default function GlobalAlerts() {
       setAlerts(data)
       setLoading(false)
       // Si no hay alertas de severidad media o alta, podemos cerrarlo por defecto,
-      // pero vamos a dejarlo abierto si hay datos para mostrar la demo.
+      // pero vamos a dejarlo abierto si hay datos.
       if (data.length === 0) setOpen(false)
     })
   }, [])

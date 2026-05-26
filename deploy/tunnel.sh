@@ -21,15 +21,15 @@ if ! command -v cloudflared &>/dev/null; then
   exit 1
 fi
 
-# ── Ensure proxy.js is running ──
+# ── Ensure proxy_server.js is running ──
 if ! lsof -ti :8080 &>/dev/null; then
-  echo "  proxy.js no está corriendo en :8080."
-  echo "   Ejecuta primero: node $BASE_DIR/proxy.js &"
+  echo "  proxy_server.js no está corriendo en :8080."
+  echo "   Ejecuta primero: node $BASE_DIR/proxy_server.js &"
   echo "   O usa: bash $(dirname "$0")/deploy.sh"
   exit 1
 fi
 
-echo " proxy.js detectado en puerto 8080"
+echo " proxy_server.js detectado en puerto 8080"
 
 # ── Start tunnel and capture URL ──
 echo " Iniciando Cloudflare Tunnel..."

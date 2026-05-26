@@ -2,13 +2,11 @@
 
 MSBrossAI es un ecosistema consolidado de 22 aplicaciones avanzadas de inteligencia artificial, productividad, gestión empresarial y herramientas interconectadas mediante un proxy centralizado.
 
-## Arquitectura del Ecosistema
-
 El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS** (y compatible con Linux/Bash), estructurada en:
-- **Proxy Central Reverso (`proxy.js`)**: Gestiona toda la capa de routing inverso y sirve las Single Page Applications desde `/www/app/<nombre-app>`. Mapea endpoints internos de API en puertos dedicados (`/_traductor`, `/_nikolina`, etc.).
+- **Proxy Central Reverso (`proxy_server.js`)**: Gestiona toda la capa de routing inverso y sirve las Single Page Applications desde `/www/app/<nombre-app>`. Mapea endpoints internos de API en puertos dedicados (`/_traductor`, `/_nikolina`, etc.). Admite almacenamiento centralizado de datos y el **Contador Global de Visitas** (`/api/track-visit`) con persistencia directa en disco.
 - **Orquestación PM2 (`ecosystem.config.js`)**: Proporciona alta disponibilidad, auto-recovery exponencial y limitación de memoria a todos los microservicios en NodeJS, FastAPI y Express.
 - **Túnel Nombrado de Cloudflare (`msbross-main`)**: Habilita acceso WAN cifrado continuo hacia los backends locales de forma segura.
-- **Bases de Datos Locales**: Instancias de SQLite independientes para garantizar la modularidad y resiliencia de datos, con bases de datos en memoria y almacenamiento local en frontend.
+- **Bases de Datos de Producción Integradas**: Todos los clientes (como Teringo ERP, JartosDTo y LogiSearch) operan de forma nativa e incondicional conectados a sus bases de datos reales en la nube (Supabase en la instancia de producción `ujktxhqxhxkbrhczbhcf.supabase.co` y APIs en vivo). Se han erradicado por completo los modos simulados offline/demo locales de la suite de software en favor de entornos 100% interactivos y reales.
 
 ## Aplicaciones Incluidas (22)
 

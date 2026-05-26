@@ -54,7 +54,7 @@ build_app() {
 echo "=== Construyendo todas las apps para msbross.me (auto-hosting) ==="
 
 # Vite apps
-# Nikolina: use LiveKit Cloud, APIs via relative path (/_nikolina/api through proxy.js)
+# Nikolina: use LiveKit Cloud, APIs via relative path (/_nikolina/api through proxy_server.js)
 build_app "apps/livekit-nikolina/frontend" "nikolina" "vite" \
   "VITE_LIVEKIT_URL=wss://nikolina-1jg7t00i.livekit.cloud VITE_API_BASE_URL=/_nikolina/api"
 build_app "apps/iaputa-os/frontend" "iaputa" "vite"

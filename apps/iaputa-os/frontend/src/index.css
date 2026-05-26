@@ -122,7 +122,7 @@ body {
   text-transform: uppercase;
 }
 .status-badge.online { background: rgba(0, 245, 255, 0.1); color: var(--neon-cyan); border: 1px solid rgba(0, 245, 255, 0.3); }
-.status-badge.demo { background: rgba(0, 245, 255, 0.06); color: rgba(0, 245, 255, 0.7); border: 1px solid rgba(0, 245, 255, 0.15); }
+.status-badge.offline { background: rgba(0, 245, 255, 0.06); color: rgba(0, 245, 255, 0.7); border: 1px solid rgba(0, 245, 255, 0.15); }
 
 /* ─── Chat Area ─── */
 .chat-area {

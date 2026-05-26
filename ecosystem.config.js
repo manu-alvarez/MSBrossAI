@@ -228,7 +228,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'msbross-proxy',
-      script: 'proxy.js',
+      script: 'proxy_server.js',
       cwd: __dirname,
       out_file: path.join(__dirname, 'logs/proxy.log'),
       error_file: path.join(__dirname, 'logs/proxy.error.log'),

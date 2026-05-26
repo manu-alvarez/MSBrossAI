@@ -2,18 +2,12 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 let _supabase: SupabaseClient | null = null;
 
-/** Check if running in offline demo mode. */
+/** Check if running in offline local-storage fallback mode. */
 export function isSupabaseConfigured(): boolean {
-  if (typeof window === "undefined") return false;
-  return !!(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
-    window.location.hostname !== 'msbross.me' &&
-    !window.location.hostname.endsWith('.me')
-  );
+  return true;
 }
 
-// ── Local Storage seeded databases for Demo Mode ──────────────
+// ── Local Storage seeded databases for Offline Fallback Mode ──────────────
 const MOCK_TERINGO_DB_KEY = "teringo_mock_db";
 
 function getMockDb(): Record<string, any[]> {
@@ -95,7 +89,7 @@ export function getMockSupabaseClient(): any {
         return {
           data: {
             user: {
-              id: "demo-user-id",
+              id: "local-user-id",
               email,
               user_metadata: { role: "admin", name: email.split("@")[0] },
             },
@@ -111,8 +105,8 @@ export function getMockSupabaseClient(): any {
           data: {
             session: {
               user: {
-                id: "demo-user-id",
-                email: "demo@msbross.me",
+                id: "local-user-id",
+                email: "admin@msbross.me",
                 user_metadata: { role: "admin", name: "Orquestador B2B" },
               },
             },
@@ -359,7 +353,7 @@ export function getClient(): SupabaseClient {
     }
     return _supabase;
   }
-  // Return the type-casted local storage mock client in Demo Mode
+  // Return the type-casted local storage mock client in Offline Fallback Mode
   return getMockSupabaseClient() as SupabaseClient;
 }
 
