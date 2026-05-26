@@ -68,8 +68,18 @@ find "$BASE_DIR/www/app" -name '*.html' -exec sed -i '' "s|__TUNNEL_URL__|$TUNNE
 
 # ── Upload everything using the robust deploy script ──
 echo " Subiendo todos los archivos actualizados a nominalia..."
-export FTP_PASSWORD="Manik.87"
-python3 "$BASE_DIR/deploy/ftp-deploy-full.py"
+if [ -z "${FTP_PASSWORD:-}" ] && [ -f "$BASE_DIR/api_keys_vault.json" ]; then
+  FTP_PASSWORD=$(python3 -c "import json; print(json.load(open('$BASE_DIR/api_keys_vault.json'))['INFRASTRUCTURE'].get('FTP_PASSWORD', ''))" 2>/dev/null || true)
+  if [ -n "$FTP_PASSWORD" ]; then
+    export FTP_PASSWORD
+  fi
+fi
+
+if [ -z "${FTP_PASSWORD:-}" ]; then
+  echo "⚠️  FTP_PASSWORD no definida. Configúrala en la variable de entorno o en api_keys_vault.json."
+else
+  python3 "$BASE_DIR/deploy/ftp-deploy-full.py"
+fi
 
 echo ""
 echo "=========================================================="
