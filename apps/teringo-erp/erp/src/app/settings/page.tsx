@@ -22,7 +22,7 @@ function SettingsSection({
       <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between px-6 py-4 hover:bg-[#FAF9F8] dark:hover:bg-[#222] transition-colors">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-lg bg-[#F3F2F1] dark:bg-[#2a2a2a] flex items-center justify-center">
-            <Icon size={20} className="text-[#005A9E] dark:text-[#4a9eff]" />
+            <Icon size={20} className="text-[#f43f5e] dark:text-[#fb7185]" />
           </div>
           <div className="text-left">
             <h3 className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0]">{title}</h3>

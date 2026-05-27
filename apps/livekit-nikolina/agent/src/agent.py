@@ -434,7 +434,7 @@ async def entrypoint(ctx: JobContext) -> None:
             pipeline_cfg = {
                 "name": "Gemini 2.5 Stable",
                 "architecture": "realtime",
-                "realtime_model": "gemini-1.5-flash",
+                "realtime_model": "models/gemini-2.0-flash-exp",
                 "realtime_voice": "Aoede",
                 "llm_temperature": 0.7
             }
@@ -545,7 +545,7 @@ async def entrypoint(ctx: JobContext) -> None:
 
             # Gemini 2.5 Flash Native Audio - The proven high-reliability voice engine
             model = RealtimeModel(
-                model=pipeline_cfg.get("realtime_model", "gemini-1.5-flash"),
+                model=pipeline_cfg.get("realtime_model", "models/gemini-2.0-flash-exp"),
                 api_key=api_key,
                 voice=pipeline_cfg.get("realtime_voice", "Aoede"),
                 instructions=system_prompt,

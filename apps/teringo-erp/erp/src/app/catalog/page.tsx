@@ -77,7 +77,7 @@ export default function CatalogPage() {
 
   const columns = [
     { key: 'brand', label: 'Marca', render: (item: CatalogItem) => (
-      <span className="font-semibold text-[#005A9E] dark:text-[#4a9eff]">{item.brand}</span>
+      <span className="font-semibold text-[#f43f5e] dark:text-[#fb7185]">{item.brand}</span>
     )},
     { key: 'name', label: 'Producto' },
     { key: 'concentration', label: 'Conc.' },
@@ -131,9 +131,9 @@ export default function CatalogPage() {
       <div className="flex justify-between items-center text-[11px] text-[#605E5C] dark:text-[#888] px-2">
         <p>Mostrando {filtered.length} de {catalogData.length} productos</p>
         <div className="flex space-x-4">
-          <button className="hover:text-[#005A9E] disabled:opacity-50" disabled>Anterior</button>
+          <button className="hover:text-[#f43f5e] disabled:opacity-50" disabled>Anterior</button>
           <span className="font-medium">Pág. 1</span>
-          <button className="hover:text-[#005A9E] disabled:opacity-50" disabled>Siguiente</button>
+          <button className="hover:text-[#f43f5e] disabled:opacity-50" disabled>Siguiente</button>
         </div>
       </div>
 

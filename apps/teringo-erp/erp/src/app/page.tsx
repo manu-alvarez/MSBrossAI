@@ -100,7 +100,7 @@ export default function Dashboard() {
           <Card key={kpi.title}>
             <CardHeader>
               <CardTitle>{kpi.title}</CardTitle>
-              <kpi.icon size={18} className="text-[#005A9E] dark:text-[#4a9eff]" />
+              <kpi.icon size={18} className="text-[#f43f5e] dark:text-[#fb7185]" />
             </CardHeader>
             <CardContent>
               <div className="flex items-end justify-between">
@@ -117,22 +117,22 @@ export default function Dashboard() {
       {/* Quick Access */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <a href="https://msbross.me/app/traductor/" target="_blank" rel="noopener noreferrer"
-          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#005A9E] dark:hover:border-[#4a9eff] transition-colors group">
+          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group">
           <div className="w-10 h-10 rounded-lg bg-[#F0F7FF] dark:bg-[#1a2a3a] flex items-center justify-center mr-4 shrink-0">
-            <Languages size={20} className="text-[#005A9E] dark:text-[#4a9eff]" />
+            <Languages size={20} className="text-[#f43f5e] dark:text-[#fb7185]" />
           </div>
           <div>
-            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#005A9E] dark:group-hover:text-[#4a9eff] transition-colors">Traductor</p>
+            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#f43f5e] dark:group-hover:text-[#fb7185] transition-colors">Traductor</p>
             <p className="text-[10px] text-[#605E5C] dark:text-[#888]">Comunicaciones multilingüe con socios</p>
           </div>
         </a>
         <a href="https://msbross.me/app/logisearch/" target="_blank" rel="noopener noreferrer"
-          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#005A9E] dark:hover:border-[#4a9eff] transition-colors group">
+          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group">
           <div className="w-10 h-10 rounded-lg bg-[#F0F7FF] dark:bg-[#1a2a3a] flex items-center justify-center mr-4 shrink-0">
-            <Wrench size={20} className="text-[#005A9E] dark:text-[#4a9eff]" />
+            <Wrench size={20} className="text-[#f43f5e] dark:text-[#fb7185]" />
           </div>
           <div>
-            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#005A9E] dark:group-hover:text-[#4a9eff] transition-colors">LogiSearch</p>
+            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#f43f5e] dark:group-hover:text-[#fb7185] transition-colors">LogiSearch</p>
             <p className="text-[10px] text-[#605E5C] dark:text-[#888]">Tracking de envíos y rutas logísticas</p>
           </div>
         </a>
@@ -144,7 +144,7 @@ export default function Dashboard() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <BarChart3 size={16} className="mr-2 text-[#005A9E]" />
+              <BarChart3 size={16} className="mr-2 text-[#f43f5e]" />
               Ventas vs Compras (Mensual)
             </CardTitle>
           </CardHeader>
@@ -156,8 +156,8 @@ export default function Dashboard() {
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#605E5C' }} />
                   <YAxis tick={{ fontSize: 11, fill: '#605E5C' }} />
                   <Tooltip contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--card-border)', borderRadius: '4px', fontSize: '12px' }} />
-                  <Bar dataKey="sales" name="Ventas" fill="#005A9E" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="purchases" name="Compras" fill="#4a9eff" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="sales" name="Ventas" fill="#f43f5e" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="purchases" name="Compras" fill="#fb7185" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -168,7 +168,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Bell size={16} className="mr-2 text-[#005A9E]" />
+              <Bell size={16} className="mr-2 text-[#f43f5e]" />
               Alertas de Stock
               {lowStockCount > 0 && (
                 <span className="ml-2 px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full">
@@ -203,7 +203,7 @@ export default function Dashboard() {
                 </Badge>
               </div>
             ))}
-            <button className="w-full text-center text-[11px] text-[#005A9E] dark:text-[#4a9eff] font-semibold hover:underline pt-2">
+            <button className="w-full text-center text-[11px] text-[#f43f5e] dark:text-[#fb7185] font-semibold hover:underline pt-2">
               Ver todas las alertas →
             </button>
           </CardContent>
@@ -216,7 +216,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <TrendingUp size={16} className="mr-2 text-[#005A9E]" />
+              <TrendingUp size={16} className="mr-2 text-[#f43f5e]" />
               Actividad Reciente
             </CardTitle>
           </CardHeader>
@@ -237,10 +237,10 @@ export default function Dashboard() {
         <Card className="lg:col-span-2" padding={false}>
           <div className="p-4 border-b border-[#EDEBE9] dark:border-[#333] flex justify-between items-center">
             <CardTitle className="flex items-center">
-              <Package size={16} className="mr-2 text-[#005A9E]" />
+              <Package size={16} className="mr-2 text-[#f43f5e]" />
               Ofertas de Trading Recientes
             </CardTitle>
-            <button className="text-[#005A9E] dark:text-[#4a9eff] text-xs font-semibold hover:underline">Ver todo</button>
+            <button className="text-[#f43f5e] dark:text-[#fb7185] text-xs font-semibold hover:underline">Ver todo</button>
           </div>
           <table className="w-full text-left text-sm">
             <thead className="bg-[#F3F2F1] dark:bg-[#2a2a2a] text-[#605E5C] dark:text-[#888] font-semibold">
@@ -253,7 +253,7 @@ export default function Dashboard() {
             <tbody className="divide-y divide-[#EDEBE9] dark:divide-[#333]">
               {recentOffers.map((offer, idx) => (
                 <tr key={idx} className="hover:bg-[#FAF9F8] dark:hover:bg-[#222] transition-colors">
-                  <td className="px-4 py-3 font-semibold text-[#005A9E] dark:text-[#4a9eff]">{offer.brand}</td>
+                  <td className="px-4 py-3 font-semibold text-[#f43f5e] dark:text-[#fb7185]">{offer.brand}</td>
                   <td className="px-4 py-3">{offer.product}</td>
                   <td className="px-4 py-3">{offer.qty}</td>
                   <td className="px-4 py-3">{offer.price}</td>

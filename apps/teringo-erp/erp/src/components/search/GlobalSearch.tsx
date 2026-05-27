@@ -159,7 +159,7 @@ export function GlobalSearch() {
                   className={cn(
                     'flex items-center px-3 py-2.5 rounded cursor-pointer text-sm transition-colors',
                     idx === selectedIdx
-                      ? 'bg-[#005A9E]/10 dark:bg-[#4a9eff]/20 text-[#005A9E] dark:text-[#4a9eff]'
+                      ? 'bg-[#f43f5e]/10 dark:bg-[#fb7185]/20 text-[#f43f5e] dark:text-[#fb7185]'
                       : 'text-[#323130] dark:text-[#e0e0e0] hover:bg-[#F3F2F1] dark:hover:bg-[#2a2a2a]'
                   )}
                 >

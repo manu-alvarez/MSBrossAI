@@ -20,7 +20,7 @@ export function Select({ label, options, error, className, ...props }: SelectPro
       <select
         className={cn(
           'w-full border px-3 py-1.5 text-sm bg-white dark:bg-[#2b2b2b] text-[#323130] dark:text-[#e0e0e0]',
-          'border-[#EDEBE9] dark:border-[#444] focus:outline-none focus:border-[#005A9E] dark:focus:border-[#4a9eff]',
+          'border-[#EDEBE9] dark:border-[#444] focus:outline-none focus:border-[#f43f5e] dark:focus:border-[#fb7185]',
           error && 'border-red-500',
           className
         )}

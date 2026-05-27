@@ -97,7 +97,7 @@ export default function InvoicesPage() {
 
   const columns = [
     { key: 'invoiceNumber', label: 'N° Factura', render: (item: Invoice) => (
-      <span className="font-mono text-xs font-semibold text-[#005A9E] dark:text-[#4a9eff]">{item.invoiceNumber}</span>
+      <span className="font-mono text-xs font-semibold text-[#f43f5e] dark:text-[#fb7185]">{item.invoiceNumber}</span>
     )},
     { key: 'partner', label: 'Socio', render: (item: Invoice) => <span className="font-medium">{item.partner}</span> },
     { key: 'type', label: 'Tipo', render: (item: Invoice) => (
@@ -135,12 +135,12 @@ export default function InvoicesPage() {
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
         <Card>
-          <CardHeader><CardTitle className="flex items-center"><FileText size={14} className="mr-1 text-[#005A9E]" />Total Neto</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center"><FileText size={14} className="mr-1 text-[#f43f5e]" />Total Neto</CardTitle></CardHeader>
           <CardContent><span className="text-2xl font-bold">{formatCurrency(totals.net)}</span></CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle className="flex items-center"><FileText size={14} className="mr-1 text-[#005A9E]" />Total Bruto</CardTitle></CardHeader>
-          <CardContent><span className="text-2xl font-bold text-[#005A9E]">{formatCurrency(totals.gross)}</span></CardContent>
+          <CardHeader><CardTitle className="flex items-center"><FileText size={14} className="mr-1 text-[#f43f5e]" />Total Bruto</CardTitle></CardHeader>
+          <CardContent><span className="text-2xl font-bold text-[#f43f5e]">{formatCurrency(totals.gross)}</span></CardContent>
         </Card>
         <Card>
           <CardHeader><CardTitle className="flex items-center">📄 Facturas</CardTitle></CardHeader>
@@ -186,7 +186,7 @@ export default function InvoicesPage() {
           {newInv.totalNet > 0 && (
             <div className="p-3 bg-[#F3F2F1] dark:bg-[#2a2a2a] text-sm rounded flex justify-between">
               <span className="text-[#605E5C]">Total Bruto estimado:</span>
-              <span className="font-bold text-[#005A9E]">{formatCurrency(newInv.totalNet * (1 + newInv.taxPercent / 100))}</span>
+              <span className="font-bold text-[#f43f5e]">{formatCurrency(newInv.totalNet * (1 + newInv.taxPercent / 100))}</span>
             </div>
           )}
         </div>

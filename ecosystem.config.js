@@ -76,15 +76,15 @@ module.exports = {
     // NEWTON MEQUINENZA (Checklist & Inventory Backend)
     // ──────────────────────────────────────────────
     {
-      name: 'newton-backend',
-      script: path.join(__dirname, 'apps/newton-react/backend/venv/bin/python3'),
+      name: 'newton-mequinenza-backend',
+      script: path.join(__dirname, 'apps/newton-mequinenza/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 3005',
-      cwd: path.join(__dirname, 'apps/newton-react/backend'),
+      cwd: path.join(__dirname, 'apps/newton-mequinenza/backend'),
       env: {
         PORT: '3005'
       },
-      out_file: path.join(__dirname, 'apps/newton-react/backend/newton.log'),
-      error_file: path.join(__dirname, 'apps/newton-react/backend/newton.error.log'),
+      out_file: path.join(__dirname, 'apps/newton-mequinenza/backend/newton.log'),
+      error_file: path.join(__dirname, 'apps/newton-mequinenza/backend/newton.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -130,15 +130,15 @@ module.exports = {
     // ARANTXA TRANSLATE (Translation Server)
     // ──────────────────────────────────────────────
     {
-      name: 'arantxa-server',
+      name: 'traductor-pro-server',
       script: 'node',
       args: 'dist/index.js',
-      cwd: path.join(__dirname, 'apps/arantxa-translate/server'),
+      cwd: path.join(__dirname, 'apps/traductor-pro/server'),
       env: {
         PORT: '8004'
       },
-      out_file: path.join(__dirname, 'apps/arantxa-translate/server/arantxa.log'),
-      error_file: path.join(__dirname, 'apps/arantxa-translate/server/arantxa.error.log'),
+      out_file: path.join(__dirname, 'apps/traductor-pro/server/arantxa.log'),
+      error_file: path.join(__dirname, 'apps/traductor-pro/server/arantxa.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -167,12 +167,12 @@ module.exports = {
     // CUENTOSMÁGICOS AI (Creative Story Teller Backend)
     // ──────────────────────────────────────────────
     {
-      name: 'cuentosmagicos-backend',
+      name: 'cuentos-magicos-backend',
       script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8007',
-      cwd: path.join(__dirname, 'apps/cuentosmagicos/backend'),
-      out_file: path.join(__dirname, 'apps/cuentosmagicos/backend/cuentosmagicos.log'),
-      error_file: path.join(__dirname, 'apps/cuentosmagicos/backend/cuentosmagicos.error.log'),
+      cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
+      out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.log'),
+      error_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -206,16 +206,16 @@ module.exports = {
     // ATENEA RESTAURANT BACKEND (Port 8009)
     // ──────────────────────────────────────────────
     {
-      name: 'atenea-backend',
+      name: 'web-restaurante-atenea-backend',
       script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 8009',
-      cwd: path.join(__dirname, 'apps/atenea-backend'),
+      cwd: path.join(__dirname, 'apps/web-restaurante-atenea'),
       env: {
         PYTHONPATH: '.',
         PORT: '8009'
       },
-      out_file: path.join(__dirname, 'apps/atenea-backend/atenea.log'),
-      error_file: path.join(__dirname, 'apps/atenea-backend/atenea.error.log'),
+      out_file: path.join(__dirname, 'apps/web-restaurante-atenea/atenea.log'),
+      error_file: path.join(__dirname, 'apps/web-restaurante-atenea/atenea.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,

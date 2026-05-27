@@ -45,7 +45,7 @@ function LoginForm() {
     <div className="min-h-screen bg-[#FAF9F8] dark:bg-[#161616] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-[#005A9E] flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-[#f43f5e] flex items-center justify-center mx-auto mb-4">
             <span className="text-white text-2xl font-bold">P</span>
           </div>
           <h1 className="text-xl font-bold text-[#323130] dark:text-[#e0e0e0]">Teringo</h1>

@@ -26,7 +26,7 @@ export function Tabs({ tabs, active, onChange, className }: TabsProps) {
           className={cn(
             'flex items-center px-4 py-1.5 text-sm font-medium transition-colors',
             active === tab.key
-              ? 'bg-white dark:bg-[#3a3a3a] text-[#005A9E] dark:text-[#4a9eff] shadow-sm'
+              ? 'bg-white dark:bg-[#3a3a3a] text-[#f43f5e] dark:text-[#fb7185] shadow-sm'
               : 'text-[#605E5C] dark:text-[#888] hover:text-[#323130] dark:hover:text-[#ccc]'
           )}
         >

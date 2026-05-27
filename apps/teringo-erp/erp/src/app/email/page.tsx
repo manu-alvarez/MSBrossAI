@@ -94,7 +94,7 @@ export default function EmailPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center text-sm">
-            <FileText size={16} className="mr-2 text-[#005A9E]" />
+            <FileText size={16} className="mr-2 text-[#f43f5e]" />
             Asunto
           </CardTitle>
           <Button variant="ghost" size="sm" icon={copied === 'subject' ? Check : Copy}
@@ -113,7 +113,7 @@ export default function EmailPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center text-sm">
-            <FileText size={16} className="mr-2 text-[#005A9E]" />
+            <FileText size={16} className="mr-2 text-[#f43f5e]" />
             Cuerpo del Correo
           </CardTitle>
           <div className="flex space-x-2">

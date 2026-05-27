@@ -11,7 +11,7 @@ async function generate() {
     const svg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <defs>
         <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#005A9E;stop-opacity:1" />
+          <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#003D6B;stop-opacity:1" />
         </linearGradient>
       </defs>
@@ -31,7 +31,7 @@ async function generate() {
 
   // Generate favicon (32x32)
   const faviconSvg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-    <rect width="32" height="32" rx="5" fill="#005A9E"/>
+    <rect width="32" height="32" rx="5" fill="#f43f5e"/>
     <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
           font-family="system-ui, sans-serif" font-weight="bold"
           font-size="16" fill="white">P</text>

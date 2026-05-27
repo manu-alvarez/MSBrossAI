@@ -18,7 +18,7 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **DOHLER** | `/apps/dohler` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
 | **Edelweiss** | `/apps/edelweiss` | Plataforma de estimulación visual infantil con modos de alto contraste y parental lock. | React 18, Tailwind, Framer Motion, PWA |
 | **EliteScout** | `/apps/elitescout` | Buscador semántico inteligente de viajes y CRM de scouting/precios con integración de scraping logístico. | Next.js 16, FastAPI, SQLite, Tavily API, Groq, Gemini |
-| **EXPOSITATOR RTE**| `/apps/expositator-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
+| **EXPOSITATOR RTE**| `/apps/expositator-rte-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
 | **IAPuta OS** | `/apps/iaputa-os` | Asistente IA centralizado con orbe 3D reactivo, multi-LLM fallback y utilidades integradas. | FastAPI, React 19, Three.js, Groq, Gemini |
 | **JartosDTo** | `/apps/jartosdto` | Chat con IA corporativo y base de datos vectorial con túnel seguro de datos para acceso nativo iOS. | React 19, FastAPI, pgvector, LangChain, iOS |
 | **LIVEKIT Nikolina**| `/apps/livekit-nikolina`| Asistente telefónico de voz inteligente de restaurante con voz e inferencia nativa en tiempo real. | LiveKit, Gemini 2.5 Flash Audio, FastAPI, React 18 |
@@ -30,7 +30,7 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **MSBrOSs** | `/apps/msbross` | Motor de asistente conversacional multimodal de voz y suite de herramientas integradas. | Python, FastAPI, Gemini API, Voice Adele |
 | **Newton Mequinenza**| `/apps/newton-mequinenza` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
 | **TaskFlowPro** | `/apps/taskflow-pro` | PWA de productividad premium con notificaciones automáticas de alarmas e integración de mensajería. | React 18, MUI, Zustand, PWA LocalStorage |
-| **Teringo ERP** | `/apps/teringo-erp` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
+| **Teringo ERP** | `/apps/teringo-erp-erp` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
 | **Traductor PRO** | `/apps/traductor-pro`| Traductor neural con 4 modos estilísticos, multi-provider fallback secuencial y OCR de imágenes. | React 19, Express, Tesseract.js, Groq, Gemini, OpenAI |
 | **Tu Energía Maya** | `/www/TuEnergiaMaya` | Suite interactiva de cosmología y cálculo de Kin y firma galáctica galáctica diaria. | HTML5, Canvas, CSS3, Tzolkin Algorithm |
 | **Web Rest. Atenea**| `/www/atenea` | Frontend estático elegante e interactivo para restauración con motor de reservas y menú premium. | HTML5, CSS3, JavaScript, SQLite |

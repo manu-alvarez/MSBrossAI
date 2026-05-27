@@ -35,7 +35,7 @@ export function Sidebar() {
       {/* Header */}
       <div className="h-12 flex items-center px-4 justify-between border-b border-[#EDEBE9] dark:border-[#333] bg-[#F3F2F1] dark:bg-[#222]">
         {!sidebarCollapsed && (
-          <span className="font-bold text-[#005A9E] dark:text-[#4a9eff] text-sm tracking-wide">Teringo</span>
+          <span className="font-bold text-[#f43f5e] dark:text-[#fb7185] text-sm tracking-wide">Teringo</span>
         )}
         <button onClick={toggleSidebar} className="p-1 hover:bg-white dark:hover:bg-[#333] rounded transition-colors">
           {sidebarCollapsed ? <Menu size={18} /> : <ChevronLeft size={18} />}
@@ -53,7 +53,7 @@ export function Sidebar() {
               className={cn(
                 'flex items-center mx-2 px-3 py-2 rounded transition-colors group',
                 isActive
-                  ? 'bg-[#005A9E]/10 dark:bg-[#4a9eff]/20 text-[#005A9E] dark:text-[#4a9eff] font-semibold'
+                  ? 'bg-[#f43f5e]/10 dark:bg-[#fb7185]/20 text-[#f43f5e] dark:text-[#fb7185] font-semibold'
                   : 'text-[#323130] dark:text-[#ccc] hover:bg-[#F3F2F1] dark:hover:bg-[#2a2a2a]'
               )}
             >
@@ -67,7 +67,7 @@ export function Sidebar() {
       {/* User Footer */}
       <div className="p-4 border-t border-[#EDEBE9] dark:border-[#333]">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-[#005A9E] dark:bg-[#4a9eff] flex items-center justify-center text-white text-xs font-bold shrink-0">
+          <div className="w-8 h-8 rounded-full bg-[#f43f5e] dark:bg-[#fb7185] flex items-center justify-center text-white text-xs font-bold shrink-0">
             AD
           </div>
           {!sidebarCollapsed && (

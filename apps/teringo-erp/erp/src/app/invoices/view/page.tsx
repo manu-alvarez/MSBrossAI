@@ -75,14 +75,14 @@ function InvoiceContent() {
           {/* Header */}
           <div className="flex justify-between items-start border-b border-[#EDEBE9] pb-6">
             <div>
-              <div className="w-12 h-12 rounded-lg bg-[#005A9E] flex items-center justify-center mb-3">
+              <div className="w-12 h-12 rounded-lg bg-[#f43f5e] flex items-center justify-center mb-3">
                 <span className="text-white font-bold text-lg">P</span>
               </div>
               <h1 className="text-2xl font-bold text-[#323130]">PROFORMA INVOICE</h1>
               <p className="text-sm text-[#605E5C]">Teringo</p>
             </div>
             <div className="text-right">
-              <p className="text-lg font-bold text-[#005A9E] font-mono">{inv.number}</p>
+              <p className="text-lg font-bold text-[#f43f5e] font-mono">{inv.number}</p>
               <p className="text-xs text-[#605E5C]">Issue: {inv.issueDate}</p>
               <p className="text-xs text-[#605E5C]">Due: {inv.dueDate}</p>
             </div>
@@ -162,7 +162,7 @@ function InvoiceContent() {
               </div>
               <div className="flex justify-between font-bold text-lg border-t border-[#EDEBE9] pt-2">
                 <span>Total Gross</span>
-                <span className="text-[#005A9E]">{formatCurrency(inv.totalGross)}</span>
+                <span className="text-[#f43f5e]">{formatCurrency(inv.totalGross)}</span>
               </div>
             </div>
           </div>

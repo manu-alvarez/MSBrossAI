@@ -135,7 +135,7 @@ export default function TradingPage() {
     { key: 'type', label: 'Tipo', render: (item: TradingRow) => (
       <span className={cn('text-xs font-bold uppercase', item.type === 'Offer' ? 'text-blue-600' : 'text-purple-600')}>{item.type}</span>
     )},
-    { key: 'brand', label: 'Marca', render: (item: TradingRow) => <span className="font-semibold text-[#005A9E]">{item.brand}</span> },
+    { key: 'brand', label: 'Marca', render: (item: TradingRow) => <span className="font-semibold text-[#f43f5e]">{item.brand}</span> },
     { key: 'product', label: 'Producto' },
     { key: 'partner', label: 'Socio' },
     { key: 'quantity', label: 'Cant.', align: 'right' as const },
@@ -166,7 +166,7 @@ export default function TradingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center text-base">
-            <Calculator size={18} className="mr-2 text-[#005A9E]" />
+            <Calculator size={18} className="mr-2 text-[#f43f5e]" />
             Calculadora de Margen Profesional
             <Badge variant="info" className="ml-3">Tiempo Real</Badge>
           </CardTitle>
@@ -198,7 +198,7 @@ export default function TradingPage() {
             <div className="bg-[#F3F2F1] dark:bg-[#2a2a2a] p-4 border border-[#EDEBE9] dark:border-[#333]">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-bold flex items-center">
-                  <TrendingUp size={16} className="mr-1.5 text-[#005A9E]" />
+                  <TrendingUp size={16} className="mr-1.5 text-[#f43f5e]" />
                   Resultado del Cálculo
                 </h4>
                 <Badge variant={marginResult.grossMarginPct >= 20 ? 'success' : marginResult.grossMarginPct > 0 ? 'warning' : 'error'} dot>
@@ -223,7 +223,7 @@ export default function TradingPage() {
                 )}
                 <div className="border-t border-[#EDEBE9] dark:border-[#444] pt-2 flex justify-between font-bold">
                   <span>Total Neto</span>
-                  <span className="text-[#005A9E]">{formatCurrency(marginResult.netTotal)}</span>
+                  <span className="text-[#f43f5e]">{formatCurrency(marginResult.netTotal)}</span>
                 </div>
                 <div className="border-t border-[#EDEBE9] dark:border-[#444] pt-2 flex justify-between">
                   <span>Margen Bruto</span>
@@ -236,7 +236,7 @@ export default function TradingPage() {
                 </div>
                 <div className="flex justify-between text-xs text-[#605E5C]">
                   <span>Precio recomendado para {calcTargetMargin}% de margen</span>
-                  <span className="font-bold text-[#005A9E]">{formatCurrency(targetPrice)}/ud</span>
+                  <span className="font-bold text-[#f43f5e]">{formatCurrency(targetPrice)}/ud</span>
                 </div>
               </div>
 
@@ -300,11 +300,11 @@ export default function TradingPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
         <Card>
-          <CardHeader><CardTitle className="flex items-center"><Percent size={14} className="mr-1 text-[#005A9E]" />Margen Promedio</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center"><Percent size={14} className="mr-1 text-[#f43f5e]" />Margen Promedio</CardTitle></CardHeader>
           <CardContent><span className="text-2xl font-bold">19.8%</span></CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle className="flex items-center"><DollarSign size={14} className="mr-1 text-[#005A9E]" />Volumen Total</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center"><DollarSign size={14} className="mr-1 text-[#f43f5e]" />Volumen Total</CardTitle></CardHeader>
           <CardContent><span className="text-2xl font-bold">{formatCurrency(trades.reduce((s, r) => s + r.total, 0))}</span></CardContent>
         </Card>
         <Card>
@@ -326,9 +326,9 @@ export default function TradingPage() {
       <div className="flex justify-between items-center text-[11px] text-[#605E5C] dark:text-[#888] px-2">
         <p>Mostrando {filtered.length} de {trades.length} operaciones</p>
         <div className="flex space-x-4">
-          <button className="hover:text-[#005A9E] disabled:opacity-50" disabled>Anterior</button>
+          <button className="hover:text-[#f43f5e] disabled:opacity-50" disabled>Anterior</button>
           <span className="font-medium">Pág. 1</span>
-          <button className="hover:text-[#005A9E] disabled:opacity-50" disabled>Siguiente</button>
+          <button className="hover:text-[#f43f5e] disabled:opacity-50" disabled>Siguiente</button>
         </div>
       </div>
 

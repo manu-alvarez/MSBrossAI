@@ -77,7 +77,7 @@ export function ExternalBridge({ sources }: { sources: ExternalSource[] }) {
             <button
               onClick={() => handleFetchAPI(active)}
               disabled={loading}
-              className="flex items-center px-3 py-1.5 bg-[#005A9E] text-white text-xs font-semibold hover:bg-[#004a87] disabled:opacity-50 transition-colors"
+              className="flex items-center px-3 py-1.5 bg-[#f43f5e] text-white text-xs font-semibold hover:bg-[#e11d48] disabled:opacity-50 transition-colors"
             >
               <RefreshCw size={14} className={cn('mr-1.5', loading && 'animate-spin')} />
               {loading ? 'Consultando...' : 'Obtener Datos'}
@@ -118,7 +118,7 @@ export function ExternalBridge({ sources }: { sources: ExternalSource[] }) {
           href={active.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center px-4 py-2 bg-[#005A9E] text-white text-sm font-semibold hover:bg-[#004a87] transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-[#f43f5e] text-white text-sm font-semibold hover:bg-[#e11d48] transition-colors"
         >
           <ExternalLink size={16} className="mr-2" />
           Acceder a {active.name}
@@ -131,7 +131,7 @@ export function ExternalBridge({ sources }: { sources: ExternalSource[] }) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
-          <ExternalLink size={16} className="mr-2 text-[#005A9E]" />
+          <ExternalLink size={16} className="mr-2 text-[#f43f5e]" />
           Integraciones Externas
         </CardTitle>
       </CardHeader>
@@ -150,7 +150,7 @@ export function ExternalBridge({ sources }: { sources: ExternalSource[] }) {
                 className={cn(
                   'px-3 py-1.5 text-xs font-semibold border transition-colors',
                   activeSource === source.id || (!activeSource && source === sources[0])
-                    ? 'bg-[#005A9E] text-white border-[#005A9E]'
+                    ? 'bg-[#f43f5e] text-white border-[#f43f5e]'
                     : 'bg-white dark:bg-[#2b2b2b] text-[#605E5C] border-[#EDEBE9] dark:border-[#444] hover:bg-[#F3F2F1]'
                 )}
               >

@@ -6,7 +6,7 @@ const iconsDir = join(process.cwd(), 'public/icons');
 
 sizes.forEach(size => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" rx="${size * 0.15}" fill="#005A9E"/>
+  <rect width="${size}" height="${size}" rx="${size * 0.15}" fill="#f43f5e"/>
   <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
         font-family="Arial, sans-serif" font-weight="bold"
         font-size="${size * 0.4}" fill="white">P</text>

@@ -36,7 +36,7 @@ export default function RootLayout({
           <div className="flex">
             <Sidebar />
             <main className="flex-1 h-screen overflow-y-auto flex flex-col">
-              <header className="h-12 bg-[#005A9E] dark:bg-[#0d3b6e] text-white flex items-center px-6 justify-between shrink-0">
+              <header className="h-12 bg-[#f43f5e] dark:bg-[#9f1239] text-white flex items-center px-6 justify-between shrink-0">
                 <div className="flex items-center space-x-4">
                   <h1 className="text-sm font-semibold tracking-wide">Teringo</h1>
                   <ExchangeRateBadge />

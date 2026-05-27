@@ -15,7 +15,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#005A9E] text-white hover:bg-[#004a87] active:bg-[#003d6b] border border-transparent',
+    'bg-[#f43f5e] text-white hover:bg-[#e11d48] active:bg-[#003d6b] border border-transparent',
   secondary:
     'bg-white text-[#323130] hover:bg-[#F3F2F1] border border-[#8A8886] dark:bg-[#2b2b2b] dark:text-[#e0e0e0] dark:border-[#555]',
   ghost:
@@ -23,7 +23,7 @@ const variants: Record<ButtonVariant, string> = {
   danger:
     'bg-red-600 text-white hover:bg-red-700 border border-transparent',
   outline:
-    'bg-transparent text-[#005A9E] border border-[#005A9E] hover:bg-[#F0F7FF] dark:hover:bg-[#1a2a3a]',
+    'bg-transparent text-[#f43f5e] border border-[#f43f5e] hover:bg-[#F0F7FF] dark:hover:bg-[#1a2a3a]',
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -45,7 +45,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#005A9E]/40 disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#f43f5e]/40 disabled:opacity-50 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         className

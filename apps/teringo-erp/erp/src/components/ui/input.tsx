@@ -20,7 +20,7 @@ export function Input({ label, error, className, ...props }: InputProps) {
       <input
         className={cn(
           'w-full border px-3 py-1.5 text-sm bg-white dark:bg-[#2b2b2b] text-[#323130] dark:text-[#e0e0e0]',
-          'border-[#EDEBE9] dark:border-[#444] focus:outline-none focus:border-[#005A9E] dark:focus:border-[#4a9eff]',
+          'border-[#EDEBE9] dark:border-[#444] focus:outline-none focus:border-[#f43f5e] dark:focus:border-[#fb7185]',
           'placeholder:text-[#aaa] dark:placeholder:text-[#666]',
           error && 'border-red-500 focus:border-red-500',
           className
@@ -51,7 +51,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-9 pr-4 py-1.5 text-sm border border-[#EDEBE9] dark:border-[#444] bg-white dark:bg-[#2b2b2b] text-[#323130] dark:text-[#e0e0e0] focus:outline-none focus:border-[#005A9E] dark:focus:border-[#4a9eff] placeholder:text-[#aaa] dark:placeholder:text-[#666]"
+        className="w-full pl-9 pr-4 py-1.5 text-sm border border-[#EDEBE9] dark:border-[#444] bg-white dark:bg-[#2b2b2b] text-[#323130] dark:text-[#e0e0e0] focus:outline-none focus:border-[#f43f5e] dark:focus:border-[#fb7185] placeholder:text-[#aaa] dark:placeholder:text-[#666]"
       />
     </div>
   );
