@@ -11,10 +11,10 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 /Users/manu/Desktop/MSBrossAI
 ├── apps/                        # Aplicaciones nativas de desarrollo
 │   ├── elitescout/              # Next.js Travel & Price Scraper Finder (Puerto 8003)
-│   ├── traductor-pro/       # Traductor PRO Client & Server (Puerto 8004)
-│   │   ├── client/              # React 18 / Vite (Ventanilla de Traducción)
+│   ├── traductor-pro/           # Traductor PRO Client & Server (Puerto 8004)
+│   │   ├── client/              # React 19 / Vite (Ventanilla de Traducción)
 │   │   └── server/              # Express AI Translation Proxy (Fallback Secuencial)
-│   ├── newton-react/            # Newton Mequinenza ERP (Puerto 3005)
+│   ├── newton-mequinenza/       # Newton Mequinenza ERP (Puerto 3005)
 │   ├── livekit-nikolina/        # Voice AI Nikolina Frontend & Backend (Puerto 8001)
 │   └── ... (resto de las 22 aplicaciones integradas)
 │
@@ -22,7 +22,7 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 │   ├── index.html               # Landing Portal principal de MSBrossAI
 │   └── app/                     # Compilaciones de producción listas para servir
 │       ├── elitescout/          # Build estático Next.js (SSG/Out)
-│       ├── traductor/           # Build estático Vite (React/TypeScript)
+│       ├── traductor-pro/       # Build estático Vite (React/TypeScript)
 │       └── ...
 │
 ├── logs/                        # Logs consolidados de ejecución de servicios
@@ -61,11 +61,11 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
 | `/_nikolina` | **8001** | API Hub Nikolina (FastAPI + JWT) |
 | `/_dohler` | **8002** | Dohler Backend (FastAPI Task Manager) |
 | `/_elitescout` | **8003** | EliteScout API (FastAPI Finder) |
-| `/_arantxa` | **8004** | Arantxa Translate Server (Express AI) |
+| `/_traductor` | **8004** | Traductor PRO Server (Express AI) |
 | `/_msbross` | **8005** | MSBrOSs (Adele Voice Server) |
 | `/_iaputa` | **8006** | IAPuta OS (FastAPI AI Assistant) |
-| `/_cuentos` | **8007** | CuentosMágicos (FastAPI Story Backend) |
-| `/_atenea` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
+| `/_cuentosmagicos` | **8007** | Cuentos Mágicos (FastAPI Story Backend) |
+| `/_webrestaurante` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
 
 ---
 
@@ -138,6 +138,7 @@ Para sincronizar de manera automatizada las actualizaciones de los clientes est�
 3. Carga automática de la landing principal `www/index.html`.
 4. Sincronización recursiva del build de **EliteScout** (`/www/app/elitescout`).
 5. Sincronización recursiva del build de **Traductor PRO** (`/www/app/traductor-pro`).
+6. En caso de lentitud por la carga global, los scripts `ftp_fast_<app>.py` bajo demanda permiten actualizar aplicaciones unitarias al vuelo.
 
 > [!NOTE]
 > Al modificar cualquier frontend estático, simplemente compila la app localmente, sincroniza la carpeta en `/www/app/<app>` y ejecuta el script FTP para subirla a producción en segundos.
