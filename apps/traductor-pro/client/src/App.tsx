@@ -51,7 +51,7 @@ export default function App() {
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
             <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '1.8rem', md: '2.5rem' }, letterSpacing: 2 }}>
-              Traductor <span style={{ color: '#6ee7b7' }}>PRO</span>
+              Traductor <span style={{ color: '#34d399', textShadow: '0 0 20px rgba(16,185,129,0.8), 0 0 40px rgba(16,185,129,0.4)' }}>PRO</span>
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
               Traducción y resumen inteligente con alta disponibilidad automática
