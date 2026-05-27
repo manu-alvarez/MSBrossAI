@@ -11,16 +11,29 @@ Traductor neural con 4 modos de traducción, 3 niveles de resumen, 4 herramienta
 
 ## Estructura
 ```
-arantxa-translate/
-├── server/             # Express + TypeScript
-├── client/             # React 19 + MUI + PWA
-├── docker-compose.yml
-└── README.md
-```
+traductor-pro/
+├── client/
+│   ├── package.json
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── components/
+│   │   │   ├── TraducirTab.tsx
+│   │   │   ├── ResumirTab.tsx
+│   │   │   └── ExtrasTab.tsx
+│   └── ...
+└── server/
+    ├── package.json
+    ├── src/
+    │   ├── index.ts
+    │   └── routes/
+    │       ├── process.ts
+    │       └── extras.ts
 
-## Despliegue Local
-```bash
-cd apps/arantxa-translate
+## Instalación y Ejecución Local
+
+1. Instalar dependencias:
+   ```bash
+   cd apps/traductor-pro
 docker-compose up -d --build
 ```
 

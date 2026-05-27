@@ -11,7 +11,7 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 /Users/manu/Desktop/MSBrossAI
 ├── apps/                        # Aplicaciones nativas de desarrollo
 │   ├── elitescout/              # Next.js Travel & Price Scraper Finder (Puerto 8003)
-│   ├── arantxa-translate/       # Traductor PRO Client & Server (Puerto 8004)
+│   ├── traductor-pro/       # Traductor PRO Client & Server (Puerto 8004)
 │   │   ├── client/              # React 18 / Vite (Ventanilla de Traducción)
 │   │   └── server/              # Express AI Translation Proxy (Fallback Secuencial)
 │   ├── newton-react/            # Newton Mequinenza ERP (Puerto 3005)
@@ -81,7 +81,7 @@ Los servicios backend no se ejecutan directamente en segundo plano mediante term
 * **Ver logs unificados:** `pm2 logs` o `pm2 logs <service-name>`
 * **Reiniciar un servicio específico actualizando variables de entorno:**
   ```bash
-  pm2 restart arantxa-server --update-env
+  pm2 restart traductor-pro-server --update-env
   ```
 
 ### Políticas de Resiliencia implementadas:
@@ -99,7 +99,7 @@ Cuando se realiza un cambio en una aplicación, se debe seguir estrictamente est
 Los cambios se hacen directamente bajo `apps/<nombre-app>/`.
 
 ### Paso 2: Construir el Frontend
-* **Para aplicaciones basadas en Vite** (`apps/arantxa-translate/client`):
+* **Para aplicaciones basadas en Vite** (`apps/traductor-pro/client`):
   ```bash
   npm run build
   # Esto genera la carpeta 'dist/'
@@ -114,14 +114,14 @@ Los cambios se hacen directamente bajo `apps/<nombre-app>/`.
 El contenido compilado se copia a `/www/app/<nombre-app>/`:
 ```bash
 # Limpiar destino anterior
-rm -rf www/app/traductor/*
+rm -rf www/app/traductor-pro/*
 # Copiar nueva compilación
-cp -r apps/arantxa-translate/client/dist/* www/app/traductor/
+cp -r apps/traductor-pro/client/dist/* www/app/traductor-pro/
 ```
 
 ### Paso 4: Reiniciar Servidores de Backend (si hubo cambios lógicos en API)
 ```bash
-pm2 restart arantxa-server --update-env
+pm2 restart traductor-pro-server --update-env
 ```
 
 ---
@@ -137,7 +137,7 @@ Para sincronizar de manera automatizada las actualizaciones de los clientes est�
 2. Autenticación con las credenciales maestras.
 3. Carga automática de la landing principal `www/index.html`.
 4. Sincronización recursiva del build de **EliteScout** (`/www/app/elitescout`).
-5. Sincronización recursiva del build de **Traductor PRO** (`/www/app/traductor`).
+5. Sincronización recursiva del build de **Traductor PRO** (`/www/app/traductor-pro`).
 
 > [!NOTE]
 > Al modificar cualquier frontend estático, simplemente compila la app localmente, sincroniza la carpeta en `/www/app/<app>` y ejecuta el script FTP para subirla a producción en segundos.
