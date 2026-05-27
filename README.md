@@ -14,11 +14,11 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | :--- | :--- | :--- | :--- |
 | **App Generator** | `/apps/app-generator` | Constructor asimétrico en tiempo real (Split-View) que genera SPAs usando prompts e inferencia native de LLM. | React 19, Vite, Gemini API, Iframe |
 | **CombiPro** | `/apps/combipro` | Algoritmo estadístico predictivo y generador de combinadas deportivas con perfiles de riesgo y stake. | React 19, Material-UI, Framer Motion, API-Football |
-| **Cuentos Mágicos** | `/apps/cuentosmagicos` | Generador e ilustrador infantil de cuentos interactivos en pergamino o cine con voz y animación por IA (Tema Amarillo/Naranja). | Next.js 15, FastAPI, Gemini API, OpenAI TTS, Luma |
+| **Cuentos Mágicos** | `/apps/cuentos-magicos` | Generador e ilustrador infantil de cuentos interactivos en pergamino o cine con voz y animación por IA (Tema Amarillo/Naranja). | Next.js 15, FastAPI, Gemini API, OpenAI TTS, Luma |
 | **DOHLER** | `/apps/dohler` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
 | **Edelweiss** | `/apps/edelweiss` | Plataforma de estimulación visual infantil con modos de alto contraste y parental lock. | React 18, Tailwind, Framer Motion, PWA |
 | **EliteScout** | `/apps/elitescout` | Buscador semántico inteligente de viajes y CRM de scouting/precios con integración de scraping logístico. | Next.js 16, FastAPI, SQLite, Tavily API, Groq, Gemini |
-| **EXPOSITATOR RTE**| `/apps/expositator` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
+| **EXPOSITATOR RTE**| `/apps/expositator-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
 | **IAPuta OS** | `/apps/iaputa-os` | Asistente IA centralizado con orbe 3D reactivo, multi-LLM fallback y utilidades integradas. | FastAPI, React 19, Three.js, Groq, Gemini |
 | **JartosDTo** | `/apps/jartosdto` | Chat con IA corporativo y base de datos vectorial con túnel seguro de datos para acceso nativo iOS. | React 19, FastAPI, pgvector, LangChain, iOS |
 | **LIVEKIT Nikolina**| `/apps/livekit-nikolina`| Asistente telefónico de voz inteligente de restaurante con voz e inferencia nativa en tiempo real. | LiveKit, Gemini 2.5 Flash Audio, FastAPI, React 18 |
@@ -28,10 +28,10 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **Manuel Alvarez CV**| `/www/Portfolio` | CV digital y portfolio profesional de Manuel Alvarez (Sistemas, Cloud & IA). | HTML5, CSS3, JS, responsive premium |
 | **Moko-Tools** | `/apps/moko-tools` | Suite de 189 herramientas de desarrollo organizadas en 14 categorías con búsqueda bento. | React 19, Vite 7, Tailwind, Client-Side |
 | **MSBrOSs** | `/apps/msbross` | Motor de asistente conversacional multimodal de voz y suite de herramientas integradas. | Python, FastAPI, Gemini API, Voice Adele |
-| **Newton Mequinenza**| `/apps/newton-react` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
+| **Newton Mequinenza**| `/apps/newton-mequinenza` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
 | **TaskFlowPro** | `/apps/taskflow-pro` | PWA de productividad premium con notificaciones automáticas de alarmas e integración de mensajería. | React 18, MUI, Zustand, PWA LocalStorage |
-| **Teringo ERP** | `/apps/teringo` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
-| **Traductor PRO** | `/apps/arantxa-translate`| Traductor neural con 4 modos estilísticos, multi-provider fallback secuencial y OCR de imágenes. | React 19, Express, Tesseract.js, Groq, Gemini, OpenAI |
+| **Teringo ERP** | `/apps/teringo-erp` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
+| **Traductor PRO** | `/apps/traductor-pro`| Traductor neural con 4 modos estilísticos, multi-provider fallback secuencial y OCR de imágenes. | React 19, Express, Tesseract.js, Groq, Gemini, OpenAI |
 | **Tu Energía Maya** | `/www/TuEnergiaMaya` | Suite interactiva de cosmología y cálculo de Kin y firma galáctica galáctica diaria. | HTML5, Canvas, CSS3, Tzolkin Algorithm |
 | **Web Rest. Atenea**| `/www/atenea` | Frontend estático elegante e interactivo para restauración con motor de reservas y menú premium. | HTML5, CSS3, JavaScript, SQLite |
 

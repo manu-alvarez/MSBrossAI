@@ -8,9 +8,9 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 # Arrays mapeados con los paths relativos exactos para evitar fallos de resolución
 declare -a NEXT_APPS=(
     "apps/elitescout:elitescout"
-    "apps/cuentosmagicos/frontend:cuentosmagicos"
+    "apps/cuentos-magicos/frontend:cuentos-magicos"
     "apps/jartosdto/client:jartosdto"
-    "apps/teringo/erp:teringo"
+    "apps/teringo-erp/erp:teringo-erp"
 )
 PROJECT_ROOT="/Users/manu/Desktop/MSBrossAI"
 DMZ_PATH="$PROJECT_ROOT/www/app" # Ruta real de la DMZ servida por proxy_server.js

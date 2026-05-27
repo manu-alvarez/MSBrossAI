@@ -55,22 +55,22 @@ echo "=== Construyendo todas las apps para msbross.me (auto-hosting) ==="
 
 # Vite apps
 # Nikolina: use LiveKit Cloud, APIs via relative path (/_nikolina/api through proxy_server.js)
-build_app "apps/livekit-nikolina/frontend" "nikolina" "vite" \
+build_app "apps/livekit-nikolina/frontend" "livekit-nikolina" "vite" \
   "VITE_LIVEKIT_URL=wss://nikolina-1jg7t00i.livekit.cloud VITE_API_BASE_URL=/_nikolina/api"
-build_app "apps/iaputa-os/frontend" "iaputa" "vite"
-build_app "apps/arantxa-translate/client" "traductor" "vite"
+build_app "apps/iaputa-os/frontend" "iaputa-os" "vite"
+build_app "apps/traductor-pro/client" "traductor-pro" "vite"
 build_app "apps/dohler" "dohler" "vite"
 build_app "apps/combipro" "combipro" "vite"
 build_app "apps/edelweiss" "edelweiss" "vite"
-build_app "apps/moko-tools" "moko" "vite"
+build_app "apps/moko-tools" "moko-tools" "vite"
 build_app "apps/taskflow-pro" "taskflow" "vite"
 build_app "apps/logisearch" "logisearch" "vite"
 build_app "apps/app-generator" "app-generator" "vite"
 
 # Next.js apps
-build_app "apps/cuentosmagicos/frontend" "cuentosmagicos" "next"
+build_app "apps/cuentos-magicos/frontend" "cuentos-magicos" "next"
 build_app "apps/elitescout" "elitescout" "next"
 build_app "apps/jartosdto/client" "jartosdto" "next"
-build_app "apps/teringo/erp" "teringo" "next"
+build_app "apps/teringo-erp/erp" "teringo-erp" "next"
 
 echo "=== Todas las builds completadas en $WWW_DIR ==="
