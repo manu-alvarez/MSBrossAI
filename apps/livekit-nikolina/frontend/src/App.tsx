@@ -193,7 +193,7 @@ export default function App() {
                     {item.image_url && (
                       <div style={{ height: 180, overflow: 'hidden', position: 'relative', background: 'rgba(0,0,0,0.3)' }}>
                         <img 
-                          src={`/app/nikolina${item.image_url}`} 
+                          src={`/app/livekit-nikolina${item.image_url}`} 
                           alt={item.name} 
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           onError={(e) => {

@@ -683,7 +683,7 @@ async def entrypoint(ctx: JobContext) -> None:
             # Use a robust retry loop for the initial greeting
             for attempt in range(1, 6):
                 await asyncio.sleep(2.0 * attempt)
-                if not session.is_running:
+                if hasattr(session, 'is_running') and not session.is_running:
                     logger.warning(f"Nikolina greeting attempt {attempt}/5 failed: AgentSession isn't running yet")
                     continue
                 
