@@ -45,8 +45,11 @@ export default function App() {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, md: 4 }, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', bgcolor: '#050508' }}>
+      {/* Neon Background Gradients */}
+      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, background: 'radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.3) 0%, transparent 45%), radial-gradient(circle at 85% 85%, rgba(110, 231, 183, 0.25) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.15) 0%, transparent 60%)' }} />
+      
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, py: { xs: 3, md: 6 }, px: { xs: 2, md: 4 }, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
