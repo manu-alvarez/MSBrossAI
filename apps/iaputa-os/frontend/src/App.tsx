@@ -39,6 +39,7 @@ export default function App() {
   const [volume, setVolume] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
@@ -266,6 +267,50 @@ export default function App() {
     if (input.trim() && !loading) { sendText(input); setInput(''); }
   };
 
+  const handleVisionUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    setOrbState('thinking');
+    setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '📸 Analizando imagen...', timestamp: new Date() }]);
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64Image = e.target?.result as string;
+      
+      try {
+        const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}vision-analyze` : `${API_BASE}/vision-analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+          body: JSON.stringify({ 
+            image: base64Image,
+            source: 'upload',
+            prompt: 'Describe detalladamente lo que ves en esta imagen. Sé concisa pero directa.'
+          }),
+        });
+        const data = await res.json();
+        const assistantContent = data.response || data.error || 'Sin respuesta';
+        
+        setMessages(prev => [...prev, {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: assistantContent,
+          timestamp: new Date()
+        }]);
+        
+        speak(assistantContent);
+      } catch (err) {
+        setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de visión: ${String(err)}`, timestamp: new Date() }]);
+        setOrbState('error');
+        setTimeout(() => setOrbState('idle'), 3000);
+      }
+      setLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="app-container">
       {/* Background Neural Orb fills the viewport contextually */}
@@ -322,7 +367,15 @@ export default function App() {
             <button type="button" className={`btn-icon ${recording ? 'pulsing' : ''}`} onClick={recording ? stopRecording : startRecording}>
               {recording ? '⏹️' : '🎤'}
             </button>
-            <button type="button" className="btn-icon" onClick={() => setVisionImage('📸')}>
+            <input 
+              type="file" 
+              accept="image/*" 
+              capture="environment" 
+              ref={fileInputRef} 
+              style={{ display: 'none' }} 
+              onChange={handleVisionUpload} 
+            />
+            <button type="button" className="btn-icon" onClick={() => fileInputRef.current?.click()}>
                👁️
             </button>
           </form>

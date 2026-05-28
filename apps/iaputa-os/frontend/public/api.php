@@ -41,8 +41,26 @@ function save_vault($data) {
 /**
  * Call Gemini 2.5 Flash API for LLM processing
  */
-function call_gemini($system_prompt, $user_text) {
+function call_gemini($system_prompt, $user_text, $base64_image = null) {
     global $GEMINI_API_KEY;
+    
+    $parts = [["text" => $user_text]];
+    
+    if ($base64_image) {
+        // Strip data URI prefix if present
+        $mime_type = "image/jpeg";
+        $b64_data = $base64_image;
+        if (preg_match('/^data:(image\/[a-zA-Z0-9]+);base64,(.+)$/', $base64_image, $matches)) {
+            $mime_type = $matches[1];
+            $b64_data = $matches[2];
+        }
+        $parts[] = [
+            "inlineData" => [
+                "mimeType" => $mime_type,
+                "data" => $b64_data
+            ]
+        ];
+    }
     
     $ch = curl_init("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $GEMINI_API_KEY);
     curl_setopt_array($ch, [
@@ -53,10 +71,10 @@ function call_gemini($system_prompt, $user_text) {
         ],
         CURLOPT_POSTFIELDS => json_encode([
             "system_instruction" => ["parts" => [["text" => $system_prompt]]],
-            "contents" => [["role" => "user", "parts" => [["text" => $user_text]]]],
+            "contents" => [["role" => "user", "parts" => $parts]],
             "generationConfig" => ["temperature" => 0.3, "maxOutputTokens" => 1024]
         ]),
-        CURLOPT_TIMEOUT => 30
+        CURLOPT_TIMEOUT => 60
     ]);
     
     $response = curl_exec($ch);
@@ -98,6 +116,21 @@ switch ($action) {
             echo json_encode(["response" => $result, "emotion" => "neutral"]);
         } else {
             echo json_encode(["response" => "Modo offline: Mi backend no está conectado ahora mismo. Escribe 'ayuda' para ver qué puedo hacer en modo local.", "emotion" => "thinking"]);
+        }
+        break;
+
+    case 'vision-analyze':
+        $input = json_decode(file_get_contents('php://input'), true);
+        $image = $input['image'] ?? '';
+        $prompt = $input['prompt'] ?? 'Describe detalladamente lo que ves en esta imagen.';
+        
+        $system = "Eres IAPuta OS, un sistema operativo IA experto en análisis visual. Analiza la imagen de forma concisa y directa.";
+        $result = call_gemini($system, $prompt, $image);
+        
+        if ($result) {
+            echo json_encode(["response" => $result, "emotion" => "thinking"]);
+        } else {
+            echo json_encode(["error" => "No se pudo analizar la imagen. Intenta de nuevo.", "emotion" => "error"]);
         }
         break;
 

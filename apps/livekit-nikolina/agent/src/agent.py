@@ -45,7 +45,7 @@ from core.database import db
 import providers
 
 # Load environment variables
-env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.env.local'))
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.env'))
 load_dotenv(dotenv_path=env_path)
 
 # ---------------------------------------------------------------------------
@@ -434,7 +434,7 @@ async def entrypoint(ctx: JobContext) -> None:
             pipeline_cfg = {
                 "name": "Gemini 2.5 Stable",
                 "architecture": "realtime",
-                "realtime_model": "models/gemini-2.0-flash-exp",
+                "realtime_model": "gemini-2.5-flash-native-audio-latest",
                 "realtime_voice": "Aoede",
                 "llm_temperature": 0.7
             }
@@ -545,7 +545,7 @@ async def entrypoint(ctx: JobContext) -> None:
 
             # Gemini 2.5 Flash Native Audio - The proven high-reliability voice engine
             model = RealtimeModel(
-                model=pipeline_cfg.get("realtime_model", "models/gemini-2.0-flash-exp"),
+                model=pipeline_cfg.get("realtime_model", "gemini-2.5-flash-native-audio-latest"),
                 api_key=api_key,
                 voice=pipeline_cfg.get("realtime_voice", "Aoede"),
                 instructions=system_prompt,
