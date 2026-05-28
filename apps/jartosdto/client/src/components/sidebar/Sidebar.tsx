@@ -7,6 +7,7 @@ import { useChatStore, useUIStore, useAuthStore } from "@/stores";
 import { clearToken } from "@/lib/api";
 import { timeAgo, truncate } from "@/lib/utils";
 import type { Conversation } from "@/types/chat";
+import SettingsModal from "./SettingsModal";
 
 /**
  * Sidebar with conversation list, new chat button, and navigation.
@@ -17,6 +18,7 @@ export default function Sidebar() {
   const { sidebarOpen, toggleSidebar } = useUIStore();
   const { user, logout } = useAuthStore();
   const router = useRouter();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -110,9 +112,12 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div style={{ padding: "12px 14px", borderTop: "1px solid var(--border-subtle)" }}>
+        <button onClick={() => setIsSettingsOpen(true)} className="sidebar-item" style={{ width: "100%", marginBottom: 4 }}>
+          ⚙️ Model APIs
+        </button>
         {user?.role === "admin" && (
           <button onClick={() => router.push("/admin/dashboard")} className="sidebar-item" style={{ width: "100%", marginBottom: 4 }}>
-            ⚙️ Admin Panel
+            🛡️ Admin Panel
           </button>
         )}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -122,6 +127,8 @@ export default function Sidebar() {
           </button>
         </div>
       </div>
+
+      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </aside>
   );
 }

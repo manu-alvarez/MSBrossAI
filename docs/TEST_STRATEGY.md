@@ -22,7 +22,7 @@
 - Integration: 20%
 - E2E: 10%
 
-### DOHLER
+### IndustrialPro
 - Unit: 60%
 - Integration: 30%
 - E2E: 10%

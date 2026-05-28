@@ -7,10 +7,10 @@ import './index.css';
  */
 const isProduction = window.location.hostname === 'msbross.me';
 const API_BASE = isProduction
-  ? './api.php?action='
+  ? '/_iaputa/api'
   : ((import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8006/api');
 const API_KEY = (import.meta as any).env.VITE_API_KEY || '';
-const USE_PHP_GATEWAY = isProduction;
+const USE_PHP_GATEWAY = false;
 
 interface Message {
   id: string;
@@ -37,9 +37,13 @@ export default function App() {
   const [speaking, setSpeaking] = useState(false);
   const [orbState, setOrbState] = useState<'idle' | 'listening' | 'thinking' | 'speaking' | 'error'>('idle');
   const [volume, setVolume] = useState(0);
+  const [visionModeActive, setVisionModeActive] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
@@ -122,7 +126,7 @@ export default function App() {
         setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: `🎤 ${transcript}`, timestamp: new Date() }]);
         
         try {
-          const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}text-command` : `${API_BASE}/text-command`, {
+          const res = await fetch(`${API_BASE}/text-command`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
             body: JSON.stringify({ text: transcript }),
@@ -149,12 +153,12 @@ export default function App() {
             }).catch(() => {});
           }
 
-          if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en dohler')) {
+          if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en industrialpro')) {
               fetch(`${API_BASE}vault-update`, {
                 method: 'POST',
                 body: JSON.stringify({ 
                   notification: { type: 'TIMER', content: `Timer iniciado desde IAPuta` },
-                  app: 'dohler',
+                  app: 'industrialpro',
                   data: { timer_active: true }
                 })
               }).catch(() => {});
@@ -214,7 +218,7 @@ export default function App() {
       }, 1000);
     } else {
       try {
-        const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}text-command` : `${API_BASE}/text-command`, {
+        const res = await fetch(`${API_BASE}/text-command`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
           body: JSON.stringify({ text }),
@@ -241,12 +245,12 @@ export default function App() {
           }).catch(() => {});
         }
         
-        if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en dohler')) {
+        if (lowerAssistant.includes('temporizador') || lowerAssistant.includes('minutos en industrialpro')) {
             fetch(`${API_BASE}vault-update`, {
               method: 'POST',
               body: JSON.stringify({ 
                 notification: { type: 'TIMER', content: `Timer iniciado desde IAPuta` },
-                app: 'dohler',
+                app: 'industrialpro',
                 data: { timer_active: true }
               })
             }).catch(() => {});
@@ -280,7 +284,7 @@ export default function App() {
       const base64Image = e.target?.result as string;
       
       try {
-        const res = await fetch(USE_PHP_GATEWAY ? `${API_BASE}vision-analyze` : `${API_BASE}/vision-analyze`, {
+        const res = await fetch(`${API_BASE}/vision-analyze`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
           body: JSON.stringify({ 
@@ -311,62 +315,167 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
+  const startVisionMode = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      setStream(mediaStream);
+      setVisionModeActive(true);
+    } catch (err) {
+      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error al acceder a la cámara: ${String(err)}`, timestamp: new Date() }]);
+    }
+  };
+
+  useEffect(() => {
+    if (visionModeActive && videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [visionModeActive, stream]);
+
+  const stopVisionMode = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setVisionModeActive(false);
+  };
+
+  const captureVisionFrame = () => {
+    if (!videoRef.current) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+    const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+    
+    stopVisionMode();
+    
+    setLoading(true);
+    setOrbState('thinking');
+    setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'user', content: '📸 Analizando entorno en tiempo real...', timestamp: new Date() }]);
+
+    fetch(`${API_BASE}/vision-analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+      body: JSON.stringify({ 
+        image: base64Image,
+        source: 'camera',
+        prompt: 'Analiza detalladamente lo que capturó la cámara y descríbelo de forma útil, como un asistente de inteligencia artificial.'
+      }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      const assistantContent = data.response || data.error || 'Sin respuesta';
+      setMessages(prev => [...prev, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: assistantContent,
+        timestamp: new Date()
+      }]);
+      speak(assistantContent);
+      setLoading(false);
+      setOrbState('idle');
+    })
+    .catch(err => {
+      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error de visión en tiempo real: ${String(err)}`, timestamp: new Date() }]);
+      setOrbState('error');
+      setTimeout(() => setOrbState('idle'), 3000);
+      setLoading(false);
+    });
+  };
+
   return (
     <div className="app-container">
+      {visionModeActive && (
+        <div className="vision-mode-overlay" style={{
+          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+          backgroundColor: '#000', zIndex: 9999, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center'
+        }}>
+          <video ref={videoRef} autoPlay playsInline style={{ width: '100%', maxHeight: '80%', objectFit: 'contain' }}></video>
+          <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
+            <button type="button" onClick={stopVisionMode} style={{ padding: '15px 30px', borderRadius: '30px', background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', fontSize: '18px' }}>❌ Cancelar</button>
+            <button type="button" onClick={captureVisionFrame} style={{ padding: '15px 30px', borderRadius: '30px', background: '#3b82f6', color: 'white', border: 'none', fontSize: '18px', fontWeight: 'bold' }}>📸 Capturar y Analizar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Background with Noise */}
+      <div className="noise-overlay"></div>
+      
       {/* Background Neural Orb fills the viewport contextually */}
-      <div className="luxury-orb-background">
+      <div className="spatial-orb-layer">
+        <div className="glow-backdrop"></div>
         <NeuralOrb state={orbState} volume={volume} />
       </div>
 
-      <div className="luxury-dashboard">
-        {/* Left/Main Panel - Glassmorphic Chat */}
-        <div className="glass-panel chat-glass-panel">
-          <header className="glass-header">
-            <div className="brand">
-               <span className="brand-logo">🤖</span>
-               <div className="brand-text">
-                  <h1>IAPuta OS</h1>
-                  <span className={`status-badge ${offlineMode ? 'offline' : 'online'}`}>{offlineMode ? 'Host Only' : 'Host + Local'}</span>
-               </div>
+      {/* Main Spatial UI Layer */}
+      <div className="spatial-ui-layer">
+        
+        {/* Sleek Top Bar */}
+        <header className="sleek-header">
+          <div className="header-content">
+            <div className="brand-group">
+              <div className="brand-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12 2.1 7.1"/><path d="M12 12l9.9 4.9"/></svg>
+              </div>
+              <h1 className="brand-title">IAPUTA OS</h1>
+              <div className="version-tag">v10</div>
             </div>
-          </header>
+            <div className={`status-indicator ${offlineMode ? 'offline' : 'online'}`}>
+              <div className="status-dot"></div>
+              <span>{offlineMode ? 'Host Only' : 'Host + Local'}</span>
+            </div>
+          </div>
+        </header>
 
-          <div className="chat-area">
+        {/* Scrollable Chat Area */}
+        <main className="sleek-chat-area">
+          <div className="chat-container-inner">
             {messages.length === 0 ? (
-              <div className="chat-empty-state">
-                <h2>Awaiting Directives</h2>
-                <p>El núcleo neuronal está conectado. Estoy lista para gestionar tu entorno.</p>
+              <div className="sleek-empty-state">
+                <div className="empty-graphic">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                </div>
+                <h2>System Ready</h2>
+                <p>Neural core is synchronized. Awaiting directives.</p>
               </div>
             ) : (
               messages.map(msg => (
-                <div key={msg.id} className={`chat-message chat-message--${msg.role}`}>
-                  <div className="chat-bubble">
-                    <p>{msg.content}</p>
-                    <span className="chat-time">{msg.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                <div key={msg.id} className={`message-row message-row--${msg.role}`}>
+                  <div className="message-avatar">
+                    {msg.role === 'user' ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12 2.1 7.1"/><path d="M12 12l9.9 4.9"/></svg>
+                    )}
+                  </div>
+                  <div className="message-content">
+                    <div className="message-text">
+                      {msg.content.split('\n').map((line, i) => <React.Fragment key={i}>{line}<br/></React.Fragment>)}
+                    </div>
                   </div>
                 </div>
               ))
             )}
             {loading && (
-              <div className="chat-message chat-message--loading">
-                 <div className="chat-bubble"><div className="loader-dots"><span></span><span></span><span></span></div></div>
+              <div className="message-row message-row--assistant">
+                 <div className="message-avatar">
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12 2.1 7.1"/><path d="M12 12l9.9 4.9"/></svg>
+                 </div>
+                 <div className="message-content">
+                    <div className="loader-pulse"></div>
+                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="scroll-anchor" />
           </div>
+        </main>
 
-          <form className="glass-input-dock" onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              placeholder="Inyectar comandos al núcleo..." 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              disabled={loading}
-              className="glass-input"
-            />
-            <button type="button" className={`btn-icon ${recording ? 'pulsing' : ''}`} onClick={recording ? stopRecording : startRecording}>
-              {recording ? '⏹️' : '🎤'}
-            </button>
+        {/* Floating Bottom Dock */}
+        <footer className="sleek-dock-container">
+          <form className="sleek-input-dock" onSubmit={handleSubmit}>
             <input 
               type="file" 
               accept="image/*" 
@@ -375,11 +484,39 @@ export default function App() {
               style={{ display: 'none' }} 
               onChange={handleVisionUpload} 
             />
-            <button type="button" className="btn-icon" onClick={() => fileInputRef.current?.click()}>
-               👁️
+            
+            <button type="button" className="action-btn" onClick={() => fileInputRef.current?.click()} title="Upload Image">
+               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
+            <button type="button" className="action-btn" onClick={startVisionMode} title="Live Vision">
+               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+
+            <input 
+              type="text" 
+              placeholder="Ask IAPuta OS or inject commands..." 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              disabled={loading}
+              className="sleek-input"
+            />
+            
+            <button type="button" className={`action-btn mic-btn ${recording ? 'recording' : ''}`} onClick={recording ? stopRecording : startRecording} title="Voice Command">
+              {recording ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/></svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              )}
+            </button>
+
+            {input.trim() && !loading && (
+              <button type="submit" className="action-btn submit-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            )}
           </form>
-        </div>
+          <div className="dock-footer-text">IAPuta OS Multi-LLM Environment. Output may vary.</div>
+        </footer>
       </div>
     </div>
   );

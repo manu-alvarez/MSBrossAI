@@ -11,7 +11,7 @@ class GeminiAdapter(LLMPort):
         if not settings.GOOGLE_STUDIO_API_KEY:
             raise ValueError("GOOGLE_STUDIO_API_KEY not configured")
         genai.configure(api_key=settings.GOOGLE_STUDIO_API_KEY)
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')
 
     async def process_chat(self, user_text: str, history: list) -> Tuple[str, Optional[str], str]:
         try:

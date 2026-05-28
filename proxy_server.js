@@ -103,17 +103,29 @@ app.get('/api/visits-badge', (req, res) => {
 
 // ── Static SPAs ──
 const NEXT_APPS = [
-  'app-generator', 'cuentosmagicos', 'combipro', 'dohler',
-  'edelweiss', 'expositator', 'iaputa', 'jartosdto',
-  'logisearch', 'moko', 'msbross', 'newton', 'nikolina',
-  'taskflow', 'teringo', 'traductor', 'atenea', 'elitescout',
+  'app-generator', 'cuentosmagicos', 'combipro', 'industrialpro',
+  'edelweiss', 'expositator', 'iaputa', 'iaputa-os', 'jartosdto',
+  'logisearch', 'moko', 'msbross', 'gas-station', 'nikolina',
+  'taskflow', 'perfume-trading', 'traductor', 'atenea', 'elitescout',
 ];
 
 for (const name of NEXT_APPS) {
   const appDir  = path.join(WWW, 'app', name);
   const prefix  = `/app/${name}`;
-  app.use(prefix, express.static(appDir, { index: false }));
+  app.use(prefix, express.static(appDir, { 
+    index: false,
+    setHeaders: (res, path) => {
+      if (path.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      }
+      if (path.endsWith('opengraph-image')) {
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    }
+  }));
   app.get(new RegExp(`^/app/${name}/(.*)$`), (req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     const indexFile = path.join(appDir, 'index.html');
     res.sendFile(indexFile, err => { if (err) next(); });
   });
@@ -138,13 +150,14 @@ const proxyOpts = (target, stripPrefix, ws = false) => ({
 
 // ── API routes ──
 app.use('/_nikolina',      createProxyMiddleware(proxyOpts('http://127.0.0.1:8001', '/_nikolina', true)));
-app.use('/_newton',        createProxyMiddleware(proxyOpts('http://127.0.0.1:3005', '/_newton')));
-app.use('/_dohler',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8002', '/_dohler')));
+app.use('/_gas-station',        createProxyMiddleware(proxyOpts('http://127.0.0.1:3005', '/_gas-station')));
+app.use('/_industrialpro',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8002', '/_industrialpro')));
 app.use('/_elitescout',    createProxyMiddleware(proxyOpts('http://127.0.0.1:8003', '/_elitescout')));
 app.use('/_arantxa',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8004', '/_arantxa')));
 app.use('/_msbross',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8005', '/_msbross')));
 app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8006', '/_iaputa')));
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));
+app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8008', '/_jartosdto')));
 app.use('/_atenea',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8009', '/_atenea')));
 
 // ── LiveKit WebSocket proxy (for self-hosted LiveKit) ──

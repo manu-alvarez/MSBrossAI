@@ -77,6 +77,10 @@ export default function ChatContainer() {
                 sources = data.sources;
               } else if (data.type === "meta" && data.conversation_id) {
                 setConversationId(data.conversation_id);
+              } else if (data.type === "error") {
+                fullText += `\\n\\n⚠️ **Error:** ${data.content}`;
+                updateLastAssistant(fullText, fullThinking || undefined);
+                break;
               }
             } catch { /* skip malformed chunks */ }
           }

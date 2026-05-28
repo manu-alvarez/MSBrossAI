@@ -1,6 +1,6 @@
 """
-MSBrossAI — Upload Teringo ERP index.html to FTP.
-Usage: FTP_PASSWORD=xxx python3 deploy/ftp-upload-teringo.py
+MSBrossAI — Upload Perfume Trading index.html to FTP.
+Usage: FTP_PASSWORD=xxx python3 deploy/ftp-upload-perfume-trading.py
 """
 import ftplib
 import os
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     
     files_to_upload = [
-        (os.path.join(base_dir, "www", "app", "teringo", "index.html"), "/www/app/teringo/index.html")
+        (os.path.join(base_dir, "www", "app", "perfume-trading", "index.html"), "/www/app/perfume-trading/index.html")
     ]
     
     print(f"🔌 Connecting to {host}...")
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         ftp.set_pasv(True)
         print(f"✅ Connected! PWD: {ftp.pwd()}")
         
-        print("\n📦 Sincronizando App de Teringo ERP a Producción...")
+        print("\n📦 Sincronizando App de Perfume Trading a Producción...")
         for local_p, remote_p in files_to_upload:
             if os.path.isfile(local_p):
                 upload_file(ftp, local_p, remote_p)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                 print(f"❌ File not found: {local_p}")
         
         ftp.quit()
-        print("\n🚀 Sincronización FTP de Teringo completada con éxito!")
+        print("\n🚀 Sincronización FTP de Perfume Trading completada con éxito!")
         
     except Exception as e:
         print(f"❌ FTP Error: {e}")

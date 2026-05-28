@@ -10,7 +10,7 @@ declare -a NEXT_APPS=(
     "apps/elitescout:elitescout"
     "apps/cuentos-magicos/frontend:cuentos-magicos"
     "apps/jartosdto/client:jartosdto"
-    "apps/teringo-erp/erp:teringo-erp"
+    "apps/perfume-trading/erp:perfume-trading"
 )
 PROJECT_ROOT="/Users/manu/Desktop/MSBrossAI"
 DMZ_PATH="$PROJECT_ROOT/www/app" # Ruta real de la DMZ servida por proxy_server.js

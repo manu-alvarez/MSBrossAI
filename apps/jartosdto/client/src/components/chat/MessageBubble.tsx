@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useChatStore } from "@/stores";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -19,6 +20,33 @@ export default function MessageBubble({
   isStreaming?: boolean;
 }) {
   const isUser = message.role === "user";
+  const { autoSpeak } = useChatStore();
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Auto-speak logic when streaming finishes
+  useEffect(() => {
+    if (!isUser && !isStreaming && autoSpeak && message.content && typeof window !== "undefined") {
+      const u = new SpeechSynthesisUtterance(message.content);
+      u.lang = "es-ES";
+      window.speechSynthesis.speak(u);
+    }
+  }, [isStreaming, isUser, autoSpeak, message.content]);
+
+  const handleSpeak = () => {
+    if (typeof window === "undefined") return;
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+    } else {
+      window.speechSynthesis.cancel(); // stop any current speech
+      const u = new SpeechSynthesisUtterance(message.content);
+      u.lang = "es-ES";
+      u.onend = () => setIsPlaying(false);
+      u.onerror = () => setIsPlaying(false);
+      window.speechSynthesis.speak(u);
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <div
@@ -35,10 +63,13 @@ export default function MessageBubble({
           width: isUser ? "auto" : "100%",
         }}
       >
-        {/* Role label */}
+        {/* Role label and Voice button */}
         {!isUser && (
-          <div style={{ fontSize: 12, color: "var(--text-tertiary)", marginBottom: 6, fontWeight: 500 }}>
-            {message.model_id || "Assistant"}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: 12, color: "var(--text-tertiary)", marginBottom: 6, fontWeight: 500 }}>
+            <span>{message.model_id || "Assistant"}</span>
+            <button onClick={handleSpeak} style={{ background: "transparent", border: "none", color: isPlaying ? "var(--accent-primary)" : "var(--text-tertiary)", cursor: "pointer", padding: "2px 6px", fontSize: 14, borderRadius: 4, transition: "color 0.2s" }} title={isPlaying ? "Stop audio" : "Play audio"}>
+              {isPlaying ? "⏹" : "🔊"}
+            </button>
           </div>
         )}
 

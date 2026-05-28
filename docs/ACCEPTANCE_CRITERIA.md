@@ -22,7 +22,7 @@
 - Given a task, When updated, Then the changes are reflected
 - Given a task, When deleted, Then it's removed from storage
 
-### DOHLER
+### IndustrialPro
 - Given a timer, When started, Then it counts down correctly
 - Given a timer, When paused, Then it stops counting
 - Given a timer, When reset, Then it returns to the initial state

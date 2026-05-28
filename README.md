@@ -6,7 +6,7 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 - **Proxy Central Reverso (`proxy_server.js`)**: Gestiona toda la capa de routing inverso y sirve las Single Page Applications desde `/www/app/<nombre-app>`. Mapea endpoints internos de API en puertos dedicados (`/_traductor`, `/_nikolina`, etc.). Admite almacenamiento centralizado de datos y el **Contador Global de Visitas** (`/api/track-visit`) con persistencia directa en disco.
 - **Orquestación PM2 (`ecosystem.config.js`)**: Proporciona alta disponibilidad, auto-recovery exponencial y limitación de memoria a todos los microservicios en NodeJS, FastAPI y Express.
 - **Túnel Nombrado de Cloudflare (`msbross-main`)**: Habilita acceso WAN cifrado continuo hacia los backends locales de forma segura.
-- **Bases de Datos de Producción Integradas**: Todos los clientes (como Teringo ERP, JartosDTo y LogiSearch) operan de forma nativa e incondicional conectados a sus bases de datos reales en la nube (Supabase en la instancia de producción `ujktxhqxhxkbrhczbhcf.supabase.co` y APIs en vivo). Se han erradicado por completo los modos simulados offline/demo locales de la suite de software en favor de entornos 100% interactivos y reales.
+- **Bases de Datos de Producción Integradas**: Todos los clientes (como Perfume Trading, JartosDTo y LogiSearch) operan de forma nativa e incondicional conectados a sus bases de datos reales en la nube (Supabase en la instancia de producción `ujktxhqxhxkbrhczbhcf.supabase.co` y APIs en vivo). Se han erradicado por completo los modos simulados offline/demo locales de la suite de software en favor de entornos 100% interactivos y reales.
 
 ## Aplicaciones Incluidas (22)
 
@@ -15,7 +15,7 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **App Generator** | `/apps/app-generator` | Constructor asimétrico en tiempo real (Split-View) que genera SPAs usando prompts e inferencia native de LLM. | React 19, Vite, Gemini API, Iframe |
 | **CombiPro** | `/apps/combipro` | Algoritmo estadístico predictivo y generador de combinadas deportivas con perfiles de riesgo y stake. | React 19, Material-UI, Framer Motion, API-Football |
 | **Cuentos Mágicos** | `/apps/cuentos-magicos` | Generador e ilustrador infantil de cuentos interactivos en pergamino o cine con voz y animación por IA (Tema Amarillo/Naranja). | Next.js 15, FastAPI, Gemini API, OpenAI TTS, Luma |
-| **DOHLER** | `/apps/dohler` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
+| **IndustrialPro** | `/apps/industrialpro` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
 | **Edelweiss** | `/apps/edelweiss` | Plataforma de estimulación visual infantil con modos de alto contraste y parental lock. | React 18, Tailwind, Framer Motion, PWA |
 | **EliteScout** | `/apps/elitescout` | Buscador semántico inteligente de viajes y CRM de scouting/precios con integración de scraping logístico. | Next.js 16, FastAPI, SQLite, Tavily API, Groq, Gemini |
 | **EXPOSITATOR RTE**| `/apps/expositator-rte-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
@@ -28,9 +28,9 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **Manuel Alvarez CV**| `/www/Portfolio` | CV digital y portfolio profesional de Manuel Alvarez (Sistemas, Cloud & IA). | HTML5, CSS3, JS, responsive premium |
 | **Moko-Tools** | `/apps/moko-tools` | Suite de 189 herramientas de desarrollo organizadas en 14 categorías con búsqueda bento. | React 19, Vite 7, Tailwind, Client-Side |
 | **MSBrOSs** | `/apps/msbross` | Motor de asistente conversacional multimodal de voz y suite de herramientas integradas. | Python, FastAPI, Gemini API, Voice Adele |
-| **Newton Mequinenza**| `/apps/newton-mequinenza` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
+| **Gas Station**| `/apps/gas-station` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
 | **TaskFlowPro** | `/apps/taskflow-pro` | PWA de productividad premium con notificaciones automáticas de alarmas e integración de mensajería. | React 18, MUI, Zustand, PWA LocalStorage |
-| **Teringo ERP** | `/apps/teringo-erp-erp` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
+| **Perfume Trading** | `/apps/perfume-trading-erp` | ERP B2B transaccional de trading de perfumes con catálogo maestro e inventario dinámico. | React 19, Supabase, PostgreSQL |
 | **Traductor PRO** | `/apps/traductor-pro`| Traductor neural con 4 modos estilísticos, multi-provider fallback secuencial y OCR de imágenes. | React 19, Express, Tesseract.js, Groq, Gemini, OpenAI |
 | **Tu Energía Maya** | `/www/TuEnergiaMaya` | Suite interactiva de cosmología y cálculo de Kin y firma galáctica galáctica diaria. | HTML5, Canvas, CSS3, Tzolkin Algorithm |
 | **Web Rest. Atenea**| `/www/atenea` | Frontend estático elegante e interactivo para restauración con motor de reservas y menú premium. | HTML5, CSS3, JavaScript, SQLite |

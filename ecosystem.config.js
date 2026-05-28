@@ -5,7 +5,7 @@
  * - LiveKit Server (WebRTC engine)
  * - Nikolina API Hub (FastAPI token server + dashboard)
  * - Nikolina Agent (LiveKit voice agent)
- * - Dohler Backend (FastAPI task manager)
+ * - IndustrialPro Backend (FastAPI task manager)
  * - IAPuta OS Backend (FastAPI AI assistant)
  * - Arantxa Translate Server (Express translation proxy)
  * - MSBrOSs Backend (Adele voice server)
@@ -73,18 +73,18 @@ module.exports = {
     },
 
     // ──────────────────────────────────────────────
-    // NEWTON MEQUINENZA (Checklist & Inventory Backend)
+    // Gas Station (Checklist & Inventory Backend)
     // ──────────────────────────────────────────────
     {
-      name: 'newton-mequinenza-backend',
-      script: path.join(__dirname, 'apps/newton-mequinenza/backend/venv/bin/python3'),
+      name: 'gas-station-backend',
+      script: path.join(__dirname, 'apps/gas-station/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 3005',
-      cwd: path.join(__dirname, 'apps/newton-mequinenza/backend'),
+      cwd: path.join(__dirname, 'apps/gas-station/backend'),
       env: {
         PORT: '3005'
       },
-      out_file: path.join(__dirname, 'apps/newton-mequinenza/backend/newton.log'),
-      error_file: path.join(__dirname, 'apps/newton-mequinenza/backend/newton.error.log'),
+      out_file: path.join(__dirname, 'apps/gas-station/backend/gas-station.log'),
+      error_file: path.join(__dirname, 'apps/gas-station/backend/gas-station.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -93,15 +93,15 @@ module.exports = {
     },
 
     // ──────────────────────────────────────────────
-    // DOHLER (Task Manager Backend)
+    // IndustrialPro (Task Manager Backend)
     // ──────────────────────────────────────────────
     {
-      name: 'dohler-backend',
+      name: 'industrialpro-backend',
       script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn app:app --host 0.0.0.0 --port 8002',
-      cwd: path.join(__dirname, 'apps/dohler/backend'),
-      out_file: path.join(__dirname, 'apps/dohler/backend/dohler.log'),
-      error_file: path.join(__dirname, 'apps/dohler/backend/dohler.error.log'),
+      cwd: path.join(__dirname, 'apps/industrialpro/backend'),
+      out_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.log'),
+      error_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -221,6 +221,27 @@ module.exports = {
       exp_backoff_delay: 1000,
       min_uptime: '15s',
       max_memory_restart: '300M'
+    },
+
+    // ──────────────────────────────────────────────
+    // JARTOSDTO BACKEND (RAG & Multi-LLM, Port 8008)
+    // ──────────────────────────────────────────────
+    {
+      name: 'jartosdto-backend',
+      script: path.join(__dirname, 'apps/jartosdto/server/.venv/bin/python3'),
+      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8008',
+      cwd: path.join(__dirname, 'apps/jartosdto/server'),
+      env: {
+        PYTHONPATH: '.',
+        PORT: '8008'
+      },
+      out_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.log'),
+      error_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '800M'
     },
 
     // ──────────────────────────────────────────────

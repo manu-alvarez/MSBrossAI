@@ -65,23 +65,66 @@ async def analyze_vision_image(image_b64: str, prompt: str = None, source: str =
         "Analiza esta imagen de la webcam en detalle. Describe lo que ves: personas, objetos, entorno, iluminación y cualquier detalle relevante."
     )
 
-    # Note: Using Llama 4 Scout as the current multimodal standard in 2026
-    vision_model = "meta-llama/llama-4-scout-17b-16e-instruct"
+    # Determine the model based on user prompt (defaulting to gemini)
+    vision_model = "google/gemini-2.5-flash"
+    lower_prompt = analysis_prompt.lower()
+    if "claude" in lower_prompt: vision_model = "anthropic/claude-3.7-sonnet"
+    elif "gpt-4o" in lower_prompt or "gpt 4" in lower_prompt: vision_model = "openai/gpt-4o"
+    elif "qwen" in lower_prompt: vision_model = "qwen/qwen-vl-plus:free"
+    elif "llama" in lower_prompt: vision_model = "meta-llama/llama-3.2-11b-vision-instruct"
 
-    try:
-        res = await groq_client.chat.completions.create(
-            model=vision_model,
-            messages=[{"role": "user", "content": [
-                {"type": "text", "text": analysis_prompt},
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
-            ]}],
-            max_tokens=600,
-        )
-        analysis = res.choices[0].message.content
-        return analysis, f"/{path_name}" if path_name else None
-    except Exception as e:
-        logging.error(f"Vision analysis error: {e}")
-        return f"Error al analizar la imagen: {e}", None
+    keys = [k for k in [
+        getattr(settings, 'OPENROUTER_API_KEY', None),
+        getattr(settings, 'OPENROUTER_API_KEY_2', None),
+        getattr(settings, 'OPENROUTER_API_KEY_3', None),
+    ] if k]
+
+    if keys:
+        import httpx
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {keys[0]}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": vision_model,
+                        "messages": [{"role": "user", "content": [
+                            {"type": "text", "text": analysis_prompt},
+                            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
+                        ]}],
+                        "max_tokens": 600,
+                    }
+                )
+                if resp.status_code == 200:
+                    analysis = resp.json()["choices"][0]["message"].get("content", "")
+                    return analysis, f"/{path_name}" if path_name else None
+                else:
+                    logging.error(f"OpenRouter vision error ({resp.status_code}): {resp.text}")
+                    return f"Error al analizar la imagen: OpenRouter devolvió {resp.status_code}.", None
+        except Exception as e:
+            logging.error(f"Vision analysis error: {e}")
+            return f"Error al analizar la imagen: {e}", None
+    else:
+        # Fallback to native Gemini Studio using the key present in .env
+        if not settings.GOOGLE_STUDIO_API_KEY:
+            return "Error: No OpenRouter API key NOR Google Studio API key found for vision.", None
+        try:
+            import google.generativeai as genai
+            from PIL import Image
+            import io
+            
+            genai.configure(api_key=settings.GOOGLE_STUDIO_API_KEY)
+            model = genai.GenerativeModel('gemini-2.5-flash')
+            image = Image.open(io.BytesIO(base64.b64decode(image_b64)))
+            
+            response = model.generate_content([analysis_prompt, image])
+            return response.text, f"/{path_name}" if path_name else None
+        except Exception as e:
+            logging.error(f"Native Gemini vision analysis error: {e}")
+            return f"Error al analizar la imagen (Gemini): {e}", None
 
 async def os_control_request(act: str, val: str, code: str = None):
     """

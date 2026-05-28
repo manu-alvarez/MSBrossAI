@@ -18,7 +18,7 @@ These vulnerabilities pose **severe risks** to the confidentiality, integrity, a
 | Severity   | Vulnerability                          | Affected Apps                          | Impact                                                                                     |
 |------------|----------------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------|
 | **Critical** | Exposed API Keys                        | IAPuta OS, LIVEKIT, Arantxa, LogiSearch | Unauthorized access, data breaches, financial loss                                         |
-| **Critical** | No Authentication                       | IAPuta OS, DOHLER, TaskFlowPro         | Unauthorized access to sensitive functionalities, data manipulation                       |
+| **Critical** | No Authentication                       | IAPuta OS, IndustrialPro, TaskFlowPro         | Unauthorized access to sensitive functionalities, data manipulation                       |
 | **Critical** | CORS Misconfiguration (`allow_origins=["*"]`) | IAPuta OS, Arantxa                     | Cross-site scripting (XSS), cross-site request forgery (CSRF), unauthorized data access |
 | **High**     | Injection Risks                         | IAPuta OS, Arantxa                     | Remote code execution, data corruption, unauthorized access                               |
 | **High**     | Data Exposure (Stack Traces)            | LIVEKIT, Multiple Apps                  | Information disclosure, reconnaissance for further attacks                                |
@@ -87,7 +87,7 @@ These vulnerabilities pose **severe risks** to the confidentiality, integrity, a
 
 ---
 
-### 5. DOHLER
+### 5. IndustrialPro
 **Critical Vulnerabilities:**
 - **No Authentication**: No auth mechanism in place.
 

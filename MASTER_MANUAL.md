@@ -14,7 +14,7 @@ El repositorio de **MSBrossAI** se gestiona bajo una arquitectura monorepo modul
 │   ├── traductor-pro/           # Traductor PRO Client & Server (Puerto 8004)
 │   │   ├── client/              # React 19 / Vite (Ventanilla de Traducción)
 │   │   └── server/              # Express AI Translation Proxy (Fallback Secuencial)
-│   ├── newton-mequinenza/       # Newton Mequinenza ERP (Puerto 3005)
+│   ├── gas-station/       # Gas Station ERP (Puerto 3005)
 │   ├── livekit-nikolina/        # Voice AI Nikolina Frontend & Backend (Puerto 8001)
 │   └── ... (resto de las 22 aplicaciones integradas)
 │
@@ -59,7 +59,7 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
 | Contexto URL | Puerto Interno | Servicio Backend |
 |:---|:---:|:---|
 | `/_nikolina` | **8001** | API Hub Nikolina (FastAPI + JWT) |
-| `/_dohler` | **8002** | Dohler Backend (FastAPI Task Manager) |
+| `/_industrialpro` | **8002** | IndustrialPro Backend (FastAPI Task Manager) |
 | `/_elitescout` | **8003** | EliteScout API (FastAPI Finder) |
 | `/_traductor` | **8004** | Traductor PRO Server (Express AI) |
 | `/_msbross` | **8005** | MSBrOSs (Adele Voice Server) |

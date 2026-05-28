@@ -27,9 +27,10 @@ MAX_TOOL_ITERATIONS = 5
 
 # Ollama local models (priority order — best → fastest)
 OLLAMA_MODELS = [
-    "glm-4.7-flash:latest",          # 19GB — best quality, fully local
-    "manoelectricaazul/llama-3-lexi-uncensored:8b",  # 4.9GB — uncensored, versatile
-    "llama3.2:3b",                   # 2GB — fast fallback
+    "qwen2.5:7b",                                    # 4.7GB — Great all-rounder, fast load
+    "llama3.1:8b",                                   # 4.9GB — Solid fallback
+    "deepseek-r1:14b",                               # 9.0GB — Excellent reasoning but slower
+    "ManoElectricaAzul/llama-3-lexi-uncensored:8b",  # 4.9GB — uncensored, versatile
 ]
 OLLAMA_BASE_URL = "http://localhost:11434"
 
@@ -107,21 +108,25 @@ async def _call_ollama(messages: list, model: str = None) -> str:
                 return data["choices"][0]["message"].get("content", "")
             else:
                 logger.warning(f"Ollama error ({resp.status_code}): {resp.text[:200]}")
-                # Try next Ollama model
-                for fallback_model in OLLAMA_MODELS[1:]:
-                    if fallback_model == model:
-                        continue
-                    try:
-                        resp2 = await client.post(
-                            f"{OLLAMA_BASE_URL}/v1/chat/completions",
-                            json={"model": fallback_model, "messages": messages, "max_tokens": 1024}
-                        )
-                        if resp2.status_code == 200:
-                            return resp2.json()["choices"][0]["message"].get("content", "")
-                    except Exception:
-                        continue
     except Exception as e:
-        logger.warning(f"Ollama unavailable: {e}")
+        logger.warning(f"Ollama model {model} failed: {e}")
+        
+    # Try next Ollama models if the first one failed
+    for fallback_model in OLLAMA_MODELS:
+        if fallback_model == model:
+            continue
+        try:
+            async with httpx.AsyncClient(timeout=120) as client:
+                resp2 = await client.post(
+                    f"{OLLAMA_BASE_URL}/v1/chat/completions",
+                    json={"model": fallback_model, "messages": messages, "max_tokens": 1024}
+                )
+                if resp2.status_code == 200:
+                    return resp2.json()["choices"][0]["message"].get("content", "")
+        except Exception as e:
+            logger.warning(f"Fallback Ollama {fallback_model} failed: {e}")
+            continue
+            
     raise RuntimeError("Ollama unavailable or all models failed")
 
 

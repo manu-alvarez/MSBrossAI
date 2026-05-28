@@ -19,6 +19,37 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => set({ user: null, isAuthenticated: false }),
 }));
 
+// ── API Key Store ─────────────────────────────────────────
+import { persist, createJSONStorage } from "zustand/middleware";
+
+interface ApiKeyState {
+  keys: Record<string, string>;
+  setKey: (provider: string, key: string) => void;
+  removeKey: (provider: string) => void;
+  getKey: (provider: string) => string | undefined;
+}
+
+export const useApiStore = create<ApiKeyState>()(
+  persist(
+    (set, get) => ({
+      keys: {},
+      setKey: (provider, key) =>
+        set((state) => ({ keys: { ...state.keys, [provider]: key } })),
+      removeKey: (provider) =>
+        set((state) => {
+          const newKeys = { ...state.keys };
+          delete newKeys[provider];
+          return { keys: newKeys };
+        }),
+      getKey: (provider) => get().keys[provider],
+    }),
+    {
+      name: "jartosdto-api-keys",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
+
 // ── Chat Store ────────────────────────────────────────────
 
 interface ChatState {
@@ -29,6 +60,7 @@ interface ChatState {
   webSearchEnabled: boolean;
   temperature: number;
   maxTokens: number;
+  autoSpeak: boolean;
 
   setMessages: (msgs: ChatMessage[]) => void;
   addMessage: (msg: ChatMessage) => void;
@@ -39,6 +71,7 @@ interface ChatState {
   setWebSearchEnabled: (v: boolean) => void;
   setTemperature: (t: number) => void;
   setMaxTokens: (t: number) => void;
+  setAutoSpeak: (v: boolean) => void;
   clearChat: () => void;
 }
 
@@ -50,6 +83,7 @@ export const useChatStore = create<ChatState>((set) => ({
   webSearchEnabled: false,
   temperature: 0.7,
   maxTokens: 4096,
+  autoSpeak: false,
 
   setMessages: (messages) => set({ messages }),
   addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
@@ -69,6 +103,7 @@ export const useChatStore = create<ChatState>((set) => ({
   setWebSearchEnabled: (webSearchEnabled) => set({ webSearchEnabled }),
   setTemperature: (temperature) => set({ temperature }),
   setMaxTokens: (maxTokens) => set({ maxTokens }),
+  setAutoSpeak: (autoSpeak) => set({ autoSpeak }),
   clearChat: () => set({ messages: [], conversationId: null }),
 }));
 

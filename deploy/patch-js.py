@@ -12,7 +12,7 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 WWW_DIR = os.path.join(BASE_DIR, "www")
 
 API_PREFIXES = {
-    "/_newton", "/_dohler", "/_elitescout", "/_atenea", 
+    "/_gas-station", "/_industrialpro", "/_elitescout", "/_atenea", 
     "/_nikolina", "/_msbross", "/_iaputa", "/_cuentosmagicos", "/_arantxa"
 }
 

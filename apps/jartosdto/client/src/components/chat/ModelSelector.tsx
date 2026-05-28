@@ -2,30 +2,38 @@
 
 import { useState, useEffect } from "react";
 import { getModels } from "@/lib/api";
-import { useChatStore } from "@/stores";
+import { useChatStore, useApiStore } from "@/stores";
 import type { ModelInfo } from "@/types/chat";
 
 const PROVIDER_COLORS: Record<string, string> = {
   openai: "#10a37f", anthropic: "#cc934f", google: "#4285f4",
-  mistral: "#ff7700", ollama: "#e0e0e0",
+  mistral: "#ff7700", ollama: "#e0e0e0", openrouter: "#4f46e5", groq: "#f97316"
 };
 
 export default function ModelSelector() {
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [open, setOpen] = useState(false);
   const { selectedModel, setSelectedModel } = useChatStore();
+  const keys = useApiStore(state => state.keys);
 
   useEffect(() => {
     getModels().then(d => {
+      let newModels: ModelInfo[] = [];
       if (Array.isArray(d)) {
-        setModels(d);
+        newModels = d;
       } else if (d && typeof d === 'object' && 'models' in d && Array.isArray((d as any).models)) {
-        setModels((d as any).models);
-      } else {
-        setModels([]);
+        newModels = (d as any).models;
+      }
+      setModels(newModels);
+      
+      if (newModels.length > 0) {
+        const currentSelected = useChatStore.getState().selectedModel;
+        if (!newModels.find(m => m.id === currentSelected)) {
+          useChatStore.getState().setSelectedModel(newModels[0].id);
+        }
       }
     }).catch(() => {});
-  }, []);
+  }, [keys]);
 
   const current = models.find(m => m.id === selectedModel);
 

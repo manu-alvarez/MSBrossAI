@@ -5,7 +5,7 @@ import path from "path";
 const HOST = "msbross.me";
 const USER = "manu@msbross.me";
 const PASS = "Br3an1sB3tt3r!";
-const APPS = ["newton", "dohler", "traductor", "logisearch"];
+const APPS = ["gas-station", "industrialpro", "traductor", "logisearch"];
 
 async function main() {
   console.log("Deploying intermediate pages...\n");

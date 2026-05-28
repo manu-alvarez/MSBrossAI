@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JartosDTo — Unified AI Chat Platform",
-  description:
-    "Open-source, self-hosted AI chat combining the best of Gemini, ChatGPT, Perplexity, DeepSeek, Qwen & Mistral. Full control over models, RAG, and agents.",
+  metadataBase: new URL("https://msbross.me/app/jartosdto"),
+  title: "JartosDTo — MSBrossAI",
+  description: "Unified AI Chat Platform with Gemini, ChatGPT, DeepSeek, Qwen & Mistral",
 };
 
 export default function RootLayout({

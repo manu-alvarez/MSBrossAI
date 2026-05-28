@@ -7,15 +7,15 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ui/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "EliteScout — Inteligencia de Productos Premium",
-  description:
-    "Búsqueda, comparación y análisis exhaustivo de productos mediante IA. Motor de búsqueda de 3 capas con análisis de sentimiento y puntuación de oportunidad.",
+  metadataBase: new URL("https://msbross.me/app/elitescout"),
+  title: "EliteScout — MSBrossAI",
+  description: "Plataforma de Scouting y Análisis Deportivo",
   keywords: ["comparador de precios", "análisis de productos", "ofertas", "cupones", "IA"],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "EliteScout",
+    title: "EliteScout — MSBrossAI",
   },
 };
 

@@ -2,6 +2,7 @@
 
 import { API_URL } from "./utils";
 import type { ChatMessage, StreamChunk, Source, ModelInfo, Agent, User } from "../types/chat";
+import { useApiStore } from "../stores";
 
 /** Stored auth token. */
 let token: string | null = null;
@@ -100,7 +101,10 @@ async function apiFetch(path: string, opts: RequestInit = {}): Promise<Response>
   if (!(opts.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
-  return fetch(`${API_URL}/api/v1${path}`, { ...opts, headers });
+  
+  // Use current origin and route through proxy
+  const baseUrl = typeof window !== "undefined" ? "" : API_URL;
+  return fetch(`${baseUrl}/_jartosdto/api/v1${path}`, { ...opts, headers });
 }
 
 // ── Auth ──────────────────────────────────────────────────
@@ -194,15 +198,27 @@ export async function deleteConversation(convId: string) {
 // ── Models ────────────────────────────────────────────────
 
 export async function getModels(): Promise<ModelInfo[]> {
+  const keys = useApiStore.getState().keys;
+  const customModels: ModelInfo[] = [];
+
+  let serverModels: ModelInfo[] = [];
   if (isOfflineMode()) {
-    return [
-      { id: "gpt-4o", provider: "OpenAI", display_name: "GPT-4o (Acceso Rápido)", is_vision: true, is_thinking: false },
-      { id: "claude-3-5-sonnet", provider: "Anthropic", display_name: "Claude 3.5 Sonnet", is_vision: true, is_thinking: false },
-      { id: "deepseek-reasoner", provider: "DeepSeek", display_name: "DeepSeek R1 (Razonamiento)", is_vision: false, is_thinking: true },
+    serverModels = [
+      { id: "gpt-4o", provider: "openai", display_name: "GPT-4o (Acceso Rápido)", is_vision: true, is_thinking: false },
+      { id: "claude-3-5-sonnet", provider: "anthropic", display_name: "Claude 3.5 Sonnet", is_vision: true, is_thinking: false },
+      { id: "deepseek-reasoner", provider: "deepseek", display_name: "DeepSeek R1 (Razonamiento)", is_vision: false, is_thinking: true },
     ];
+  } else {
+    try {
+      const res = await apiFetch("/models/", {
+        headers: {
+          "x-custom-api-keys": JSON.stringify(keys)
+        }
+      });
+      serverModels = await res.json();
+    } catch { }
   }
-  const res = await apiFetch("/models/");
-  return res.json();
+  return [...customModels, ...serverModels];
 }
 
 // ── Agents ────────────────────────────────────────────────
@@ -397,10 +413,13 @@ export function streamChat(body: {
   }
 
   const t = getToken();
-  return fetch(`${API_URL}/api/v1/chat/completions`, {
+  const keys = useApiStore.getState().keys;
+  const baseUrl = typeof window !== "undefined" ? "" : API_URL;
+  return fetch(`${baseUrl}/_jartosdto/api/v1/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "x-custom-api-keys": JSON.stringify(keys),
       ...(t ? { Authorization: `Bearer ${t}` } : {}),
     },
     body: JSON.stringify({ ...body, stream: true }),

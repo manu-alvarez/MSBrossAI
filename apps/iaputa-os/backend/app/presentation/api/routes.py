@@ -14,12 +14,14 @@ from app.application.use_cases.memory_service import clear_history
 from app.domain.entities import AIResponse
 from app.infrastructure.tools.toolbox import analyze_vision_image
 from app.infrastructure.llm.gemini_adapter import GeminiAdapter
+from app.infrastructure.llm.fallback_adapter import FallbackLLMAdapter
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 def get_chat_usecase() -> ChatUseCase:
-    return ChatUseCase(llm_adapter=GeminiAdapter(), audio_adapter=GroqEdgeAudioAdapter())
+    fallback_llm = FallbackLLMAdapter(adapters=[GeminiAdapter(), GroqAdapter()])
+    return ChatUseCase(llm_adapter=fallback_llm, audio_adapter=GroqEdgeAudioAdapter())
 
 def get_audio_adapter() -> GroqEdgeAudioAdapter:
     return GroqEdgeAudioAdapter()
