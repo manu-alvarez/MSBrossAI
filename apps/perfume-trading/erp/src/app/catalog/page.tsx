@@ -57,28 +57,35 @@ export default function CatalogPage() {
     if (!newProduct.ean) return;
     setIsSearchingBarcode(true);
     try {
-      // 1. Try OpenBeautyFacts (Fragrances/Cosmetics)
+      // 1. Try OpenBeautyFacts (Fragrances/Cosmetics) - It supports CORS natively
       let res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${newProduct.ean}`);
       let data = await res.json();
       
-      // 2. Fallback to OpenFoodFacts if not found (users often test with random barcodes like water bottles)
-      if (!data || data.status !== 1 || !data.product) {
+      // 2. If it returns status 0 (not found) or says it's in the food database, check OpenFoodFacts
+      if (data.status === 0 || !data.product) {
         res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${newProduct.ean}`);
         data = await res.json();
       }
 
       if (data && data.status === 1 && data.product) {
-        setNewProduct(prev => ({
-          ...prev,
-          brand: data.product.brands || prev.brand,
-          name: data.product.product_name || prev.name,
-        }));
+        const brand = data.product.brands || data.product.brands_tags?.[0] || "";
+        const name = data.product.product_name || data.product.generic_name || "";
+        
+        if (!brand && !name) {
+           alert("EAN encontrado, pero no tiene marca ni nombre registrados en la base pública.");
+        } else {
+          setNewProduct(prev => ({
+            ...prev,
+            brand: brand || prev.brand,
+            name: name || prev.name,
+          }));
+        }
       } else {
-        alert("EAN no encontrado en la base de datos pública global (Beauty/Food).");
+        alert("EAN no encontrado en las bases de datos públicas (OpenBeautyFacts/OpenFoodFacts).");
       }
     } catch (error) {
       console.error("Error fetching barcode:", error);
-      alert("Error de conexión al contactar con la API externa.");
+      alert("Error de conexión al contactar con la API externa (posible bloqueo de CORS o red).");
     } finally {
       setIsSearchingBarcode(false);
     }
