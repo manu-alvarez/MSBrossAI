@@ -39,7 +39,6 @@ const SEARCH_ENTRIES = [
   { id: 'nav4', label: 'Socios B2B', category: 'Navegación', href: '/partners', keywords: 'socios partners proveedores clientes brokers' },
   { id: 'nav5', label: 'Facturación', category: 'Navegación', href: '/invoices', keywords: 'facturas invoices proforma' },
   { id: 'nav6', label: 'Correo Comercial', category: 'Navegación', href: '/email', keywords: 'correo email plantillas templates' },
-  { id: 'nav7', label: 'Herramientas Externas', category: 'Navegación', href: '/tools', keywords: 'herramientas tools traductor logisearch' },
   { id: 'nav8', label: 'Configuración', category: 'Navegación', href: '/settings', keywords: 'configuracion settings preferencias' },
 ];
 

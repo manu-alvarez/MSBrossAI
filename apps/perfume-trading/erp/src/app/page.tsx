@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   TrendingUp, Package, ShoppingCart, UserCheck,
-  DollarSign, AlertTriangle, BarChart3, Percent, Bell, Wrench, Languages, Euro
+  DollarSign, AlertTriangle, BarChart3, Percent, Bell, Wrench, Languages, Euro, Mail
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -126,28 +126,19 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Quick Access */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <a href="https://msbross.me/app/traductor/" target="_blank" rel="noopener noreferrer"
-          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group">
-          <div className="w-10 h-10 rounded-lg bg-[#F0F7FF] dark:bg-[#1a2a3a] flex items-center justify-center mr-4 shrink-0">
-            <Languages size={20} className="text-[#f43f5e] dark:text-[#fb7185]" />
+      {/* Smart Inbox Widget */}
+      <div className="grid grid-cols-1">
+        <div className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group cursor-pointer" onClick={() => window.location.href='/email'}>
+          <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mr-4 shrink-0 relative">
+            <Mail size={20} className="text-indigo-600 dark:text-indigo-400" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white dark:border-[#1e1e1e]"></span>
           </div>
-          <div>
-            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#f43f5e] dark:group-hover:text-[#fb7185] transition-colors">Traductor</p>
-            <p className="text-[10px] text-[#605E5C] dark:text-[#888]">Comunicaciones multilingüe con socios</p>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Smart Inbox — Extracción IA Activa</p>
+            <p className="text-[10px] text-[#605E5C] dark:text-[#888]">1 correo B2B con pedido pendiente de procesar</p>
           </div>
-        </a>
-        <a href="https://msbross.me/app/logisearch/" target="_blank" rel="noopener noreferrer"
-          className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group">
-          <div className="w-10 h-10 rounded-lg bg-[#F0F7FF] dark:bg-[#1a2a3a] flex items-center justify-center mr-4 shrink-0">
-            <Wrench size={20} className="text-[#f43f5e] dark:text-[#fb7185]" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-[#f43f5e] dark:group-hover:text-[#fb7185] transition-colors">LogiSearch</p>
-            <p className="text-[10px] text-[#605E5C] dark:text-[#888]">Tracking de envíos y rutas logísticas</p>
-          </div>
-        </a>
+          <Badge variant="info">IA Lista</Badge>
+        </div>
       </div>
 
       {/* Charts + Alerts Grid */}

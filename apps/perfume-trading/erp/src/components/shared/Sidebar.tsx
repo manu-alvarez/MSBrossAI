@@ -18,7 +18,6 @@ const navItems = [
   { name: 'Facturación', href: '/invoices', icon: FileText },
   { name: 'Contabilidad', href: '/accounting', icon: Calculator },
   { name: 'Correo', href: '/email', icon: Mail },
-  { name: 'Herramientas', href: '/tools', icon: Wrench },
   { name: 'Configuración', href: '/settings', icon: Settings },
 ];
 

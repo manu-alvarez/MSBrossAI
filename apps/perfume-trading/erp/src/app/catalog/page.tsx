@@ -42,6 +42,7 @@ export default function CatalogPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [isSearchingBarcode, setIsSearchingBarcode] = useState(false);
   const [newProduct, setNewProduct] = useState({
     brand: '', name: '', concentration: 'EDP', size: '100', format: 'Regular',
     gender: 'Unisex', ean: '', price: 0,
@@ -51,6 +52,29 @@ export default function CatalogPage() {
     (i) => !search || i.brand.toLowerCase().includes(search.toLowerCase()) ||
       i.name.toLowerCase().includes(search.toLowerCase()) || i.ean.includes(search)
   );
+
+  const handleSearchBarcode = async () => {
+    if (!newProduct.ean) return;
+    setIsSearchingBarcode(true);
+    try {
+      const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${newProduct.ean}`);
+      const data = await res.json();
+      if (data && data.status === 1 && data.product) {
+        setNewProduct(prev => ({
+          ...prev,
+          brand: data.product.brands || prev.brand,
+          name: data.product.product_name || prev.name,
+        }));
+      } else {
+        alert("EAN no encontrado en la base de datos de OpenBeautyFacts.");
+      }
+    } catch (error) {
+      console.error("Error fetching barcode:", error);
+      alert("Error al contactar con la API.");
+    } finally {
+      setIsSearchingBarcode(false);
+    }
+  };
 
   const handleAddProduct = () => {
     if (!newProduct.brand || !newProduct.name || !newProduct.ean) return;
@@ -148,6 +172,15 @@ export default function CatalogPage() {
           </>
         }>
         <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2 flex space-x-2 items-end">
+            <div className="flex-1">
+              <Input label="EAN (Auto API) *" placeholder="3145891073607" value={newProduct.ean}
+                onChange={(e) => setNewProduct({ ...newProduct, ean: e.target.value })} />
+            </div>
+            <Button variant="secondary" onClick={handleSearchBarcode} disabled={isSearchingBarcode || !newProduct.ean}>
+              {isSearchingBarcode ? "Buscando..." : "Autocompletar con API"}
+            </Button>
+          </div>
           <Input label="Marca *" placeholder="Chanel, Dior..." value={newProduct.brand}
             onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })} />
           <Input label="Nombre *" placeholder="Bleu de Chanel..." value={newProduct.name}
@@ -163,8 +196,6 @@ export default function CatalogPage() {
           <Select label="Género" value={newProduct.gender}
             onChange={(e) => setNewProduct({ ...newProduct, gender: e.target.value })}
             options={[{ value: 'Male', label: 'Hombre' }, { value: 'Female', label: 'Mujer' }, { value: 'Unisex', label: 'Unisex' }]} />
-          <Input label="EAN *" placeholder="3145891073607" value={newProduct.ean}
-            onChange={(e) => setNewProduct({ ...newProduct, ean: e.target.value })} />
           <Input label="Precio ($)" type="number" value={newProduct.price}
             onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })} />
         </div>
