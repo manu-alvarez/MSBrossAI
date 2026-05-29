@@ -3,24 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import { getEURRate, formatCurrency } from '@/lib/services/currency';
 import { cn } from '@/lib/utils';
+import { useUIStore } from '@/stores/ui-store';
+import { DollarSign, Euro } from 'lucide-react';
 
 interface CurrencyDisplayProps {
   amountUSD: number;
-  showEUR?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
 /**
- * Displays price in USD with optional EUR conversion.
- * Fetches live exchange rate on mount.
+ * Displays price in the globally selected currency (USD or EUR).
+ * Fetches live exchange rate on mount to accurately display EUR.
  */
 export function CurrencyDisplay({
   amountUSD,
-  showEUR = true,
   className,
   size = 'md',
 }: CurrencyDisplayProps) {
+  const { currency } = useUIStore();
   const [eurAmount, setEurAmount] = useState<number | null>(null);
   const [rate, setRate] = useState<number>(0.85);
 
@@ -36,16 +37,34 @@ export function CurrencyDisplay({
 
   const sizeClasses = size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm';
 
+  const displayAmount = currency === 'EUR' && eurAmount !== null ? eurAmount : amountUSD;
+  const displayTitle = currency === 'EUR' ? `Original: $${amountUSD.toFixed(2)} (Rate: ${rate})` : '';
+
   return (
-    <span className={cn('inline-flex items-center gap-1.5', sizeClasses, className)} title={`Tipo de cambio: 1 USD = ${rate} EUR`}>
-      <span className="font-bold">{formatCurrency(amountUSD, 'USD')}</span>
-      {showEUR && eurAmount !== null && (
-        <>
-          <span className="text-[#605E5C] dark:text-[#888] font-normal">/</span>
-          <span className="text-[#605E5C] dark:text-[#888]">{formatCurrency(eurAmount, 'EUR')}</span>
-        </>
-      )}
+    <span className={cn('inline-flex items-center gap-1.5', sizeClasses, className)} title={displayTitle}>
+      <span className="font-bold">{formatCurrency(displayAmount, currency)}</span>
     </span>
+  );
+}
+
+/**
+ * A toggle button to switch the global currency state.
+ */
+export function CurrencyToggle() {
+  const { currency, setCurrency } = useUIStore();
+
+  const handleToggle = () => {
+    setCurrency(currency === 'USD' ? 'EUR' : 'USD');
+  };
+
+  return (
+    <button
+      onClick={handleToggle}
+      className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center w-8 h-8"
+      title={`Cambiar a ${currency === 'USD' ? 'EUR' : 'USD'}`}
+    >
+      {currency === 'USD' ? <DollarSign size={16} /> : <Euro size={16} />}
+    </button>
   );
 }
 

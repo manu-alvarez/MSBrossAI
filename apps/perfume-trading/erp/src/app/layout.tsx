@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/shared/Sidebar";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
-import { ExchangeRateBadge } from "@/components/ui/currency-display";
+import { ExchangeRateBadge, CurrencyToggle } from "@/components/ui/currency-display";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { SearchButton } from "@/components/search/SearchButton";
 
@@ -43,6 +43,7 @@ export default function RootLayout({
                   <ExchangeRateBadge />
                 </div>
                 <div className="flex items-center space-x-3">
+                  <CurrencyToggle />
                   <SearchButton />
                   <ThemeToggle />
                 </div>
