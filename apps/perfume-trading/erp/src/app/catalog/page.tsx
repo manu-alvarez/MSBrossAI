@@ -57,8 +57,16 @@ export default function CatalogPage() {
     if (!newProduct.ean) return;
     setIsSearchingBarcode(true);
     try {
-      const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${newProduct.ean}`);
-      const data = await res.json();
+      // 1. Try OpenBeautyFacts (Fragrances/Cosmetics)
+      let res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${newProduct.ean}`);
+      let data = await res.json();
+      
+      // 2. Fallback to OpenFoodFacts if not found (users often test with random barcodes like water bottles)
+      if (!data || data.status !== 1 || !data.product) {
+        res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${newProduct.ean}`);
+        data = await res.json();
+      }
+
       if (data && data.status === 1 && data.product) {
         setNewProduct(prev => ({
           ...prev,
@@ -66,11 +74,11 @@ export default function CatalogPage() {
           name: data.product.product_name || prev.name,
         }));
       } else {
-        alert("EAN no encontrado en la base de datos de OpenBeautyFacts.");
+        alert("EAN no encontrado en la base de datos pública global (Beauty/Food).");
       }
     } catch (error) {
       console.error("Error fetching barcode:", error);
-      alert("Error al contactar con la API.");
+      alert("Error de conexión al contactar con la API externa.");
     } finally {
       setIsSearchingBarcode(false);
     }

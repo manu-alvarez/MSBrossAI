@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useState, useMemo } from 'react';
 import {
   TrendingUp, Package, ShoppingCart, UserCheck,
@@ -128,17 +129,19 @@ export default function Dashboard() {
 
       {/* Smart Inbox Widget */}
       <div className="grid grid-cols-1">
-        <div className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group cursor-pointer" onClick={() => window.location.href='/email'}>
-          <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mr-4 shrink-0 relative">
-            <Mail size={20} className="text-indigo-600 dark:text-indigo-400" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white dark:border-[#1e1e1e]"></span>
+        <Link href="/email" className="block">
+          <div className="flex items-center p-4 bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm hover:border-[#f43f5e] dark:hover:border-[#fb7185] transition-colors group cursor-pointer">
+            <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mr-4 shrink-0 relative">
+              <Mail size={20} className="text-indigo-600 dark:text-indigo-400" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white dark:border-[#1e1e1e]"></span>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Smart Inbox — Extracción IA Activa</p>
+              <p className="text-[10px] text-[#605E5C] dark:text-[#888]">1 correo B2B con pedido pendiente de procesar</p>
+            </div>
+            <Badge variant="info">IA Lista</Badge>
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-bold text-[#323130] dark:text-[#e0e0e0] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Smart Inbox — Extracción IA Activa</p>
-            <p className="text-[10px] text-[#605E5C] dark:text-[#888]">1 correo B2B con pedido pendiente de procesar</p>
-          </div>
-          <Badge variant="info">IA Lista</Badge>
-        </div>
+        </Link>
       </div>
 
       {/* Charts + Alerts Grid */}
