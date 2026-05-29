@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   TrendingUp, Package, ShoppingCart, UserCheck,
-  DollarSign, AlertTriangle, BarChart3, Percent, Bell, Wrench, Languages,
+  DollarSign, AlertTriangle, BarChart3, Percent, Bell, Wrench, Languages, Euro
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -17,8 +17,8 @@ import type { StockAlert } from '@/lib/services/inventory';
 
 // ─── Mock KPI Data ───
 const kpis = [
-  { title: 'Ventas (30d)', value: '$124,500', change: '+12.5%', positive: true, icon: DollarSign },
-  { title: 'Ofertas Activas', value: '48', change: '+3', positive: true, icon: ShoppingCart },
+  { title: 'Ventas (30d)', value: 124500, isCurrency: true, change: '+12.5%', positive: true },
+  { title: 'Ofertas Activas', value: 48, change: '+3', positive: true },
   { title: 'Stock Bajo', value: '12 SKUs', change: '-2', positive: false, icon: AlertTriangle },
   { title: 'Margen Promedio', value: '24.8%', change: '+2.1%', positive: true, icon: Percent },
 ];
@@ -58,10 +58,10 @@ const recentActivity = [
 ];
 
 const recentOffers = [
-  { brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', qty: 50, price: '$78.50', status: 'Activa' as const },
-  { brand: 'Dior', product: 'Sauvage EDT 100ml Tester', qty: 100, price: '$62.00', status: 'Pendiente' as const },
-  { brand: 'Creed', product: 'Aventus EDP 100ml', qty: 10, price: '$245.00', status: 'Cerrada' as const },
-  { brand: 'Tom Ford', product: 'Ombre Leather EDP 100ml', qty: 25, price: '$115.00', status: 'Activa' as const },
+  { brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', qty: 50, price: 78.50, status: 'Activa' as const },
+  { brand: 'Dior', product: 'Sauvage EDT 100ml Tester', qty: 100, price: 62.00, status: 'Pendiente' as const },
+  { brand: 'Creed', product: 'Aventus EDP 100ml', qty: 10, price: 245.00, status: 'Cerrada' as const },
+  { brand: 'Tom Ford', product: 'Ombre Leather EDP 100ml', qty: 25, price: 115.00, status: 'Activa' as const },
 ];
 
 const activityColors = {
@@ -77,9 +77,13 @@ const statusStyles = {
   Cerrada: 'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-400',
 };
 
+import { CurrencyDisplay } from '@/components/ui/currency-display';
+import { useUIStore } from '@/stores/ui-store';
+
 export default function Dashboard() {
   const [alerts] = useState(stockAlerts);
   const lowStockCount = useMemo(() => alerts.filter((a) => a.alert_type === 'low_stock').length, [alerts]);
+  const { currency } = useUIStore();
 
   return (
     <div className="space-y-6">
@@ -100,11 +104,19 @@ export default function Dashboard() {
           <Card key={kpi.title}>
             <CardHeader>
               <CardTitle>{kpi.title}</CardTitle>
-              <kpi.icon size={18} className="text-[#f43f5e] dark:text-[#fb7185]" />
+              {kpi.icon ? (
+                <kpi.icon size={18} className="text-[#f43f5e] dark:text-[#fb7185]" />
+              ) : kpi.isCurrency ? (
+                currency === 'USD' ? <DollarSign size={18} className="text-[#f43f5e] dark:text-[#fb7185]" /> : <Euro size={18} className="text-[#f43f5e] dark:text-[#fb7185]" />
+              ) : (
+                <ShoppingCart size={18} className="text-[#f43f5e] dark:text-[#fb7185]" />
+              )}
             </CardHeader>
             <CardContent>
               <div className="flex items-end justify-between">
-                <span className="text-2xl font-bold text-[#323130] dark:text-[#e0e0e0]">{kpi.value}</span>
+                <span className="text-2xl font-bold text-[#323130] dark:text-[#e0e0e0]">
+                  {kpi.isCurrency ? <CurrencyDisplay amountUSD={kpi.value as number} /> : kpi.value}
+                </span>
                 <span className={cn('text-xs font-medium', kpi.positive ? 'text-green-600' : 'text-red-600')}>
                   {kpi.change}
                 </span>
@@ -256,7 +268,9 @@ export default function Dashboard() {
                   <td className="px-4 py-3 font-semibold text-[#f43f5e] dark:text-[#fb7185]">{offer.brand}</td>
                   <td className="px-4 py-3">{offer.product}</td>
                   <td className="px-4 py-3">{offer.qty}</td>
-                  <td className="px-4 py-3">{offer.price}</td>
+                  <td className="px-4 py-3">
+                    <CurrencyDisplay amountUSD={offer.price} size="sm" />
+                  </td>
                   <td className="px-4 py-3">
                     <span className={cn('px-2 py-0.5 rounded-full text-[10px] font-bold', statusStyles[offer.status])}>
                       {offer.status}

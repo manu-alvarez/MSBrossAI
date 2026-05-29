@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Package, ArrowLeftRight, Users,
-  FileText, Settings, Wrench, Mail, Menu, ChevronLeft,
+  FileText, Settings, Wrench, Mail, Menu, ChevronLeft, Calculator
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/ui-store';
@@ -16,6 +16,7 @@ const navItems = [
   { name: 'Trading B2B', href: '/trading', icon: ArrowLeftRight },
   { name: 'Socios B2B', href: '/partners', icon: Users },
   { name: 'Facturación', href: '/invoices', icon: FileText },
+  { name: 'Contabilidad', href: '/accounting', icon: Calculator },
   { name: 'Correo', href: '/email', icon: Mail },
   { name: 'Herramientas', href: '/tools', icon: Wrench },
   { name: 'Configuración', href: '/settings', icon: Settings },

@@ -36,7 +36,7 @@ async function fetchRates(): Promise<RateCache> {
     return cache;
   }
 
-  const res = await fetch('https://open.er-api.com/v6/latest/USD', {
+  const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD', {
     signal: AbortSignal.timeout(5000),
   });
 
