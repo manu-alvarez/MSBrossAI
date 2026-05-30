@@ -103,7 +103,7 @@ app.get('/api/visits-badge', (req, res) => {
 
 // ── Static SPAs ──
 const NEXT_APPS = [
-  'app-generator', 'cuentosmagicos', 'combipro', 'industrialpro',
+  'app-generator', 'cuentos-magicos', 'combipro', 'industrialpro',
   'edelweiss', 'expositator', 'iaputa', 'iaputa-os', 'jartosdto',
   'logisearch', 'moko', 'msbross', 'gas-station', 'nikolina',
   'taskflow', 'perfume-trading', 'traductor', 'atenea', 'elitescout',
