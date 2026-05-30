@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   trailingSlash: true,
   output: "export",
-  basePath: "/app/cuentosmagicos",
+  basePath: "/app/cuentos-magicos",
   images: {
     unoptimized: true,
     remotePatterns: [
