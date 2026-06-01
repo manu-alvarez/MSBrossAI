@@ -17,15 +17,22 @@ jobs:
       fail-fast: false
       matrix:
         app:
+          # ── Vite apps en raíz ──
+          - { name: 'app-generator', path: 'apps/app-generator' }
+          - { name: 'combipro', path: 'apps/combipro' }
+          - { name: 'edelweiss', path: 'apps/edelweiss' }
+          - { name: 'elitescout', path: 'apps/elitescout' }
+          - { name: 'gas-station', path: 'apps/gas-station' }
+          - { name: 'industrialpro', path: 'apps/industrialpro' }
+          - { name: 'logisearch', path: 'apps/logisearch' }
+          - { name: 'moko-tools', path: 'apps/moko-tools' }
+          - { name: 'taskflow-pro', path: 'apps/taskflow-pro' }
+          # ── Apps con frontend/ o client/ ──
           - { name: 'iaputa-os', path: 'apps/iaputa-os/frontend' }
+          - { name: 'jartosdto', path: 'apps/jartosdto/client' }
           - { name: 'livekit-nikolina', path: 'apps/livekit-nikolina/frontend' }
           - { name: 'traductor-pro', path: 'apps/traductor-pro/client' }
-          - { name: 'taskflow-pro', path: 'apps/taskflow-pro' }
-          - { name: 'logisearch', path: 'apps/logisearch' }
-          - { name: 'edelweiss', path: 'apps/edelweiss' }
-          - { name: 'moko-tools', path: 'apps/moko-tools' }
-          - { name: 'combipro', path: 'apps/combipro' }
-          - { name: 'app-generator', path: 'apps/app-generator' }
+          # NOTA: cuentos-magicos usa Next.js static export con deploy manual
 
     steps:
       - name: Checkout
@@ -79,10 +86,10 @@ jobs:
 
       - name: Verify deployment
         run: |
-          echo "Verifying 9 apps..."
+          echo "Verifying 13 apps..."
           PASS=0
           FAIL=0
-          for slug in iaputa-os livekit-nikolina traductor-pro taskflow-pro logisearch edelweiss moko-tools combipro app-generator; do
+          for slug in app-generator combipro edelweiss elitescout gas-station industrialpro logisearch moko-tools taskflow-pro iaputa-os jartosdto livekit-nikolina traductor-pro; do
             HTTP=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 --retry 2 --retry-delay 2 "https://msbross.me/app/$slug/")
             if [ "$HTTP" = "200" ]; then
               echo "  ✅ $slug: HTTP $HTTP"
@@ -94,5 +101,5 @@ jobs:
           done
           echo ""
           echo "Result: $PASS PASS / $FAIL FAIL"
-          echo "Deployment completed successfully. Curl verification completed."
+          echo "Deployment completed successfully."
 
