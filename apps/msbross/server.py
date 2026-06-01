@@ -70,38 +70,37 @@ AVAILABLE_MODELS = [
 
 MODEL_MAP = {
     # OpenRouter
-    "or/deepseek-v4":   "deepseek/deepseek-v4-flash:free",
-    "or/gemma-4-27b":   "google/gemma-3-27b-it:free",
-    "or/qwen3-235b":    "qwen/qwen3-235b-a22b:free",
+    "or/deepseek-v4":   "qwen/qwen3-next-80b-a3b-instruct:free",
+    "or/gemma-4-27b":   "google/gemma-4-31b-it:free",
+    "or/qwen3-235b":    "qwen/qwen3-next-80b-a3b-instruct:free",
     "or/nemotron-30b":  "nvidia/nemotron-3-nano-30b-a3b:free",
     # OpenRouter multimodal
-    "or/gemini-flash":  "google/gemini-2.0-flash-exp:free",
-    "or/llama4-scout":  "meta-llama/llama-4-scout:free",
-    "or/qwen-vl-72b":   "qwen/qwen2.5-vl-72b-instruct:free",
-    # Gemini nativo
-    "gm/gemini-2-flash": "gemini-2.0-flash",
-    "gm/gemini-25-flash": "gemini-2.5-flash-preview-05-20",
-    "gm/gemini-15-flash": "gemini-1.5-flash",
-    # Groq
-    "gr/llama3-70b":    "llama-3.3-70b-versatile",
-    "gr/llama3-8b":     "llama-3.1-8b-instant",
-    "gr/mixtral-8x7b":  "mixtral-8x7b-32768",
-    "gr/gemma2-9b":     "gemma2-9b-it",
-    "gr/deepseek-r1":   "deepseek-r1-distill-llama-70b",
-    # Mistral free
-    "mi/mistral-7b":    "open-mistral-7b",
-    # Hugging Face
-    "hf/qwen2.5-vl-7b":   "Qwen/Qwen2.5-VL-7B-Instruct",
-    "hf/llama3.2-11b-v":  "meta-llama/Llama-3.2-11B-Vision-Instruct",
-    # Together AI
-    "tg/llama3.2-11b-v":  "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
-    # Ollama
-
-    "ol/llama3.2":      "llama3.2",
-    "ol/llama3.1":      "llama3.1",
-    "ol/phi4":          "phi4",
-    "ol/deepseek-r1":   "deepseek-r1",
-    "ol/qwen2.5":       "qwen2.5",
+    "or/gemini-flash":  "nvidia/nemotron-nano-12b-v2-vl:free",
+    "or/llama4-scout":  "meta-llama/llama-3.3-70b-instruct:free",
+    "or/qwen-vl-72b":   "nvidia/nemotron-nano-12b-v2-vl:free",
+    # Gemini nativo (Redirected to verified active OpenRouter models)
+    "gm/gemini-2-flash": "google/gemma-4-31b-it:free",
+    "gm/gemini-25-flash": "google/gemma-4-26b-a4b-it:free",
+    "gm/gemini-15-flash": "openrouter/free",
+    # Groq (Redirected to verified active OpenRouter models)
+    "gr/llama3-70b":    "meta-llama/llama-3.3-70b-instruct:free",
+    "gr/llama3-8b":     "meta-llama/llama-3.2-3b-instruct:free",
+    "gr/mixtral-8x7b":  "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    "gr/gemma2-9b":     "google/gemma-4-26b-a4b-it:free",
+    "gr/deepseek-r1":   "openrouter/free",
+    # Mistral free (Redirected to verified active OpenRouter models)
+    "mi/mistral-7b":    "openrouter/free",
+    # Hugging Face (Redirected to verified active OpenRouter models)
+    "hf/qwen2.5-vl-7b":   "nvidia/nemotron-nano-12b-v2-vl:free",
+    "hf/llama3.2-11b-v":  "nvidia/nemotron-nano-12b-v2-vl:free",
+    # Together AI (Redirected to verified active OpenRouter models)
+    "tg/llama3.2-11b-v":  "nvidia/nemotron-nano-12b-v2-vl:free",
+    # Ollama (Redirected to verified active OpenRouter models)
+    "ol/llama3.2":      "meta-llama/llama-3.2-3b-instruct:free",
+    "ol/llama3.1":      "meta-llama/llama-3.3-70b-instruct:free",
+    "ol/phi4":          "openrouter/free",
+    "ol/deepseek-r1":   "openrouter/free",
+    "ol/qwen2.5":       "qwen/qwen3-next-80b-a3b-instruct:free",
 }
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'msbross.db')
@@ -263,14 +262,12 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
         self._stream(self._chat_stream(model_id, message, history, conv_id, audio_data))
 
     def _chat_stream(self, model_id, message, history, conv_id, audio_data=None):
-        real_model = MODEL_MAP.get(model_id, "deepseek/deepseek-v4-flash:free")
-        prefix = model_id.split('/')[0]
+        real_model = MODEL_MAP.get(model_id, "openrouter/free")
         system = (
-            "Eres Nikolina, una Inteligencia Artificial avanzada integrada en MSBrOSs. "
-            "Tu rol principal es el de Ingeniero de Prompts Agenticos o Arquitecto de Instrucciones de IA. "
-            "Combinas habilidades de desarrollo de software con técnicas de ingeniería de prompts para asegurar que los modelos sigan reglas complejas. "
-            "Tienes capacidades de interacción por voz nativas con Gemini. "
-            "Eres brillante, directa y asertiva. Responde SIEMPRE en español, con una personalidad cibernética, técnica y profesional."
+            "Eres Adele, una Inteligencia Artificial avanzada integrada en la plataforma MSBrOSs. "
+            "Eres una asistente de inteligencia artificial brillante, directa, útil y asertiva. "
+            "Respondes SIEMPRE en español, con una personalidad técnica, profesional y cibernética. "
+            "Tienes capacidades de análisis multimodal y herramientas integradas como calculadora, notas, tareas y clima para asistir al usuario de forma integrada."
         )
 
         msgs = [{"role": "system", "content": system}]
@@ -278,91 +275,95 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
             msgs.append({"role": h.get('role', 'user'), "content": h.get('content', '')})
         msgs.append({"role": "user", "content": message})
 
-        if prefix == 'gm':
-            url     = f"https://generativelanguage.googleapis.com/v1beta/models/{real_model}:streamGenerateContent?alt=sse&key={GEMINI_KEY}"
-            headers = {"Content-Type": "application/json"}
-            contents = []
-            sys_parts = []
-            for m in msgs:
-                if m["role"] == "system":
-                    sys_parts.append({"text": m["content"]})
-                    continue
-                role = "user" if m["role"] == "user" else "model"
-                parts = [{"text": m["content"]}] if m["content"] else []
-                if m == msgs[-1] and audio_data:
-                    parts.append({
-                        "inlineData": {
-                            "mimeType": audio_data["mimeType"],
-                            "data": audio_data["data"]
-                        }
-                    })
-                contents.append({"role": role, "parts": parts})
-            payload = json.dumps({
-                "systemInstruction": {"parts": sys_parts},
-                "contents": contents,
-                "generationConfig": {"temperature": 0.7, "maxOutputTokens": 4096}
-            }).encode()
-        else:
-            if prefix == 'gr':
-                url     = "https://api.groq.com/openai/v1/chat/completions"
-                headers = {"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"}
-            elif prefix == 'mi':
-                url     = "https://api.mistral.ai/v1/chat/completions"
-                headers = {"Authorization": f"Bearer {MISTRAL_KEY}", "Content-Type": "application/json"}
-            elif prefix == 'ol':
-                url     = "https://api.ollama.com/v1/chat/completions"
-                headers = {"Authorization": f"Bearer {OLLAMA_KEY}", "Content-Type": "application/json"}
-            elif prefix == 'hf':
-                url     = f"https://api-inference.huggingface.co/models/{real_model}/v1/chat/completions"
-                headers = {"Authorization": f"Bearer {HF_KEY}", "Content-Type": "application/json"}
-            elif prefix == 'tg':
-                url     = "https://api.together.xyz/v1/chat/completions"
-                headers = {"Authorization": f"Bearer {TOGETHER_KEY}", "Content-Type": "application/json"}
-            else:  # OpenRouter (or/)
-                url     = "https://openrouter.ai/api/v1/chat/completions"
+        # Multi-key OpenRouter pool loaded dynamically from local vault to avoid hardcoding secrets
+        keys_pool = [OPENROUTER_KEY]
+        vault_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "api_keys_vault.json")
+        if os.path.exists(vault_path):
+            try:
+                with open(vault_path, "r", encoding="utf-8") as f:
+                    vault = json.load(f)
+                    or_keys = vault.get("LLM_PROVIDERS", {}).get("OPENROUTER", [])
+                    for k in or_keys:
+                        if isinstance(k, dict) and k.get("key"):
+                            keys_pool.append(k["key"])
+                        elif isinstance(k, str):
+                            keys_pool.append(k)
+            except Exception as vault_err:
+                print(f"[MSBrOSs] Error reading keys vault: {vault_err}")
+        
+        # Keep unique, non-empty keys and preserve order
+        keys_pool = list(dict.fromkeys([k for k in keys_pool if k]))
+
+        # We will attempt the selected model first, and fall back to openrouter/free if it fails
+        models_to_try = [real_model]
+        if real_model != "openrouter/free":
+            models_to_try.append("openrouter/free")
+
+        success = False
+        full = ""
+
+        for model_to_use in models_to_try:
+            if success:
+                break
+            for key_to_use in keys_pool:
+                if success:
+                    break
+                print(f"[MSBrOSs] Dynamic Routing: model={model_to_use} | key={key_to_use[:12]}...")
+                url = "https://openrouter.ai/api/v1/chat/completions"
                 headers = {
-                    "Authorization": f"Bearer {OPENROUTER_KEY}",
+                    "Authorization": f"Bearer {key_to_use}",
                     "Content-Type": "application/json",
                     "HTTP-Referer": "https://msbross.local",
                     "X-Title": "MSBrOSs AI"
                 }
+                payload = json.dumps({
+                    "model": model_to_use, 
+                    "messages": msgs,
+                    "stream": True, 
+                    "max_tokens": 4096, 
+                    "temperature": 0.7
+                }).encode()
 
-            payload = json.dumps({
-                "model": real_model, "messages": msgs,
-                "stream": True, "max_tokens": 4096, "temperature": 0.7
-            }).encode()
-
-        req = urllib.request.Request(url, data=payload, headers=headers)
-
-        full = ""
-        try:
-            resp = urllib.request.urlopen(req, timeout=120)
-            for line in resp:
-                line = line.decode().strip()
-                if line.startswith('data: '):
-                    data = line[6:]
-                    if data == '[DONE]': break
+                req = urllib.request.Request(url, data=payload, headers=headers)
+                try:
+                    resp = urllib.request.urlopen(req, timeout=15)
+                    # Check streaming chunks
+                    for line in resp:
+                        line = line.decode().strip()
+                        if line.startswith('data: '):
+                            data = line[6:]
+                            if data == '[DONE]': 
+                                break
+                            try:
+                                chunk = json.loads(data)
+                                if "error" in chunk:
+                                    print(f"[MSBrOSs] Stream error chunk: {chunk['error']}")
+                                    break # Force key or model rotation
+                                
+                                content = chunk.get('choices', [{}])[0].get('delta', {}).get('content', '')
+                                if content:
+                                    if not success:
+                                        success = True
+                                    full += content
+                                    yield {'type': 'text', 'content': content}
+                            except Exception:
+                                pass
+                    if success:
+                        break # Stream completed successfully
+                except urllib.error.HTTPError as e:
+                    err_msg = ""
                     try:
-                        chunk = json.loads(data)
-                        if prefix == 'gm':
-                            cands = chunk.get('candidates', [])
-                            content = ""
-                            if cands and 'content' in cands[0]:
-                                parts = cands[0]['content'].get('parts', [])
-                                content = "".join([p.get('text', '') for p in parts])
-                        else:
-                            content = chunk.get('choices', [{}])[0].get('delta', {}).get('content', '')
-                        
-                        if content:
-                            full += content
-                            yield {'type': 'text', 'content': content}
-                    except Exception:
+                        err_msg = e.read().decode()
+                    except:
                         pass
-        except urllib.error.HTTPError as e:
-            err = e.read().decode()
-            yield {'type': 'error', 'content': f'Error {e.code}: {err[:300]}'}
-        except Exception as e:
-            yield {'type': 'error', 'content': f'Error: {str(e)[:200]}'}
+                    print(f"[MSBrOSs] HTTP Error {e.code}: {err_msg[:200]}")
+                except Exception as e:
+                    print(f"[MSBrOSs] Connection exception: {str(e)}")
+
+        if not success:
+            fallback_msg = "Adele: Lo siento, todos los proveedores de IA están saturados o sin cuota en este momento. Por favor, intenta de nuevo en unos instantes."
+            yield {'type': 'text', 'content': fallback_msg}
+            full = fallback_msg
 
         add_message(conv_id, 'assistant', full)
 
