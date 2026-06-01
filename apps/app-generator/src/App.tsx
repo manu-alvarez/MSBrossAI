@@ -1,8 +1,42 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Code2, MonitorPlay, Sparkles, Loader2, Copy, Check } from 'lucide-react';
 
-const GEMINI_API_KEY = (import.meta as any).env.VITE_GEMINI_API_KEY || "REPLACE_ME_SECRETS";
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+/** Pool de API keys con rotación automática ante rate-limits.
+ *  Vite requiere acceso literal a import.meta.env.VITE_* para inlining estático. */
+const API_KEYS: string[] = [
+  import.meta.env.VITE_GEMINI_API_KEY,
+  import.meta.env.VITE_GEMINI_API_KEY_2,
+  import.meta.env.VITE_GEMINI_API_KEY_3,
+  import.meta.env.VITE_GEMINI_API_KEY_4,
+  import.meta.env.VITE_GEMINI_API_KEY_5,
+  import.meta.env.VITE_GEMINI_API_KEY_6,
+  import.meta.env.VITE_GEMINI_API_KEY_7,
+  import.meta.env.VITE_GEMINI_API_KEY_8,
+  import.meta.env.VITE_GEMINI_API_KEY_9,
+  import.meta.env.VITE_GEMINI_API_KEY_10,
+  import.meta.env.VITE_GEMINI_API_KEY_11,
+  import.meta.env.VITE_GEMINI_API_KEY_12,
+  import.meta.env.VITE_GEMINI_API_KEY_13,
+  import.meta.env.VITE_GEMINI_API_KEY_14,
+  import.meta.env.VITE_GEMINI_API_KEY_15,
+  import.meta.env.VITE_GEMINI_API_KEY_16,
+  import.meta.env.VITE_GEMINI_API_KEY_17,
+].filter((k): k is string => !!k && k !== "REPLACE_ME_SECRETS");
+
+
+let currentKeyIndex = 0;
+
+/** Devuelve la siguiente key del pool (round-robin). */
+function getNextKey(): string {
+  if (API_KEYS.length === 0) return "";
+  const key = API_KEYS[currentKeyIndex % API_KEYS.length];
+  currentKeyIndex++;
+  return key;
+}
+
+function buildApiUrl(key: string): string {
+  return `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+}
 
 const SYSTEM_INSTRUCTION = `Eres MSBross APP Generator, un Ingeniero Frontend Experto.
 Tu única misión es crear aplicaciones web 100% funcionales, interactivas y asombrosas a partir de prompts.
@@ -36,6 +70,10 @@ export default function App() {
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
+    if (API_KEYS.length === 0) {
+      setMessages(prev => [...prev, { role: 'assistant', content: '⚠️ No hay API keys de Gemini configuradas. Contacta al administrador.' }]);
+      return;
+    }
     
     const userPrompt = input.trim();
     const newMessages: Message[] = [...messages, { role: 'user', content: userPrompt }];
@@ -44,7 +82,6 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      // Build conversation history for context
       const historyContents = newMessages.map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }]
@@ -56,34 +93,43 @@ export default function App() {
         generationConfig: { temperature: 0.7 }
       };
 
-      const doFetch = async (retries = 5) => {
-        for (let i = 0; i < retries; i++) {
+      /** Intenta con rotación de keys y backoff exponencial. */
+      const doFetch = async (): Promise<any> => {
+        const maxAttempts = Math.min(API_KEYS.length * 2, 10);
+        for (let i = 0; i < maxAttempts; i++) {
+          const key = getNextKey();
           try {
-            const response = await fetch(GEMINI_API_URL, {
+            const response = await fetch(buildApiUrl(key), {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
             });
             if (response.ok) return await response.json();
-            if (response.status === 429) await new Promise(r => setTimeout(r, 4000 * (i + 1))); // Exponential backoff
-            else throw new Error(`API Error: ${response.status}`);
+            if (response.status === 429 || response.status === 403) {
+              // Rate-limited o key inválida → rotar a la siguiente
+              await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+              continue;
+            }
+            throw new Error(`API Error: ${response.status}`);
           } catch (e) {
-            if (i === retries - 1) throw e;
+            if (i === maxAttempts - 1) throw e;
           }
         }
+        throw new Error("Todas las keys agotadas");
       };
 
       const data = await doFetch();
       const botResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       
-      if (!botResponse) throw new Error("Respuesta nula");
+      if (!botResponse) throw new Error("Respuesta vacía de Gemini");
       const cleanCode = extractHTML(botResponse);
       setGeneratedCode(cleanCode);
+      setActiveTab('preview');
       
       setMessages([...newMessages, { role: 'assistant', content: "¡Aplicación generada con éxito! He desplegado el resultado interactivo en el Sandbox." }]);
     } catch (error) {
       console.error(error);
-      setMessages([...newMessages, { role: 'assistant', content: "⚠️ Error crítico generando la aplicación. Se superaron los límites de la API de Gemini (Rate Limit). Reinténtalo en unos segundos." }]);
+      setMessages([...newMessages, { role: 'assistant', content: "⚠️ Error generando la aplicación. Se superaron los límites de la API de Gemini. Reinténtalo en unos segundos." }]);
     } finally {
       setIsLoading(false);
     }
