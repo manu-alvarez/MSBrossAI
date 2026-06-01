@@ -26,7 +26,6 @@ jobs:
           - { name: 'moko-tools', path: 'apps/moko-tools' }
           - { name: 'combipro', path: 'apps/combipro' }
           - { name: 'app-generator', path: 'apps/app-generator' }
-          - { name: 'dohler', path: 'apps/dohler' }
 
     steps:
       - name: Checkout
@@ -80,10 +79,10 @@ jobs:
 
       - name: Verify deployment
         run: |
-          echo "Verifying 10 apps..."
+          echo "Verifying 9 apps..."
           PASS=0
           FAIL=0
-          for slug in iaputa-os livekit-nikolina traductor-pro taskflow-pro dohler logisearch edelweiss moko-tools combipro app-generator; do
+          for slug in iaputa-os livekit-nikolina traductor-pro taskflow-pro logisearch edelweiss moko-tools combipro app-generator; do
             HTTP=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 --retry 2 --retry-delay 2 "https://msbross.me/app/$slug/")
             if [ "$HTTP" = "200" ]; then
               echo "  ✅ $slug: HTTP $HTTP"
