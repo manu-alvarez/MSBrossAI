@@ -1,15 +1,15 @@
 # Moko-Tools - Directorio de Herramientas de Desarrollo
 
 ## Descripción
-Directorio curado de 189 herramientas de desarrollo organizadas en 14 categorías con búsqueda semántica.
+Directorio curado de 167 herramientas de desarrollo organizadas en 15 categorías con búsqueda semántica.
 
 ## Arquitectura
 - **Frontend**: React 19 + Vite 7 + shadcn/ui + Tailwind
-- **Datos**: tools.json (189 herramientas curadas)
+- **Datos**: tools.json (167 herramientas curadas)
 - **Búsqueda**: Accent normalization + filtros avanzados
 
 ## Características
-- ✅ 189 herramientas en 14 categorías
+- ✅ 167 herramientas en 15 categorías
 - ✅ Bento grid navigation
 - ✅ Búsqueda semántica con accent normalization
 - ✅ Sistema de favoritos

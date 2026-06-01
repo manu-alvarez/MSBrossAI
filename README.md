@@ -26,7 +26,7 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **LogiTrack Almacén**| `/www/logitrack` | Tablero Kanban interactivo para el control ágil de inventarios, expedición y operaciones de almacén. | HTML5, Trello API, Tailwind, JavaScript |
 | **Mano Eléctrica Azul**| `/www/ManoElectricaAzul`| App multiplataforma (Google Play Store) de exploración, meditación y sincronario maya Tzolkin. | React Native, Expo Go, Android SDK |
 | **Manuel Alvarez CV**| `/www/Portfolio` | CV digital y portfolio profesional de Manuel Alvarez (Sistemas, Cloud & IA). | HTML5, CSS3, JS, responsive premium |
-| **Moko-Tools** | `/apps/moko-tools` | Suite de 189 herramientas de desarrollo organizadas en 14 categorías con búsqueda bento. | React 19, Vite 7, Tailwind, Client-Side |
+| **Moko-Tools** | `/apps/moko-tools` | Suite de 167 herramientas de desarrollo organizadas en 15 categorías con búsqueda bento. | React 19, Vite 7, Tailwind, Client-Side |
 | **MSBrOSs** | `/apps/msbross` | Motor de asistente conversacional multimodal de voz y suite de herramientas integradas. | Python, FastAPI, Gemini API, Voice Adele |
 | **Gas Station**| `/apps/gas-station` | ERP/PWA vertical para estaciones de servicio Repsol (Checklists, Horarios, Incidencias). | React 19, FastAPI, SQLite, PWA, Service Worker |
 | **TaskFlowPro** | `/apps/taskflow-pro` | PWA de productividad premium con notificaciones automáticas de alarmas e integración de mensajería. | React 18, MUI, Zustand, PWA LocalStorage |
