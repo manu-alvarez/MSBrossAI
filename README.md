@@ -15,10 +15,10 @@ El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS*
 | **App Generator** | `/apps/app-generator` | Constructor asimétrico en tiempo real (Split-View) que genera SPAs usando prompts e inferencia native de LLM. | React 19, Vite, Gemini API, Iframe |
 | **CombiPro** | `/apps/combipro` | Algoritmo estadístico predictivo y generador de combinadas deportivas con perfiles de riesgo y stake. | React 19, Material-UI, Framer Motion, API-Football |
 | **Cuentos Mágicos** | `/apps/cuentos-magicos` | Generador e ilustrador infantil de cuentos interactivos en pergamino o cine con voz y animación por IA (Tema Amarillo/Naranja). | Next.js 15, FastAPI, Gemini API, OpenAI TTS, Luma |
-| **IndustrialPro** | `/apps/industrialpro` | Gestor de tareas con temporizador Pomodoro de alto rendimiento y estilo visual neón glassmorphism. | React 19, FastAPI, SQLite, Tailwind |
+| **IndustrialPro** | `/apps/industrialpro` | Plataforma de gestión industrial para procesos productivos, mantenimiento preventivo/correctivo, control de calidad y trazabilidad de materiales. | React 19, FastAPI, SQLite, Tailwind |
 | **Edelweiss** | `/apps/edelweiss` | Plataforma de estimulación visual infantil con modos de alto contraste y parental lock. | React 18, Tailwind, Framer Motion, PWA |
 | **EliteScout** | `/apps/elitescout` | Buscador semántico inteligente de viajes y CRM de scouting/precios con integración de scraping logístico. | Next.js 16, FastAPI, SQLite, Tavily API, Groq, Gemini |
-| **EXPOSITATOR RTE**| `/apps/expositator-rte-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
+| **EXPOSITATOR RTE**| `/apps/expositator-rte` | Simulador e interactivo evaluador en tiempo real de exposiciones y discursos con reconocimiento de voz y visión. | HTML5, Native Speech API, JavaScript, PWA |
 | **IAPuta OS** | `/apps/iaputa-os` | Asistente IA centralizado con orbe 3D reactivo, multi-LLM fallback y utilidades integradas. | FastAPI, React 19, Three.js, Groq, Gemini |
 | **JartosDTo** | `/apps/jartosdto` | Chat con IA corporativo y base de datos vectorial con túnel seguro de datos para acceso nativo iOS. | React 19, FastAPI, pgvector, LangChain, iOS |
 | **LIVEKIT Nikolina**| `/apps/livekit-nikolina`| Asistente telefónico de voz inteligente de restaurante con voz e inferencia nativa en tiempo real. | LiveKit, Gemini 2.5 Flash Audio, FastAPI, React 18 |
