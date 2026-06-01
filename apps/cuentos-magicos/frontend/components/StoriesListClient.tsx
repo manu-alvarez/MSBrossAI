@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { playBubble, playChime } from "@/lib/sound";
 
@@ -14,8 +14,8 @@ interface StoryItem {
 }
 
 interface StoriesListClientProps {
-  initialStories: StoryItem[];
-  totalCount: number;
+  initialStories?: StoryItem[];
+  totalCount?: number;
 }
 
 function getBookAesthetics(title: string) {
@@ -120,11 +120,36 @@ function getStatusBadgeClass(status: string) {
   return styles[status] || "bg-slate-500/20 text-slate-300 border-slate-500/40";
 }
 
-export default function StoriesListClient({ initialStories, totalCount }: StoriesListClientProps) {
+export default function StoriesListClient({ initialStories = [], totalCount = 0 }: StoriesListClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [stories, setStories] = useState<StoryItem[]>(initialStories);
+  const [total, setTotal] = useState<number>(totalCount);
+  const [isLoading, setIsLoading] = useState<boolean>(initialStories.length === 0);
 
-  const filteredStories = initialStories.filter((story) => {
+  // Fetch stories on mount to ensure we always have the latest data
+  useEffect(() => {
+    const fetchStories = async () => {
+      setIsLoading(true);
+      try {
+        // In the browser, this proxy path works perfectly.
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const res = await fetch(`${apiBase}/api/stories/?page=1&page_size=50`);
+        if (res.ok) {
+          const data = await res.json();
+          setStories(data.stories || []);
+          setTotal(data.total || 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch stories client-side:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchStories();
+  }, []);
+
+  const filteredStories = stories.filter((story) => {
     const matchesSearch =
       story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       story.child_name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -137,9 +162,18 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
     return matchesSearch;
   });
 
-  const readyCount = initialStories.filter((s) => s.status === "ready").length;
-  const processingCount = initialStories.filter((s) => ["processing", "text_pending", "pending", "text_ready"].includes(s.status)).length;
-  const failedCount = initialStories.filter((s) => s.status === "failed").length;
+  const readyCount = stories.filter((s) => s.status === "ready").length;
+  const processingCount = stories.filter((s) => ["processing", "text_pending", "pending", "text_ready"].includes(s.status)).length;
+  const failedCount = stories.filter((s) => s.status === "failed").length;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-amber-200 font-bold font-kid-title animate-pulse">Abriendo la estantería mágica...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 font-kid-body">
@@ -168,7 +202,7 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
                   : "bg-white/5 border-white/10 text-amber-200 hover:bg-white/10"
               }`}
             >
-              📚 Todos ({initialStories.length})
+              📚 Todos ({stories.length})
             </button>
             <button
               onClick={() => { playBubble(); setStatusFilter("ready"); }}
@@ -298,7 +332,7 @@ export default function StoriesListClient({ initialStories, totalCount }: Storie
       {filteredStories.length > 0 && (
         <footer className="text-center py-8 text-xs font-bold text-amber-300/40 mt-8">
           <p>
-            Mostrando {filteredStories.length} de {totalCount} cuentos en la estantería mágica
+            Mostrando {filteredStories.length} de {total} cuentos en la estantería mágica
           </p>
         </footer>
       )}

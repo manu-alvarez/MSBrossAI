@@ -10,27 +10,8 @@ interface StoryItem {
   created_at: string;
 }
 
-interface StoriesResponse {
-  stories: StoryItem[];
-  total: number;
-}
-
-async function getStories(): Promise<StoriesResponse | null> {
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-  try {
-    const res = await fetch(`${apiBase}/api/stories/?page=1&page_size=50`, {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
-
-export default async function StoriesPage() {
-  const data = await getStories();
-  const stories = data?.stories || [];
+export default function StoriesPage() {
+  const stories: StoryItem[] = [];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-amber-950 to-orange-950 text-white relative overflow-hidden font-kid-body py-8 md:py-12">
@@ -56,9 +37,7 @@ export default async function StoriesPage() {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-black font-kid-title tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
               📚 Estantería <span className="text-amber-300">Mágica</span>
             </h1>
-            <p className="text-amber-200/60 text-sm mt-1">
-              {data?.total || 0} cuento{(data?.total || 0) !== 1 ? "s" : ""} mágico{(data?.total || 0) !== 1 ? "s" : ""} guardado{(data?.total || 0) !== 1 ? "s" : ""} en tu biblioteca.
-            </p>
+              0 cuento mágico guardado en tu biblioteca.
           </div>
           
           <Link
@@ -70,7 +49,7 @@ export default async function StoriesPage() {
         </div>
 
         {/* Stories List / Library Grid */}
-        <StoriesListClient initialStories={stories} totalCount={data?.total || stories.length} />
+        <StoriesListClient />
       </div>
     </main>
   );

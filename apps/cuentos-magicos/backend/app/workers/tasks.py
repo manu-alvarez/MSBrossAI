@@ -89,7 +89,7 @@ async def _run_text_generation(story_id: str, tier_limits: dict):
         await session.commit()
 
         # Read content_type from initial payload to decide which media to generate
-        content_type = (story.initial_prompt or {}).get("content_type", "text_image_audio")
+        content_type = (story.initial_prompt or {}).get("content_type", "text")
         parts = set(content_type.split("_"))
 
         if "image" in parts and story.canonical_character_description:
@@ -139,7 +139,7 @@ async def _check_and_mark_ready(session, story_id: str):
     if not story:
         return
 
-    content_type = (story.initial_prompt or {}).get("content_type", "text_image_audio")
+    content_type = (story.initial_prompt or {}).get("content_type", "text")
     parts = set(content_type.split("_"))
 
     checks = [story.text_generated]

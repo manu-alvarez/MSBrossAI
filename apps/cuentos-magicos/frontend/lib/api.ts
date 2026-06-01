@@ -5,8 +5,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-function getApiBase(): string {
-  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+export function getApiBase(): string {
+  if (typeof window !== "undefined") {
+    // Autodetectar servidor de desarrollo local de Next.js (puerto 3000)
+    // y redirigir las peticiones directamente al backend FastAPI (puerto 8007)
+    if (window.location.port === "3000") {
+      return "http://localhost:8007";
+    }
+  }
+  return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8007";
 }
 
 export interface StoryListItem {

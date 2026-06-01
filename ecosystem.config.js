@@ -180,6 +180,20 @@ module.exports = {
       max_memory_restart: '600M'
     },
 
+    {
+      name: 'cuentos-magicos-celery',
+      script: 'start-celery.sh',
+      interpreter: '/bin/bash',
+      cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
+      out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/celery.log'),
+      error_file: path.join(__dirname, 'apps/cuentos-magicos/backend/celery.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '800M'
+    },
+
     // ──────────────────────────────────────────────
     // ELITESCOUT (Semantic Travel Finder & Price Scraper Server, Port 8003)
     // ──────────────────────────────────────────────

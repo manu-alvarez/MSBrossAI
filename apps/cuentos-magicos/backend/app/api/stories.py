@@ -168,7 +168,7 @@ async def get_story_progress(
 
     # Calculate estimated remaining time
     initial_prompt = story.initial_prompt or {}
-    content_type = initial_prompt.get("content_type", "text_image_audio")
+    content_type = initial_prompt.get("content_type", "text")
     parts = set(content_type.split("_"))
 
     # Typical processing times (seconds per chapter)

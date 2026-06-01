@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://msbross.me/app/cuentos-magicos"),
   title: "Cuentos Mágicos — MSBrossAI",
   description: "Generador de Cuentos Infantiles Personalizados",
-  manifest: "/manifest.json",
+  manifest: "/app/cuentos-magicos/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/app/cuentos-magicos/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/app/cuentos-magicos/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/app/cuentos-magicos/icons/icon-192.png", sizes: "192x192", type: "image/png" },
     ],
   },
 };
@@ -43,10 +43,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/app/cuentos-magicos/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" href="/app/cuentos-magicos/icons/icon-192.png" />
       </head>
       <body className="antialiased relative bg-gradient-to-br from-amber-950 via-stone-950 to-orange-950 min-h-screen text-white">
         <MagicBackground />

@@ -264,6 +264,7 @@ async def generate_video_for_story(session: AsyncSession, story_id: str) -> None
     if not chapter_video_files:
         logger.error("No chapter videos generated.")
         story.video_status = "failed"
+        story.video_generated = True
         await session.commit()
         return
 
@@ -299,7 +300,6 @@ async def generate_video_for_story(session: AsyncSession, story_id: str) -> None
             
             story.url_video = storage_url
             story.video_status = "done"
-            story.video_generated = True
             
         os.remove(concat_list_path)
         os.remove(final_story_path)
@@ -311,6 +311,7 @@ async def generate_video_for_story(session: AsyncSession, story_id: str) -> None
         for vid in chapter_video_files:
             try: os.remove(vid)
             except: pass
+        story.video_generated = True
             
     await session.commit()
 

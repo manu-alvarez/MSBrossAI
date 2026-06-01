@@ -40,7 +40,7 @@ export default function LoginScreen({ onLogin }: Props) {
         <Card sx={{ p: 4, width: 400, maxWidth: '100%', background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' }}>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <PrecisionManufacturingIcon sx={{ fontSize: 48, color: '#3b82f6', mb: 1 }} />
-            <Typography variant="h4" fontWeight={700} sx={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               IndustrialPro
             </Typography>
             <Typography variant="body2" color="text.secondary">Control de Procesos Industriales</Typography>
@@ -58,7 +58,7 @@ export default function LoginScreen({ onLogin }: Props) {
           <TextField fullWidth label="Contraseña" type={showPw ? 'text' : 'password'} value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !loading && handleSubmit()}
-            InputProps={{ endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPw(!showPw)} edge="end" size="small">{showPw ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment> }}
+            slotProps={{ input: { endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPw(!showPw)} edge="end" size="small">{showPw ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment> } }}
             sx={{ mb: 3 }} />
 
           <Button fullWidth variant="contained" size="large" onClick={handleSubmit} disabled={loading}

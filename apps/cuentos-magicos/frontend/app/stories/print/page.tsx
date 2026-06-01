@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import PrintTrigger from "./PrintTrigger";
+import { fetchStory, resolveMediaUrl } from "@/lib/api";
 
 interface Chapter {
   id: string;
@@ -20,12 +21,6 @@ interface StoryData {
   child_age: number;
   status: string;
   chapters: Chapter[];
-}
-
-function resolveMediaUrl(url: string | null | undefined, apiBase: string): string | null {
-  if (!url) return null;
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `${apiBase}${url}`;
 }
 
 function StoryPrintContent() {
@@ -45,13 +40,9 @@ function StoryPrintContent() {
       setError(true);
       return;
     }
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-    fetch(`${apiBase}/api/stories/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
+    fetchStory(id)
       .then((data) => {
+        if (!data) throw new Error();
         setStoryData(data);
         setLoading(false);
       })
@@ -78,8 +69,6 @@ function StoryPrintContent() {
     );
   }
 
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
   return (
     <div className="max-w-4xl mx-auto bg-white text-black p-8 md:p-12 font-serif min-h-screen" suppressHydrationWarning>
       <PrintTrigger />
@@ -97,7 +86,7 @@ function StoryPrintContent() {
         <div key={ch.id} className="mb-12 page-break-inside-avoid">
           <h2 className="text-2xl font-bold mb-4">Capítulo {ch.chapter_number}: {ch.chapter_title}</h2>
           {!textOnly && (() => {
-            const imgUrl = resolveMediaUrl(ch.url_image, apiBase);
+            const imgUrl = resolveMediaUrl(ch.url_image);
             return imgUrl ? (
               <div className="mb-6 flex justify-center">
                 <img src={imgUrl} alt={ch.chapter_title} className="max-w-full h-auto max-h-[400px] rounded-lg shadow-sm border border-gray-100" />

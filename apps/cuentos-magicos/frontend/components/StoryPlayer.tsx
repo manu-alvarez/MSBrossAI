@@ -144,6 +144,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
 
   const isProcessing =
     story.status === "pending" ||
+    story.status === "text_pending" ||
     story.status === "processing" ||
     story.status === "text_ready";
 
@@ -547,9 +548,10 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
             </button>
             {printOpen && (
               <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-amber-500/20 bg-slate-900/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden">
-                <Link
-                  href={`/stories/print?id=${story.id}`}
+                <a
+                  href={`${process.env.NEXT_PUBLIC_BASE_PATH || "/app/cuentos-magicos"}/stories/print/?id=${story.id}`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => {
                     playChime();
                     setPrintOpen(false);
@@ -557,10 +559,11 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                   className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 transition"
                 >
                   🖼️ Texto + Dibujos
-                </Link>
-                <Link
-                  href={`/stories/print?id=${story.id}&mode=text`}
+                </a>
+                <a
+                  href={`${process.env.NEXT_PUBLIC_BASE_PATH || "/app/cuentos-magicos"}/stories/print/?id=${story.id}&mode=text`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => {
                     playChime();
                     setPrintOpen(false);
@@ -568,7 +571,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                   className="flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 border-t border-amber-500/10 transition"
                 >
                   📝 Solo texto
-                </Link>
+                </a>
               </div>
             )}
           </div>

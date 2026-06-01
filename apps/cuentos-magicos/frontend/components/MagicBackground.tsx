@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { startBgMusic, stopBgMusic, isBgMusicPlaying } from "@/lib/bgmusic";
 
 interface MagicBackgroundProps {
   emojiTheme?: string;
@@ -11,7 +12,6 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
   const [smoke, setSmoke] = useState<Array<{ id: number; x: number; delay: number }>>([]);
   const [floatingEmojis, setFloatingEmojis] = useState<Array<{ id: number; emoji: string; x: number; delay: number; duration: number }>>([]);
   const [musicEnabled, setMusicEnabled] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     // Generate stars
@@ -42,6 +42,11 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
       duration: 6 + Math.random() * 6,
     }));
     setFloatingEmojis(newEmojis);
+
+    // Cleanup music on unmount
+    return () => {
+      stopBgMusic();
+    };
   }, []);
 
   // Cursor trail effect
@@ -91,15 +96,12 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
   }, []);
 
   const toggleMusic = () => {
-    setMusicEnabled(!musicEnabled);
-    if (iframeRef.current) {
-      if (!musicEnabled) {
-        // Start playing - need user interaction first
-        iframeRef.current.src = "https://www.youtube.com/embed/T8D8vEcZrqM?autoplay=1&loop=1&playlist=T8D8vEcZrqM&controls=0&showinfo=0&autohide=1&mute=0";
-      } else {
-        // Stop playing
-        iframeRef.current.src = "";
-      }
+    if (musicEnabled) {
+      stopBgMusic();
+      setMusicEnabled(false);
+    } else {
+      startBgMusic();
+      setMusicEnabled(true);
     }
   };
 
@@ -165,16 +167,6 @@ export default function MagicBackground({ emojiTheme = "✨⭐💫🌙" }: Magic
       >
         {musicEnabled ? "🔊" : "🔇"}
       </button>
-
-      {/* Hidden YouTube iframe for background music */}
-      <div className="fixed -top-[9999px] -left-[9999px] w-1 h-1 overflow-hidden" aria-hidden="true">
-        <iframe
-          ref={iframeRef}
-          title="Background Music"
-          allow="autoplay; encrypted-media"
-          style={{ border: "none" }}
-        />
-      </div>
     </>
   );
 }

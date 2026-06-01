@@ -38,7 +38,7 @@ export default function LoginScreen({ onLogin }: Props) {
         <Card sx={{ p: 4, width: 380, maxWidth: '100%' }}>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <LocalGasStationIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-            <Typography variant="h4" fontWeight={700}>Gas Station</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>Gas Station</Typography>
             <Typography variant="body2" color="text.secondary">Estación de Servicio</Typography>
           </Box>
 
@@ -50,7 +50,7 @@ export default function LoginScreen({ onLogin }: Props) {
           <TextField fullWidth label="PIN" type={showPin ? 'text' : 'password'} value={pin}
             onChange={e => setPin(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !loading && handleLogin()}
-            InputProps={{
+            slotProps={{ input: {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={() => setShowPin(!showPin)} edge="end" size="small">
@@ -58,7 +58,7 @@ export default function LoginScreen({ onLogin }: Props) {
                   </IconButton>
                 </InputAdornment>
               ),
-            }} sx={{ mb: 3 }} />
+            } }} sx={{ mb: 3 }} />
 
           <Button fullWidth variant="contained" size="large" onClick={handleLogin} disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}

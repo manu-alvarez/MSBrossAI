@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import StoryPlayer from "@/components/StoryPlayer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { fetchStory } from "@/lib/api";
 
 function StoryDetailContent() {
   const searchParams = useSearchParams();
@@ -19,13 +21,9 @@ function StoryDetailContent() {
       setError(true);
       return;
     }
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-    fetch(`${apiBase}/api/stories/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
+    fetchStory(id)
       .then((data) => {
+        if (!data) throw new Error();
         setStoryData(data);
         setLoading(false);
       })
@@ -55,12 +53,12 @@ function StoryDetailContent() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950 text-white p-3 md:p-6">
       <div className="mb-4">
-        <a
+        <Link
           href="/"
           className="inline-flex items-center gap-1 text-sm text-amber-300 hover:text-amber-200 transition"
         >
           ← Volver al inicio
-        </a>
+        </Link>
       </div>
       <StoryPlayer story={storyData} chapters={storyData.chapters || []} />
     </main>
