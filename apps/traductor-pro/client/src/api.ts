@@ -42,7 +42,7 @@ export interface HistoryEntry {
   targetLang?: string;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/_arantxa/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/_traductor/api';
 
 export async function processText(payload: ProcessPayload): Promise<ProcessResult> {
   const res = await fetch(`${API_BASE}/process`, {

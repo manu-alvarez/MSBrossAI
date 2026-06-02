@@ -152,8 +152,40 @@ const proxyOpts = (target, stripPrefix, ws = false) => ({
 app.use('/_nikolina',      createProxyMiddleware(proxyOpts('http://127.0.0.1:8001', '/_nikolina', true)));
 app.use('/_gas-station',        createProxyMiddleware(proxyOpts('http://127.0.0.1:3005', '/_gas-station')));
 app.use('/_industrialpro',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8002', '/_industrialpro')));
-app.use('/_elitescout',    createProxyMiddleware(proxyOpts('http://127.0.0.1:8003', '/_elitescout')));
-app.use('/_arantxa',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8004', '/_arantxa')));
+app.use('/app/elitescout/api', createProxyMiddleware({
+  target: 'http://127.0.0.1:8003',
+  changeOrigin: true,
+  pathRewrite: (path) => {
+    let [pathname, search] = path.split('?');
+    let newPath = '/app/elitescout/api' + pathname;
+    if (!newPath.endsWith('/')) newPath += '/';
+    return search ? `${newPath}?${search}` : newPath;
+  },
+  on: {
+    error: (err, req, res) => {
+      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:8003: ${err.message}`);
+      if (res && res.writeHead) res.status(502).json({ error: 'Backend unavailable', detail: err.message });
+    }
+  }
+}));
+
+app.use('/_elitescout', createProxyMiddleware({
+  target: 'http://127.0.0.1:8003',
+  changeOrigin: true,
+  pathRewrite: (path) => {
+    let [pathname, search] = path.split('?');
+    let newPath = '/app/elitescout' + pathname;
+    if (!newPath.endsWith('/')) newPath += '/';
+    return search ? `${newPath}?${search}` : newPath;
+  },
+  on: {
+    error: (err, req, res) => {
+      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:8003: ${err.message}`);
+      if (res && res.writeHead) res.status(502).json({ error: 'Backend unavailable', detail: err.message });
+    }
+  }
+}));
+app.use('/_traductor',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8004', '/_traductor')));
 app.use('/_msbross',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8005', '/_msbross')));
 app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8006', '/_iaputa')));
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));

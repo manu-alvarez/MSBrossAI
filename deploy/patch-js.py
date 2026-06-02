@@ -13,7 +13,7 @@ WWW_DIR = os.path.join(BASE_DIR, "www")
 
 API_PREFIXES = {
     "/_gas-station", "/_industrialpro", "/_elitescout", "/_atenea", 
-    "/_nikolina", "/_msbross", "/_iaputa", "/_cuentosmagicos", "/_arantxa"
+    "/_nikolina", "/_msbross", "/_iaputa", "/_cuentosmagicos", "/_traductor"
 }
 
 # Regex to match either string quotes + '/_prefix' OR string quotes + 'https://old.tunnel.../_prefix'

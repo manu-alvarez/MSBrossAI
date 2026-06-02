@@ -180,7 +180,7 @@ class MSBrOSsAI {
       try {
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 3000); // 3s timeout max
-        const resp = await fetch('/api/models', { signal: ctrl.signal });
+        const resp = await fetch('/_msbross/api/models', { signal: ctrl.signal });
         if (!resp.ok) throw new Error();
         this.models = await resp.json();
         if (!Array.isArray(this.models) || !this.models.length) throw new Error();
@@ -251,7 +251,7 @@ class MSBrOSsAI {
 
   async loadConversations() {
     try {
-      const res = await fetch('/api/conversations');
+      const res = await fetch('/_msbross/api/conversations');
       const data = await res.json();
       this.conversations = {};
       data.forEach(c => this.conversations[c.id] = c);
@@ -383,7 +383,7 @@ class MSBrOSsAI {
       
       this.currentAudio = null;
 
-      const resp = await fetch('/api/chat', {
+      const resp = await fetch('/_msbross/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -485,7 +485,7 @@ class MSBrOSsAI {
       }
       this.currentAudio = null;
 
-      const resp = await fetch('/api/chat', {
+      const resp = await fetch('/_msbross/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
@@ -572,7 +572,7 @@ class MSBrOSsAI {
   registerSW() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
   }
@@ -580,19 +580,19 @@ class MSBrOSsAI {
 
 const Tools = {
   async calc(expr) {
-    const resp = await fetch('/api/tools/calculator', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({expression:expr}) });
+    const resp = await fetch('/_msbross/api/tools/calculator', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({expression:expr}) });
     return await resp.json();
   },
   async notes(action, data = {}) {
-    const resp = await fetch('/api/tools/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action,...data}) });
+    const resp = await fetch('/_msbross/api/tools/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action,...data}) });
     return await resp.json();
   },
   async todos(action, data = {}) {
-    const resp = await fetch('/api/tools/todos', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action,...data}) });
+    const resp = await fetch('/_msbross/api/tools/todos', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action,...data}) });
     return await resp.json();
   },
   async weather(city) {
-    const resp = await fetch('/api/tools/weather', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({city}) });
+    const resp = await fetch('/_msbross/api/tools/weather', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({city}) });
     return await resp.json();
   }
 };

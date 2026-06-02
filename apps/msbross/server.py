@@ -170,6 +170,8 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
+        if path.startswith('/_msbross'):
+            path = path[len('/_msbross'):]
 
         if path == '/api/models':
             self._json(AVAILABLE_MODELS)
@@ -188,6 +190,8 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path
+        if path.startswith('/_msbross'):
+            path = path[len('/_msbross'):]
 
         try:
             length = int(self.headers.get('Content-Length', 0))

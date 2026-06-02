@@ -65,7 +65,7 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
 | `/_msbross` | **8005** | MSBrOSs (Adele Voice Server) |
 | `/_iaputa` | **8006** | IAPuta OS (FastAPI AI Assistant) |
 | `/_cuentosmagicos` | **8007** | Cuentos Mágicos (FastAPI Story Backend) |
-| `/_webrestaurante` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
+| `/_atenea` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
 
 ---
 
