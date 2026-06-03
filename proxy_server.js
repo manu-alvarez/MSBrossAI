@@ -189,7 +189,7 @@ app.use('/_traductor',     createProxyMiddleware(proxyOpts('http://127.0.0.1:800
 app.use('/_msbross',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8005', '/_msbross')));
 app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8006', '/_iaputa')));
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));
-app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8008', '/_jartosdto')));
+app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8010', '/_jartosdto')));
 app.use('/_atenea',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8009', '/_atenea')));
 
 // ── LiveKit WebSocket proxy (for self-hosted LiveKit) ──

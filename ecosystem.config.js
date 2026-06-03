@@ -238,16 +238,16 @@ module.exports = {
     },
 
     // ──────────────────────────────────────────────
-    // JARTOSDTO BACKEND (RAG & Multi-LLM, Port 8008)
+    // JARTOSDTO BACKEND (RAG & Multi-LLM, Port 8010)
     // ──────────────────────────────────────────────
     {
       name: 'jartosdto-backend',
       script: path.join(__dirname, 'apps/jartosdto/server/.venv/bin/python3'),
-      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8008',
+      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8010',
       cwd: path.join(__dirname, 'apps/jartosdto/server'),
       env: {
         PYTHONPATH: '.',
-        PORT: '8008'
+        PORT: '8010'
       },
       out_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.log'),
       error_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.error.log'),
