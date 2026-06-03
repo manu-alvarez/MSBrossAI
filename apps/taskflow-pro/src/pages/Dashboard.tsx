@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
             <Typography variant="h2" sx={{ fontWeight: 900 }}>
               {tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%
             </Typography>
-            <Typography sx={{ opacity: 0.8, fontWeight: 600 }}>Global SOTA Flow</Typography>
+            <Typography sx={{ opacity: 0.8, fontWeight: 600 }}>Tareas Completadas</Typography>
           </MotionPaper>
         </Grid>
       </Grid>
