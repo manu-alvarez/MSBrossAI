@@ -77,7 +77,6 @@ export default function App() {
   }, []);
 
   if (checking) return null;
-  if (!user) return <LoginScreen onLogin={u => setUser(u)} />;
 
   const renderView = () => {
     switch (view) {
@@ -92,48 +91,52 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-        <AppBar position="fixed" sx={{ bgcolor: '#111827', borderBottom: '1px solid rgba(59,130,246,0.15)', boxShadow: 'none' }}>
-          <Toolbar>
-            <IconButton edge="start" onClick={() => setDrawerOpen(true)} sx={{ mr: 1, color: '#3b82f6' }}>
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" sx={{ flex: 1, fontWeight: 800, background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              IndustrialPro
-            </Typography>
-            <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-              <Avatar sx={{ bgcolor: '#3b82f6', width: 32, height: 32, fontSize: 14, fontWeight: 700 }}>
-                {user.name?.charAt(0).toUpperCase()}
-              </Avatar>
-            </Badge>
-          </Toolbar>
-        </AppBar>
+      {!user ? (
+        <LoginScreen onLogin={u => setUser(u)} />
+      ) : (
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+          <AppBar position="fixed" sx={{ bgcolor: '#111827', borderBottom: '1px solid rgba(59,130,246,0.15)', boxShadow: 'none' }}>
+            <Toolbar>
+              <IconButton edge="start" onClick={() => setDrawerOpen(true)} sx={{ mr: 1, color: '#3b82f6' }}>
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" sx={{ flex: 1, fontWeight: 800, background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                IndustrialPro
+              </Typography>
+              <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <Avatar sx={{ bgcolor: '#3b82f6', width: 32, height: 32, fontSize: 14, fontWeight: 700 }}>
+                  {user.name?.charAt(0).toUpperCase()}
+                </Avatar>
+              </Badge>
+            </Toolbar>
+          </AppBar>
 
-        <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { bgcolor: '#111827', borderRight: '1px solid rgba(59,130,246,0.1)', width: 250 } }}>
-          <Toolbar>
-            <Typography variant="h6" fontWeight={800} sx={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              IndustrialPro
-            </Typography>
-          </Toolbar>
-          <List>
-            {navItems.map(item => (
-              <ListItemButton key={item.id} selected={view === item.id} onClick={() => { setView(item.id); setDrawerOpen(false); }}
-                sx={{ mx: 1, borderRadius: 2, mb: 0.5, '&.Mui-selected': { bgcolor: 'rgba(59,130,246,0.12)' } }}>
-                <ListItemIcon sx={{ color: view === item.id ? 'primary.main' : 'text.secondary', minWidth: 40 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
+          <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { bgcolor: '#111827', borderRight: '1px solid rgba(59,130,246,0.1)', width: 250 } }}>
+            <Toolbar>
+              <Typography variant="h6" fontWeight={800} sx={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                IndustrialPro
+              </Typography>
+            </Toolbar>
+            <List>
+              {navItems.map(item => (
+                <ListItemButton key={item.id} selected={view === item.id} onClick={() => { setView(item.id); setDrawerOpen(false); }}
+                  sx={{ mx: 1, borderRadius: 2, mb: 0.5, '&.Mui-selected': { bgcolor: 'rgba(59,130,246,0.12)' } }}>
+                  <ListItemIcon sx={{ color: view === item.id ? 'primary.main' : 'text.secondary', minWidth: 40 }}>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              ))}
+              <ListItemButton onClick={() => { setToken(null); setUser(null); }} sx={{ mx: 1, borderRadius: 2, mt: 2 }}>
+                <ListItemIcon sx={{ color: 'text.secondary', minWidth: 40 }}><LogoutIcon /></ListItemIcon>
+                <ListItemText primary="Cerrar Sesión" />
               </ListItemButton>
-            ))}
-            <ListItemButton onClick={() => { setToken(null); setUser(null); }} sx={{ mx: 1, borderRadius: 2, mt: 2 }}>
-              <ListItemIcon sx={{ color: 'text.secondary', minWidth: 40 }}><LogoutIcon /></ListItemIcon>
-              <ListItemText primary="Cerrar Sesión" />
-            </ListItemButton>
-          </List>
-        </Drawer>
+            </List>
+          </Drawer>
 
-        <Box component="main" sx={{ flex: 1, mt: '64px', p: { xs: 2, md: 3 }, maxWidth: 1200, mx: 'auto', width: '100%' }}>
-          {renderView()}
+          <Box component="main" sx={{ flex: 1, mt: '64px', p: { xs: 2, md: 3 }, maxWidth: 1200, mx: 'auto', width: '100%' }}>
+            {renderView()}
+          </Box>
         </Box>
-      </Box>
+      )}
     </ThemeProvider>
   );
 }
