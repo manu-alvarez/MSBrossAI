@@ -152,6 +152,13 @@ def get_operations(status=None):
         query += f" WHERE o.status = '{status}'"
     query += " ORDER BY o.created_at DESC"
     rows = [dict(r) for r in conn.execute(query).fetchall()]
+    # Attach child entities (timers, valves, pumps, checklists) to each operation
+    for op in rows:
+        oid = op["id"]
+        op['timers'] = [dict(r) for r in conn.execute("SELECT * FROM timers WHERE operation_id = ?", (oid,)).fetchall()]
+        op['valves'] = [dict(r) for r in conn.execute("SELECT * FROM valves WHERE operation_id = ?", (oid,)).fetchall()]
+        op['pumps'] = [dict(r) for r in conn.execute("SELECT * FROM pumps WHERE operation_id = ?", (oid,)).fetchall()]
+        op['checklists'] = [dict(r) for r in conn.execute("SELECT * FROM checklist_items WHERE operation_id = ?", (oid,)).fetchall()]
     conn.close()
     return rows
 
