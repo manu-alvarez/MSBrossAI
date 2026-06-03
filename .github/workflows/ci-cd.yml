@@ -89,7 +89,7 @@ jobs:
           echo "Verifying 13 apps..."
           PASS=0
           FAIL=0
-          for slug in app-generator combipro edelweiss elitescout gas-station industrialpro logisearch moko-tools taskflow-pro iaputa-os jartosdto livekit-nikolina traductor-pro; do
+          for slug in app-generator combipro edelweiss elitescout gas-station industrialpro logisearch moko-tools taskflow iaputa-os jartosdto livekit-nikolina traductor-pro; do
             HTTP=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 --retry 2 --retry-delay 2 "https://msbross.me/app/$slug/")
             if [ "$HTTP" = "200" ]; then
               echo "  ✅ $slug: HTTP $HTTP"
