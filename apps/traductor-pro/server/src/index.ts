@@ -8,11 +8,12 @@ import documentsRouter from './routes/documents.js';
 import extrasRouter from './routes/extras.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8004;
+app.set('trust proxy', 1);
 app.use(helmet());
 const corsOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173'];
 app.use(cors({ origin: corsOrigins, credentials: true }));
-app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 100 }));
+app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 100, validate: { xForwardedForHeader: false } }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/api', processRouter);
 app.use('/api', documentsRouter);

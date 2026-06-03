@@ -41,10 +41,10 @@ module.exports = {
     {
       name: 'nikolina-api-hub',
       script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
-      args: 'server/main.py',
-      cwd: path.join(__dirname, 'apps/livekit-nikolina'),
+      args: '-m uvicorn main:app --host 0.0.0.0 --port 8001',
+      cwd: path.join(__dirname, 'apps/livekit-nikolina/server'),
       env: {
-        PYTHONPATH: './agent/src:./server/src',
+        PYTHONPATH: path.join(__dirname, 'apps/livekit-nikolina/agent/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server'),
         PORT: '8001'
       },
       out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/api.log'),
@@ -254,7 +254,8 @@ module.exports = {
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
-      min_uptime: '15s',
+      min_uptime: '60s',
+      kill_timeout: 10000,
       max_memory_restart: '800M'
     },
 
