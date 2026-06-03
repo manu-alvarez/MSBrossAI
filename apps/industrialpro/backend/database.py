@@ -1,7 +1,7 @@
 import sqlite3, os, json
 from datetime import datetime
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "dohler.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "industrialpro.db")
 
 def get_conn():
     conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=20.0)
