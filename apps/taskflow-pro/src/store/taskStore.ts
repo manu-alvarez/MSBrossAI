@@ -2,6 +2,40 @@ import { create } from 'zustand';
 import { WhatsAppService } from '../services/whatsappService';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+export const playNotificationSound = () => {
+  try {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const now = ctx.currentTime;
+    
+    // Play a dual-tone alert using Web Audio API (offline-friendly, avoids CORS block)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, now); // D5
+    gain1.gain.setValueAtTime(0.12, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.15);
+    
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880.00, now + 0.1); // A5
+    gain2.gain.setValueAtTime(0.12, now + 0.1);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.1);
+    osc2.stop(now + 0.3);
+  } catch (e) {
+    console.warn('Web Audio API playback failed:', e);
+  }
+};
+
 export type Priority = 'low' | 'medium' | 'high';
 export type TaskStatus = 'pending' | 'in_progress' | 'completed';
 
@@ -96,9 +130,16 @@ export const useTaskStore = create<TaskStore>()(
 
       updateTask: (id, updates) => set((state) => {
         const oldTask = state.tasks.find(t => t.id === id);
+        
+        // Reset reminderSent to false if reminderTime is being updated or changed
+        const finalUpdates = { ...updates };
+        if (updates.reminderTime !== undefined && updates.reminderTime !== oldTask?.reminderTime) {
+          finalUpdates.reminderSent = false;
+        }
+
         const newTasks = state.tasks.map((task) => 
           task.id === id 
-            ? { ...task, ...updates, updatedAt: new Date().toISOString() } 
+            ? { ...task, ...finalUpdates, updatedAt: new Date().toISOString() } 
             : task
         );
         
@@ -174,37 +215,45 @@ export const useTaskStore = create<TaskStore>()(
       checkReminders: () => {
         const state = get();
         const now = new Date();
-        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         
         state.tasks.forEach(task => {
           if (task.reminderTime && !task.reminderSent && task.status !== 'completed') {
-            // Check if it's time for the reminder (within the current minute)
-            if (task.reminderTime === currentTime) {
-              // Send WhatsApp alert via CallMeBot
-              if (state.settings.whatsappEnabled) {
-                WhatsAppService.onTaskDue(task.title, task.reminderTime);
+            // Parse reminderTime to compare at the minute level robustly
+            const reminderDate = new Date(task.reminderTime);
+            if (!isNaN(reminderDate.getTime())) {
+              const isSameMinute = 
+                reminderDate.getFullYear() === now.getFullYear() &&
+                reminderDate.getMonth() === now.getMonth() &&
+                reminderDate.getDate() === now.getDate() &&
+                reminderDate.getHours() === now.getHours() &&
+                reminderDate.getMinutes() === now.getMinutes();
+
+              if (isSameMinute) {
+                // Send WhatsApp alert via CallMeBot
+                if (state.settings.whatsappEnabled) {
+                  WhatsAppService.onTaskDue(task.title, task.reminderTime);
+                }
+                
+                // Also show browser notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                  new Notification(`⏰ Recordatorio: ${task.title}`, {
+                    body: `Es hora de cumplir esta tarea. Prioridad: ${task.priority}`,
+                    icon: '/taskflow/pwa-192x192.png',
+                  });
+                }
+                
+                // Play sound if enabled
+                if (state.settings.soundEnabled) {
+                  playNotificationSound();
+                }
+                
+                // Mark reminder as sent
+                set((s) => ({
+                  tasks: s.tasks.map(t => 
+                    t.id === task.id ? { ...t, reminderSent: true } : t
+                  )
+                }));
               }
-              
-              // Also show browser notification
-              if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(`⏰ Recordatorio: ${task.title}`, {
-                  body: `Es hora de cumplir esta tarea. Prioridad: ${task.priority}`,
-                  icon: '/taskflow/pwa-192x192.png',
-                });
-              }
-              
-              // Play sound if enabled
-              if (state.settings.soundEnabled) {
-                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                audio.play().catch(() => {});
-              }
-              
-              // Mark reminder as sent
-              set((s) => ({
-                tasks: s.tasks.map(t => 
-                  t.id === task.id ? { ...t, reminderSent: true } : t
-                )
-              }));
             }
           }
         });

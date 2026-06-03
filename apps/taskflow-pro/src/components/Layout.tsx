@@ -15,7 +15,7 @@ const menuItems = [
   { text: 'Dashboard', icon: <LayoutDashboard size={22} />, path: '/' },
   { text: 'Tareas', icon: <CheckSquare size={22} />, path: '/tasks' },
   { text: 'Categorías', icon: <Tags size={22} />, path: '/categories' },
-  { text: 'Ajustes Premium', icon: <Settings size={22} />, path: '/settings' },
+  { text: 'Ajustes', icon: <Settings size={22} />, path: '/settings' },
 ];
 
 const Layout: React.FC = () => {
@@ -39,8 +39,8 @@ const Layout: React.FC = () => {
             TaskFlow<Box component="span" sx={{ color: 'primary.main' }}>Pro</Box>
           </Typography>
         </Box>
-        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5 }}>
-          Enterprise OS
+        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: 0.5 }}>
+          ¿Algo nuevo que podamos organizar?
         </Typography>
       </Toolbar>
       
@@ -59,7 +59,6 @@ const Layout: React.FC = () => {
           </Avatar>
           <Box>
             <Typography variant="body2" sx={{ fontWeight: 700 }}>{settings.whatsappPhone1 || 'Usuario MSB'}</Typography>
-            <Typography variant="caption" color="text.secondary">Plan Pro Active</Typography>
           </Box>
         </Box>
       </Box>
@@ -92,11 +91,11 @@ const Layout: React.FC = () => {
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText 
-                  primary={item.text} 
-                  slotProps={{ primary: { sx: { 
-                    fontWeight: isActive ? 800 : 500,
-                    fontSize: '0.95rem'
-                  }}}} 
+                   primary={item.text} 
+                   slotProps={{ primary: { sx: { 
+                     fontWeight: isActive ? 800 : 500,
+                     fontSize: '0.95rem'
+                   }}}} 
                 />
                 {isActive && (
                   <motion.div layoutId="activeNav" style={{ width: 4, height: 20, borderRadius: 2, backgroundColor: theme.palette.primary.main }} />
@@ -109,8 +108,10 @@ const Layout: React.FC = () => {
       
       <Box sx={{ p: 3 }}>
          <Paper elevation={0} sx={{ p: 2, borderRadius: 3, bgcolor: 'rgba(0, 245, 255, 0.05)', border: '1px solid rgba(0, 245, 255, 0.1)' }}>
-           <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>MSB SOLUTIONS</Typography>
-           <Typography variant="caption" color="text.secondary">V2.0.4 Build Final</Typography>
+           <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>MSBrossAI</Typography>
+           <Typography variant="caption" color="text.secondary" component="a" href="https://msbross.me/" target="_blank" rel="noopener noreferrer" sx={{ textDecoration: 'none', color: 'primary.main', '&:hover': { textDecoration: 'underline' } }}>
+             https://msbross.me/
+           </Typography>
          </Paper>
       </Box>
     </Box>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper, TextField, Switch, FormControlLabel, Button } from '@mui/material';
 import { motion } from 'framer-motion';
-import { useTaskStore } from '../store/taskStore';
+import { useTaskStore, playNotificationSound } from '../store/taskStore';
 import { Smartphone, BellRing } from 'lucide-react';
 
 const Settings: React.FC = () => {
@@ -14,7 +14,7 @@ const Settings: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 800, mx: 'auto', w: '100%' }}>
-      <Typography variant="h3" color="primary" sx={{ mb: 4, fontWeight: 800 }}>Ajustes Premium</Typography>
+      <Typography variant="h3" color="primary" sx={{ mb: 4, fontWeight: 800 }}>Ajustes</Typography>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <Paper sx={{ p: 4, mb: 4 }}>
@@ -25,7 +25,19 @@ const Settings: React.FC = () => {
             <Typography variant="h5" sx={{ fontWeight: 700 }}>Experiencia Sensorial</Typography>
           </Box>
           <FormControlLabel
-            control={<Switch color="primary" checked={settings.soundEnabled} onChange={(e) => updateSettings({ soundEnabled: e.target.checked })} />}
+            control={
+              <Switch 
+                color="primary" 
+                checked={settings.soundEnabled} 
+                onChange={(e) => {
+                  const enabled = e.target.checked;
+                  updateSettings({ soundEnabled: enabled });
+                  if (enabled) {
+                    playNotificationSound();
+                  }
+                }} 
+              />
+            }
             label="Efectos de Sonido"
           />
         </Paper>
