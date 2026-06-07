@@ -26,21 +26,8 @@ module.exports = {
     // LIVEKIT NIKOLINA (Voice AI)
     // ──────────────────────────────────────────────
     {
-      name: 'nikolina-livekit-server',
-      script: path.join(__dirname, 'apps/livekit-nikolina/server/livekit-server'),
-      args: '--dev --bind 127.0.0.1 --node-ip 127.0.0.1',
-      cwd: __dirname,
-      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.log'),
-      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.error.log'),
-      autorestart: true,
-      max_restarts: 15,
-      exp_backoff_delay: 1000,
-      min_uptime: '15s',
-      max_memory_restart: '1G'
-    },
-    {
       name: 'nikolina-api-hub',
-      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 8001',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/server'),
       env: {
@@ -57,7 +44,7 @@ module.exports = {
     },
     {
       name: 'nikolina-agent',
-      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: 'src/agent.py dev',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
       env: {
@@ -77,7 +64,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'gas-station-backend',
-      script: path.join(__dirname, 'apps/gas-station/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 3005',
       cwd: path.join(__dirname, 'apps/gas-station/backend'),
       env: {
@@ -289,5 +276,37 @@ module.exports = {
       min_uptime: '15s',
       max_memory_restart: '200M'
     },
+    {
+      name: 'txa-fitness-pro',
+      script: 'npm',
+      args: 'run start',
+      cwd: path.join(__dirname, 'apps/txa-fitness-pro'),
+      env: {
+        PORT: '3456'
+      },
+      out_file: path.join(__dirname, 'apps/txa-fitness-pro/txa.log'),
+      error_file: path.join(__dirname, 'apps/txa-fitness-pro/txa.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '500M'
+    },
+    {
+      name: 'mapfre-infocol',
+      script: 'npm',
+      args: 'run start',
+      cwd: path.join(__dirname, 'apps/mapfre-infocol/frontend'),
+      env: {
+        PORT: '3333'
+      },
+      out_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre.log'),
+      error_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '500M'
+    }
   ]
 };

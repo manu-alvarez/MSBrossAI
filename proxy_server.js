@@ -7,6 +7,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
 
 const app  = express();
+app.set('trust proxy', 1);
 const PORT = 8080;
 const WWW  = path.join(__dirname, 'www');
 
@@ -104,9 +105,9 @@ app.get('/api/visits-badge', (req, res) => {
 // ── Static SPAs ──
 const NEXT_APPS = [
   'app-generator', 'cuentos-magicos', 'combipro', 'industrialpro',
-  'edelweiss', 'expositator', 'iaputa', 'iaputa-os', 'jartosdto',
-  'logisearch', 'moko', 'msbross', 'gas-station', 'nikolina',
-  'taskflow', 'perfume-trading', 'traductor', 'atenea', 'elitescout',
+  'edelweiss', 'expositator-rte', 'iaputa-os', 'jartosdto',
+  'logisearch', 'moko-tools', 'msbross', 'gas-station', 'livekit-nikolina',
+  'taskflow', 'perfume-trading', 'traductor-pro', 'web-restaurante-atenea'
 ];
 
 for (const name of NEXT_APPS) {
@@ -127,7 +128,12 @@ for (const name of NEXT_APPS) {
   app.get(new RegExp(`^/app/${name}/(.*)$`), (req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     const indexFile = path.join(appDir, 'index.html');
-    res.sendFile(indexFile, err => { if (err) next(); });
+    res.sendFile(indexFile, err => { 
+      if (err) {
+        console.error(`Error serving ${indexFile}:`, err.message);
+        next(); 
+      }
+    });
   });
 }
 
@@ -152,15 +158,9 @@ const proxyOpts = (target, stripPrefix, ws = false) => ({
 app.use('/_nikolina',      createProxyMiddleware(proxyOpts('http://127.0.0.1:8001', '/_nikolina', true)));
 app.use('/_gas-station',        createProxyMiddleware(proxyOpts('http://127.0.0.1:3005', '/_gas-station')));
 app.use('/_industrialpro',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8002', '/_industrialpro')));
-app.use('/app/elitescout/api', createProxyMiddleware({
-  target: 'http://127.0.0.1:8003',
+app.use('/app/elitescout', createProxyMiddleware({
+  target: 'http://127.0.0.1:8003/app/elitescout',
   changeOrigin: true,
-  pathRewrite: (path) => {
-    let [pathname, search] = path.split('?');
-    let newPath = '/app/elitescout/api' + pathname;
-    if (!newPath.endsWith('/')) newPath += '/';
-    return search ? `${newPath}?${search}` : newPath;
-  },
   on: {
     error: (err, req, res) => {
       console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:8003: ${err.message}`);
@@ -169,18 +169,23 @@ app.use('/app/elitescout/api', createProxyMiddleware({
   }
 }));
 
-app.use('/_elitescout', createProxyMiddleware({
-  target: 'http://127.0.0.1:8003',
+app.use('/app/txafitnesspro', createProxyMiddleware({
+  target: 'http://127.0.0.1:3456/app/txafitnesspro',
   changeOrigin: true,
-  pathRewrite: (path) => {
-    let [pathname, search] = path.split('?');
-    let newPath = '/app/elitescout' + pathname;
-    if (!newPath.endsWith('/')) newPath += '/';
-    return search ? `${newPath}?${search}` : newPath;
-  },
   on: {
     error: (err, req, res) => {
-      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:8003: ${err.message}`);
+      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:3456: ${err.message}`);
+      if (res && res.writeHead) res.status(502).json({ error: 'Backend unavailable', detail: err.message });
+    }
+  }
+}));
+
+app.use('/app/mapfre', createProxyMiddleware({
+  target: 'http://127.0.0.1:3333/app/mapfre',
+  changeOrigin: true,
+  on: {
+    error: (err, req, res) => {
+      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:3333: ${err.message}`);
       if (res && res.writeHead) res.status(502).json({ error: 'Backend unavailable', detail: err.message });
     }
   }
@@ -191,6 +196,8 @@ app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:800
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));
 app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8010', '/_jartosdto')));
 app.use('/_atenea',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8009', '/_atenea')));
+app.use('/txa-fitness-pro',createProxyMiddleware(proxyOpts('http://127.0.0.1:8011', '/txa-fitness-pro')));
+app.use('/mapfre-infocol', createProxyMiddleware(proxyOpts('http://127.0.0.1:8012', '/mapfre-infocol')));
 
 // ── LiveKit WebSocket proxy (for self-hosted LiveKit) ──
 app.use('/rtc', createProxyMiddleware({

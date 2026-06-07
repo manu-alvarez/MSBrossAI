@@ -330,7 +330,7 @@ async def chat_completions(req: Request, body: ChatRequest):
     async def event_generator():
         # Inform frontend about RAG phase
         if context:
-            yield f"data: {json.dumps({'type': 'thinking', 'content': 'Consultando base de datos vectorial local (RAG)...\n'})}\n\n"
+            yield f"data: {json.dumps({'type': 'thinking', 'content': 'Consultando base de datos vectorial local (RAG)...'})}\n\n"
         
         async for chunk in _stream_openai_compatible(model_id, messages_payload, api_key, base_url):
             yield chunk

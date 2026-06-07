@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     APP_SECRET_KEY: str = "change-me-to-a-random-secret-key"
 
     # Database
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/cuentos_magicos"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/cuentos_magicos"
 
     # Supabase
     SUPABASE_URL: str = ""
