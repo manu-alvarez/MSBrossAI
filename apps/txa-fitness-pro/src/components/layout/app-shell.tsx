@@ -10,10 +10,12 @@ import {
   Dumbbell,
   History,
   User,
+  Utensils,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Hoy", icon: Dumbbell },
+  { href: "/ai-nutrition", label: "Nutrición", icon: Utensils },
   { href: "/log", label: "Historial", icon: History },
   { href: "/progress", label: "Progreso", icon: BarChart3 },
   { href: "/profile", label: "Perfil", icon: User },
