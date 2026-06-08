@@ -68,20 +68,20 @@ export default function AINutritionPage() {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-extrabold text-surface-900 dark:text-surface-50 tracking-tight mb-3 transition-colors">
-                Ingeniería Nutricional de Élite
+                Tu Nutricionista Inteligente
               </h1>
               <p className="text-surface-600 dark:text-surface-400 transition-colors">
-                El motor biométrico procesará tus métricas de diagnóstico en la nube para calcular tus macros, timing de nutrientes y periodización de hipertrofia.
+                Analizamos tus resultados del diagnóstico para crear un plan de nutrición y entrenamiento adaptado a tus necesidades.
               </p>
             </div>
 
             <Card className="p-6 mb-8 border-brand-200 dark:border-brand-900/50 bg-white/50 dark:bg-surface-900/50 backdrop-blur-sm shadow-xl shadow-brand-500/5 transition-colors">
               <div className="flex items-center gap-3 mb-4 text-brand-700 dark:text-brand-400 font-bold transition-colors">
                 <Activity className="w-5 h-5" />
-                <h3>Análisis de Diagnóstico Requerido</h3>
+                <h3>Generación de Plan</h3>
               </div>
               <p className="text-sm text-surface-500 dark:text-surface-400 mb-6 transition-colors">
-                Usamos la Inteligencia Artificial del servidor para realizar una evaluación profunda de tus marcadores. El proceso es inmediato y completamente gratuito para tu cuenta.
+                Usamos Inteligencia Artificial para evaluar tus datos y generar una pauta completa en segundos. El proceso es totalmente gratuito.
               </p>
               
               <div className="space-y-4">
@@ -100,12 +100,12 @@ export default function AINutritionPage() {
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="w-5 h-5 animate-spin" />
-                      Procesando Biometría...
+                      Creando tu plan...
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5" />
-                      Generar Macro-Ciclo Nivel Dios
+                      Generar Plan Personalizado
                     </span>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
@@ -116,7 +116,7 @@ export default function AINutritionPage() {
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-extrabold text-surface-900 dark:text-surface-50 tracking-tight transition-colors">Tu Ciclo Metabólico Generado</h2>
+                <h2 className="text-2xl font-extrabold text-surface-900 dark:text-surface-50 tracking-tight transition-colors">Tu Plan Personalizado</h2>
                 <Button variant="outline" size="sm" onClick={() => setAiPlan("")} className="rounded-full border-surface-200 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-100 dark:hover:bg-surface-700 transition-colors">
                     <RefreshCw className="w-4 h-4 mr-2" /> Recalcular
                 </Button>
