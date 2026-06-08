@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/auth/login-form"
+import Link from "next/link"
 
 export default function LoginPage() {
   return (
@@ -9,9 +10,9 @@ export default function LoginPage() {
         </h2>
         <p className="mt-2 text-center text-sm text-neutral-400">
           O{" "}
-          <a href="/register" className="font-medium text-brand-400 hover:text-brand-300 transition-colors">
+          <Link href="/register" className="font-medium text-brand-400 hover:text-brand-300 transition-colors">
             crea una cuenta nueva gratis
-          </a>
+          </Link>
         </p>
       </div>
 
