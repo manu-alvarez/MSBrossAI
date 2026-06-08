@@ -38,29 +38,31 @@ export async function POST(req: NextRequest) {
       .map((w) => `- ${w.areaName} (Severidad: ${w.severity}): ${w.justification}`)
       .join("\n");
 
-    const prompt = `Actúa como el Nutricionista Clínico, Médico Deportivo y Preparador Físico de más alto nivel mundial.
-Tu objetivo es realizar una "Ingeniería Metabólica" para el siguiente usuario basándote estrictamente en sus debilidades biométricas reales:
-DEBILIDADES DETECTADAS:
+    const prompt = `Actúa como un Nutricionista y Entrenador Personal experto, amigable y muy empático.
+Tu objetivo es crear un plan de nutrición y entrenamiento semanal sencillo y fácil de seguir para una persona normal, basándote en las siguientes áreas de mejora detectadas en su evaluación:
+
+ÁREAS A MEJORAR:
 ${weakAreasList}
 
-Genera un MACRO-CICLO de 7 días con un enfoque "Hyper-Deep" y precisión clínica.
-Obligatorio incluir las siguientes 4 secciones con títulos Markdown (##):
+Genera un plan de 7 días (Macro-Ciclo) de forma clara y sin usar jerga médica o términos demasiado técnicos. 
+Organiza la respuesta usando los siguientes títulos en formato Markdown (##):
 
-## 1. Periodización Nutricional y Timing
-- Define los Macros específicos (Proteína, CH, Grasas en % o g/kg) adaptados a sus debilidades.
-- Timing de Nutrientes Perientrenamiento (Qué ingerir exactamente Pre, Intra y Post-entreno enfocándose en el índice glucémico y síntesis proteica).
+## 1. Tu Enfoque Nutricional
+- Sugerencias fáciles y prácticas sobre qué comer (proteínas, carbohidratos, grasas saludables).
+- Consejos sobre cuándo comer (antes, durante y después de hacer ejercicio).
 
-## 2. Suplementación Clínica Basada en Evidencia
-- Recomienda 3 suplementos exactos para paliar sus debilidades (Ej: Creatina Monohidrato 0.1g/kg, Omega-3 EPA/DHA > 2g, Ashwagandha KSM-66, etc.) con justificación científica.
+## 2. Recomendaciones Extra
+- Sugerencias simples de suplementos naturales o vitaminas si fueran necesarios (ej. vitaminas, omega 3), explicando para qué sirven de forma muy sencilla.
 
-## 3. Arquitectura del Ciclo de Entrenamiento
-- Volumen, Frecuencia y RIR (Repetitions in Reserve) adaptado para no sobrecargar el Sistema Nervioso Central (SNC).
-- Ejercicios biomecánicos clave para corregir las debilidades mencionadas.
+## 3. Tu Rutina de Ejercicios
+- Cuántos días entrenar a la semana y con qué intensidad para no agotarse.
+- Ejercicios recomendados para mejorar específicamente sus puntos débiles de forma segura.
 
-## 4. Plan de Acción (Día a Día)
-- Resumen ejecutivo de 7 días (Qué hacer, comer y entrenar cada día). Incluye 3 recetas élite ricas en leucina/proteína.
+## 4. Plan de Acción Semanal
+- Un resumen día a día fácil de leer (qué hacer y recomendaciones de comidas).
+- Incluye 3 recetas saludables, riquísimas y muy fáciles de preparar en casa.
 
-REGLA ESTRICTA: Formato Markdown pulido e hiperprofesional. Sin introducciones genéricas ni advertencias redundantes. Directo a la ciencia.`;
+Por favor, usa un tono motivador, cercano y coherente. El formato debe ser limpio en Markdown, usando viñetas y negritas para facilitar la lectura.`;
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
