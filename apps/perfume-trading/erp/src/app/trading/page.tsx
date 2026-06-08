@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Calculator, TrendingUp, Percent, DollarSign, X } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,12 +14,13 @@ import { CurrencyDisplay } from '@/components/ui/currency-display';
 import { cn } from '@/lib/utils';
 import { calculateNetMargin, calculateTargetPrice } from '@/lib/trading-calculator';
 import type { Incoterm } from '@/types';
+import { getTrades } from '@/app/actions';
 
 type TradeOp = 'Offer' | 'Bid';
 
-// ─── Mock Data ───
+// ─── Mock Data Removed ───
 interface TradingRow {
-  id: number;
+  id: string;
   type: TradeOp;
   brand: string;
   product: string;
@@ -33,17 +34,6 @@ interface TradingRow {
   status: string;
   validUntil: string;
 }
-
-const mockData: TradingRow[] = [
-  { id: 1, type: 'Offer', brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', partner: 'GlobalFragance GmbH', quantity: 50, priceUnit: 78.50, total: 3925.00, incoterm: 'EXW', marketPrice: 95.00, marginPct: 17.4, status: 'Active', validUntil: '2026-06-15' },
-  { id: 2, type: 'Offer', brand: 'Dior', product: 'Sauvage EDT 100ml Tester', partner: 'Parfums World SA', quantity: 120, priceUnit: 62.00, total: 7440.00, incoterm: 'FOB', marketPrice: 82.00, marginPct: 24.4, status: 'Active', validUntil: '2026-06-20' },
-  { id: 3, type: 'Offer', brand: 'Creed', product: 'Aventus EDP 100ml', partner: 'Luxury Scents Ltd', quantity: 10, priceUnit: 245.00, total: 2450.00, incoterm: 'CIF', marketPrice: 320.00, marginPct: 23.4, status: 'Draft', validUntil: '2026-07-01' },
-  { id: 4, type: 'Bid', brand: 'Tom Ford', product: 'Ombre Leather EDP 100ml', partner: 'Aroma Select SL', quantity: 25, priceUnit: 110.00, total: 2750.00, incoterm: 'DDP', marketPrice: 135.00, marginPct: 18.5, status: 'Active', validUntil: '2026-06-10' },
-  { id: 5, type: 'Bid', brand: 'Lancôme', product: 'La Vie Est Belle EDP 75ml', partner: 'Beauty Distribution Inc', quantity: 80, priceUnit: 72.00, total: 5760.00, incoterm: 'FOB', marketPrice: 95.00, marginPct: 24.2, status: 'Accepted', validUntil: '2026-05-30' },
-  { id: 6, type: 'Offer', brand: 'Prada', product: 'Luna Rossa Carbon EDT 150ml', partner: 'GlobalFragance GmbH', quantity: 40, priceUnit: 95.00, total: 3800.00, incoterm: 'EXW', marketPrice: 110.00, marginPct: 13.6, status: 'Expired', validUntil: '2026-05-01' },
-  { id: 7, type: 'Bid', brand: 'Jo Malone', product: 'Wood Sage & Sea Salt 100ml', partner: 'Parfums World SA', quantity: 60, priceUnit: 88.00, total: 5280.00, incoterm: 'CIF', marketPrice: 105.00, marginPct: 16.2, status: 'Negotiating', validUntil: '2026-06-25' },
-  { id: 8, type: 'Offer', brand: 'YSL', product: 'Libre EDP 90ml', partner: 'Luxury Scents Ltd', quantity: 35, priceUnit: 105.00, total: 3675.00, incoterm: 'FOB', marketPrice: 130.00, marginPct: 19.2, status: 'Draft', validUntil: '2026-07-05' },
-];
 
 const statusVariant: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
   Active: 'success', Draft: 'warning', Accepted: 'info',
@@ -67,7 +57,31 @@ function formatCurrency(val: number) {
 export default function TradingPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [search, setSearch] = useState('');
-  const [trades, setTrades] = useState(mockData);
+  const [trades, setTrades] = useState<TradingRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getTrades().then(data => {
+      const items = data.map((t: any) => ({
+        id: t.id,
+        type: t.type as TradeOp,
+        brand: t.product?.brand?.name || '',
+        product: t.product?.name || '',
+        partner: t.partner?.name || '',
+        quantity: t.quantity,
+        priceUnit: t.priceUnit,
+        total: t.totalAmount,
+        incoterm: t.incoterm as Incoterm,
+        marketPrice: t.product?.marketPrice || 0,
+        marginPct: t.marginPct,
+        status: t.status,
+        validUntil: new Date(t.validUntil).toISOString().split('T')[0]
+      }));
+      setTrades(items);
+      setIsLoading(false);
+    });
+  }, []);
+
   const [isNewTradeOpen, setIsNewTradeOpen] = useState(false);
   const [newTrade, setNewTrade] = useState<{
     type: TradeOp; partner: string; product: string; brand: string;
@@ -79,7 +93,7 @@ export default function TradingPage() {
 
   const handleCreateTrade = () => {
     if (!newTrade.partner || !newTrade.product) return;
-    const id = Math.max(...trades.map((t) => t.id), 0) + 1;
+    const id = Date.now().toString(); // Mock ID for now
     const total = newTrade.quantity * newTrade.priceUnit;
     const margin = newTrade.marketPrice > 0
       ? Math.round(((newTrade.marketPrice - newTrade.priceUnit) / newTrade.marketPrice) * 1000) / 10

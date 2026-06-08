@@ -1,39 +1,14 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Printer, ArrowLeft, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-// ─── Mock invoice detail ───
-const mockInvoices: Record<string, {
-  number: string; partner: string; partnerAddress: string; type: string;
-  incoterm: string; issueDate: string; dueDate: string; status: string;
-  items: Array<{ brand: string; product: string; ean: string; qty: number; price: number; total: number }>;
-  totalNet: number; taxPercent: number; totalGross: number;
-}> = {
-  '1': {
-    number: 'INV-2026-0001', partner: 'GlobalFragance GmbH',
-    partnerAddress: 'Industriestr. 42, 10115 Berlin, Alemania',
-    type: 'Offer', incoterm: 'EXW', issueDate: '2026-05-01', dueDate: '2026-06-15',
-    status: 'Paid',
-    items: [
-      { brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', ean: '3145891073607', qty: 50, price: 78.50, total: 3925.00 },
-    ],
-    totalNet: 3925.00, taxPercent: 21, totalGross: 4749.25,
-  },
-  '2': {
-    number: 'INV-2026-0002', partner: 'Parfums World SA',
-    partnerAddress: '12 Rue de la Paix, 75002 Paris, Francia',
-    type: 'Offer', incoterm: 'FOB', issueDate: '2026-05-10', dueDate: '2026-07-01',
-    status: 'Pending',
-    items: [
-      { brand: 'Dior', product: 'Sauvage EDT 100ml Tester', ean: '3348901250141', qty: 120, price: 62.00, total: 7440.00 },
-    ],
-    totalNet: 7440.00, taxPercent: 21, totalGross: 9002.40,
-  },
-};
+import { getInvoiceById } from '@/app/actions';
+
+// ─── Mock Data Removed ───
 
 function formatCurrency(val: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -41,8 +16,50 @@ function formatCurrency(val: number) {
 
 function InvoiceContent() {
   const searchParams = useSearchParams();
-  const id = searchParams.get('id') || '1';
-  const inv = mockInvoices[id];
+  const id = searchParams.get('id') || '';
+  const [inv, setInv] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) {
+      setIsLoading(false);
+      return;
+    }
+    getInvoiceById(id).then(data => {
+      if (data) {
+        setInv({
+          number: data.invoiceNumber,
+          partner: data.partner?.name,
+          partnerAddress: data.partner?.address || 'N/A',
+          type: data.type,
+          incoterm: data.incoterm,
+          issueDate: new Date(data.createdAt).toLocaleDateString(),
+          dueDate: data.dueDate ? new Date(data.dueDate).toLocaleDateString() : 'N/A',
+          status: data.status,
+          items: data.items.map((item: any) => ({
+            brand: item.product?.brand?.name || '',
+            product: item.product?.name || '',
+            ean: item.product?.ean || '',
+            qty: item.quantity,
+            price: item.priceUnit,
+            total: item.total
+          })),
+          totalNet: data.totalNet,
+          taxPercent: data.taxPercent,
+          totalGross: data.totalGross,
+        });
+      }
+      setIsLoading(false);
+    });
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-20 text-[#605E5C]">
+        <p className="text-lg font-semibold">Cargando proforma...</p>
+      </div>
+    );
+  }
 
   if (!inv) {
     return (
@@ -135,7 +152,7 @@ function InvoiceContent() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#EDEBE9]">
-              {inv.items.map((item, idx) => (
+              {inv.items.map((item: any, idx: number) => (
                 <tr key={idx}>
                   <td className="py-3 text-[#605E5C]">{idx + 1}</td>
                   <td className="py-3 font-semibold">{item.brand}</td>

@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { isSupabaseConfigured } from '@/lib/supabase-client';
 
 // ─── Settings Section ───
 function SettingsSection({
@@ -37,8 +36,8 @@ function SettingsSection({
 }
 
 export default function SettingsPage() {
-  const supabaseConfigured = isSupabaseConfigured();
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'No configurado';
+  const dbStatus = 'Conectado a SQLite via Prisma';
+  const dbUrl = process.env.DATABASE_URL || 'file:./erp.db';
 
   return (
     <div className="space-y-4 max-w-3xl">
@@ -95,24 +94,23 @@ export default function SettingsPage() {
           </div>
         </SettingsSection>
 
-        {/* Supabase */}
-        <SettingsSection icon={Database} title="Conexión Supabase" description="Estado de la base de datos y configuración">
+        {/* Database */}
+        <SettingsSection icon={Database} title="Conexión Base de Datos" description="Estado de la base de datos y configuración">
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-[#F3F2F1] dark:bg-[#2a2a2a] border border-[#EDEBE9] dark:border-[#333]">
               <div className="flex items-center space-x-3">
-                {supabaseConfigured ? <Check size={20} className="text-green-600" /> : <AlertCircle size={20} className="text-yellow-600" />}
+                <Check size={20} className="text-green-600" />
                 <div>
-                  <p className="text-sm font-semibold">{supabaseConfigured ? 'Conectado' : 'No conectado'}</p>
-                  <p className="text-[11px] text-[#605E5C] font-mono">{supabaseUrl}</p>
+                  <p className="text-sm font-semibold">{dbStatus}</p>
+                  <p className="text-[11px] text-[#605E5C] font-mono">{dbUrl}</p>
                 </div>
               </div>
               <Button variant="secondary" size="sm">Probar Conexión</Button>
             </div>
             <div className="text-xs text-[#605E5C] dark:text-[#888] space-y-1">
-              <p><strong>Configuración necesaria en .env.local:</strong></p>
+              <p><strong>Configuración necesaria en .env:</strong></p>
               <code className="block bg-[#F3F2F1] dark:bg-[#2a2a2a] p-2 mt-1 font-mono text-[11px]">
-                NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co<br />
-                NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+                DATABASE_URL="file:./erp.db"
               </code>
             </div>
           </div>

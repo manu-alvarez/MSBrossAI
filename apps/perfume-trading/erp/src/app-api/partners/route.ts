@@ -1,25 +1,32 @@
 import { NextResponse } from 'next/server';
-import { getClient } from '@/lib/supabase-client';
+import prisma from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
-    const supabase = getClient();
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
     const search = searchParams.get('search');
 
-    let query = supabase.from('partners').select('*');
+    let whereClause: any = { isActive: true };
 
     if (type && type !== 'all') {
-      query = query.eq('type', type);
+      whereClause.type = type;
     }
+    
     if (search) {
-      query = query.or(`name.ilike.%${search}%,country.ilike.%${search}%,email.ilike.%${search}%`);
+      whereClause.OR = [
+        { name: { contains: search } },
+        { country: { contains: search } },
+        { email: { contains: search } }
+      ];
     }
 
-    const { data, error } = await query.eq('is_active', true).order('name', { ascending: true });
-    if (error) throw error;
-    return NextResponse.json({ data, count: data?.length ?? 0 });
+    const data = await prisma.partner.findMany({
+      where: whereClause,
+      orderBy: { name: 'asc' }
+    });
+
+    return NextResponse.json({ data, count: data.length });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });
@@ -28,24 +35,20 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = getClient();
     const body = await request.json();
-    const { data, error } = await supabase
-      .from('partners')
-      .insert({
+    const data = await prisma.partner.create({
+      data: {
         name: body.name,
         type: body.type,
         email: body.email,
         phone: body.phone,
         country: body.country,
         address: body.address,
-        credit_limit: body.credit_limit ?? 0,
-        payment_terms: body.payment_terms ?? 'Net 30',
-      })
-      .select()
-      .single();
+        creditLimit: body.credit_limit ?? 0,
+        paymentTerms: body.payment_terms ?? 'Net 30',
+      }
+    });
 
-    if (error) throw error;
     return NextResponse.json({ data }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
@@ -55,7 +58,6 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const supabase = getClient();
     const body = await request.json();
     const { id, ...updates } = body;
 
@@ -63,14 +65,15 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Partner ID is required' }, { status: 400 });
     }
 
-    const { data, error } = await supabase
-      .from('partners')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
+    const mappedUpdates: any = { ...updates };
+    if (updates.credit_limit !== undefined) mappedUpdates.creditLimit = updates.credit_limit;
+    if (updates.payment_terms !== undefined) mappedUpdates.paymentTerms = updates.payment_terms;
 
-    if (error) throw error;
+    const data = await prisma.partner.update({
+      where: { id },
+      data: mappedUpdates
+    });
+
     return NextResponse.json({ data });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';

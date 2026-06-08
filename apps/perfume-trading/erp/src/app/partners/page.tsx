@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Globe, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/ui/input';
@@ -10,27 +10,18 @@ import { Table } from '@/components/ui/table';
 import Modal from '@/components/ui/Modal';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { getPartners } from '@/app/actions';
 
 interface Partner {
-  id: number;
+  id: string;
   name: string;
   type: string;
-  email: string;
-  phone: string;
-  country: string;
+  email: string | null;
+  phone: string | null;
+  country: string | null;
   isActive: boolean;
   creditLimit: number;
 }
-
-const mockPartners: Partner[] = [
-  { id: 1, name: 'GlobalFragance GmbH', type: 'Supplier', email: 'info@globalfragance.de', phone: '+49 30 1234 5678', country: 'Alemania', isActive: true, creditLimit: 50000 },
-  { id: 2, name: 'Parfums World SA', type: 'Both', email: 'sales@parfumsworld.fr', phone: '+33 1 2345 6789', country: 'Francia', isActive: true, creditLimit: 75000 },
-  { id: 3, name: 'Luxury Scents Ltd', type: 'Supplier', email: 'contact@luxuryscents.uk', phone: '+44 20 7123 4567', country: 'Reino Unido', isActive: true, creditLimit: 30000 },
-  { id: 4, name: 'Aroma Select SL', type: 'Client', email: 'compras@aromaselect.es', phone: '+34 91 2345 678', country: 'España', isActive: true, creditLimit: 25000 },
-  { id: 5, name: 'Beauty Distribution Inc', type: 'Client', email: 'orders@beautydist.com', phone: '+1 212 555 0199', country: 'USA', isActive: true, creditLimit: 100000 },
-  { id: 6, name: 'Orient Perfumes FZE', type: 'Broker', email: 'info@orientperfumes.ae', phone: '+971 4 234 5678', country: 'EAU', isActive: true, creditLimit: 20000 },
-  { id: 7, name: 'Scents Global Brokers', type: 'Broker', email: 'trading@scentsglobal.ch', phone: '+41 22 345 6789', country: 'Suiza', isActive: true, creditLimit: 15000 },
-];
 
 const typeVariant: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
   Supplier: 'info',
@@ -55,19 +46,28 @@ export default function PartnersPage() {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filtered = mockPartners.filter((p) => {
+  useEffect(() => {
+    getPartners().then(data => {
+      setPartners(data as Partner[]);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const filtered = partners.filter((p) => {
     if (typeFilter !== 'all' && p.type !== typeFilter) return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase()) &&
-        !p.country.toLowerCase().includes(search.toLowerCase())) return false;
+        !(p.country || '').toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
   const tabs = [
-    { key: 'all', label: 'Todos', count: mockPartners.length },
-    { key: 'Supplier', label: 'Proveedores', count: mockPartners.filter((p) => p.type === 'Supplier').length },
-    { key: 'Client', label: 'Clientes', count: mockPartners.filter((p) => p.type === 'Client').length },
-    { key: 'Broker', label: 'Brókers', count: mockPartners.filter((p) => p.type === 'Broker').length },
+    { key: 'all', label: 'Todos', count: partners.length },
+    { key: 'Supplier', label: 'Proveedores', count: partners.filter((p) => p.type === 'Supplier').length },
+    { key: 'Client', label: 'Clientes', count: partners.filter((p) => p.type === 'Client').length },
+    { key: 'Broker', label: 'Brókers', count: partners.filter((p) => p.type === 'Broker').length },
   ];
 
   const columns = [

@@ -1,44 +1,50 @@
 import { NextResponse } from 'next/server';
-import { getClient } from '@/lib/supabase-client';
+import prisma from '@/lib/prisma';
 import type { TradingItem } from '@/types';
 
-function mapItem(item: Record<string, unknown>): TradingItem {
+function mapItem(item: any): TradingItem {
   return {
-    id: item.id as string,
+    id: item.id,
     type: item.type as TradingItem['type'],
-    partner_id: item.partner_id as string,
-    partner_name: (item.partners as Record<string, unknown>)?.name as string ?? '',
-    product_id: item.product_id as string,
-    product_name: (item.products as Record<string, unknown>)?.name as string ?? '',
-    brand_name: (item.brands as Record<string, unknown>)?.name as string ?? '',
-    quantity: Number(item.quantity),
-    price_unit: Number(item.price_unit),
-    total_amount: Number(item.total_amount),
+    partner_id: item.partnerId,
+    partner_name: item.partner?.name ?? '',
+    product_id: item.productId,
+    product_name: item.product?.name ?? '',
+    brand_name: item.product?.brand?.name ?? '',
+    quantity: item.quantity,
+    price_unit: item.priceUnit,
+    total_amount: item.quantity * item.priceUnit,
     incoterm: (item.incoterm as TradingItem['incoterm']) ?? 'EXW',
-    market_price: Number(item.market_price ?? 0),
-    margin_pct: Number(item.margin_pct ?? 0),
-    margin_amount: Number(item.margin_amount ?? 0),
+    market_price: item.marketPrice ?? 0,
+    margin_pct: 0, // Calculated dynamically if needed
+    margin_amount: 0, // Calculated dynamically if needed
     status: item.status as TradingItem['status'],
-    valid_until: item.valid_until as string | undefined,
-    created_at: item.created_at as string,
+    valid_until: item.validUntil ? item.validUntil.toISOString() : undefined,
+    created_at: item.createdAt.toISOString(),
   };
 }
 
 export async function GET(request: Request) {
   try {
-    const supabase = getClient();
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
     const status = searchParams.get('status');
 
-    let query = supabase.from('trading_list').select('*, partners(name), products(name)');
-    if (type && type !== 'all') query = query.eq('type', type);
-    if (status && status !== 'all') query = query.eq('status', status);
+    let whereClause: any = {};
+    if (type && type !== 'all') whereClause.type = type;
+    if (status && status !== 'all') whereClause.status = status;
 
-    const { data, error } = await query.order('created_at', { ascending: false }).limit(100);
-    if (error) throw error;
+    const data = await prisma.tradingItem.findMany({
+      where: whereClause,
+      include: {
+        partner: true,
+        product: { include: { brand: true } }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 100
+    });
 
-    const items = (data ?? []).map(mapItem);
+    const items = data.map(mapItem);
     return NextResponse.json({ data: items, count: items.length });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
@@ -48,27 +54,28 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = getClient();
     const body = await request.json();
-    const { data, error } = await supabase
-      .from('trading_list')
-      .insert({
+    const newItem = await prisma.tradingItem.create({
+      data: {
         type: body.type,
-        partner_id: body.partner_id,
-        product_id: body.product_id,
+        partnerId: body.partner_id,
+        productId: body.product_id,
         quantity: body.quantity,
-        price_unit: body.price_unit,
+        priceUnit: body.price_unit,
         incoterm: body.incoterm ?? 'EXW',
-        market_price: body.market_price ?? 0,
+        marketPrice: body.market_price ?? 0,
         status: body.status ?? 'Draft',
-        valid_until: body.valid_until,
+        validUntil: body.valid_until ? new Date(body.valid_until) : undefined,
         notes: body.notes,
-      })
-      .select()
-      .single();
+      },
+      include: {
+        partner: true,
+        product: { include: { brand: true } }
+      }
+    });
 
-    if (error) throw error;
-    return NextResponse.json({ data }, { status: 201 });
+    const mappedItem = mapItem(newItem);
+    return NextResponse.json({ data: mappedItem }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });
@@ -77,7 +84,6 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
-    const supabase = getClient();
     const body = await request.json();
     const { id, status } = body;
 
@@ -85,15 +91,17 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'id and status are required' }, { status: 400 });
     }
 
-    const { data, error } = await supabase
-      .from('trading_list')
-      .update({ status })
-      .eq('id', id)
-      .select()
-      .single();
+    const updatedItem = await prisma.tradingItem.update({
+      where: { id },
+      data: { status },
+      include: {
+        partner: true,
+        product: { include: { brand: true } }
+      }
+    });
 
-    if (error) throw error;
-    return NextResponse.json({ data });
+    const mappedItem = mapItem(updatedItem);
+    return NextResponse.json({ data: mappedItem });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });

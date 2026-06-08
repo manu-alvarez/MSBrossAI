@@ -1,108 +1,134 @@
-import { getDb, handleDbError } from './base';
+import prisma from '../prisma';
 import type { Product, ApiResponse } from '@/types';
-
-function mapProduct(p: Record<string, unknown>): Product {
-  return {
-    id: p.id as string,
-    brand_id: p.brand_id as string,
-    brand_name: (p.brands as Record<string, unknown>)?.name as string ?? '',
-    brand_category: (p.brands as Record<string, unknown>)?.category as string ?? '',
-    name: p.name as string,
-    line: p.line as string | undefined,
-    gender: p.gender as Product['gender'],
-    format: p.format as Product['format'],
-    concentration: p.concentration as Product['concentration'],
-    size_ml: p.size_ml as number,
-    ean: p.ean as string,
-    market_price: p.market_price as number,
-    cost_price: p.cost_price as number | undefined,
-    is_active: (p.is_active as boolean) ?? true,
-    created_at: p.created_at as string,
-    updated_at: p.updated_at as string,
-  };
-}
 
 export const ProductsService = {
   async list(search?: string): Promise<ApiResponse<Product[]>> {
     try {
-      const db = getDb();
+      let whereClause: any = { isActive: true };
       if (search) {
-        const { data, error } = await db.rpc('search_products', { search_term: search });
-        if (error) throw error;
-        return { data: data as unknown as Product[], count: (data as unknown[])?.length ?? 0 };
+        whereClause.OR = [
+          { name: { contains: search } },
+          { ean: { contains: search } },
+          { brand: { name: { contains: search } } }
+        ];
       }
-      const { data, error } = await db
-        .from('products')
-        .select('*, brands(name, category)')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      const products = (data ?? []).map(mapProduct);
+
+      const data = await prisma.product.findMany({
+        where: whereClause,
+        include: { brand: true },
+        orderBy: { createdAt: 'desc' }
+      });
+
+      const products = data.map((p) => ({
+        id: p.id,
+        brand_id: p.brandId,
+        brand_name: p.brand?.name ?? '',
+        brand_category: p.brand?.category ?? '',
+        name: p.name,
+        line: p.line ?? undefined,
+        gender: p.gender as Product['gender'],
+        format: p.format as Product['format'],
+        concentration: p.concentration as Product['concentration'],
+        size_ml: p.sizeMl,
+        ean: p.ean,
+        market_price: p.marketPrice,
+        cost_price: p.costPrice ?? undefined,
+        is_active: p.isActive,
+        created_at: p.createdAt.toISOString(),
+        updated_at: p.updatedAt.toISOString(),
+      }));
+
       return { data: products, count: products.length };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
   async getById(id: string): Promise<ApiResponse<Product>> {
     try {
-      const db = getDb();
-      const { data, error } = await db
-        .from('products')
-        .select('*, brands(name, category)')
-        .eq('id', id)
-        .single();
-      if (error) throw error;
-      return { data: mapProduct(data as Record<string, unknown>) };
-    } catch (err) { handleDbError(err); }
+      const data = await prisma.product.findUnique({
+        where: { id },
+        include: { brand: true }
+      });
+      if (!data) throw new Error('Product not found');
+      
+      const product = {
+        id: data.id,
+        brand_id: data.brandId,
+        brand_name: data.brand?.name ?? '',
+        brand_category: data.brand?.category ?? '',
+        name: data.name,
+        line: data.line ?? undefined,
+        gender: data.gender as Product['gender'],
+        format: data.format as Product['format'],
+        concentration: data.concentration as Product['concentration'],
+        size_ml: data.sizeMl,
+        ean: data.ean,
+        market_price: data.marketPrice,
+        cost_price: data.costPrice ?? undefined,
+        is_active: data.isActive,
+        created_at: data.createdAt.toISOString(),
+        updated_at: data.updatedAt.toISOString(),
+      };
+      return { data: product };
+    } catch (err) { throw err; }
   },
 
   async create(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<ApiResponse<Product>> {
     try {
-      const db = getDb();
-      const { data, error } = await db.from('products').insert({
-        brand_id: product.brand_id,
-        name: product.name,
-        line: product.line,
-        gender: product.gender,
-        format: product.format,
-        concentration: product.concentration,
-        size_ml: product.size_ml,
-        ean: product.ean,
-        market_price: product.market_price,
-        cost_price: product.cost_price,
-      }).select().single();
-      if (error) throw error;
+      const data = await prisma.product.create({
+        data: {
+          brandId: product.brand_id,
+          name: product.name,
+          line: product.line,
+          gender: product.gender,
+          format: product.format,
+          concentration: product.concentration,
+          sizeMl: product.size_ml,
+          ean: product.ean,
+          marketPrice: product.market_price,
+          costPrice: product.cost_price,
+        },
+        include: { brand: true }
+      });
       return { data: data as unknown as Product, count: 1 };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
   async update(id: string, updates: Partial<Product>): Promise<ApiResponse<Product>> {
     try {
-      const db = getDb();
-      const { data, error } = await db
-        .from('products')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-      if (error) throw error;
+      const data = await prisma.product.update({
+        where: { id },
+        data: {
+          brandId: updates.brand_id,
+          name: updates.name,
+          line: updates.line,
+          gender: updates.gender,
+          format: updates.format,
+          concentration: updates.concentration,
+          sizeMl: updates.size_ml,
+          ean: updates.ean,
+          marketPrice: updates.market_price,
+          costPrice: updates.cost_price,
+          isActive: updates.is_active,
+        },
+        include: { brand: true }
+      });
       return { data: data as unknown as Product };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
   async getLowStock(threshold = 20): Promise<ApiResponse<(Product & { stock_qty: number })[]>> {
     try {
-      const db = getDb();
-      const { data, error } = await db
-        .from('inventory')
-        .select('product_id, products(*, brands(name)), quantity')
-        .lt('quantity', threshold)
-        .gt('quantity', 0);
-      if (error) throw error;
-      const items = (data ?? []).map((item: Record<string, unknown>) => ({
-        ...(item.products as Record<string, unknown>) ?? {},
-        stock_qty: Number(item.quantity),
-      })) as (Product & { stock_qty: number })[];
+      const data = await prisma.inventory.findMany({
+        where: { quantity: { gt: 0, lt: threshold } },
+        include: { product: { include: { brand: true } } }
+      });
+      
+      const items = data.map(item => ({
+        ...item.product,
+        stock_qty: item.quantity,
+      })) as unknown as (Product & { stock_qty: number })[];
+      
       return { data: items, count: items.length };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 };

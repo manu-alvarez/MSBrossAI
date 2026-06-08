@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Filter, Download, MoreHorizontal } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,9 +11,10 @@ import { Select } from '@/components/ui/select';
 import Modal from '@/components/ui/Modal';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 import { cn } from '@/lib/utils';
+import { getProducts } from '@/app/actions';
 
 interface CatalogItem {
-  id: number;
+  id: string;
   brand: string;
   name: string;
   concentration: string;
@@ -30,15 +31,27 @@ function formatCurrency(val: number) {
 }
 
 export default function CatalogPage() {
-  const [catalogData, setCatalogData] = useState<CatalogItem[]>([
-    { id: 1, brand: 'Chanel', name: 'Bleu de Chanel', concentration: 'EDP', size: '100ml', format: 'Regular', gender: 'Male', ean: '3145891073607', stock: 150, price: 85.50 },
-    { id: 2, brand: 'Dior', name: 'Sauvage', concentration: 'EDT', size: '100ml', format: 'Tester', gender: 'Male', ean: '3348901250141', stock: 45, price: 62.00 },
-    { id: 3, brand: 'Creed', name: 'Aventus', concentration: 'EDP', size: '100ml', format: 'Regular', gender: 'Male', ean: '3508441001114', stock: 12, price: 245.00 },
-    { id: 4, brand: 'Lancôme', name: 'La Vie Est Belle', concentration: 'EDP', size: '75ml', format: 'Regular', gender: 'Female', ean: '3605532612836', stock: 80, price: 72.00 },
-    { id: 5, brand: 'Tom Ford', name: 'Black Orchid', concentration: 'EDP', size: '50ml', format: 'Regular', gender: 'Unisex', ean: '888066000512', stock: 25, price: 110.00 },
-    { id: 6, brand: 'Jo Malone', name: 'Wood Sage & Sea Salt', concentration: 'EDC', size: '100ml', format: 'Regular', gender: 'Unisex', ean: '5013515100160', stock: 60, price: 95.00 },
-    { id: 7, brand: 'Prada', name: 'Luna Rossa Carbon', concentration: 'EDT', size: '150ml', format: 'Tester', gender: 'Male', ean: '3348901400126', stock: 8, price: 78.00 },
-  ]);
+  const [catalogData, setCatalogData] = useState<CatalogItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts().then(data => {
+      const items = data.map((p: any) => ({
+        id: p.id,
+        brand: p.brand.name,
+        name: p.name,
+        concentration: p.concentration,
+        size: `${p.sizeMl}ml`,
+        format: p.format,
+        gender: p.gender,
+        ean: p.ean,
+        stock: p.inventory?.reduce((acc: number, inv: any) => acc + inv.quantity, 0) || 0,
+        price: p.marketPrice
+      }));
+      setCatalogData(items);
+      setIsLoading(false);
+    });
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -110,7 +123,7 @@ export default function CatalogPage() {
 
   const handleAddProduct = () => {
     if (!newProduct.brand || !newProduct.name || !newProduct.ean) return;
-    const id = Math.max(...catalogData.map((p) => p.id), 0) + 1;
+    const id = Date.now().toString(); // Temporary mock ID since we don't have a create API yet
     setCatalogData([{
       id, brand: newProduct.brand, name: newProduct.name,
       concentration: newProduct.concentration, size: `${newProduct.size}ml`,

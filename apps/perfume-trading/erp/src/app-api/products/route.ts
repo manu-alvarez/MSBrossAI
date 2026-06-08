@@ -1,47 +1,50 @@
 import { NextResponse } from 'next/server';
-import { getClient } from '@/lib/supabase-client';
+import prisma from '@/lib/prisma';
 import type { Product } from '@/types';
 
-function mapProduct(p: Record<string, unknown>): Product {
+function mapProduct(p: any): Product {
   return {
-    id: p.id as string,
-    brand_id: p.brand_id as string,
-    brand_name: (p.brands as Record<string, unknown>)?.name as string ?? '',
-    name: p.name as string,
-    line: p.line as string | undefined,
+    id: p.id,
+    brand_id: p.brandId,
+    brand_name: p.brand?.name ?? '',
+    name: p.name,
+    line: p.line ?? undefined,
     gender: p.gender as Product['gender'],
     format: p.format as Product['format'],
     concentration: p.concentration as Product['concentration'],
-    size_ml: p.size_ml as number,
-    ean: p.ean as string,
-    market_price: p.market_price as number,
-    cost_price: p.cost_price as number | undefined,
-    is_active: p.is_active as boolean ?? true,
-    created_at: p.created_at as string,
-    updated_at: p.updated_at as string,
+    size_ml: p.sizeMl,
+    ean: p.ean,
+    market_price: p.marketPrice,
+    cost_price: p.costPrice ?? undefined,
+    is_active: p.isActive,
+    created_at: p.createdAt.toISOString(),
+    updated_at: p.updatedAt.toISOString(),
   };
 }
 
 export async function GET(request: Request) {
   try {
-    const supabase = getClient();
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
 
+    let whereClause = {};
     if (search) {
-      const { data, error } = await supabase.rpc('search_products', { search_term: search });
-      if (error) throw error;
-      return NextResponse.json({ data, count: data?.length ?? 0 });
+      whereClause = {
+        OR: [
+          { name: { contains: search } },
+          { ean: { contains: search } },
+          { brand: { name: { contains: search } } }
+        ]
+      };
     }
 
-    const { data, error } = await supabase
-      .from('products')
-      .select('*, brands(name)')
-      .order('created_at', { ascending: false });
+    const data = await prisma.product.findMany({
+      where: whereClause,
+      include: { brand: true },
+      orderBy: { createdAt: 'desc' }
+    });
 
-    if (error) throw error;
-
-    const products = (data ?? []).map(mapProduct);
+    const products = data.map(mapProduct);
     return NextResponse.json({ data: products, count: products.length });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
@@ -51,27 +54,25 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = getClient();
     const body = await request.json();
-    const { data, error } = await supabase
-      .from('products')
-      .insert({
-        brand_id: body.brand_id,
+    const newProduct = await prisma.product.create({
+      data: {
+        brandId: body.brand_id,
         name: body.name,
         line: body.line,
         gender: body.gender ?? 'Unisex',
         format: body.format ?? 'Regular',
         concentration: body.concentration ?? 'EDP',
-        size_ml: body.size_ml,
+        sizeMl: body.size_ml,
         ean: body.ean,
-        market_price: body.market_price,
-        cost_price: body.cost_price,
-      })
-      .select()
-      .single();
+        marketPrice: body.market_price,
+        costPrice: body.cost_price,
+      },
+      include: { brand: true }
+    });
 
-    if (error) throw error;
-    return NextResponse.json({ data }, { status: 201 });
+    const mappedProduct = mapProduct(newProduct);
+    return NextResponse.json({ data: mappedProduct }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });

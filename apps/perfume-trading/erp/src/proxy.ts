@@ -37,7 +37,8 @@ export function proxy(request: NextRequest) {
   const hasSession = request.cookies.get('sb-session')?.value;
 
   if (!authCookie && !hasSession) {
-    const loginUrl = new URL('/auth/login', request.url);
+    // Note: We use relative path so URL() keeps the basePath /app/perfume-trading
+    const loginUrl = new URL('./auth/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }

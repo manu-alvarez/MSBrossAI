@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   TrendingUp, Package, ShoppingCart, UserCheck,
   DollarSign, AlertTriangle, BarChart3, Percent, Bell, Wrench, Languages, Euro, Mail
@@ -15,14 +15,9 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { InventoryService } from '@/lib/services/inventory';
 import type { StockAlert } from '@/lib/services/inventory';
+import { getDashboardKpis } from '@/app/actions';
 
-// ─── Mock KPI Data ───
-const kpis = [
-  { title: 'Ventas (30d)', value: 124500, isCurrency: true, change: '+12.5%', positive: true },
-  { title: 'Ofertas Activas', value: 48, change: '+3', positive: true },
-  { title: 'Stock Bajo', value: '12 SKUs', change: '-2', positive: false, icon: AlertTriangle },
-  { title: 'Margen Promedio', value: '24.8%', change: '+2.1%', positive: true, icon: Percent },
-];
+// ─── Mock KPI Data Removed ───
 
 const monthlyData = [
   { month: 'Ene', sales: 85, purchases: 45 },
@@ -85,6 +80,23 @@ export default function Dashboard() {
   const [alerts] = useState(stockAlerts);
   const lowStockCount = useMemo(() => alerts.filter((a) => a.alert_type === 'low_stock').length, [alerts]);
   const { currency } = useUIStore();
+  const [kpiData, setKpiData] = useState<any>(null);
+
+  useEffect(() => {
+    getDashboardKpis().then(data => setKpiData(data));
+  }, []);
+
+  const dynamicKpis = kpiData ? [
+    { title: 'Ventas (30d)', value: kpiData.totalSales, isCurrency: true, change: `+${kpiData.salesChange}%`, positive: true },
+    { title: 'Ofertas Activas', value: kpiData.activeOffers, change: '+0', positive: true },
+    { title: 'Stock Bajo', value: `${kpiData.lowStockCount} SKUs`, change: '-0', positive: false, icon: AlertTriangle },
+    { title: 'Margen Promedio', value: `${kpiData.avgMargin}%`, change: '+0%', positive: true, icon: Percent },
+  ] : [
+    { title: 'Ventas (30d)', value: 0, isCurrency: true, change: '0%', positive: true },
+    { title: 'Ofertas Activas', value: 0, change: '0', positive: true },
+    { title: 'Stock Bajo', value: '0 SKUs', change: '0', positive: false, icon: AlertTriangle },
+    { title: 'Margen Promedio', value: '0%', change: '0%', positive: true, icon: Percent },
+  ];
 
   return (
     <div className="space-y-6">
@@ -101,7 +113,7 @@ export default function Dashboard() {
 
       {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi) => (
+        {dynamicKpis.map((kpi) => (
           <Card key={kpi.title}>
             <CardHeader>
               <CardTitle>{kpi.title}</CardTitle>

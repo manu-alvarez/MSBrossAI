@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus, Download, Eye, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -12,9 +12,11 @@ import { Table } from '@/components/ui/table';
 import { Select } from '@/components/ui/select';
 import Modal from '@/components/ui/Modal';
 import { cn } from '@/lib/utils';
+import { getInvoices } from '@/app/actions';
 
+// ─── Mock Data Removed ───
 interface Invoice {
-  id: number;
+  id: string;
   invoiceNumber: string;
   partner: string;
   type: string;
@@ -26,15 +28,6 @@ interface Invoice {
   dueDate: string;
 }
 
-const initialInvoices: Invoice[] = [
-  { id: 1, invoiceNumber: 'INV-2026-0001', partner: 'GlobalFragance GmbH', type: 'Offer', incoterm: 'EXW', totalNet: 3925.00, taxPercent: 21, totalGross: 4749.25, status: 'Paid', dueDate: '2026-06-15' },
-  { id: 2, invoiceNumber: 'INV-2026-0002', partner: 'Parfums World SA', type: 'Offer', incoterm: 'FOB', totalNet: 7440.00, taxPercent: 21, totalGross: 9002.40, status: 'Pending', dueDate: '2026-07-01' },
-  { id: 3, invoiceNumber: 'INV-2026-0003', partner: 'Aroma Select SL', type: 'Bid', incoterm: 'DDP', totalNet: 2750.00, taxPercent: 21, totalGross: 3327.50, status: 'Approved', dueDate: '2026-06-30' },
-  { id: 4, invoiceNumber: 'INV-2026-0004', partner: 'Beauty Distribution Inc', type: 'Bid', incoterm: 'CIF', totalNet: 5760.00, taxPercent: 21, totalGross: 6969.60, status: 'Shipped', dueDate: '2026-06-10' },
-  { id: 5, invoiceNumber: 'INV-2026-0005', partner: 'Luxury Scents Ltd', type: 'Offer', incoterm: 'EXW', totalNet: 2450.00, taxPercent: 0, totalGross: 2450.00, status: 'Cancelled', dueDate: '2026-05-30' },
-  { id: 6, invoiceNumber: 'INV-2026-0006', partner: 'Scents Global Brokers', type: 'Bid', incoterm: 'FOB', totalNet: 5280.00, taxPercent: 21, totalGross: 6388.80, status: 'Proforma', dueDate: '2026-07-15' },
-];
-
 const statusVariant: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
   Paid: 'success', Pending: 'warning', Approved: 'info',
   Shipped: 'info', Cancelled: 'error', Proforma: 'default',
@@ -45,7 +38,28 @@ function formatCurrency(val: number) {
 }
 
 export default function InvoicesPage() {
-  const [invoices, setInvoices] = useState(initialInvoices);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getInvoices().then(data => {
+      const items = data.map((i: any) => ({
+        id: i.id,
+        invoiceNumber: i.invoiceNumber,
+        partner: i.partner?.name || '',
+        type: i.type,
+        incoterm: i.incoterm,
+        totalNet: i.totalNet,
+        taxPercent: i.taxPercent,
+        totalGross: i.totalGross,
+        status: i.status,
+        dueDate: new Date(i.dueDate).toISOString().split('T')[0]
+      }));
+      setInvoices(items);
+      setIsLoading(false);
+    });
+  }, []);
+
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,9 +90,9 @@ export default function InvoicesPage() {
 
   const handleCreateInvoice = () => {
     if (!newInv.partner || newInv.totalNet <= 0) return;
-    const id = Math.max(...invoices.map((i) => i.id), 0) + 1;
+    const id = Date.now().toString(); // Mock ID for now
     const gross = newInv.totalNet * (1 + newInv.taxPercent / 100);
-    const invNum = `INV-${new Date().getFullYear()}-${String(id).padStart(4, '0')}`;
+    const invNum = `INV-${new Date().getFullYear()}-${Math.floor(Math.random()*10000).toString().padStart(4, '0')}`;
     setInvoices([{
       id, invoiceNumber: invNum, partner: newInv.partner,
       type: newInv.type, incoterm: newInv.incoterm,

@@ -1,4 +1,4 @@
-import { getDb, handleDbError } from './base';
+import prisma from '../prisma';
 import type { Inventory, ApiResponse } from '@/types';
 
 export interface StockAlert {
@@ -16,115 +16,118 @@ export interface StockAlert {
 export const InventoryService = {
   async list(warehouseId?: string): Promise<ApiResponse<Inventory[]>> {
     try {
-      const db = getDb();
-      let query = db
-        .from('inventory')
-        .select('*, products(name), warehouses(name), partners(name)')
-        .gt('quantity', 0);
-      if (warehouseId) query = query.eq('warehouse_id', warehouseId);
-      const { data, error } = await query.order('expiry_date', { ascending: true, nullsFirst: false });
-      if (error) throw error;
-      const items = (data ?? []).map((inv: Record<string, unknown>) => ({
-        id: inv.id as string,
-        product_id: inv.product_id as string,
-        product_name: (inv.products as Record<string, unknown>)?.name as string ?? '',
-        warehouse_id: inv.warehouse_id as string,
-        warehouse_name: (inv.warehouses as Record<string, unknown>)?.name as string ?? '',
-        partner_id: inv.partner_id as string | undefined,
-        partner_name: (inv.partners as Record<string, unknown>)?.name as string | undefined,
-        quantity: Number(inv.quantity),
-        batch_code: inv.batch_code as string,
-        cost_price: Number(inv.cost_price),
-        expiry_date: inv.expiry_date as string | undefined,
-        warehouse_location: inv.warehouse_location as string | undefined,
-        received_at: inv.received_at as string,
+      let whereClause: any = { quantity: { gt: 0 } };
+      if (warehouseId) whereClause.warehouseId = warehouseId;
+
+      const data = await prisma.inventory.findMany({
+        where: whereClause,
+        include: {
+          product: { include: { brand: true } },
+          warehouse: true,
+          partner: true,
+        },
+        orderBy: { expiryDate: 'asc' }
+      });
+
+      const items = data.map((inv) => ({
+        id: inv.id,
+        product_id: inv.productId,
+        product_name: inv.product?.name ?? '',
+        warehouse_id: inv.warehouseId,
+        warehouse_name: inv.warehouse?.name ?? '',
+        partner_id: inv.partnerId ?? undefined,
+        partner_name: inv.partner?.name ?? undefined,
+        quantity: inv.quantity,
+        batch_code: inv.batchCode,
+        cost_price: inv.costPrice,
+        expiry_date: inv.expiryDate ? inv.expiryDate.toISOString() : undefined,
+        warehouse_location: inv.warehouseLocation ?? undefined,
+        received_at: inv.receivedAt.toISOString(),
       })) as Inventory[];
       return { data: items, count: items.length };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
-  /**
-   * Get stock alerts: low stock (<20), expiring (within 90 days), overstock (>200).
-   */
   async getAlerts(threshold = 20, expiryDays = 90): Promise<StockAlert[]> {
     try {
-      const db = getDb();
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() + expiryDays);
 
-      const { data, error } = await db
-        .from('inventory')
-        .select('*, products(name), brands(name)')
-        .gt('quantity', 0);
-
-      if (error) throw error;
+      const data = await prisma.inventory.findMany({
+        where: { quantity: { gt: 0 } },
+        include: { product: { include: { brand: true } } }
+      });
 
       const alerts: StockAlert[] = [];
 
-      for (const item of data ?? []) {
-        const record = item as Record<string, unknown>;
-        const qty = Number(record.quantity);
-        const product = record.products as Record<string, unknown> ?? {};
-        const prodName = product.name as string ?? 'Unknown';
-        const brands = (product.brands ?? record.brands) as Record<string, unknown> ?? {};
+      for (const record of data) {
+        const qty = record.quantity;
+        const prodName = record.product?.name ?? 'Unknown';
+        const brandName = record.product?.brand?.name ?? '';
 
         if (qty < threshold) {
           alerts.push({
-            product_id: record.product_id as string,
+            product_id: record.productId,
             product_name: prodName,
-            brand_name: brands.name as string ?? '',
-            batch_code: record.batch_code as string,
+            brand_name: brandName,
+            batch_code: record.batchCode,
             quantity: qty,
             threshold,
-            expiry_date: record.expiry_date as string | undefined,
-            warehouse_location: record.warehouse_location as string | undefined,
+            expiry_date: record.expiryDate ? record.expiryDate.toISOString() : undefined,
+            warehouse_location: record.warehouseLocation ?? undefined,
             alert_type: 'low_stock',
           });
         }
 
-        if (record.expiry_date && new Date(record.expiry_date as string) <= cutoff) {
+        if (record.expiryDate && record.expiryDate <= cutoff) {
           alerts.push({
-            product_id: record.product_id as string,
+            product_id: record.productId,
             product_name: prodName,
-            brand_name: brands.name as string ?? '',
-            batch_code: record.batch_code as string,
+            brand_name: brandName,
+            batch_code: record.batchCode,
             quantity: qty,
             threshold,
-            expiry_date: record.expiry_date as string,
-            warehouse_location: record.warehouse_location as string | undefined,
+            expiry_date: record.expiryDate.toISOString(),
+            warehouse_location: record.warehouseLocation ?? undefined,
             alert_type: 'expiring',
           });
         }
       }
 
       return alerts;
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
-  /**
-   * Deduct stock when a trade is completed/accepted.
-   * Called automatically by TradingService.acceptOffer.
-   */
   async deductStock(productId: string, quantity: number, batchCode?: string): Promise<void> {
     try {
-      const db = getDb();
       if (batchCode) {
-        // Deduct from specific batch
-        const { error } = await db.rpc('deduct_inventory_batch', {
-          p_product_id: productId,
-          p_batch_code: batchCode,
-          p_quantity: quantity,
+        const item = await prisma.inventory.findFirst({
+          where: { productId, batchCode, quantity: { gte: quantity } }
         });
-        if (error) throw error;
+        if (item) {
+          await prisma.inventory.update({
+            where: { id: item.id },
+            data: { quantity: item.quantity - quantity }
+          });
+        }
       } else {
-        // Deduct from any batch (FIFO by expiry)
-        const { error } = await db.rpc('deduct_inventory_fifo', {
-          p_product_id: productId,
-          p_quantity: quantity,
+        // FIFO logic simplified for mocked environment
+        const items = await prisma.inventory.findMany({
+          where: { productId, quantity: { gt: 0 } },
+          orderBy: { expiryDate: 'asc' }
         });
-        if (error) throw error;
+        let remaining = quantity;
+        for (const item of items) {
+          if (remaining <= 0) break;
+          const deduct = Math.min(item.quantity, remaining);
+          await prisma.inventory.update({
+            where: { id: item.id },
+            data: { quantity: item.quantity - deduct }
+          });
+          remaining -= deduct;
+        }
       }
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
   async addStock(input: {
@@ -137,18 +140,18 @@ export const InventoryService = {
     partner_id?: string;
   }): Promise<ApiResponse<Inventory>> {
     try {
-      const db = getDb();
-      const { data, error } = await db.from('inventory').insert({
-        product_id: input.product_id,
-        warehouse_id: input.warehouse_id,
-        quantity: input.quantity,
-        batch_code: input.batch_code,
-        cost_price: input.cost_price,
-        expiry_date: input.expiry_date,
-        partner_id: input.partner_id,
-      }).select().single();
-      if (error) throw error;
-      return { data: data as unknown as Inventory };
-    } catch (err) { handleDbError(err); }
+      const newInv = await prisma.inventory.create({
+        data: {
+          productId: input.product_id,
+          warehouseId: input.warehouse_id,
+          quantity: input.quantity,
+          batchCode: input.batch_code,
+          costPrice: input.cost_price,
+          expiryDate: input.expiry_date ? new Date(input.expiry_date) : undefined,
+          partnerId: input.partner_id,
+        }
+      });
+      return { data: newInv as unknown as Inventory };
+    } catch (err) { throw err; }
   },
 };

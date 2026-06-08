@@ -1,5 +1,5 @@
-import { getDb, handleDbError } from './base';
-import type { Invoice, InvoiceItem, ApiResponse, InvoiceStatus, TradeType, Incoterm } from '@/types';
+import prisma from '../prisma';
+import type { Invoice, ApiResponse, InvoiceStatus, TradeType, Incoterm } from '@/types';
 
 export interface CreateInvoiceInput {
   partner_id: string;
@@ -17,83 +17,113 @@ export interface CreateInvoiceInput {
   }>;
 }
 
-function mapInvoice(inv: Record<string, unknown>): Invoice {
-  return {
-    id: inv.id as string,
-    partner_id: inv.partner_id as string,
-    partner_name: (inv.partners as Record<string, unknown>)?.name as string ?? '',
-    invoice_number: inv.invoice_number as string,
-    type: inv.type as Invoice['type'],
-    incoterm: (inv.incoterm as Incoterm) ?? 'EXW',
-    total_net: Number(inv.total_net),
-    tax_percent: Number(inv.tax_percent),
-    tax_amount: Number(inv.tax_amount ?? 0),
-    total_gross: Number(inv.total_gross),
-    status: inv.status as Invoice['status'],
-    due_date: inv.due_date as string | undefined,
-    notes: inv.notes as string | undefined,
-    created_at: inv.created_at as string,
-  };
-}
-
 export const InvoicesService = {
   async list(status?: string): Promise<ApiResponse<Invoice[]>> {
     try {
-      const db = getDb();
-      let query = db.from('invoices').select('*, partners(name)');
-      if (status && status !== 'all') query = query.eq('status', status);
-      const { data, error } = await query.order('created_at', { ascending: false }).limit(100);
-      if (error) throw error;
-      const invoices = (data ?? []).map(mapInvoice);
+      let whereClause: any = {};
+      if (status && status !== 'all') whereClause.status = status;
+
+      const data = await prisma.invoice.findMany({
+        where: whereClause,
+        include: { partner: true },
+        orderBy: { createdAt: 'desc' },
+        take: 100
+      });
+
+      const invoices = data.map(inv => ({
+        id: inv.id,
+        partner_id: inv.partnerId,
+        partner_name: inv.partner?.name ?? '',
+        invoice_number: inv.invoiceNumber,
+        type: inv.type as Invoice['type'],
+        incoterm: (inv.incoterm as Incoterm) ?? 'EXW',
+        total_net: inv.totalNet,
+        tax_percent: inv.taxPercent,
+        tax_amount: inv.totalNet * (inv.taxPercent / 100),
+        total_gross: inv.totalGross,
+        status: inv.status as Invoice['status'],
+        due_date: inv.dueDate ? inv.dueDate.toISOString() : undefined,
+        notes: inv.notes ?? undefined,
+        created_at: inv.createdAt.toISOString(),
+      }));
+
       return { data: invoices, count: invoices.length };
-    } catch (err) { handleDbError(err); }
+    } catch (err) { throw err; }
   },
 
   async create(input: CreateInvoiceInput): Promise<ApiResponse<Invoice>> {
     try {
-      const db = getDb();
       const invoiceNumber = `INV-${new Date().getFullYear()}-${Date.now().toString(36).toUpperCase()}`;
       const taxAmount = input.total_net * (input.tax_percent / 100);
       const totalGross = input.total_net + taxAmount;
 
-      const { data: invoice, error: invError } = await db.from('invoices').insert({
-        partner_id: input.partner_id,
-        invoice_number: invoiceNumber,
-        type: input.type,
-        incoterm: input.incoterm ?? 'EXW',
-        total_net: input.total_net,
-        tax_percent: input.tax_percent,
-        total_gross: totalGross,
-        status: 'Pending',
-        due_date: input.due_date,
-        notes: input.notes,
-      }).select().single();
+      const newInvoice = await prisma.invoice.create({
+        data: {
+          partnerId: input.partner_id,
+          invoiceNumber: invoiceNumber,
+          type: input.type,
+          incoterm: input.incoterm ?? 'EXW',
+          totalNet: input.total_net,
+          taxPercent: input.tax_percent,
+          totalGross: totalGross,
+          status: 'Pending',
+          dueDate: input.due_date ? new Date(input.due_date) : undefined,
+          notes: input.notes,
+          items: input.items ? {
+            create: input.items.map(item => ({
+              productId: item.product_id,
+              description: item.description,
+              quantity: item.quantity,
+              unitPrice: item.unit_price,
+            }))
+          } : undefined
+        },
+        include: { partner: true }
+      });
 
-      if (invError) throw invError;
-
-      // Insert line items if provided
-      if (input.items && input.items.length > 0) {
-        const items = input.items.map((item) => ({
-          invoice_id: invoice.id,
-          product_id: item.product_id,
-          description: item.description,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-        }));
-        const { error: itemsError } = await db.from('invoice_items').insert(items);
-        if (itemsError) throw itemsError;
-      }
-
-      return { data: mapInvoice(invoice as Record<string, unknown>) };
-    } catch (err) { handleDbError(err); }
+      return { data: {
+        id: newInvoice.id,
+        partner_id: newInvoice.partnerId,
+        partner_name: newInvoice.partner?.name ?? '',
+        invoice_number: newInvoice.invoiceNumber,
+        type: newInvoice.type as Invoice['type'],
+        incoterm: (newInvoice.incoterm as Incoterm) ?? 'EXW',
+        total_net: newInvoice.totalNet,
+        tax_percent: newInvoice.taxPercent,
+        tax_amount: newInvoice.totalNet * (newInvoice.taxPercent / 100),
+        total_gross: newInvoice.totalGross,
+        status: newInvoice.status as Invoice['status'],
+        due_date: newInvoice.dueDate ? newInvoice.dueDate.toISOString() : undefined,
+        notes: newInvoice.notes ?? undefined,
+        created_at: newInvoice.createdAt.toISOString(),
+      }};
+    } catch (err) { throw err; }
   },
 
   async updateStatus(id: string, status: InvoiceStatus): Promise<ApiResponse<Invoice>> {
     try {
-      const db = getDb();
-      const { data, error } = await db.from('invoices').update({ status }).eq('id', id).select().single();
-      if (error) throw error;
-      return { data: mapInvoice(data as Record<string, unknown>) };
-    } catch (err) { handleDbError(err); }
+      const updatedInvoice = await prisma.invoice.update({
+        where: { id },
+        data: { status },
+        include: { partner: true }
+      });
+
+      return { data: {
+        id: updatedInvoice.id,
+        partner_id: updatedInvoice.partnerId,
+        partner_name: updatedInvoice.partner?.name ?? '',
+        invoice_number: updatedInvoice.invoiceNumber,
+        type: updatedInvoice.type as Invoice['type'],
+        incoterm: (updatedInvoice.incoterm as Incoterm) ?? 'EXW',
+        total_net: updatedInvoice.totalNet,
+        tax_percent: updatedInvoice.taxPercent,
+        tax_amount: updatedInvoice.totalNet * (updatedInvoice.taxPercent / 100),
+        total_gross: updatedInvoice.totalGross,
+        status: updatedInvoice.status as Invoice['status'],
+        due_date: updatedInvoice.dueDate ? updatedInvoice.dueDate.toISOString() : undefined,
+        notes: updatedInvoice.notes ?? undefined,
+        created_at: updatedInvoice.createdAt.toISOString(),
+      }};
+    } catch (err) { throw err; }
   },
 };

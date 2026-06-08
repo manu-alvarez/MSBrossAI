@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://msbross.me/app/perfume-trading"),
   title: "Perfume Trading — MSBrossAI",
-  description: "Sistema ERP y Facturación Empresarial",
+  description: "Sistema ERP especializado en trading B2B de perfumería. Potenciado por Prisma y Node.js.",
   manifest: "/manifest.json",
   icons: { icon: "/favicon.ico" },
 };

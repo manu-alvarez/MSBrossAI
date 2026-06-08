@@ -307,6 +307,22 @@ module.exports = {
       exp_backoff_delay: 1000,
       min_uptime: '15s',
       max_memory_restart: '500M'
+    },
+    {
+      name: 'perfume-trading',
+      script: 'npm',
+      args: 'run start',
+      cwd: path.join(__dirname, 'apps/perfume-trading/erp'),
+      env: {
+        PORT: '3011'
+      },
+      out_file: path.join(__dirname, 'apps/perfume-trading/erp/perfume.log'),
+      error_file: path.join(__dirname, 'apps/perfume-trading/erp/perfume.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '500M'
     }
   ]
 };

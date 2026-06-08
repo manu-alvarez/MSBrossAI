@@ -107,12 +107,20 @@ const NEXT_APPS = [
   'app-generator', 'cuentos-magicos', 'combipro', 'industrialpro',
   'edelweiss', 'expositator-rte', 'iaputa-os', 'jartosdto',
   'logisearch', 'moko-tools', 'msbross', 'gas-station', 'livekit-nikolina',
-  'taskflow', 'perfume-trading', 'traductor-pro', 'web-restaurante-atenea'
+  'taskflow', 'traductor-pro', 'web-restaurante-atenea'
 ];
 
 for (const name of NEXT_APPS) {
   const appDir  = path.join(WWW, 'app', name);
   const prefix  = `/app/${name}`;
+
+  app.get(prefix, (req, res, next) => {
+    if (req.originalUrl === prefix) {
+      return res.redirect(301, prefix + '/');
+    }
+    next();
+  });
+
   app.use(prefix, express.static(appDir, { 
     index: false,
     setHeaders: (res, path) => {
@@ -170,8 +178,9 @@ app.use('/app/elitescout', createProxyMiddleware({
 }));
 
 app.use('/app/txafitnesspro', createProxyMiddleware({
-  target: 'http://127.0.0.1:3456/app/txafitnesspro',
+  target: 'http://127.0.0.1:3456',
   changeOrigin: true,
+  pathRewrite: (path, req) => req.originalUrl,
   on: {
     error: (err, req, res) => {
       console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:3456: ${err.message}`);
@@ -180,9 +189,23 @@ app.use('/app/txafitnesspro', createProxyMiddleware({
   }
 }));
 
-app.use('/app/mapfre', createProxyMiddleware({
-  target: 'http://127.0.0.1:3333/app/mapfre',
+app.use('/app/perfume-trading', createProxyMiddleware({
+  target: 'http://127.0.0.1:3011',
   changeOrigin: true,
+  pathRewrite: (path, req) => req.originalUrl,
+  on: {
+    error: (err, req, res) => {
+      console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:3011: ${err.message}`);
+      if (res && res.writeHead) res.status(502).json({ error: 'Backend unavailable', detail: err.message });
+    }
+  }
+}));
+
+
+app.use('/app/mapfre', createProxyMiddleware({
+  target: 'http://127.0.0.1:3333',
+  changeOrigin: true,
+  pathRewrite: (path, req) => req.originalUrl,
   on: {
     error: (err, req, res) => {
       console.error(`[Proxy error] ${req.url} -> http://127.0.0.1:3333: ${err.message}`);
@@ -196,8 +219,6 @@ app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:800
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));
 app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8010', '/_jartosdto')));
 app.use('/_atenea',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8009', '/_atenea')));
-app.use('/txa-fitness-pro',createProxyMiddleware(proxyOpts('http://127.0.0.1:8011', '/txa-fitness-pro')));
-app.use('/mapfre-infocol', createProxyMiddleware(proxyOpts('http://127.0.0.1:8012', '/mapfre-infocol')));
 
 // ── LiveKit WebSocket proxy (for self-hosted LiveKit) ──
 app.use('/rtc', createProxyMiddleware({
