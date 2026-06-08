@@ -104,7 +104,7 @@ export const useWorkoutStore = create<WorkoutState>()(
           const session = get().sessions.find(s => s.id === sessionId);
           if (!session) return;
 
-          const res = await fetch("/api/workouts", {
+          const res = await fetch("/app/txafitnesspro/api/workouts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

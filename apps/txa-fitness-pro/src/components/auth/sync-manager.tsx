@@ -19,7 +19,7 @@ export function SyncManager() {
     if (status === "authenticated" && !hasPulled.current) {
       // Pull data once on login
       hasPulled.current = true;
-      fetch("/api/user/sync")
+      fetch("/app/txafitnesspro/api/user/sync")
         .then((res) => res.json())
         .then((data) => {
           if (data.state) {
@@ -41,7 +41,7 @@ export function SyncManager() {
       };
 
       const timeoutId = setTimeout(() => {
-        fetch("/api/user/sync", {
+        fetch("/app/txafitnesspro/api/user/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ state: stateToSave }),

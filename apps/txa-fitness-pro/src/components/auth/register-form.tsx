@@ -21,7 +21,7 @@ export function RegisterForm() {
 
     try {
       const syntheticEmail = `${name.toLowerCase().replace(/\s+/g, '')}@txa.local`;
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/app/txafitnesspro/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email: syntheticEmail, password }),

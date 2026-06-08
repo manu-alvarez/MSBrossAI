@@ -25,7 +25,7 @@ export default function AINutritionPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/ai/generate", {
+      const response = await fetch("/app/txafitnesspro/api/ai/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

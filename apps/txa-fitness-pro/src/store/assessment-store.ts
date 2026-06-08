@@ -54,7 +54,7 @@ export const useAssessmentStore = create<AssessmentState>()(
           const goalAns = get().answers["primary-goal"]?.value as any as string;
           const levelAns = get().answers["fitness-level"]?.value as any as string;
 
-          const res = await fetch("/api/assessments/sync", {
+          const res = await fetch("/app/txafitnesspro/api/assessments/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
