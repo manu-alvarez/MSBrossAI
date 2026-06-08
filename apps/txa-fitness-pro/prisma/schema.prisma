@@ -38,6 +38,7 @@ model Profile {
   equipment     String?   // JSON stored as String
   weight        Float?
   targetWeight  Float?
+  appState      String?   // JSON stored as String to sync Zustand
 
   workoutLogs   WorkoutLog[]
   setLogs       SetLog[]

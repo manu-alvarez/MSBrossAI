@@ -84,6 +84,7 @@ export interface Activity {
   title: string;
   instructions: string;
   expectedMetrics: Metric[];
+  exercises?: ExercisePreset[]; // Structured exercises for physical activities
   videoAssets: Asset[];
   status: ActivityStatus;
   completionLog: ActivityCompletionLog | null;

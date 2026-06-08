@@ -20,10 +20,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { DEFAULT_PROGRAMS } from "@/lib/workouts";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const report = useAssessmentStore((s) => s.report);
   const { theme, setTheme } = useThemeStore();
   const { sessions, activeProgram, setActiveProgram, getTotalVolume } =
@@ -36,16 +38,29 @@ export default function ProfilePage() {
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-full bg-brand-500 flex items-center justify-center text-white text-xl font-bold">
-          U
+        <div className="w-14 h-14 rounded-full bg-brand-500 flex items-center justify-center text-white text-xl font-bold uppercase">
+          {session?.user?.name?.[0] || "U"}
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-lg font-bold text-surface-900 dark:text-white">
-            Tu Perfil
+            {session?.user?.name ? session.user.name : "Tu Perfil"}
           </h1>
           <p className="text-sm text-surface-500 dark:text-surface-400">
             {totalSessions} entrenos completados
           </p>
+        </div>
+        <div>
+          {session ? (
+            <Button size="sm" variant="outline" onClick={() => signOut()}>
+              Cerrar
+            </Button>
+          ) : (
+            <Link href="/login">
+              <Button size="sm" variant="primary">
+                Iniciar Sesión
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 

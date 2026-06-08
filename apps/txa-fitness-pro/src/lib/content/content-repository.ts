@@ -122,10 +122,16 @@ const MODULE_LIBRARY: ModuleTemplate[] = [
         type: ActivityType.CALISTHENICS,
         title: "Circuito Full Body (Nivel 1)",
         instructions:
-          "Realiza 3 rondas de: 10 sentadillas, 8 flexiones, 10 pasos de zancada, 30s plancha. Descansa 60s entre rondas.",
+          "Circuito completo. Realiza 3 rondas y descansa 60s entre rondas.",
         expectedMetrics: [
           { fieldName: "rounds_completed", unit: "count", isCalculated: false },
           { fieldName: "rpe", unit: "scale (1-10)", isCalculated: false },
+        ],
+        exercises: [
+          { name: "Sentadillas", targetMuscle: "Piernas", defaultSets: 3, defaultReps: 10, restSeconds: 0 },
+          { name: "Flexiones", targetMuscle: "Pecho", defaultSets: 3, defaultReps: 8, restSeconds: 0 },
+          { name: "Pasos de zancada", targetMuscle: "Piernas", defaultSets: 3, defaultReps: 10, restSeconds: 0 },
+          { name: "Plancha", targetMuscle: "Core", defaultSets: 3, defaultReps: 30, restSeconds: 60 },
         ],
         videoAssets: [],
         status: ActivityStatus.PENDING,

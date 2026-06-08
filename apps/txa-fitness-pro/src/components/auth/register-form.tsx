@@ -9,7 +9,6 @@ import { signIn } from "next-auth/react";
  */
 export function RegisterForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -21,10 +20,11 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
+      const syntheticEmail = `${name.toLowerCase().replace(/\s+/g, '')}@txa.local`;
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email: syntheticEmail, password }),
       });
 
       const data = await res.json();
@@ -35,7 +35,7 @@ export function RegisterForm() {
 
       // Auto login after successful registration
       const signInResult = await signIn("credentials", {
-        email,
+        email: syntheticEmail,
         password,
         redirect: false,
       });
@@ -70,20 +70,6 @@ export function RegisterForm() {
           onChange={(e) => setName(e.target.value)}
           className="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
           placeholder="Tu nombre"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-white mb-1">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
-          placeholder="tu@email.com"
           required
         />
       </div>

@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
  */
 export function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,8 +19,9 @@ export function LoginForm() {
     setError(null);
     setLoading(true);
 
+    const syntheticEmail = `${name.toLowerCase().replace(/\s+/g, '')}@txa.local`;
     const result = await signIn("credentials", {
-      email,
+      email: syntheticEmail,
       password,
       redirect: false,
     });
@@ -43,16 +44,16 @@ export function LoginForm() {
         </div>
       )}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-white mb-1">
-          Email
+        <label htmlFor="name" className="block text-sm font-medium text-white mb-1">
+          Nombre de Usuario
         </label>
         <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="w-full px-3 py-2 rounded-lg bg-neutral-800 border border-white/10 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
-          placeholder="tu@email.com"
+          placeholder="Tu nombre"
           required
         />
       </div>
