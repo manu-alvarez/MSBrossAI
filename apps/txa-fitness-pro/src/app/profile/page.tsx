@@ -51,7 +51,7 @@ export default function ProfilePage() {
         </div>
         <div>
           {session ? (
-            <Button size="sm" variant="outline" onClick={() => signOut()}>
+            <Button size="sm" variant="outline" onClick={() => signOut({ callbackUrl: '/app/txafitnesspro/login' })}>
               Cerrar
             </Button>
           ) : (
