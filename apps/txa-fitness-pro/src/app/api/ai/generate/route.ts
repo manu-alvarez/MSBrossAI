@@ -3,9 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { getServerSession } from "next-auth/next";
 import { DiagnosticReport } from "@/types/domain";
 
-// Initialize Gemini Client
-// This will automatically pick up GEMINI_API_KEY from process.env
-const ai = new GoogleGenAI({});
+// The client will be initialized dynamically per request
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +13,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { diagnosticReport } = body as { diagnosticReport: DiagnosticReport };
+    const { diagnosticReport, apiKey } = body as { diagnosticReport: DiagnosticReport, apiKey?: string };
+
+    // Si el cliente envía apiKey, úsala; si no, usa la de entorno
+    const ai = new GoogleGenAI(apiKey ? { apiKey } : {});
 
     if (!diagnosticReport || !diagnosticReport.weakAreas) {
       return NextResponse.json({ error: "Invalid diagnostic report provided" }, { status: 400 });

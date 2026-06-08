@@ -103,9 +103,15 @@ export default function DashboardPage() {
             </div>
             <span className="font-bold text-surface-900 tracking-tight">{APP_NAME}</span>
           </div>
-          <Link href="/assessment" className="text-xs font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 bg-brand-50 px-3 py-2 rounded-full">
-            Re-evaluar
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/ai-nutrition" className="text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 px-4 py-2 rounded-full shadow-lg shadow-brand-500/30 transition-all flex items-center gap-1">
+              <span>Nutrición IA</span>
+              <span>✨</span>
+            </Link>
+            <Link href="/assessment" className="text-xs font-bold uppercase tracking-wider text-brand-600 hover:text-brand-700 bg-brand-50 px-3 py-2 rounded-full">
+              Re-evaluar
+            </Link>
+          </div>
         </div>
       </header>
 
