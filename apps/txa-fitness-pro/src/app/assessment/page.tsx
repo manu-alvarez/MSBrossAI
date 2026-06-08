@@ -12,10 +12,10 @@ import Image from "next/image";
 
 /* ─── Age-Range Cards ─── */
 const AGE_RANGES = [
-  { id: "18-29", label: "18 – 29", image: "/images/age-18-29.png", subtitle: "Energía y fundamentos" },
-  { id: "30-39", label: "30 – 39", image: "/images/age-30-39.png", subtitle: "Equilibrio y fuerza" },
-  { id: "40-49", label: "40 – 49", image: "/images/age-40-49.png", subtitle: "Flexibilidad y bienestar" },
-  { id: "50+",   label: "50+",     image: "/images/age-50-plus.png", subtitle: "Vitalidad y cuidado" },
+  { id: "18-29", label: "18 – 29", image: "/app/txafitnesspro/images/age-18-29.png", subtitle: "Energía y fundamentos" },
+  { id: "30-39", label: "30 – 39", image: "/app/txafitnesspro/images/age-30-39.png", subtitle: "Equilibrio y fuerza" },
+  { id: "40-49", label: "40 – 49", image: "/app/txafitnesspro/images/age-40-49.png", subtitle: "Flexibilidad y bienestar" },
+  { id: "50+",   label: "50+",     image: "/app/txafitnesspro/images/age-50-plus.png", subtitle: "Vitalidad y cuidado" },
 ];
 
 /* ─── Physical Data (Personal Info) ─── */
