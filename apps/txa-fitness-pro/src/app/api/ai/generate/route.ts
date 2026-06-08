@@ -3,22 +3,34 @@ import { GoogleGenAI } from "@google/genai";
 import { getServerSession } from "next-auth/next";
 import { DiagnosticReport } from "@/types/domain";
 
-// The client will be initialized dynamically per request
+// Helper de telemetría a Nivel de Producción
+function logTelemetry(action: string, status: number, error?: string) {
+  const timestamp = new Date().toISOString();
+  console.log(`[TELEMETRY][${timestamp}] action=${action} status=${status}${error ? ` error="${error}"` : ""}`);
+}
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     if (!session?.user) {
+      logTelemetry("AI_GENERATE", 401, "Unauthorized");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { diagnosticReport, apiKey } = body as { diagnosticReport: DiagnosticReport, apiKey?: string };
+    const { diagnosticReport } = body as { diagnosticReport: DiagnosticReport };
 
-    // Si el cliente envía apiKey, úsala; si no, usa la de entorno
-    const ai = new GoogleGenAI(apiKey ? { apiKey } : {});
+    // Usar la clave gratuita del servidor (Level 99)
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      logTelemetry("AI_GENERATE", 500, "Missing GEMINI_API_KEY in env");
+      return NextResponse.json({ error: "El servidor no tiene configurada su API Key gratuita." }, { status: 500 });
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
 
     if (!diagnosticReport || !diagnosticReport.weakAreas) {
+      logTelemetry("AI_GENERATE", 400, "Invalid diagnostic report");
       return NextResponse.json({ error: "Invalid diagnostic report provided" }, { status: 400 });
     }
 
@@ -26,22 +38,36 @@ export async function POST(req: NextRequest) {
       .map((w) => `- ${w.areaName} (Severidad: ${w.severity}): ${w.justification}`)
       .join("\n");
 
-    const prompt = `Eres un entrenador personal de élite y nutricionista experto (IA).
-Basándote en el siguiente reporte de debilidades de un usuario:
+    const prompt = `Actúa como el Nutricionista Clínico, Médico Deportivo y Preparador Físico de más alto nivel mundial.
+Tu objetivo es realizar una "Ingeniería Metabólica" para el siguiente usuario basándote estrictamente en sus debilidades biométricas reales:
+DEBILIDADES DETECTADAS:
 ${weakAreasList}
 
-Genera un plan de acción de 7 días enfocado en corregir estas áreas específicas.
-El plan debe incluir:
-1. Una rutina de ejercicios sugerida (3-4 días a la semana).
-2. Un plan de comidas (macros generales y 3 recetas sugeridas ricas en proteínas).
-3. 2 hábitos de recuperación obligatorios.
+Genera un MACRO-CICLO de 7 días con un enfoque "Hyper-Deep" y precisión clínica.
+Obligatorio incluir las siguientes 4 secciones con títulos Markdown (##):
 
-Formato requerido: Markdown limpio y profesional.`;
+## 1. Periodización Nutricional y Timing
+- Define los Macros específicos (Proteína, CH, Grasas en % o g/kg) adaptados a sus debilidades.
+- Timing de Nutrientes Perientrenamiento (Qué ingerir exactamente Pre, Intra y Post-entreno enfocándose en el índice glucémico y síntesis proteica).
+
+## 2. Suplementación Clínica Basada en Evidencia
+- Recomienda 3 suplementos exactos para paliar sus debilidades (Ej: Creatina Monohidrato 0.1g/kg, Omega-3 EPA/DHA > 2g, Ashwagandha KSM-66, etc.) con justificación científica.
+
+## 3. Arquitectura del Ciclo de Entrenamiento
+- Volumen, Frecuencia y RIR (Repetitions in Reserve) adaptado para no sobrecargar el Sistema Nervioso Central (SNC).
+- Ejercicios biomecánicos clave para corregir las debilidades mencionadas.
+
+## 4. Plan de Acción (Día a Día)
+- Resumen ejecutivo de 7 días (Qué hacer, comer y entrenar cada día). Incluye 3 recetas élite ricas en leucina/proteína.
+
+REGLA ESTRICTA: Formato Markdown pulido e hiperprofesional. Sin introducciones genéricas ni advertencias redundantes. Directo a la ciencia.`;
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: prompt,
     });
+
+    logTelemetry("AI_GENERATE", 200);
 
     return NextResponse.json({ 
         success: true, 
@@ -49,12 +75,11 @@ Formato requerido: Markdown limpio y profesional.`;
     });
 
   } catch (error: any) {
-    console.error("Error generating AI plan:", error);
+    logTelemetry("AI_GENERATE", 500, error.message);
     
-    // Si la API key no está configurada
     if (error.message?.includes("API key not valid") || error.message?.includes("not found")) {
          return NextResponse.json(
-            { error: "GEMINI_API_KEY no está configurada o es inválida en el servidor." },
+            { error: "La GEMINI_API_KEY del servidor es inválida o expiró." },
             { status: 500 }
         );
     }
