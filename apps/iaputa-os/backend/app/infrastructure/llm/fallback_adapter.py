@@ -35,4 +35,4 @@ class FallbackLLMAdapter(LLMPort):
                 
         # Si todos fallan
         logger.error(f"FallbackLLMAdapter: Todos los modelos de respaldo fallaron. Errores: {errors}")
-        return "Todos los motores de IA (incluyendo locales y en la nube) están saturados o desconectados. Sistema colapsado.", None, "sad"
+        return "Mis servidores externos están sufriendo una saturación cuántica en este momento. Sigo en línea, pero necesito un instante para reconectar. ¿Hablamos en un minuto?", None, "sad"

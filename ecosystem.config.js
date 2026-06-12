@@ -26,8 +26,21 @@ module.exports = {
     // LIVEKIT NIKOLINA (Voice AI)
     // ──────────────────────────────────────────────
     {
+      name: 'nikolina-livekit-server',
+      script: path.join(__dirname, 'apps/livekit-nikolina/server/livekit-server'),
+      args: '--dev --bind 127.0.0.1 --node-ip 127.0.0.1',
+      cwd: __dirname,
+      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.log'),
+      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '1G'
+    },
+    {
       name: 'nikolina-api-hub',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 8001',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/server'),
       env: {
@@ -44,7 +57,7 @@ module.exports = {
     },
     {
       name: 'nikolina-agent',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
       args: 'src/agent.py dev',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
       env: {
@@ -64,7 +77,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'gas-station-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/gas-station/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 3005',
       cwd: path.join(__dirname, 'apps/gas-station/backend'),
       env: {
@@ -247,6 +260,48 @@ module.exports = {
     },
 
     // ──────────────────────────────────────────────
+    // TXA FITNESS PRO (Behavioral Change Coaching, Next.js SSR, Port 3456)
+    // ──────────────────────────────────────────────
+    {
+      name: 'txa-fitness-pro',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3456 -H 0.0.0.0',
+      cwd: path.join(__dirname, 'apps/txa-fitness-pro'),
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3456'
+      },
+      out_file: path.join(__dirname, 'apps/txa-fitness-pro/txa-fitness.log'),
+      error_file: path.join(__dirname, 'apps/txa-fitness-pro/txa-fitness.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '500M'
+    },
+
+    // ──────────────────────────────────────────────
+    // MAPFRE INFOCOL (Insurance Claim Automation Dashboard, Next.js SSR, Port 3333)
+    // ──────────────────────────────────────────────
+    {
+      name: 'mapfre-infocol',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3333 -H 0.0.0.0',
+      cwd: path.join(__dirname, 'apps/mapfre-infocol/frontend'),
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3333'
+      },
+      out_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre-infocol.log'),
+      error_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre-infocol.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '500M'
+    },
+
+    // ──────────────────────────────────────────────
     // REVERSE PROXY (Unified Portal & Routing, Port 8080)
     // ──────────────────────────────────────────────
     {
@@ -276,44 +331,17 @@ module.exports = {
       min_uptime: '15s',
       max_memory_restart: '200M'
     },
-    {
-      name: 'txa-fitness-pro',
-      script: 'npm',
-      args: 'run start',
-      cwd: path.join(__dirname, 'apps/txa-fitness-pro'),
-      env: {
-        PORT: '3456'
-      },
-      out_file: path.join(__dirname, 'apps/txa-fitness-pro/txa.log'),
-      error_file: path.join(__dirname, 'apps/txa-fitness-pro/txa.error.log'),
-      autorestart: true,
-      max_restarts: 15,
-      exp_backoff_delay: 1000,
-      min_uptime: '15s',
-      max_memory_restart: '500M'
-    },
-    {
-      name: 'mapfre-infocol',
-      script: 'npm',
-      args: 'run start',
-      cwd: path.join(__dirname, 'apps/mapfre-infocol/frontend'),
-      env: {
-        PORT: '3333'
-      },
-      out_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre.log'),
-      error_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre.error.log'),
-      autorestart: true,
-      max_restarts: 15,
-      exp_backoff_delay: 1000,
-      min_uptime: '15s',
-      max_memory_restart: '500M'
-    },
+
+    // ──────────────────────────────────────────────
+    // PERFUME TRADING ERP (Next.js SSR, Port 3011)
+    // ──────────────────────────────────────────────
     {
       name: 'perfume-trading',
-      script: 'npm',
-      args: 'run start',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3011 -H 0.0.0.0',
       cwd: path.join(__dirname, 'apps/perfume-trading/erp'),
       env: {
+        NODE_ENV: 'production',
         PORT: '3011'
       },
       out_file: path.join(__dirname, 'apps/perfume-trading/erp/perfume.log'),
@@ -323,6 +351,6 @@ module.exports = {
       exp_backoff_delay: 1000,
       min_uptime: '15s',
       max_memory_restart: '500M'
-    }
+    },
   ]
 };

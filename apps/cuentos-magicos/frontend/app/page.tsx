@@ -11,7 +11,7 @@ const FEATURES: { key: ContentKey; icon: string; label: string; desc: string; co
   { key: "text", icon: "📖", label: "Texto Mágico", desc: "La historia capitulada", color: "from-amber-500 to-orange-600" },
   { key: "images", icon: "🎨", label: "Ilustraciones", desc: "Dibujos hechos con IA", color: "from-yellow-400 to-amber-500" },
   { key: "audio", icon: "🎙️", label: "Voz de Hada", desc: "Narración de cuento", color: "from-cyan-400 to-blue-500" },
-  { key: "video", icon: "🎬", label: "Cine Animado", desc: "Las imágenes cobran vida", color: "from-emerald-400 to-teal-500" },
+  // { key: "video", icon: "🎬", label: "Cine Animado", desc: "Las imágenes cobran vida", color: "from-emerald-400 to-teal-500" },
 ];
 
 export default function HomePage() {
@@ -84,7 +84,7 @@ export default function HomePage() {
             ⭐ ¿Qué ingredientes llevará tu cuento mágico? ⭐
           </p>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
             {FEATURES.map((f) => {
               const isOn = selected[f.key];
               return (

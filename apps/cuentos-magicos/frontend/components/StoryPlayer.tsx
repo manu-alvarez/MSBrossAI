@@ -394,10 +394,10 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                 <span>{story.audio_generated ? "✅" : "⏳"}</span>
                 <span>Voz Narradora</span>
               </div>
-              <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.video_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
+              {/* <div className={`flex items-center gap-2 justify-center p-2.5 rounded-xl border transition duration-300 ${story.video_generated ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300" : "bg-slate-900/40 border-amber-500/10 text-amber-300/40"}`}>
                 <span>{story.video_generated ? "✅" : "⏳"}</span>
                 <span>Cine Animado</span>
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -499,7 +499,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
             >
               🖼️ Ilustración
             </button>
-            <button
+            {/* <button
               onClick={() => handleMediaToggle("video")}
               className={`px-3 py-1.5 rounded-full font-bold font-kid-title transition ${
                 mediaMode === "video"
@@ -508,7 +508,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
               }`}
             >
               🎬 Cine IA
-            </button>
+            </button> */}
           </div>
 
           {/* View Mode Selector */}
@@ -595,14 +595,14 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
                 >
                   📖 Texto + Audio + Imágenes
                 </button>
-                {story.url_video && (
+                {/* {story.url_video && (
                   <button
                     onClick={() => downloadAll("video")}
                     className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-amber-100 hover:bg-amber-500/20 border-t border-amber-500/10 transition text-left"
                   >
                     🎬 Vídeo Completo del Cuento
                   </button>
-                )}
+                )} */}
               </div>
             )}
           </div>

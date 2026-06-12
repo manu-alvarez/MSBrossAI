@@ -155,8 +155,8 @@ export default function App() {
             )}
 
             {!isConnectedBackend && (
-              <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255,0,0,0.1)', border: '1px solid rgba(255,0,0,0.3)', borderRadius: 12, color: '#f87171' }}>
-                Atención: El motor backend de Nikolina no responde en tu Mac (127.0.0.1:8001). Ejecuta el script "INICIAR_NIKOLINA_MAC.sh".
+              <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255,165,0,0.1)', border: '1px solid rgba(255,165,0,0.3)', borderRadius: 12, color: '#fbbf24' }}>
+                ⏳ El motor backend de Nikolina se está inicializando. Espera unos segundos y recarga la página. Si el problema persiste, contacta con el administrador del sistema.
               </div>
             )}
           </div>

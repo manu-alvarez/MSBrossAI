@@ -41,7 +41,7 @@ const CONTENT_TYPES = [
   { id: "text", icon: "📖", label: "Solo Texto", desc: "Lectura tradicional" },
   { id: "text_image", icon: "🎨", label: "Texto + Dibujos", desc: "Con hermosas imágenes" },
   { id: "text_image_audio", icon: "🎙️", label: "Audiolibro", desc: "Voz narradora" },
-  { id: "text_image_audio_video", icon: "🎬", label: "Cine Animado", desc: "Con películas de IA" },
+  // { id: "text_image_audio_video", icon: "🎬", label: "Cine Animado", desc: "Con películas de IA" },
 ];
 
 interface StoryFormProps {

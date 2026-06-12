@@ -365,7 +365,7 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
                     print(f"[MSBrOSs] Connection exception: {str(e)}")
 
         if not success:
-            fallback_msg = "Adele: Lo siento, todos los proveedores de IA están saturados o sin cuota en este momento. Por favor, intenta de nuevo en unos instantes."
+            fallback_msg = "Adele: Mis satélites de conexión a la red neuronal han perdido cobertura temporalmente, pero mi núcleo local sigue operando. Dame un minuto para restablecer los protocolos."
             yield {'type': 'text', 'content': fallback_msg}
             full = fallback_msg
 
