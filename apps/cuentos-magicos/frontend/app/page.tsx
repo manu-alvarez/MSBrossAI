@@ -91,7 +91,7 @@ export default function HomePage() {
                 <button
                   key={f.key}
                   onClick={() => toggle(f.key)}
-                  className={`group relative rounded-[2rem] border-3 p-4 md:p-5 backdrop-blur-sm transition duration-300 text-left cursor-pointer select-none flex flex-col justify-between min-h-[10rem] h-full ${
+                  className={`group relative rounded-[2rem] border-3 p-4 md:p-5 backdrop-blur-sm transition duration-300 text-center cursor-pointer select-none flex flex-col items-center justify-between min-h-[10rem] h-full ${
                     isOn
                       ? "bg-amber-500/20 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.5)] scale-[1.03] magic-glow"
                       : "bg-white/5 border-white/10 opacity-60 hover:opacity-100 hover:border-white/20"
