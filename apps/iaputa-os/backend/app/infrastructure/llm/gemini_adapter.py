@@ -1,6 +1,7 @@
 import logging
 from typing import Tuple, Optional
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from app.core.config import settings
 from app.application.interfaces.ai_port import LLMPort
 
@@ -10,12 +11,10 @@ class GeminiAdapter(LLMPort):
     def __init__(self):
         if not settings.GOOGLE_STUDIO_API_KEY:
             raise ValueError("GOOGLE_STUDIO_API_KEY not configured")
-        genai.configure(api_key=settings.GOOGLE_STUDIO_API_KEY)
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
+        self.client = genai.Client(api_key=settings.GOOGLE_STUDIO_API_KEY)
 
     async def process_chat(self, user_text: str, history: list) -> Tuple[str, Optional[str], str]:
         try:
-            # Convert history to Gemini format
             contents = []
             for h in history:
                 role = "user" if h["role"] == "user" else "model"
@@ -23,7 +22,10 @@ class GeminiAdapter(LLMPort):
             
             contents.append({"role": "user", "parts": [{"text": user_text}]})
             
-            response = self.model.generate_content(contents)
+            response = self.client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=contents
+            )
             text = response.text
             
             # Simple emotion extraction

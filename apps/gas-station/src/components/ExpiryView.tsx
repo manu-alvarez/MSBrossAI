@@ -173,7 +173,16 @@ export default function ExpiryView() {
           {dialog === 'product' ? (
             <>
               <TextField autoFocus fullWidth label="Nombre" value={form.name || ''} onChange={e => setForm({...form, name: e.target.value})} sx={{ mt: 2 }} />
-              <TextField fullWidth label="Categoría" value={form.category || ''} onChange={e => setForm({...form, category: e.target.value})} sx={{ mt: 2 }} />
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel>Categoría</InputLabel>
+                <Select value={form.category || 'otros'} onChange={e => setForm({...form, category: e.target.value})} label="Categoría">
+                  <MenuItem value="bebidas">Bebidas</MenuItem>
+                  <MenuItem value="snacks">Snacks</MenuItem>
+                  <MenuItem value="aditivos">Aditivos</MenuItem>
+                  <MenuItem value="tabaco">Tabaco</MenuItem>
+                  <MenuItem value="otros">Otros</MenuItem>
+                </Select>
+              </FormControl>
             </>
           ) : (
             <>

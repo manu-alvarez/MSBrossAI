@@ -121,7 +121,16 @@ export default function IncidentsView() {
       <Dialog open={dialog} onClose={() => setDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editItem ? 'Editar Incidencia' : 'Nueva Incidencia'}</DialogTitle>
         <DialogContent>
-          <TextField autoFocus fullWidth label="Categoría" value={form.category || ''} onChange={e => setForm({...form, category: e.target.value})} sx={{ mt: 2 }} />
+          <FormControl fullWidth sx={{ mt: 2 }} autoFocus>
+            <InputLabel>Categoría</InputLabel>
+            <Select value={form.category || 'otros'} onChange={e => setForm({...form, category: e.target.value})} label="Categoría">
+              <MenuItem value="surtidores">Surtidores / Pista</MenuItem>
+              <MenuItem value="tienda">Tienda / Stock</MenuItem>
+              <MenuItem value="limpieza">Limpieza / Aseos</MenuItem>
+              <MenuItem value="sistemas">Sistemas / Informática</MenuItem>
+              <MenuItem value="otros">Otros</MenuItem>
+            </Select>
+          </FormControl>
           <TextField fullWidth label="Descripción" multiline rows={3} value={form.description || ''} onChange={e => setForm({...form, description: e.target.value})} sx={{ mt: 2 }} />
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Urgencia</InputLabel>
