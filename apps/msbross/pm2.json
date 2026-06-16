@@ -1,0 +1,10 @@
+{
+  "apps": [{
+    "name": "msbross-backend",
+    "script": "venv/bin/python3",
+    "args": "server.py",
+    "cwd": "/Users/manu/Desktop/MSBrossAI/apps/msbross",
+    "error_file": "/Users/manu/Desktop/MSBrossAI/apps/msbross/msbross.error.log",
+    "out_file": "/Users/manu/Desktop/MSBrossAI/apps/msbross/msbross.log"
+  }]
+}

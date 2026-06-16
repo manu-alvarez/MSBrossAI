@@ -112,15 +112,17 @@ async def analyze_vision_image(image_b64: str, prompt: str = None, source: str =
         if not settings.GOOGLE_STUDIO_API_KEY:
             return "Error: No OpenRouter API key NOR Google Studio API key found for vision.", None
         try:
-            import google.generativeai as genai
+            from google import genai
             from PIL import Image
             import io
             
-            genai.configure(api_key=settings.GOOGLE_STUDIO_API_KEY)
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            client = genai.Client(api_key=settings.GOOGLE_STUDIO_API_KEY)
             image = Image.open(io.BytesIO(base64.b64decode(image_b64)))
             
-            response = model.generate_content([analysis_prompt, image])
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[analysis_prompt, image]
+            )
             return response.text, f"/{path_name}" if path_name else None
         except Exception as e:
             logging.error(f"Native Gemini vision analysis error: {e}")
