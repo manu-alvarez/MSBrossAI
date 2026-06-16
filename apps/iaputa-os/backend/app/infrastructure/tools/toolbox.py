@@ -138,11 +138,11 @@ async def os_control_request(act: str, val: str, code: str = None):
         if url_pattern.match(val):
             # It is a URL
             cmd = ["open", val] if settings.OS_TYPE == "Darwin" else ["xdg-open", val]
-            logger.info(f"Opening URL: {val}")
+            logging.info(f"Opening URL: {val}")
         else:
             # It is an App
             cmd = ["open", "-a", val] if settings.OS_TYPE == "Darwin" else [val]
-            logger.info(f"Opening App: {val}")
+            logging.info(f"Opening App: {val}")
         
         await asyncio.create_subprocess_exec(*cmd)
         return f"Acción '{val}' lanzada correctamente.", None
