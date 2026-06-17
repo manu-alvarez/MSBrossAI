@@ -97,7 +97,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'industrialpro-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/industrialpro/backend/venv/bin/python3'),
       args: '-m uvicorn app:app --host 0.0.0.0 --port 8002',
       cwd: path.join(__dirname, 'apps/industrialpro/backend'),
       out_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.log'),
@@ -151,7 +151,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'msbross-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/msbross/venv/bin/python3'),
       args: 'server.py',
       cwd: path.join(__dirname, 'apps/msbross'),
       out_file: path.join(__dirname, 'apps/msbross/msbross.log'),
