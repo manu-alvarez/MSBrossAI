@@ -410,10 +410,11 @@ def _providers_status() -> dict:
 
 
 @app.get("/api/health")
+@app.get("/health")
 def health_check():
     try:
         db.get_llm_config()
-        return {"status": "ok", "db": "ok"}
+        return {"status": "ok", "service": "nikolina-api-hub", "db": "ok"}
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(
             status_code=500, detail=f"Health check failed: {exc}"

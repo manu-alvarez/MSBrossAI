@@ -168,7 +168,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'cuentos-magicos-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/cuentos-magicos/backend/venv/bin/python3'),
       args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8007',
       cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
       out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.log'),
@@ -221,7 +221,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'web-restaurante-atenea-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(__dirname, 'apps/web-restaurante-atenea/venv/bin/python3'),
       args: '-m uvicorn main:app --host 0.0.0.0 --port 8009',
       cwd: path.join(__dirname, 'apps/web-restaurante-atenea'),
       env: {

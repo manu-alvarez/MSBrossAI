@@ -173,6 +173,9 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
         if path.startswith('/_msbross'):
             path = path[len('/_msbross'):]
 
+        if path == '/health':
+            self._json({"status": "ok", "service": "msbross-backend"})
+            return
         if path == '/api/models':
             self._json(AVAILABLE_MODELS)
             return

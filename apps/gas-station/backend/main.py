@@ -163,6 +163,17 @@ async def get_token_user(req: Request):
     except:
         raise HTTPException(status_code=401, detail="Token invalido")
 
+# --- Health Check ---
+@app.get("/health")
+def health_check():
+    """Uniform health check endpoint for ecosystem monitoring."""
+    try:
+        conn = get_db()
+        conn.execute("SELECT 1")
+        return {"status": "ok", "service": "gas-station-backend", "db": "ok"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Health check failed: {e}")
+
 # --- Auth ---
 class LoginBody(BaseModel):
     name: str
