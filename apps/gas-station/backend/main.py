@@ -1,9 +1,13 @@
 import os
 import uuid
 import json
+import logging
 from datetime import datetime, date
 from typing import Optional
 from contextlib import asynccontextmanager
+
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +15,14 @@ from pydantic import BaseModel
 import bcrypt
 import jwt
 
+logger = logging.getLogger("gas-station")
+logging.basicConfig(level=logging.INFO)
+
 DB = {}
-JWT_SECRET = os.getenv("NEWTON_JWT_SECRET", "newton-mequinenza-secret-2024")
+JWT_SECRET = os.getenv("NEWTON_JWT_SECRET")
+if not JWT_SECRET:
+    logger.warning("NEWTON_JWT_SECRET not set — using insecure fallback! Set it in .env for production.")
+    JWT_SECRET = "newton-fallback-insecure-dev-only"
 PORT = int(os.getenv("PORT", "3005"))
 
 def init_db():
@@ -139,7 +149,7 @@ async def lifespan(app: FastAPI):
     DB["conn"].close()
 
 app = FastAPI(title="Gas Station API", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["https://msbross.me", "https://www.msbross.me", "http://localhost:8080", "http://localhost:3005", "http://localhost:5173"], allow_methods=["*"], allow_headers=["*"])
 
 # --- Helpers ---
 def get_db():
@@ -160,7 +170,7 @@ async def get_token_user(req: Request):
         raise HTTPException(status_code=401, detail="Token requerido")
     try:
         return jwt.decode(auth[7:], JWT_SECRET, algorithms=["HS256"])
-    except:
+    except Exception:
         raise HTTPException(status_code=401, detail="Token invalido")
 
 # --- Health Check ---
@@ -660,7 +670,7 @@ def calc_hours(start: str, end: str, break_min: int) -> float:
         eh, em = map(int, end.split(":"))
         total = (eh * 60 + em) - (sh * 60 + sm) - break_min
         return round(max(0, total) / 60, 2)
-    except:
+    except (ValueError, AttributeError):
         return 0
 
 if __name__ == "__main__":

@@ -3,13 +3,30 @@
 const path    = require('path');
 const fs      = require('fs');
 const express = require('express');
+const compression = require('compression');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
 
 const app  = express();
 app.set('trust proxy', 1);
+app.disable('x-powered-by');
 const PORT = 8080;
 const WWW  = path.join(__dirname, 'www');
+
+// ── Compression (gzip/brotli for all text responses) ──
+app.use(compression({ level: 6, threshold: 1024 }));
+
+// ── Security Headers ──
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(self), geolocation=()');
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
 
 // ── Rate Limiting (100 req / min) ──
 const limiter = rateLimit({

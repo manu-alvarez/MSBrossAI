@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="IndustrialPro Process Control", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["https://msbross.me", "https://www.msbross.me", "http://localhost:8080", "http://localhost:8002", "http://localhost:5173"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 # --- Auth ---
 class LoginReq(BaseModel):
