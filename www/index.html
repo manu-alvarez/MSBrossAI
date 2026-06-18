@@ -5,179 +5,199 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MSBrossAI — Ecosistema Digital Personal.">
     <title>MSBrossAI • Ecosistema Digital Personal</title>
-    
+
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content="MSBrossAI — Ecosistema Digital Personal" />
     <meta property="og:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
     <meta property="og:url" content="https://msbross.me/" />
     <meta property="og:image" content="https://msbross.me/assets/img/og-image.jpg" />
     <meta property="og:type" content="website" />
-    
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="MSBrossAI — Ecosistema Digital Personal" />
     <meta name="twitter:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
     <meta name="twitter:image" content="https://msbross.me/assets/img/og-image.jpg" />
-    
+
     <link rel="icon" href="/assets/img/og-image.jpg">
     <link rel="apple-touch-icon" href="/assets/img/og-image.jpg">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --bg: #030712;
-            --card-bg: rgba(255,255,255,0.03);
-            --card-border: rgba(255,255,255,0.06);
-            --card-hover: rgba(255,255,255,0.08);
             --text: #f8fafc;
             --text-muted: #64748b;
             --accent-1: #8b5cf6;
             --accent-2: #06b6d4;
             --accent-3: #10b981;
-            --accent-4: #f59e0b;
-            --accent-5: #ef4444;
             --accent-6: #ec4899;
-            --accent-7: #3b82f6;
-            --accent-8: #14b8a6;
-            --accent-9: #f97316;
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.06);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Animated Background */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* Ambient Orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
-            animation: orbFloat 20s infinite alternate ease-in-out;
-        }
-        .orb-1 { width: 600px; height: 600px; background: var(--accent-1); top: -200px; left: -100px; }
-        .orb-2 { width: 500px; height: 500px; background: var(--accent-2); bottom: -150px; right: -100px; animation-delay: -5s; }
-        .orb-3 { width: 400px; height: 400px; background: var(--accent-6); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -10s; }
-
-        @keyframes orbFloat {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(50px, 30px) scale(1.1); }
-            100% { transform: translate(-30px, -50px) scale(0.9); }
-        }
-
-        /* Main Container */
-        .container {
+        /* ══════════════════════════════════════════════════
+           HERO — Full screen, logo alive
+           ══════════════════════════════════════════════════ */
+        .hero {
             position: relative;
-            z-index: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .header-hero {
-            position: relative;
-            display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 28px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-hero > * {
-            position: relative;
             z-index: 2;
         }
-
-        .logo {
-            font-size: 4rem;
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-logo-wrap {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .hero-logo {
+            width: 200px; height: 200px;
+            border-radius: 32px;
+            object-fit: cover;
+            box-shadow:
+                0 0 60px rgba(139,92,246,0.4),
+                0 0 120px rgba(6,182,212,0.2),
+                0 0 200px rgba(236,72,153,0.15);
+            animation: logoPulse 4s ease-in-out infinite, logoFloat 6s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .hero-logo:hover { transform: scale(1.1) rotate(2deg); }
+        @keyframes logoPulse {
+            0%,100% { box-shadow: 0 0 60px rgba(139,92,246,0.4), 0 0 120px rgba(6,182,212,0.2); }
+            50% { box-shadow: 0 0 80px rgba(139,92,246,0.6), 0 0 180px rgba(6,182,212,0.35), 0 0 250px rgba(236,72,153,0.25); }
+        }
+        @keyframes logoFloat {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 900;
-            letter-spacing: -0.05em;
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-6));
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 50%, var(--accent-6) 100%);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: gradientShift 8s ease infinite;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 60px rgba(139, 92, 246, 0.3);
+            animation: gradShift 6s ease infinite;
+            text-align: center;
         }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
+        @keyframes gradShift {
+            0%,100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
-
-        .subtitle {
+        .hero-sub {
             font-size: 1.1rem;
             color: var(--text-muted);
-            font-weight: 400;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
+            font-weight: 500;
         }
-
-        .stats-bar {
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            z-index: 2;
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 100px;
-            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: hintPulse 2s ease-in-out infinite;
         }
+        .scroll-hint .arrow {
+            width: 24px; height: 24px;
+            border-right: 2px solid var(--accent-1);
+            border-bottom: 2px solid var(--accent-1);
+            transform: rotate(45deg);
+            animation: arrowBounce 2s ease-in-out infinite;
+        }
+        @keyframes hintPulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+        @keyframes arrowBounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(8px)} }
 
-        .stat-dot {
-            width: 8px;
-            height: 8px;
+        /* ══════════════════════════════════════════════════
+           PORTAL WORMHOLE TRANSITION
+           ══════════════════════════════════════════════════ */
+        .portal-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: visible;
+        }
+        .portal-ring {
+            position: sticky;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100px; height: 100px;
             border-radius: 50%;
-            background: var(--accent-3);
-            animation: pulse 2s infinite;
+            border: 3px solid var(--accent-1);
+            box-shadow: 0 0 40px rgba(139,92,246,0.4), inset 0 0 40px rgba(139,92,246,0.15);
+            z-index: 10;
+            pointer-events: none;
+            transition: width 0.1s, height 0.1s, border-radius 0.1s;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+        .portal-ring::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(6,182,212,0.3);
+            animation: portalSpin 8s linear infinite;
         }
+        @keyframes portalSpin { to { transform: rotate(360deg); } }
 
-        /* App Grid */
+        /* ══════════════════════════════════════════════════
+           APP GRID — Emerging from portal
+           ══════════════════════════════════════════════════ */
+        .apps-container {
+            position: relative;
+            z-index: 5;
+            max-width: 1400px;
+            width: 100%;
+            padding: 4rem 2rem;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 1.5rem;
-            margin-top: 2rem;
         }
 
         /* App Card */
@@ -186,883 +206,353 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 1.8rem;
             text-decoration: none;
             color: var(--text);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(60px) scale(0.85);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
+        .app-card.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
         .app-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--card-accent) 0%, transparent 60%);
+            inset: 0;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--card-accent, #8b5cf6) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
+            pointer-events: none;
         }
-
+        .app-card:hover::before { opacity: 0.08; }
         .app-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--card-accent);
-            box-shadow: 0 20px 60px -15px var(--card-accent-shadow);
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--card-accent, var(--accent-1));
+            box-shadow: 0 20px 60px -15px var(--card-shadow, rgba(139,92,246,0.3));
         }
-
-        .app-card:hover::before {
-            opacity: 0.1;
-        }
-
-        .app-card > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
+        .app-card > * { position: relative; z-index: 1; }
+        .card-header { display:flex; align-items:center; gap:1rem; }
         .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            background: var(--card-accent);
-            color: white;
-            flex-shrink: 0;
+            width:52px; height:52px; border-radius:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.6rem; background:var(--card-accent, var(--accent-1));
+            color:white; flex-shrink:0;
         }
-
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
+        .card-title { font-size:1.3rem; font-weight:800; letter-spacing:-0.02em; }
         .card-badge {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0.25rem 0.6rem;
-            border-radius: 100px;
-            background: var(--card-accent);
-            color: white;
-            margin-left: auto;
+            font-size:0.6rem; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.1em; padding:0.2rem 0.5rem; border-radius:100px;
+            background:var(--card-accent, var(--accent-1)); color:white; margin-left:auto;
         }
-
-        .card-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        .card-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
+        .card-desc { font-size:0.85rem; color:var(--text-muted); line-height:1.6; }
+        .card-tech { display:flex; flex-wrap:wrap; gap:0.4rem; }
         .tech-tag {
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.3rem 0.7rem;
-            border-radius: 100px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
+            font-size:0.65rem; font-weight:600; padding:0.25rem 0.6rem;
+            border-radius:100px; background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.08);
+            color:var(--text-muted); font-family:'JetBrains Mono',monospace;
         }
-
         .card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid var(--card-border);
+            display:flex; align-items:center; justify-content:space-between;
+            margin-top:auto; padding-top:0.8rem; border-top:1px solid var(--card-border);
         }
+        .card-status { display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:var(--accent-3); }
+        .status-dot { width:6px; height:6px; border-radius:50%; background:var(--accent-3); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .card-arrow { font-size:1.1rem; color:var(--card-accent, var(--accent-1)); transition:transform 0.3s ease; }
+        .app-card:hover .card-arrow { transform:translateX(5px); }
 
-        .card-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--accent-3);
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent-3);
-            animation: pulse 2s infinite;
-        }
-
-        .card-arrow {
-            font-size: 1.2rem;
-            color: var(--card-accent);
-            transition: transform 0.3s ease;
-        }
-
-        .app-card:hover .card-arrow {
-            transform: translateX(4px);
-        }
-
-        /* Footer */
+        /* ══════════════════════════════════════════════════
+           FOOTER
+           ══════════════════════════════════════════════════ */
         footer {
-            text-align: center;
-            padding: 4rem 0 2rem;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+            text-align:center; padding:3rem 0 2rem; color:var(--text-muted);
+            font-size:0.8rem; border-top:1px solid var(--card-border);
+            max-width: 1400px; margin: 0 auto;
         }
-
-        footer a {
-            color: var(--accent-2);
-            text-decoration: none;
+        #visit-counter {
+            margin-top:1rem; display:inline-flex; gap:1rem;
+            background:var(--card-bg); padding:0.5rem 1.5rem;
+            border-radius:20px; border:1px solid var(--card-border);
+            font-size:0.85rem; color:var(--text-muted);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .logo { font-size: 2.5rem; }
-            .app-grid { grid-template-columns: 1fr; }
-            .container { padding: 1rem; }
-            header { padding: 2rem 0 1.5rem; }
+        @media (max-width:768px) {
+            .hero-logo { width:140px; height:140px; }
+            .hero-title { font-size:2.2rem; }
+            .app-grid { grid-template-columns:1fr; }
+            .apps-container { padding:2rem 1rem; }
+            .portal-ring { width:60px; height:60px; }
         }
 
-        /* Loading Animation */
-        .app-card {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        .app-card:nth-child(1) { animation-delay: 0.1s; }
-        .app-card:nth-child(2) { animation-delay: 0.15s; }
-        .app-card:nth-child(3) { animation-delay: 0.2s; }
-        .app-card:nth-child(4) { animation-delay: 0.25s; }
-        .app-card:nth-child(5) { animation-delay: 0.3s; }
-        .app-card:nth-child(6) { animation-delay: 0.35s; }
-        .app-card:nth-child(7) { animation-delay: 0.4s; }
-        .app-card:nth-child(8) { animation-delay: 0.45s; }
-        .app-card:nth-child(9) { animation-delay: 0.5s; }
-        .app-card:nth-child(10) { animation-delay: 0.55s; }
-        .app-card:nth-child(11) { animation-delay: 0.6s; }
-        .app-card:nth-child(12) { animation-delay: 0.65s; }
-        .app-card:nth-child(13) { animation-delay: 0.7s; }
-        .app-card:nth-child(14) { animation-delay: 0.75s; }
-        .app-card:nth-child(15) { animation-delay: 0.8s; }
-        .app-card:nth-child(16) { animation-delay: 0.85s; }
-        .app-card:nth-child(17) { animation-delay: 0.9s; }
-        .app-card:nth-child(18) { animation-delay: 0.95s; }
-        .app-card:nth-child(19) { animation-delay: 1.0s; }
-        .app-card:nth-child(20) { animation-delay: 1.05s; }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:8px }
+        ::-webkit-scrollbar-track { background:var(--bg) }
+        ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:4px }
+        ::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.2) }
     </style>
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
 
-    <div class="container">
-        <header>
-            <div class="header-hero">
-                <img src="https://msbross.me/assets/img/og-image.jpg" alt="MSBrossAI Logo" style="width: 100%; max-width: 220px; height: auto; border-radius: 12px; margin-bottom: 0.5rem; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);" />
-                <p class="subtitle" style="color: var(--accent-2); font-weight: 800; font-size: 0.9rem;">Ecosistema Digital Personal</p>
+    <!-- ═══════ HERO ═══════ -->
+    <section class="hero" id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-logo-wrap">
+            <img src="/assets/img/og-image.jpg" alt="MSBrossAI" class="hero-logo" id="hero-logo">
+            <h1 class="hero-title">MSBrossAI</h1>
+            <p class="hero-sub">Ecosistema Digital Personal</p>
+        </div>
+        <div class="scroll-hint">
+            <span>Explorar</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <!-- ═══════ PORTAL WORMHOLE ═══════ -->
+    <section class="portal-section" id="portal-section">
+        <div class="portal-ring" id="portal-ring"></div>
+    </section>
+
+    <!-- ═══════ APPS ═══════ -->
+    <section class="apps-container" id="apps">
+        <p class="section-title">⬡ Aplicaciones del Ecosistema</p>
+        <div class="app-grid" id="app-grid"></div>
+    </section>
+
+    <footer>
+        <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
+        <div id="visit-counter">
+            <span>Visitas hoy: <strong id="visits-today" style="color:var(--accent-1);">...</strong></span>
+            <span style="opacity:0.5;">|</span>
+            <span>Visitas totales: <strong id="visits-total" style="color:var(--accent-1);">...</strong></span>
+        </div>
+    </footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   APP DATA
+   ═══════════════════════════════════════════════════════ */
+const APPS = [
+  { href:"/app-generator/", icon:"⚡", name:"App Generator", badge:"DEV AI", accent:"#f472b6", desc:"Constructor asimétrico Split-View que genera Single-Page Apps usando Gemini 2.5 Flash Native.", tech:["React 19","Vite","Gemini API","Iframe"] },
+  { href:"/combipro/", icon:"⚽", name:"CombiPro", badge:"SPORTS AI", accent:"#f97316", desc:"Generador de combinadas deportivas con algoritmo de probabilidad real y perfiles de riesgo.", tech:["React 19","MUI 7","Framer Motion","API-Football"] },
+  { href:"/cuentos-magicos/", icon:"🦄", name:"Cuentos Mágicos", badge:"CREATIVE AI", accent:"#fbbf24", desc:"Narrador interactivo que genera cuentos personalizados en tiempo real con ilustraciones y audio.", tech:["Next.js 15","Gemini API","PWA","FastAPI"] },
+  { href:"/edelweiss/", icon:"👶", name:"Edelweiss", badge:"VISION PLAY", accent:"#ec4899", desc:"Estimulación visual infantil con 5 modos, parental lock e i18n ES/EN.", tech:["React 18","Tailwind","Framer Motion","PWA"] },
+  { href:"/elitescout/", icon:"✈️", name:"EliteScout", badge:"TRAVEL AI", accent:"#D4AF37", desc:"Buscador semántico de viajes y productos mediante inteligencia artificial avanzada.", tech:["Next.js 16","Tavily API","Groq Llama","Gemini API"] },
+  { href:"/expositator-rte/", icon:"🗣️", name:"EXPOSITATOR RTE", badge:"EVALUATOR AI", accent:"#10b981", desc:"Motor interactivo de simulación y evaluación en tiempo real para exposiciones orales.", tech:["PWA","Speech API","Vision API","JavaScript"] },
+  { href:"/gas-station/", icon:"⛽", name:"Gas Station", badge:"OPS PWA", accent:"#f97316", desc:"App PWA de gestión operativa para Estación de Servicio Repsol.", tech:["PWA","FastAPI","SQLite","Service Worker"] },
+  { href:"/iaputa-os/", icon:"🤖", name:"IAPuta OS", badge:"CORE AI", accent:"#8b5cf6", desc:"Asistente IA soberano con orbe 3D reactivo, 12 herramientas y multi-LLM fallback.", tech:["FastAPI","React 19","Three.js","Clean Arch"] },
+  { href:"/industrialpro/", icon:"⚙️", name:"IndustrialPro", badge:"INDUSTRY", accent:"#3b82f6", desc:"Plataforma de gestión industrial para procesos productivos y mantenimiento.", tech:["FastAPI","React","Tailwind","SQLite"] },
+  { href:"/jartosdto/", icon:"🧠", name:"JartosDTo", badge:"AI CHAT", accent:"#8b5cf6", desc:"Plataforma unificada de chat IA con RAG, base vectorial y iOS nativo.", tech:["FastAPI","LangChain","pgvector","iOS Native"] },
+  { href:"/livekit-nikolina/", icon:"🎙️", name:"LIVEKIT Nikolina", badge:"VOICE AI", accent:"#06b6d4", desc:"Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio.", tech:["LiveKit","Gemini 2.5","FastAPI","React 18"] },
+  { href:"/logisearch/", icon:"🔍", name:"LogiSearch", badge:"LOGISTICS AI", accent:"#00E5FF", desc:"Buscador logístico con IA, análisis de rutas y generación de RFQs.", tech:["React 19","TypeScript","Supabase","Tavily"] },
+  { href:"/logitrack-almacen/", icon:"📦", name:"LogiTrack Almacén", badge:"LOGISTICS", accent:"#0ea5e9", desc:"Sistema de gestión integral de operaciones de almacén y supply chain.", tech:["Trello","Kanban","Operaciones","Supply Chain"] },
+  { href:"/mano-electrica-azul/", icon:"📱", name:"Mano Eléctrica Azul", badge:"MOBILE APP", accent:"#10b981", desc:"App multiplataforma en Google Play para exploración interactiva y Tzolkin.", tech:["React Native","Expo Go","Android","Google Play"] },
+  { href:"/manuel-alvarez-cv/", icon:"👨‍💻", name:"Manuel Alvarez CV", badge:"PORTFOLIO", accent:"#3b82f6", desc:"Portfolio profesional. Técnico de Sistemas, Soporte IT e IA.", tech:["Sistemas","IT Support","DevOps","Agile"] },
+  { href:"/mapfre/", icon:"🛡️", name:"MAPFRE Infocol", badge:"INSURANCE", accent:"#e60028", desc:"Sistema avanzado de información, tasación y gestión documental para seguros.", tech:["Next.js 15","Enterprise","Data Grid","API Integration"] },
+  { href:"/moko-tools/", icon:"🛠️", name:"Moko-Tools", badge:"DEV TOOLS", accent:"#14b8a6", desc:"Directorio curado de 167 herramientas de desarrollo en 15 categorías.", tech:["React 19","Vite 7","Tailwind","167 Tools"] },
+  { href:"/msbross/", icon:"💬", name:"MSBrOSs", badge:"ASSISTANT", accent:"#a855f7", desc:"Asistente conversacional principal del ecosistema MSBrossAI.", tech:["Python","Flask","Gemini API","SQLite"] },
+  { href:"/perfume-trading/", icon:"💼", name:"Perfume Trading", badge:"TRADING B2B", accent:"#f43f5e", desc:"Sistema ERP especializado en trading B2B de perfumería.", tech:["ERP","Prisma","Next.js","B2B Trading"] },
+  { href:"/taskflow/", icon:"✅", name:"TaskFlowPro", badge:"PRODUCTIVITY", accent:"#f59e0b", desc:"Gestión de tareas con alarmas, categorías e integración WhatsApp.", tech:["React 18","MUI 5","Zustand","PWA"] },
+  { href:"/traductor-pro/", icon:"🌐", name:"Traductor PRO", badge:"TRANSLATION", accent:"#10b981", desc:"Traductor neural con 4 modos, 4 providers y OCR con Tesseract.js.", tech:["Express","React 19","MUI 7","Multi-Provider"] },
+  { href:"/tu-energia-maya/", icon:"🌀", name:"Tu Energía Maya", badge:"WEB APP", accent:"#f59e0b", desc:"Plataforma interactiva sobre sabiduría Maya, kin y firma galáctica.", tech:["Web App","JavaScript","Tzolkin","Cosmología"] },
+  { href:"/txafitnesspro/", icon:"🏋️", name:"TxaFitnessPro", badge:"FITNESS AI", accent:"#a855f7", desc:"Plataforma integral de entrenamiento y nutrición inteligente con IA.", tech:["Next.js 15","React 19","Tailwind","PostgreSQL"] },
+  { href:"/web-restaurante-atenea/", icon:"🏛️", name:"Web Restaurante Atenea", badge:"GASTRONOMY", accent:"#c4b5fd", desc:"Experiencia culinaria de alta gastronomía con sistema de reservas.", tech:["HTML5","CSS3","JavaScript","Reservas"] },
+];
+
+/* ═══════════════════════════════════════════════════════
+   RENDER APP CARDS
+   ═══════════════════════════════════════════════════════ */
+const grid = document.getElementById('app-grid');
+APPS.forEach((app, i) => {
+    const shadow = app.accent + '4d'; // 30% opacity
+    grid.innerHTML += `
+    <a href="${app.href}" class="app-card" style="--card-accent:${app.accent};--card-shadow:${shadow};" data-delay="${i * 70}">
+        <div class="card-header">
+            <div class="card-icon">${app.icon}</div>
+            <div>
+                <div class="card-title">${app.name}</div>
+                <span class="card-badge">${app.badge}</span>
             </div>
-        </header>
+        </div>
+        <p class="card-desc">${app.desc}</p>
+        <div class="card-tech">${app.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}</div>
+        <div class="card-footer">
+            <div class="card-status"><span class="status-dot"></span> Online</div>
+            <span class="card-arrow">→</span>
+        </div>
+    </a>`;
+});
 
-        <main class="app-grid">
-            <!-- App Generator -->
-            <a href="/app-generator/" class="app-card" style="--card-accent: #f472b6; --card-accent-shadow: rgba(244,114,182,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">⚡</div>
-                    <div>
-                        <div class="card-title">App Generator</div>
-                        <span class="card-badge">DEV AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Constructor asimétrico (Split-View) que genera Single-Page Apps usando Gemini 2.5 Flash Native. Escríbele el prompt y previsualiza el render interactivo al vuelo.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Vite</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">Iframe CodeSandbox</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- CombiPro -->
-            <a href="/combipro/" class="app-card" style="--card-accent: var(--accent-9); --card-accent-shadow: rgba(249,115,22,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">⚽</div>
-                    <div>
-                        <div class="card-title">CombiPro</div>
-                        <span class="card-badge">SPORTS AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Generador de combinadas deportivas con algoritmo de probabilidad real, perfiles de riesgo, gestión de stake y seguimiento de resultados.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">MUI 7</span>
-                    <span class="tech-tag">Framer Motion</span>
-                    <span class="tech-tag">API-Football</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Cuentos Mágicos -->
-            <a href="/cuentos-magicos/" class="app-card" style="--card-accent: #fbbf24; --card-accent-shadow: rgba(251,191,36,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🦄</div>
-                    <div>
-                        <div class="card-title">Cuentos Mágicos</div>
-                        <span class="card-badge">CREATIVE AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Narrador interactivo que genera cuentos personalizados en tiempo real con ilustraciones y audio usando IA.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Next.js 15</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">PWA</span>
-                    <span class="tech-tag">FastAPI</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Edelweiss -->
-            <a href="/edelweiss/" class="app-card" style="--card-accent: var(--accent-6); --card-accent-shadow: rgba(236,72,153,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">👶</div>
-                    <div>
-                        <div class="card-title">Edelweiss</div>
-                        <span class="card-badge">VISION PLAY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Estimulación visual infantil con 5 modos (alto contraste, seguimiento, enfoque, descanso, formas), parental lock e i18n ES/EN.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 18</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">Framer Motion</span>
-                    <span class="tech-tag">PWA</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- EliteScout -->
-            <a href="/elitescout/" class="app-card" style="--card-accent: #D4AF37; --card-accent-shadow: rgba(212, 175, 55, 0.3);">
-                <div class="card-header">
-                    <div class="card-icon">✈️</div>
-                    <div>
-                        <div class="card-title">EliteScout</div>
-                        <span class="card-badge">TRAVEL AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Buscador semántico de viajes y productos mediante inteligencia artificial avanzada. Descubre destinos únicos y planifica viajes personalizados.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Next.js 16</span>
-                    <span class="tech-tag">Tavily API</span>
-                    <span class="tech-tag">Groq Llama</span>
-                    <span class="tech-tag">Gemini API</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- EXPOSITATOR RTE -->
-            <a href="/expositator-rte/" class="app-card" style="--card-accent: #10b981; --card-accent-shadow: rgba(16,185,129,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🗣️</div>
-                    <div>
-                        <div class="card-title">EXPOSITATOR RTE</div>
-                        <span class="card-badge">EVALUATOR AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Motor interactivo de simulación y evaluación en tiempo real para exposiciones orales utilizando APIs nativas de visión y reconocimiento de voz.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">PWA</span>
-                    <span class="tech-tag">Speech API</span>
-                    <span class="tech-tag">Vision API</span>
-                    <span class="tech-tag">JavaScript</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Gas Station -->
-            <a href="/gas-station/" class="app-card" style="--card-accent: #f97316; --card-accent-shadow: rgba(249,115,22,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">⛽</div>
-                    <div>
-                        <div class="card-title">Gas Station</div>
-                        <span class="card-badge">OPS PWA</span>
-                    </div>
-                </div>
-                <p class="card-desc">App PWA de gestión operativa para Estación de Servicio Repsol: checklists de tareas, control de caducidades, fichaje de horarios e incidencias.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">PWA</span>
-                    <span class="tech-tag">Express</span>
-                    <span class="tech-tag">SQLite</span>
-                    <span class="tech-tag">Service Worker</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- IAPuta OS -->
-            <a href="/iaputa-os/" class="app-card" style="--card-accent: var(--accent-1); --card-accent-shadow: rgba(139,92,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🤖</div>
-                    <div>
-                        <div class="card-title">IAPuta OS</div>
-                        <span class="card-badge">CORE AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Asistente IA soberano con orbe 3D reactivo, 12 herramientas integradas, visión computacional y multi-LLM fallback (Groq → Ollama → OpenRouter).</p>
-                <div class="card-tech">
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Three.js</span>
-                    <span class="tech-tag">Clean Arch</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- IndustrialPro -->
-            <a href="/industrialpro/" class="app-card" style="--card-accent: var(--accent-7); --card-accent-shadow: rgba(59,130,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">⚙️</div>
-                    <div>
-                        <div class="card-title">IndustrialPro</div>
-                        <span class="card-badge">INDUSTRY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma de gestión industrial para procesos productivos, mantenimiento preventivo/correctivo, control de calidad y trazabilidad de materiales.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">SQLite</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- JartosDTo -->
-            <a href="/jartosdto/" class="app-card" style="--card-accent: #8b5cf6; --card-accent-shadow: rgba(139,92,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🧠</div>
-                    <div>
-                        <div class="card-title">JartosDTo</div>
-                        <span class="card-badge">AI CHAT PLATFORM</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma unificada de chat de IA con soporte RAG, backend escalable, base de datos vectorial y túnel Cloudflare para acceso móvil nativo iOS.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">LangChain</span>
-                    <span class="tech-tag">pgvector</span>
-                    <span class="tech-tag">iOS Native</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- LIVEKIT Nikolina -->
-            <a href="/livekit-nikolina/" class="app-card" style="--card-accent: var(--accent-2); --card-accent-shadow: rgba(6,182,212,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🎙️</div>
-                    <div>
-                        <div class="card-title">LIVEKIT Nikolina</div>
-                        <span class="card-badge">VOICE AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio, gestión de reservas, carta interactiva y logging de llamadas.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">LiveKit</span>
-                    <span class="tech-tag">Gemini 2.5</span>
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">React 18</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- LogiSearch -->
-            <a href="/logisearch/" class="app-card" style="--card-accent: #00E5FF; --card-accent-shadow: rgba(0, 229, 255, 0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🔍</div>
-                    <div>
-                        <div class="card-title">LogiSearch</div>
-                        <span class="card-badge">LOGISTICS AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Buscador logístico con IA, análisis de rutas, comparador de transportistas, calculadora de costes y generación de RFQs con PDF.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">TypeScript</span>
-                    <span class="tech-tag">Supabase</span>
-                    <span class="tech-tag">Tavily</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- LogiTrack Almacén -->
-            <a href="/logitrack-almacen/" class="app-card" style="--card-accent: #0ea5e9; --card-accent-shadow: rgba(14,165,233,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">📦</div>
-                    <div>
-                        <div class="card-title">LogiTrack Almacén</div>
-                        <span class="card-badge">LOGISTICS</span>
-                    </div>
-                </div>
-                <p class="card-desc">Tablero ágil y sistema de gestión integral de operaciones de almacén. Control de stock, seguimiento de pedidos, expedición y optimización logística.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Trello</span>
-                    <span class="tech-tag">Kanban</span>
-                    <span class="tech-tag">Operaciones</span>
-                    <span class="tech-tag">Supply Chain</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Mano Eléctrica Azul -->
-            <a href="/mano-electrica-azul/" class="app-card" style="--card-accent: #10b981; --card-accent-shadow: rgba(16,185,129,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">📱</div>
-                    <div>
-                        <div class="card-title">Mano Eléctrica Azul</div>
-                        <span class="card-badge">MOBILE APP</span>
-                    </div>
-                </div>
-                <p class="card-desc">Aplicación multiplataforma disponible en Google Play Store para la exploración de contenido interactivo, aprendizaje personal y seguimiento Tzolkin.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React Native</span>
-                    <span class="tech-tag">Expo Go</span>
-                    <span class="tech-tag">Android</span>
-                    <span class="tech-tag">Google Play</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Manuel Alvarez CV -->
-            <a href="/manuel-alvarez-cv/" class="app-card" style="--card-accent: #3b82f6; --card-accent-shadow: rgba(59,130,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">👨‍💻</div>
-                    <div>
-                        <div class="card-title">Manuel Alvarez CV</div>
-                        <span class="card-badge">PORTFOLIO</span>
-                    </div>
-                </div>
-                <p class="card-desc">Portfolio profesional de Manuel Alvarez Dianez. Técnico de Sistemas, Soporte IT Multiplataforma e Implementación práctica de Inteligencia Artificial.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Sistemas</span>
-                    <span class="tech-tag">IT Support</span>
-                    <span class="tech-tag">DevOps</span>
-                    <span class="tech-tag">Agile</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- MAPFRE Infocol -->
-            <a href="/mapfre/" class="app-card" style="--card-accent: #e60028; --card-accent-shadow: rgba(230,0,40,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🛡️</div>
-                    <div>
-                        <div class="card-title">MAPFRE Infocol</div>
-                        <span class="card-badge">INSURANCE</span>
-                    </div>
-                </div>
-                <p class="card-desc">Sistema avanzado de información, tasación y gestión documental para seguros y peritaje inteligente con integración corporativa.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Next.js 15</span>
-                    <span class="tech-tag">Enterprise</span>
-                    <span class="tech-tag">Data Grid</span>
-                    <span class="tech-tag">API Integration</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Moko-Tools -->
-            <a href="/moko-tools/" class="app-card" style="--card-accent: var(--accent-8); --card-accent-shadow: rgba(20,184,166,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🛠️</div>
-                    <div>
-                        <div class="card-title">Moko-Tools</div>
-                        <span class="card-badge">DEV TOOLS</span>
-                    </div>
-                </div>
-                <p class="card-desc">Directorio curado de 167 herramientas de desarrollo en 15 categorías con búsqueda semántica, favoritos y bento grid navigation.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Vite 7</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">167 Tools</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- MSBrOSs -->
-            <a href="/msbross/" class="app-card" style="--card-accent: #8b5cf6; --card-accent-shadow: rgba(139,92,246,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🧠</div>
-                    <div>
-                        <div class="card-title">MSBrOSs</div>
-                        <span class="card-badge">VOICE AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma de inteligencia artificial multimodelo con integración de voz Adele y herramientas inteligentes de productividad.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Python 3.11</span>
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">Voice Adele</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Perfume Trading -->
-            <a href="/perfume-trading/" class="app-card" style="--card-accent: #f43f5e; --card-accent-shadow: rgba(244,63,94,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">💼</div>
-                    <div>
-                        <div class="card-title">Perfume Trading</div>
-                        <span class="card-badge">TRADING B2B</span>
-                    </div>
-                </div>
-                <p class="card-desc">Sistema ERP especializado en trading B2B de perfumería. Potenciado por Prisma y Node.js para alto rendimiento.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">ERP</span>
-                    <span class="tech-tag">Prisma</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                    <span class="tech-tag">B2B Trading</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- TaskFlowPro -->
-            <a href="/taskflow/" class="app-card" style="--card-accent: var(--accent-4); --card-accent-shadow: rgba(245,158,11,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">✅</div>
-                    <div>
-                        <div class="card-title">TaskFlowPro</div>
-                        <span class="card-badge">PRODUCTIVITY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Gestión de tareas con alarmas, categorías, integración WhatsApp, export/import, búsqueda y drag-and-drop. Persistencia en localStorage.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">React 18</span>
-                    <span class="tech-tag">MUI 5</span>
-                    <span class="tech-tag">Zustand</span>
-                    <span class="tech-tag">PWA</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Traductor PRO -->
-            <a href="/traductor-pro/" class="app-card" style="--card-accent: var(--accent-3); --card-accent-shadow: rgba(16,185,129,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🌐</div>
-                    <div>
-                        <div class="card-title">Traductor PRO</div>
-                        <span class="card-badge">TRANSLATION</span>
-                    </div>
-                </div>
-                <p class="card-desc">Traductor neural con 4 modos (estándar, profesional, coloquial, resumen), 4 providers (Groq, OpenAI, Gemini, OpenRouter) y OCR con Tesseract.js.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Express</span>
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">MUI 7</span>
-                    <span class="tech-tag">Multi-Provider</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Tu Energía Maya -->
-            <a href="/tu-energia-maya/" class="app-card" style="--card-accent: #f59e0b; --card-accent-shadow: rgba(245,158,11,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🌀</div>
-                    <div>
-                        <div class="card-title">Tu Energía Maya</div>
-                        <span class="card-badge">WEB APP</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma interactiva sobre la sabiduría y energía Maya. Calcula y descubre tu kin, tu oráculo de destino y tu firma galáctica diaria de forma visual.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Web App</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">Tzolkin</span>
-                    <span class="tech-tag">Cosmología</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- TxaFitnessPro -->
-            <a href="/txafitnesspro/" class="app-card" style="--card-accent: #a855f7; --card-accent-shadow: rgba(168,85,247,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🏋️</div>
-                    <div>
-                        <div class="card-title">TxaFitnessPro</div>
-                        <span class="card-badge">FITNESS AI</span>
-                    </div>
-                </div>
-                <p class="card-desc">Plataforma integral de entrenamiento, nutrición inteligente y seguimiento biométrico con planes personalizados impulsados por IA.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">Next.js 15</span>
-                    <span class="tech-tag">React 19</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-            <!-- Web Restaurante Atenea -->
-            <a href="/web-restaurante-atenea/" class="app-card" style="--card-accent: #c4b5fd; --card-accent-shadow: rgba(196,181,253,0.3);">
-                <div class="card-header">
-                    <div class="card-icon">🏛️</div>
-                    <div>
-                        <div class="card-title">Web Restaurante Atenea</div>
-                        <span class="card-badge">GASTRONOMY</span>
-                    </div>
-                </div>
-                <p class="card-desc">Experiencia culinaria de alta gastronomía con sistema de reservas integrado, menú interactivo y diseño premium.</p>
-                <div class="card-tech">
-                    <span class="tech-tag">HTML5</span>
-                    <span class="tech-tag">CSS3</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">Reservas</span>
-                </div>
-                <div class="card-footer">
-                    <div class="card-status"><span class="status-dot"></span> Online</div>
-                    <span class="card-arrow">→</span>
-                </div>
-            </a>
-    </main>
+/* ═══════════════════════════════════════════════════════
+   HERO PARTICLE CANVAS — Gravitational field around logo
+   ═══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], mouse = {x: -999, y: -999};
+const logoEl = document.getElementById('hero-logo');
 
-        <footer style="text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border);">
-            <div class="footer-content">
-                <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
-            </div>
-            <div id="visit-counter" style="margin-top: 1rem; display: inline-flex; gap: 1rem; background: var(--card-bg); padding: 0.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--card-border); font-size: 0.9rem; color: var(--text-muted);">
-                <span>Visitas hoy: <strong id="visits-today" style="color: var(--accent-1);">...</strong></span>
-                <span style="opacity: 0.5;">|</span>
-                <span>Visitas totales: <strong id="visits-total" style="color: var(--accent-1);">...</strong></span>
-            </div>
-        </footer>
-    </div>
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 
-    <script>
-        // Fetch and display visits using active Cloudflare Tunnel or fallback
-        const apiBase = (window.__MSBROSS_CONFIG__ && window.__MSBROSS_CONFIG__.apiBase) || '';
-        
-        fetch(apiBase + '/api/track-visit')
-            .then(() => fetch(apiBase + '/api/visits'))
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('visits-today').textContent = data.today || '0';
-                document.getElementById('visits-total').textContent = data.total || '0';
-            })
-            .catch(err => {
-                console.warn('Backend proxy offline, falling back to public counter API:', err);
-                // Fallback to counterapi.dev for dynamic hits tracking when offline
-                fetch('https://api.counterapi.dev/v1/msbross/global/up')
-                    .then(r => r.json())
-                    .then(res => {
-                        document.getElementById('visits-today').textContent = 'Activo';
-                        document.getElementById('visits-total').textContent = res.value || '12,450';
-                    })
-                    .catch(() => {
-                        document.getElementById('visits-today').textContent = 'Activa';
-                        document.getElementById('visits-total').textContent = '12,482';
-                    });
-            });
+class Particle {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 120 + Math.random() * 300;
+        this.cx = W / 2;
+        this.cy = H / 2;
+        this.angle = angle;
+        this.dist = dist;
+        this.speed = 0.002 + Math.random() * 0.008;
+        this.radius = Math.random() * 2 + 0.5;
+        this.opacity = Math.random() * 0.6 + 0.2;
+        this.hue = 250 + Math.random() * 40;
+    }
+    update() {
+        this.angle += this.speed;
+        this.cx = W / 2;
+        this.cy = H / 2;
+        this.x = this.cx + Math.cos(this.angle) * this.dist;
+        this.y = this.cy + Math.sin(this.angle) * this.dist * 0.6;
 
-        // Animated Background Canvas
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouse = { x: 0, y: 0 };
-
-        // No more neural monitor logic needed
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // Mouse repulsion
+        const dx = mouse.x - this.x, dy = mouse.y - this.y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 120) {
+            this.x -= dx * 0.03;
+            this.y -= dy * 0.03;
         }
-        resize();
-        window.addEventListener('resize', resize);
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.opacity})`;
+        ctx.fill();
+    }
+}
 
-        document.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
+const pCount = Math.min(120, Math.floor(W * H / 10000));
+for (let i = 0; i < pCount; i++) particles.push(new Particle());
 
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 0.5;
-                this.opacity = Math.random() * 0.5 + 0.1;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // Mouse interaction
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 150) {
-                    this.vx -= dx * 0.00005;
-                    this.vy -= dy * 0.00005;
-                }
-
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
+function drawLines() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 100) {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(139, 92, 246, ${this.opacity})`;
-                ctx.fill();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(139,92,246,${0.12 * (1 - d/100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
             }
         }
+    }
+}
 
-        // Create particles
-        const particleCount = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 15000));
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+function animateHero() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawLines();
+    requestAnimationFrame(animateHero);
+}
+animateHero();
+
+/* ═══════════════════════════════════════════════════════
+   PORTAL WORMHOLE — Scroll-driven expansion
+   ═══════════════════════════════════════════════════════ */
+const portalRing = document.getElementById('portal-ring');
+const portalSection = document.getElementById('portal-section');
+
+function updatePortal() {
+    const rect = portalSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const progress = Math.max(0, Math.min(1, 1 - (rect.top / vh)));
+
+    // Scale from 100px circle to full-screen
+    const size = 100 + progress * (Math.max(W, H) * 1.5);
+    const borderW = Math.max(0, 3 - progress * 3);
+    const blur = 40 - progress * 35;
+
+    portalRing.style.width = size + 'px';
+    portalRing.style.height = size + 'px';
+    portalRing.style.borderWidth = borderW + 'px';
+    portalRing.style.opacity = 1 - progress * 0.8;
+    portalRing.style.boxShadow = `0 0 ${blur}px rgba(139,92,246,${0.4 - progress*0.4}), inset 0 0 ${blur}px rgba(139,92,246,${0.15 - progress*0.15})`;
+
+    // Fade hero on scroll
+    const heroEl = document.getElementById('hero');
+    heroEl.style.opacity = Math.max(0, 1 - progress * 2);
+    heroEl.style.transform = `scale(${1 - progress * 0.15})`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   REVEAL APP CARDS — Intersection Observer
+   ═══════════════════════════════════════════════════════ */
+const cards = document.querySelectorAll('.app-card');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const delay = entry.target.dataset.delay || 0;
+            setTimeout(() => entry.target.classList.add('revealed'), +delay);
+            observer.unobserve(entry.target);
         }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+cards.forEach(c => observer.observe(c));
 
-        function drawConnections() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - dist / 150)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
+/* Card radial follow */
+cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+});
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+/* Scroll listener */
+window.addEventListener('scroll', updatePortal, { passive: true });
+updatePortal();
+
+/* ═══════════════════════════════════════════════════════
+   VISIT COUNTER
+   ═══════════════════════════════════════════════════════ */
+const apiBase = (window.__MSBROSS_CONFIG__ && window.__MSBROSS_CONFIG__.apiBase) || '';
+fetch(apiBase + '/api/track-visit')
+    .then(() => fetch(apiBase + '/api/visits'))
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('visits-today').textContent = data.today || '0';
+        document.getElementById('visits-total').textContent = data.total || '0';
+    })
+    .catch(() => {
+        fetch('https://api.counterapi.dev/v1/msbross/global/up')
+            .then(r => r.json())
+            .then(res => {
+                document.getElementById('visits-today').textContent = 'Activo';
+                document.getElementById('visits-total').textContent = res.value || '—';
+            })
+            .catch(() => {
+                document.getElementById('visits-today').textContent = 'Activa';
+                document.getElementById('visits-total').textContent = '—';
             });
-            drawConnections();
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Card hover sound effect (optional)
-        document.querySelectorAll('.app-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
