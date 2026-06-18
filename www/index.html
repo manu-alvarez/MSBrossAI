@@ -5,552 +5,510 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MSBrossAI — Ecosistema Digital Personal.">
     <title>MSBrossAI • Ecosistema Digital Personal</title>
-
-    <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content="MSBrossAI — Ecosistema Digital Personal" />
     <meta property="og:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
     <meta property="og:url" content="https://msbross.me/" />
     <meta property="og:image" content="https://msbross.me/assets/img/og-image.jpg" />
     <meta property="og:type" content="website" />
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="MSBrossAI — Ecosistema Digital Personal" />
     <meta name="twitter:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
     <meta name="twitter:image" content="https://msbross.me/assets/img/og-image.jpg" />
-
     <link rel="icon" href="/assets/img/og-image.jpg">
     <link rel="apple-touch-icon" href="/assets/img/og-image.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #030712;
+    --text: #f8fafc;
+    --text-muted: #64748b;
+    --accent-1: #8b5cf6;
+    --accent-2: #06b6d4;
+    --accent-3: #10b981;
+    --accent-6: #ec4899;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 
-    <style>
-        :root {
-            --bg: #030712;
-            --text: #f8fafc;
-            --text-muted: #64748b;
-            --accent-1: #8b5cf6;
-            --accent-2: #06b6d4;
-            --accent-3: #10b981;
-            --accent-6: #ec4899;
-            --card-bg: rgba(255,255,255,0.03);
-            --card-border: rgba(255,255,255,0.06);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-        }
+/* ═══ HERO ═══ */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.hero-logo-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.hero-logo{width:200px;height:200px;border-radius:32px;object-fit:cover;
+    box-shadow:0 0 60px rgba(139,92,246,0.5),0 0 120px rgba(6,182,212,0.3),0 0 200px rgba(236,72,153,0.2);
+    animation:logoPulse 4s ease-in-out infinite,logoFloat 6s ease-in-out infinite;cursor:pointer;transition:transform .3s}
+.hero-logo:hover{transform:scale(1.12) rotate(3deg)}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 60px rgba(139,92,246,0.5),0 0 120px rgba(6,182,212,0.3)}50%{box-shadow:0 0 100px rgba(139,92,246,0.7),0 0 200px rgba(6,182,212,0.4),0 0 300px rgba(236,72,153,0.3)}}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.hero-title{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;letter-spacing:-.04em;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-6));
+    background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:gradShift 6s ease infinite;text-align:center}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-sub{font-size:1.1rem;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;font-weight:500}
+.scroll-hint{position:absolute;bottom:2rem;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--text-muted);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;animation:hintPulse 2s ease-in-out infinite}
+.scroll-hint .arrow{width:24px;height:24px;border-right:2px solid var(--accent-1);border-bottom:2px solid var(--accent-1);transform:rotate(45deg);animation:arrowBounce 2s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes arrowBounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(8px)}}
 
-        /* ══════════════════════════════════════════════════
-           HERO — Full screen, logo alive
-           ══════════════════════════════════════════════════ */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 2;
-        }
-        #hero-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .hero-logo-wrap {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-        .hero-logo {
-            width: 200px; height: 200px;
-            border-radius: 32px;
-            object-fit: cover;
-            box-shadow:
-                0 0 60px rgba(139,92,246,0.4),
-                0 0 120px rgba(6,182,212,0.2),
-                0 0 200px rgba(236,72,153,0.15);
-            animation: logoPulse 4s ease-in-out infinite, logoFloat 6s ease-in-out infinite;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .hero-logo:hover { transform: scale(1.1) rotate(2deg); }
-        @keyframes logoPulse {
-            0%,100% { box-shadow: 0 0 60px rgba(139,92,246,0.4), 0 0 120px rgba(6,182,212,0.2); }
-            50% { box-shadow: 0 0 80px rgba(139,92,246,0.6), 0 0 180px rgba(6,182,212,0.35), 0 0 250px rgba(236,72,153,0.25); }
-        }
-        @keyframes logoFloat {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 900;
-            letter-spacing: -0.04em;
-            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 50%, var(--accent-6) 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradShift 6s ease infinite;
-            text-align: center;
-        }
-        @keyframes gradShift {
-            0%,100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .hero-sub {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-        .scroll-hint {
-            position: absolute;
-            bottom: 2rem;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            animation: hintPulse 2s ease-in-out infinite;
-        }
-        .scroll-hint .arrow {
-            width: 24px; height: 24px;
-            border-right: 2px solid var(--accent-1);
-            border-bottom: 2px solid var(--accent-1);
-            transform: rotate(45deg);
-            animation: arrowBounce 2s ease-in-out infinite;
-        }
-        @keyframes hintPulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
-        @keyframes arrowBounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(8px)} }
+/* ═══ WORMHOLE TUNNEL — Full-screen fixed canvas ═══ */
+#wormhole-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity .3s}
 
-        /* ══════════════════════════════════════════════════
-           PORTAL WORMHOLE TRANSITION
-           ══════════════════════════════════════════════════ */
-        .portal-section {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: visible;
-        }
-        .portal-ring {
-            position: sticky;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--accent-1);
-            box-shadow: 0 0 40px rgba(139,92,246,0.4), inset 0 0 40px rgba(139,92,246,0.15);
-            z-index: 10;
-            pointer-events: none;
-            transition: width 0.1s, height 0.1s, border-radius 0.1s;
-        }
-        .portal-ring::after {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            border: 1px solid rgba(6,182,212,0.3);
-            animation: portalSpin 8s linear infinite;
-        }
-        @keyframes portalSpin { to { transform: rotate(360deg); } }
+/* ═══ PORTAL SPACER ═══ */
+.portal-spacer{height:250vh;position:relative;z-index:0}
 
-        /* ══════════════════════════════════════════════════
-           APP GRID — Emerging from portal
-           ══════════════════════════════════════════════════ */
-        .apps-container {
-            position: relative;
-            z-index: 5;
-            max-width: 1400px;
-            width: 100%;
-            padding: 4rem 2rem;
-            margin: 0 auto;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 1rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--accent-2);
-            margin-bottom: 3rem;
-            font-weight: 700;
-        }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 1.5rem;
-        }
+/* ═══ APPS ═══ */
+.apps-container{position:relative;z-index:5;max-width:1400px;width:100%;padding:6rem 2rem 4rem;margin:0 auto}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header h2{font-size:2.5rem;font-weight:900;letter-spacing:-.03em;
+    background:linear-gradient(135deg,#fff 0%,var(--accent-2) 50%,var(--accent-1) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.section-header p{color:var(--text-muted);font-size:1rem;letter-spacing:.05em}
+.section-line{width:80px;height:3px;margin:1rem auto 0;border-radius:2px;
+    background:linear-gradient(90deg,var(--accent-1),var(--accent-2));animation:linePulse 3s ease-in-out infinite}
+@keyframes linePulse{0%,100%{width:80px;opacity:.6}50%{width:160px;opacity:1}}
 
-        /* App Card */
-        .app-card {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.8rem;
-            text-decoration: none;
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(60px) scale(0.85);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .app-card.revealed {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .app-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--card-accent, #8b5cf6) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-        }
-        .app-card:hover::before { opacity: 0.08; }
-        .app-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            border-color: var(--card-accent, var(--accent-1));
-            box-shadow: 0 20px 60px -15px var(--card-shadow, rgba(139,92,246,0.3));
-        }
-        .app-card > * { position: relative; z-index: 1; }
-        .card-header { display:flex; align-items:center; gap:1rem; }
-        .card-icon {
-            width:52px; height:52px; border-radius:14px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:1.6rem; background:var(--card-accent, var(--accent-1));
-            color:white; flex-shrink:0;
-        }
-        .card-title { font-size:1.3rem; font-weight:800; letter-spacing:-0.02em; }
-        .card-badge {
-            font-size:0.6rem; font-weight:700; text-transform:uppercase;
-            letter-spacing:0.1em; padding:0.2rem 0.5rem; border-radius:100px;
-            background:var(--card-accent, var(--accent-1)); color:white; margin-left:auto;
-        }
-        .card-desc { font-size:0.85rem; color:var(--text-muted); line-height:1.6; }
-        .card-tech { display:flex; flex-wrap:wrap; gap:0.4rem; }
-        .tech-tag {
-            font-size:0.65rem; font-weight:600; padding:0.25rem 0.6rem;
-            border-radius:100px; background:rgba(255,255,255,0.05);
-            border:1px solid rgba(255,255,255,0.08);
-            color:var(--text-muted); font-family:'JetBrains Mono',monospace;
-        }
-        .card-footer {
-            display:flex; align-items:center; justify-content:space-between;
-            margin-top:auto; padding-top:0.8rem; border-top:1px solid var(--card-border);
-        }
-        .card-status { display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:var(--accent-3); }
-        .status-dot { width:6px; height:6px; border-radius:50%; background:var(--accent-3); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .card-arrow { font-size:1.1rem; color:var(--card-accent, var(--accent-1)); transition:transform 0.3s ease; }
-        .app-card:hover .card-arrow { transform:translateX(5px); }
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.5rem}
 
-        /* ══════════════════════════════════════════════════
-           FOOTER
-           ══════════════════════════════════════════════════ */
-        footer {
-            text-align:center; padding:3rem 0 2rem; color:var(--text-muted);
-            font-size:0.8rem; border-top:1px solid var(--card-border);
-            max-width: 1400px; margin: 0 auto;
-        }
-        #visit-counter {
-            margin-top:1rem; display:inline-flex; gap:1rem;
-            background:var(--card-bg); padding:0.5rem 1.5rem;
-            border-radius:20px; border:1px solid var(--card-border);
-            font-size:0.85rem; color:var(--text-muted);
-        }
+/* ═══ PREMIUM CARD ═══ */
+.app-card{
+    position:relative;
+    background:rgba(255,255,255,0.02);
+    border-radius:20px;
+    padding:2px; /* border gradient space */
+    text-decoration:none;
+    color:var(--text);
+    opacity:0;
+    transform:translateY(80px) scale(0.8) rotateX(8deg);
+    transition:all .7s cubic-bezier(.16,1,.3,1);
+    perspective:800px;
+}
+.app-card.revealed{opacity:1;transform:translateY(0) scale(1) rotateX(0deg)}
 
-        /* Responsive */
-        @media (max-width:768px) {
-            .hero-logo { width:140px; height:140px; }
-            .hero-title { font-size:2.2rem; }
-            .app-grid { grid-template-columns:1fr; }
-            .apps-container { padding:2rem 1rem; }
-            .portal-ring { width:60px; height:60px; }
-        }
+/* Animated gradient border */
+.app-card::before{
+    content:'';position:absolute;inset:0;border-radius:20px;padding:1.5px;
+    background:linear-gradient(var(--border-angle,0deg),var(--card-accent,#8b5cf6),transparent 40%,transparent 60%,var(--card-accent,#8b5cf6));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    animation:borderSpin 4s linear infinite;opacity:.5;transition:opacity .4s;
+}
+.app-card:hover::before{opacity:1}
+@keyframes borderSpin{to{--border-angle:360deg}}
+@property --border-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width:8px }
-        ::-webkit-scrollbar-track { background:var(--bg) }
-        ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:4px }
-        ::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.2) }
-    </style>
+/* Card inner */
+.card-inner{
+    background:rgba(8,12,24,0.85);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-radius:19px;padding:1.8rem;
+    display:flex;flex-direction:column;gap:.8rem;
+    position:relative;overflow:hidden;height:100%;
+}
+
+/* Glow follow cursor */
+.card-inner::after{
+    content:'';position:absolute;width:300px;height:300px;
+    border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,var(--card-accent,#8b5cf6) 0%,transparent 70%);
+    opacity:0;transition:opacity .4s;
+    left:var(--gx,-150px);top:var(--gy,-150px);
+    transform:translate(-50%,-50%);filter:blur(40px);
+}
+.app-card:hover .card-inner::after{opacity:.12}
+
+.app-card:hover{transform:translateY(-10px) scale(1.03)}
+
+.card-header{display:flex;align-items:center;gap:1rem;position:relative;z-index:1}
+.card-icon{
+    width:54px;height:54px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.6rem;flex-shrink:0;
+    background:linear-gradient(135deg,var(--card-accent,#8b5cf6),transparent);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 20px var(--card-accent,rgba(139,92,246,0.3));
+}
+.card-title{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;position:relative;z-index:1}
+.card-badge{
+    font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+    padding:.2rem .6rem;border-radius:100px;margin-left:auto;
+    background:rgba(255,255,255,0.06);border:1px solid var(--card-accent,#8b5cf6);
+    color:var(--card-accent,#8b5cf6);position:relative;z-index:1;
+}
+.card-desc{font-size:.85rem;color:var(--text-muted);line-height:1.6;position:relative;z-index:1}
+.card-tech{display:flex;flex-wrap:wrap;gap:.4rem;position:relative;z-index:1}
+.tech-tag{
+    font-size:.65rem;font-weight:600;padding:.25rem .6rem;border-radius:100px;
+    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+    color:var(--text-muted);font-family:'JetBrains Mono',monospace;
+    transition:all .3s;
+}
+.app-card:hover .tech-tag{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.card-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:auto;padding-top:.8rem;border-top:1px solid rgba(255,255,255,0.05);
+    position:relative;z-index:1;
+}
+.card-status{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--accent-3)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--accent-3)}50%{opacity:.4;box-shadow:none}}
+.card-arrow{font-size:1.1rem;color:var(--card-accent,var(--accent-1));transition:transform .3s;opacity:.6}
+.app-card:hover .card-arrow{transform:translateX(6px);opacity:1}
+
+/* ═══ FOOTER ═══ */
+footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-size:.8rem;border-top:1px solid rgba(255,255,255,0.05);max-width:1400px;margin:0 auto}
+#visit-counter{margin-top:1rem;display:inline-flex;gap:1rem;background:rgba(255,255,255,0.02);padding:.5rem 1.5rem;border-radius:20px;border:1px solid rgba(255,255,255,0.05);font-size:.85rem;color:var(--text-muted)}
+
+@media(max-width:768px){
+    .hero-logo{width:140px;height:140px}
+    .hero-title{font-size:2.2rem}
+    .app-grid{grid-template-columns:1fr}
+    .apps-container{padding:3rem 1rem}
+    .portal-spacer{height:180vh}
+    .section-header h2{font-size:1.8rem}
+}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+</style>
 </head>
 <body>
 
-    <!-- ═══════ HERO ═══════ -->
-    <section class="hero" id="hero">
-        <canvas id="hero-canvas"></canvas>
-        <div class="hero-logo-wrap">
-            <img src="/assets/img/og-image.jpg" alt="MSBrossAI" class="hero-logo" id="hero-logo">
-            <h1 class="hero-title">MSBrossAI</h1>
-            <p class="hero-sub">Ecosistema Digital Personal</p>
-        </div>
-        <div class="scroll-hint">
-            <span>Explorar</span>
-            <div class="arrow"></div>
-        </div>
-    </section>
+<section class="hero" id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-logo-wrap">
+        <img src="/assets/img/og-image.jpg" alt="MSBrossAI" class="hero-logo" id="hero-logo">
+        <h1 class="hero-title">MSBrossAI</h1>
+        <p class="hero-sub">Ecosistema Digital Personal</p>
+    </div>
+    <div class="scroll-hint"><span>Explorar</span><div class="arrow"></div></div>
+</section>
 
-    <!-- ═══════ PORTAL WORMHOLE ═══════ -->
-    <section class="portal-section" id="portal-section">
-        <div class="portal-ring" id="portal-ring"></div>
-    </section>
+<canvas id="wormhole-canvas"></canvas>
+<div class="portal-spacer" id="portal-spacer"></div>
 
-    <!-- ═══════ APPS ═══════ -->
-    <section class="apps-container" id="apps">
-        <p class="section-title">⬡ Aplicaciones del Ecosistema</p>
-        <div class="app-grid" id="app-grid"></div>
-    </section>
+<section class="apps-container" id="apps">
+    <div class="section-header">
+        <h2>Aplicaciones del Ecosistema</h2>
+        <p>24 servicios de inteligencia artificial en producción</p>
+        <div class="section-line"></div>
+    </div>
+    <div class="app-grid" id="app-grid"></div>
+</section>
 
-    <footer>
-        <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
-        <div id="visit-counter">
-            <span>Visitas hoy: <strong id="visits-today" style="color:var(--accent-1);">...</strong></span>
-            <span style="opacity:0.5;">|</span>
-            <span>Visitas totales: <strong id="visits-total" style="color:var(--accent-1);">...</strong></span>
-        </div>
-    </footer>
+<footer>
+    <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
+    <div id="visit-counter">
+        <span>Visitas hoy: <strong id="visits-today" style="color:var(--accent-1)">...</strong></span>
+        <span style="opacity:.5">|</span>
+        <span>Visitas totales: <strong id="visits-total" style="color:var(--accent-1)">...</strong></span>
+    </div>
+</footer>
 
 <script>
 /* ═══════════════════════════════════════════════════════
    APP DATA
    ═══════════════════════════════════════════════════════ */
-const APPS = [
-  { href:"/app-generator/", icon:"⚡", name:"App Generator", badge:"DEV AI", accent:"#f472b6", desc:"Constructor asimétrico Split-View que genera Single-Page Apps usando Gemini 2.5 Flash Native.", tech:["React 19","Vite","Gemini API","Iframe"] },
-  { href:"/combipro/", icon:"⚽", name:"CombiPro", badge:"SPORTS AI", accent:"#f97316", desc:"Generador de combinadas deportivas con algoritmo de probabilidad real y perfiles de riesgo.", tech:["React 19","MUI 7","Framer Motion","API-Football"] },
-  { href:"/cuentos-magicos/", icon:"🦄", name:"Cuentos Mágicos", badge:"CREATIVE AI", accent:"#fbbf24", desc:"Narrador interactivo que genera cuentos personalizados en tiempo real con ilustraciones y audio.", tech:["Next.js 15","Gemini API","PWA","FastAPI"] },
-  { href:"/edelweiss/", icon:"👶", name:"Edelweiss", badge:"VISION PLAY", accent:"#ec4899", desc:"Estimulación visual infantil con 5 modos, parental lock e i18n ES/EN.", tech:["React 18","Tailwind","Framer Motion","PWA"] },
-  { href:"/elitescout/", icon:"✈️", name:"EliteScout", badge:"TRAVEL AI", accent:"#D4AF37", desc:"Buscador semántico de viajes y productos mediante inteligencia artificial avanzada.", tech:["Next.js 16","Tavily API","Groq Llama","Gemini API"] },
-  { href:"/expositator-rte/", icon:"🗣️", name:"EXPOSITATOR RTE", badge:"EVALUATOR AI", accent:"#10b981", desc:"Motor interactivo de simulación y evaluación en tiempo real para exposiciones orales.", tech:["PWA","Speech API","Vision API","JavaScript"] },
-  { href:"/gas-station/", icon:"⛽", name:"Gas Station", badge:"OPS PWA", accent:"#f97316", desc:"App PWA de gestión operativa para Estación de Servicio Repsol.", tech:["PWA","FastAPI","SQLite","Service Worker"] },
-  { href:"/iaputa-os/", icon:"🤖", name:"IAPuta OS", badge:"CORE AI", accent:"#8b5cf6", desc:"Asistente IA soberano con orbe 3D reactivo, 12 herramientas y multi-LLM fallback.", tech:["FastAPI","React 19","Three.js","Clean Arch"] },
-  { href:"/industrialpro/", icon:"⚙️", name:"IndustrialPro", badge:"INDUSTRY", accent:"#3b82f6", desc:"Plataforma de gestión industrial para procesos productivos y mantenimiento.", tech:["FastAPI","React","Tailwind","SQLite"] },
-  { href:"/jartosdto/", icon:"🧠", name:"JartosDTo", badge:"AI CHAT", accent:"#8b5cf6", desc:"Plataforma unificada de chat IA con RAG, base vectorial y iOS nativo.", tech:["FastAPI","LangChain","pgvector","iOS Native"] },
-  { href:"/livekit-nikolina/", icon:"🎙️", name:"LIVEKIT Nikolina", badge:"VOICE AI", accent:"#06b6d4", desc:"Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio.", tech:["LiveKit","Gemini 2.5","FastAPI","React 18"] },
-  { href:"/logisearch/", icon:"🔍", name:"LogiSearch", badge:"LOGISTICS AI", accent:"#00E5FF", desc:"Buscador logístico con IA, análisis de rutas y generación de RFQs.", tech:["React 19","TypeScript","Supabase","Tavily"] },
-  { href:"/logitrack-almacen/", icon:"📦", name:"LogiTrack Almacén", badge:"LOGISTICS", accent:"#0ea5e9", desc:"Sistema de gestión integral de operaciones de almacén y supply chain.", tech:["Trello","Kanban","Operaciones","Supply Chain"] },
-  { href:"/mano-electrica-azul/", icon:"📱", name:"Mano Eléctrica Azul", badge:"MOBILE APP", accent:"#10b981", desc:"App multiplataforma en Google Play para exploración interactiva y Tzolkin.", tech:["React Native","Expo Go","Android","Google Play"] },
-  { href:"/manuel-alvarez-cv/", icon:"👨‍💻", name:"Manuel Alvarez CV", badge:"PORTFOLIO", accent:"#3b82f6", desc:"Portfolio profesional. Técnico de Sistemas, Soporte IT e IA.", tech:["Sistemas","IT Support","DevOps","Agile"] },
-  { href:"/mapfre/", icon:"🛡️", name:"MAPFRE Infocol", badge:"INSURANCE", accent:"#e60028", desc:"Sistema avanzado de información, tasación y gestión documental para seguros.", tech:["Next.js 15","Enterprise","Data Grid","API Integration"] },
-  { href:"/moko-tools/", icon:"🛠️", name:"Moko-Tools", badge:"DEV TOOLS", accent:"#14b8a6", desc:"Directorio curado de 167 herramientas de desarrollo en 15 categorías.", tech:["React 19","Vite 7","Tailwind","167 Tools"] },
-  { href:"/msbross/", icon:"💬", name:"MSBrOSs", badge:"ASSISTANT", accent:"#a855f7", desc:"Asistente conversacional principal del ecosistema MSBrossAI.", tech:["Python","Flask","Gemini API","SQLite"] },
-  { href:"/perfume-trading/", icon:"💼", name:"Perfume Trading", badge:"TRADING B2B", accent:"#f43f5e", desc:"Sistema ERP especializado en trading B2B de perfumería.", tech:["ERP","Prisma","Next.js","B2B Trading"] },
-  { href:"/taskflow/", icon:"✅", name:"TaskFlowPro", badge:"PRODUCTIVITY", accent:"#f59e0b", desc:"Gestión de tareas con alarmas, categorías e integración WhatsApp.", tech:["React 18","MUI 5","Zustand","PWA"] },
-  { href:"/traductor-pro/", icon:"🌐", name:"Traductor PRO", badge:"TRANSLATION", accent:"#10b981", desc:"Traductor neural con 4 modos, 4 providers y OCR con Tesseract.js.", tech:["Express","React 19","MUI 7","Multi-Provider"] },
-  { href:"/tu-energia-maya/", icon:"🌀", name:"Tu Energía Maya", badge:"WEB APP", accent:"#f59e0b", desc:"Plataforma interactiva sobre sabiduría Maya, kin y firma galáctica.", tech:["Web App","JavaScript","Tzolkin","Cosmología"] },
-  { href:"/txafitnesspro/", icon:"🏋️", name:"TxaFitnessPro", badge:"FITNESS AI", accent:"#a855f7", desc:"Plataforma integral de entrenamiento y nutrición inteligente con IA.", tech:["Next.js 15","React 19","Tailwind","PostgreSQL"] },
-  { href:"/web-restaurante-atenea/", icon:"🏛️", name:"Web Restaurante Atenea", badge:"GASTRONOMY", accent:"#c4b5fd", desc:"Experiencia culinaria de alta gastronomía con sistema de reservas.", tech:["HTML5","CSS3","JavaScript","Reservas"] },
+const APPS=[
+{href:"/app-generator/",icon:"⚡",name:"App Generator",badge:"DEV AI",accent:"#f472b6",desc:"Constructor asimétrico Split-View que genera Single-Page Apps usando Gemini 2.5 Flash Native.",tech:["React 19","Vite","Gemini API","Iframe"]},
+{href:"/combipro/",icon:"⚽",name:"CombiPro",badge:"SPORTS AI",accent:"#f97316",desc:"Generador de combinadas deportivas con algoritmo de probabilidad real y perfiles de riesgo.",tech:["React 19","MUI 7","Framer Motion","API-Football"]},
+{href:"/cuentos-magicos/",icon:"🦄",name:"Cuentos Mágicos",badge:"CREATIVE AI",accent:"#fbbf24",desc:"Narrador interactivo que genera cuentos personalizados con ilustraciones y audio IA.",tech:["Next.js 15","Gemini API","PWA","FastAPI"]},
+{href:"/edelweiss/",icon:"👶",name:"Edelweiss",badge:"VISION PLAY",accent:"#ec4899",desc:"Estimulación visual infantil con 5 modos, parental lock e i18n ES/EN.",tech:["React 18","Tailwind","Framer Motion","PWA"]},
+{href:"/elitescout/",icon:"✈️",name:"EliteScout",badge:"TRAVEL AI",accent:"#D4AF37",desc:"Buscador semántico de viajes y productos mediante inteligencia artificial avanzada.",tech:["Next.js 16","Tavily API","Groq Llama","Gemini API"]},
+{href:"/expositator-rte/",icon:"🗣️",name:"EXPOSITATOR RTE",badge:"EVALUATOR AI",accent:"#10b981",desc:"Motor interactivo de evaluación en tiempo real para exposiciones orales.",tech:["PWA","Speech API","Vision API","JavaScript"]},
+{href:"/gas-station/",icon:"⛽",name:"Gas Station",badge:"OPS PWA",accent:"#f97316",desc:"App PWA de gestión operativa para Estación de Servicio Repsol.",tech:["PWA","FastAPI","SQLite","Service Worker"]},
+{href:"/iaputa-os/",icon:"🤖",name:"IAPuta OS",badge:"CORE AI",accent:"#8b5cf6",desc:"Asistente IA soberano con orbe 3D reactivo, 12 herramientas y multi-LLM.",tech:["FastAPI","React 19","Three.js","Clean Arch"]},
+{href:"/industrialpro/",icon:"⚙️",name:"IndustrialPro",badge:"INDUSTRY",accent:"#3b82f6",desc:"Plataforma de gestión industrial para procesos productivos y mantenimiento.",tech:["FastAPI","React","Tailwind","SQLite"]},
+{href:"/jartosdto/",icon:"🧠",name:"JartosDTo",badge:"AI CHAT",accent:"#8b5cf6",desc:"Plataforma unificada de chat IA con RAG, base vectorial y iOS nativo.",tech:["FastAPI","LangChain","pgvector","iOS Native"]},
+{href:"/livekit-nikolina/",icon:"🎙️",name:"LIVEKIT Nikolina",badge:"VOICE AI",accent:"#06b6d4",desc:"Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio.",tech:["LiveKit","Gemini 2.5","FastAPI","React 18"]},
+{href:"/logisearch/",icon:"🔍",name:"LogiSearch",badge:"LOGISTICS AI",accent:"#00E5FF",desc:"Buscador logístico con IA, análisis de rutas y generación de RFQs.",tech:["React 19","TypeScript","Supabase","Tavily"]},
+{href:"/logitrack-almacen/",icon:"📦",name:"LogiTrack Almacén",badge:"LOGISTICS",accent:"#0ea5e9",desc:"Sistema de gestión integral de operaciones de almacén y supply chain.",tech:["Trello","Kanban","Operaciones","Supply Chain"]},
+{href:"/mano-electrica-azul/",icon:"📱",name:"Mano Eléctrica Azul",badge:"MOBILE APP",accent:"#10b981",desc:"App multiplataforma en Google Play para exploración interactiva y Tzolkin.",tech:["React Native","Expo Go","Android","Google Play"]},
+{href:"/manuel-alvarez-cv/",icon:"👨‍💻",name:"Manuel Alvarez CV",badge:"PORTFOLIO",accent:"#3b82f6",desc:"Portfolio profesional. Técnico de Sistemas, Soporte IT e IA.",tech:["Sistemas","IT Support","DevOps","Agile"]},
+{href:"/mapfre/",icon:"🛡️",name:"MAPFRE Infocol",badge:"INSURANCE",accent:"#e60028",desc:"Sistema avanzado de información, tasación y gestión documental para seguros.",tech:["Next.js 15","Enterprise","Data Grid","API Integration"]},
+{href:"/moko-tools/",icon:"🛠️",name:"Moko-Tools",badge:"DEV TOOLS",accent:"#14b8a6",desc:"Directorio curado de 167 herramientas de desarrollo en 15 categorías.",tech:["React 19","Vite 7","Tailwind","167 Tools"]},
+{href:"/msbross/",icon:"💬",name:"MSBrOSs",badge:"ASSISTANT",accent:"#a855f7",desc:"Asistente conversacional principal del ecosistema MSBrossAI.",tech:["Python","Flask","Gemini API","SQLite"]},
+{href:"/perfume-trading/",icon:"💼",name:"Perfume Trading",badge:"TRADING B2B",accent:"#f43f5e",desc:"Sistema ERP especializado en trading B2B de perfumería.",tech:["ERP","Prisma","Next.js","B2B Trading"]},
+{href:"/taskflow/",icon:"✅",name:"TaskFlowPro",badge:"PRODUCTIVITY",accent:"#f59e0b",desc:"Gestión de tareas con alarmas, categorías e integración WhatsApp.",tech:["React 18","MUI 5","Zustand","PWA"]},
+{href:"/traductor-pro/",icon:"🌐",name:"Traductor PRO",badge:"TRANSLATION",accent:"#10b981",desc:"Traductor neural con 4 modos, 4 providers y OCR con Tesseract.js.",tech:["Express","React 19","MUI 7","Multi-Provider"]},
+{href:"/tu-energia-maya/",icon:"🌀",name:"Tu Energía Maya",badge:"WEB APP",accent:"#f59e0b",desc:"Plataforma interactiva sobre sabiduría Maya, kin y firma galáctica.",tech:["Web App","JavaScript","Tzolkin","Cosmología"]},
+{href:"/txafitnesspro/",icon:"🏋️",name:"TxaFitnessPro",badge:"FITNESS AI",accent:"#a855f7",desc:"Plataforma integral de entrenamiento y nutrición inteligente con IA.",tech:["Next.js 15","React 19","Tailwind","PostgreSQL"]},
+{href:"/web-restaurante-atenea/",icon:"🏛️",name:"Web Restaurante Atenea",badge:"GASTRONOMY",accent:"#c4b5fd",desc:"Experiencia culinaria de alta gastronomía con sistema de reservas.",tech:["HTML5","CSS3","JavaScript","Reservas"]},
 ];
 
-/* ═══════════════════════════════════════════════════════
-   RENDER APP CARDS
-   ═══════════════════════════════════════════════════════ */
-const grid = document.getElementById('app-grid');
-APPS.forEach((app, i) => {
-    const shadow = app.accent + '4d'; // 30% opacity
-    grid.innerHTML += `
-    <a href="${app.href}" class="app-card" style="--card-accent:${app.accent};--card-shadow:${shadow};" data-delay="${i * 70}">
-        <div class="card-header">
-            <div class="card-icon">${app.icon}</div>
-            <div>
-                <div class="card-title">${app.name}</div>
-                <span class="card-badge">${app.badge}</span>
-            </div>
-        </div>
-        <p class="card-desc">${app.desc}</p>
-        <div class="card-tech">${app.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}</div>
-        <div class="card-footer">
-            <div class="card-status"><span class="status-dot"></span> Online</div>
-            <span class="card-arrow">→</span>
-        </div>
-    </a>`;
+/* ═══ RENDER CARDS ═══ */
+const grid=document.getElementById('app-grid');
+APPS.forEach((a,i)=>{
+grid.innerHTML+=`
+<a href="${a.href}" class="app-card" style="--card-accent:${a.accent}" data-delay="${i*60}">
+  <div class="card-inner">
+    <div class="card-header">
+      <div class="card-icon">${a.icon}</div>
+      <div><div class="card-title">${a.name}</div><span class="card-badge">${a.badge}</span></div>
+    </div>
+    <p class="card-desc">${a.desc}</p>
+    <div class="card-tech">${a.tech.map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
+    <div class="card-footer">
+      <div class="card-status"><span class="status-dot"></span> Online</div>
+      <span class="card-arrow">→</span>
+    </div>
+  </div>
+</a>`;
 });
 
-/* ═══════════════════════════════════════════════════════
-   HERO PARTICLE CANVAS — Gravitational field around logo
-   ═══════════════════════════════════════════════════════ */
-const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [], mouse = {x: -999, y: -999};
-const logoEl = document.getElementById('hero-logo');
+/* ═══ CARD GLOW FOLLOW ═══ */
+document.querySelectorAll('.app-card').forEach(c=>{
+    const inner=c.querySelector('.card-inner');
+    c.addEventListener('mousemove',e=>{
+        const r=inner.getBoundingClientRect();
+        inner.style.setProperty('--gx',e.clientX-r.left+'px');
+        inner.style.setProperty('--gy',e.clientY-r.top+'px');
+    });
+});
 
-function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-}
+/* ═══ CARD REVEAL ═══ */
+const cards=document.querySelectorAll('.app-card');
+const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+        if(e.isIntersecting){
+            setTimeout(()=>e.target.classList.add('revealed'),+(e.target.dataset.delay||0));
+            obs.unobserve(e.target);
+        }
+    });
+},{threshold:.05,rootMargin:'0px 0px -30px 0px'});
+cards.forEach(c=>obs.observe(c));
+
+/* ═══════════════════════════════════════════════════════
+   HERO CANVAS — Gravitational particle field
+   ═══════════════════════════════════════════════════════ */
+const hc=document.getElementById('hero-canvas');
+const hx=hc.getContext('2d');
+let W,H,pts=[],mouse={x:-999,y:-999};
+function resize(){W=hc.width=window.innerWidth;H=hc.height=window.innerHeight}
 resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('resize',resize);
+document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
 
-class Particle {
-    constructor() {
-        this.reset();
+class P{
+    constructor(){this.reset()}
+    reset(){
+        this.angle=Math.random()*Math.PI*2;
+        this.dist=100+Math.random()*350;
+        this.speed=.002+Math.random()*.01;
+        this.r=Math.random()*2+.4;
+        this.op=Math.random()*.6+.2;
+        this.hue=250+Math.random()*50;
     }
-    reset() {
-        const angle = Math.random() * Math.PI * 2;
-        const dist = 120 + Math.random() * 300;
-        this.cx = W / 2;
-        this.cy = H / 2;
-        this.angle = angle;
-        this.dist = dist;
-        this.speed = 0.002 + Math.random() * 0.008;
-        this.radius = Math.random() * 2 + 0.5;
-        this.opacity = Math.random() * 0.6 + 0.2;
-        this.hue = 250 + Math.random() * 40;
+    update(){
+        this.angle+=this.speed;
+        this.x=W/2+Math.cos(this.angle)*this.dist;
+        this.y=H/2+Math.sin(this.angle)*this.dist*.55;
+        const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){this.x-=dx*.04;this.y-=dy*.04}
     }
-    update() {
-        this.angle += this.speed;
-        this.cx = W / 2;
-        this.cy = H / 2;
-        this.x = this.cx + Math.cos(this.angle) * this.dist;
-        this.y = this.cy + Math.sin(this.angle) * this.dist * 0.6;
-
-        // Mouse repulsion
-        const dx = mouse.x - this.x, dy = mouse.y - this.y;
-        const d = Math.sqrt(dx*dx + dy*dy);
-        if (d < 120) {
-            this.x -= dx * 0.03;
-            this.y -= dy * 0.03;
+    draw(){
+        hx.beginPath();
+        hx.arc(this.x,this.y,this.r,0,Math.PI*2);
+        hx.fillStyle=`hsla(${this.hue},80%,70%,${this.op})`;
+        hx.fill();
+    }
+}
+const pN=Math.min(130,Math.floor(W*H/9000));
+for(let i=0;i<pN;i++)pts.push(new P);
+function heroAnim(){
+    hx.clearRect(0,0,W,H);
+    for(let i=0;i<pts.length;i++){
+        pts[i].update();pts[i].draw();
+        for(let j=i+1;j<pts.length;j++){
+            const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+            if(d<90){hx.beginPath();hx.moveTo(pts[i].x,pts[i].y);hx.lineTo(pts[j].x,pts[j].y);hx.strokeStyle=`rgba(139,92,246,${.15*(1-d/90)})`;hx.lineWidth=.5;hx.stroke()}
         }
     }
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.opacity})`;
-        ctx.fill();
-    }
+    requestAnimationFrame(heroAnim);
 }
-
-const pCount = Math.min(120, Math.floor(W * H / 10000));
-for (let i = 0; i < pCount; i++) particles.push(new Particle());
-
-function drawLines() {
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 100) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(139,92,246,${0.12 * (1 - d/100)})`;
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-            }
-        }
-    }
-}
-
-function animateHero() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => { p.update(); p.draw(); });
-    drawLines();
-    requestAnimationFrame(animateHero);
-}
-animateHero();
+heroAnim();
 
 /* ═══════════════════════════════════════════════════════
-   PORTAL WORMHOLE — Scroll-driven expansion
+   3D WORMHOLE TUNNEL — Stars rushing past camera
    ═══════════════════════════════════════════════════════ */
-const portalRing = document.getElementById('portal-ring');
-const portalSection = document.getElementById('portal-section');
+const wc=document.getElementById('wormhole-canvas');
+const wx=wc.getContext('2d');
+let wW,wH;
+function wResize(){wW=wc.width=window.innerWidth;wH=wc.height=window.innerHeight}
+wResize();
+window.addEventListener('resize',wResize);
 
-function updatePortal() {
-    const rect = portalSection.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const progress = Math.max(0, Math.min(1, 1 - (rect.top / vh)));
-
-    // Scale from 100px circle to full-screen
-    const size = 100 + progress * (Math.max(W, H) * 1.5);
-    const borderW = Math.max(0, 3 - progress * 3);
-    const blur = 40 - progress * 35;
-
-    portalRing.style.width = size + 'px';
-    portalRing.style.height = size + 'px';
-    portalRing.style.borderWidth = borderW + 'px';
-    portalRing.style.opacity = 1 - progress * 0.8;
-    portalRing.style.boxShadow = `0 0 ${blur}px rgba(139,92,246,${0.4 - progress*0.4}), inset 0 0 ${blur}px rgba(139,92,246,${0.15 - progress*0.15})`;
-
-    // Fade hero on scroll
-    const heroEl = document.getElementById('hero');
-    heroEl.style.opacity = Math.max(0, 1 - progress * 2);
-    heroEl.style.transform = `scale(${1 - progress * 0.15})`;
-}
-
-/* ═══════════════════════════════════════════════════════
-   REVEAL APP CARDS — Intersection Observer
-   ═══════════════════════════════════════════════════════ */
-const cards = document.querySelectorAll('.app-card');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const delay = entry.target.dataset.delay || 0;
-            setTimeout(() => entry.target.classList.add('revealed'), +delay);
-            observer.unobserve(entry.target);
-        }
+const STAR_COUNT=600;
+const stars=[];
+for(let i=0;i<STAR_COUNT;i++){
+    stars.push({
+        x:(Math.random()-.5)*2,
+        y:(Math.random()-.5)*2,
+        z:Math.random()*3+.1,
+        speed:.01+Math.random()*.02,
+        hue:220+Math.random()*80,
+        size:Math.random()*1.5+.5,
     });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-cards.forEach(c => observer.observe(c));
+}
 
-/* Card radial follow */
-cards.forEach(card => {
-    card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
-        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+// Nebula rings
+const rings=[];
+for(let i=0;i<8;i++){
+    rings.push({
+        z:i*.4+.5,
+        rotation:Math.random()*Math.PI*2,
+        rotSpeed:.003+Math.random()*.005,
+        hue:250+i*15,
+        radius:.3+Math.random()*.2,
     });
-});
+}
 
-/* Scroll listener */
-window.addEventListener('scroll', updatePortal, { passive: true });
-updatePortal();
+let wormholeProgress=0; // 0=inactive, 1=full speed
 
-/* ═══════════════════════════════════════════════════════
-   VISIT COUNTER
-   ═══════════════════════════════════════════════════════ */
-const apiBase = (window.__MSBROSS_CONFIG__ && window.__MSBROSS_CONFIG__.apiBase) || '';
-fetch(apiBase + '/api/track-visit')
-    .then(() => fetch(apiBase + '/api/visits'))
-    .then(r => r.json())
-    .then(data => {
-        document.getElementById('visits-today').textContent = data.today || '0';
-        document.getElementById('visits-total').textContent = data.total || '0';
+function drawWormhole(){
+    wx.fillStyle='rgba(3,7,18,0.15)';
+    wx.fillRect(0,0,wW,wH);
+
+    if(wormholeProgress<=0)return;
+
+    const cx=wW/2,cy=wH/2;
+    const speedFactor=wormholeProgress;
+
+    // Draw nebula rings
+    rings.forEach(ring=>{
+        ring.rotation+=ring.rotSpeed*speedFactor;
+        const perspective=1/(ring.z*.8+.2);
+        const r=ring.radius*Math.min(wW,wH)*perspective;
+        const alpha=Math.min(1,speedFactor)*(.15+.1*Math.sin(ring.rotation*3));
+
+        wx.save();
+        wx.translate(cx,cy);
+        wx.rotate(ring.rotation);
+        wx.beginPath();
+        wx.ellipse(0,0,r,r*.7,0,0,Math.PI*2);
+        wx.strokeStyle=`hsla(${ring.hue},70%,60%,${alpha})`;
+        wx.lineWidth=2*perspective;
+        wx.shadowBlur=20*perspective;
+        wx.shadowColor=`hsla(${ring.hue},80%,50%,.4)`;
+        wx.stroke();
+        wx.restore();
+
+        // Move ring toward camera
+        ring.z-=.008*speedFactor;
+        if(ring.z<.1){ring.z=3;ring.hue=250+Math.random()*60}
+    });
+
+    // Draw stars
+    stars.forEach(star=>{
+        star.z-=star.speed*speedFactor*2;
+        if(star.z<=.01){
+            star.x=(Math.random()-.5)*2;
+            star.y=(Math.random()-.5)*2;
+            star.z=3;
+        }
+        const perspective=1/star.z;
+        const sx=cx+star.x*wW*perspective*.4;
+        const sy=cy+star.y*wH*perspective*.4;
+        const sz=star.size*perspective*.8;
+
+        if(sx<-10||sx>wW+10||sy<-10||sy>wH+10)return;
+
+        // Star trail
+        const trailLen=Math.min(40,sz*8*speedFactor);
+        const dx=sx-cx,dy=sy-cy;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist>0&&trailLen>2){
+            const nx=dx/dist,ny=dy/dist;
+            wx.beginPath();
+            wx.moveTo(sx,sy);
+            wx.lineTo(sx-nx*trailLen,sy-ny*trailLen);
+            const grad=wx.createLinearGradient(sx,sy,sx-nx*trailLen,sy-ny*trailLen);
+            grad.addColorStop(0,`hsla(${star.hue},80%,80%,${Math.min(.9,speedFactor)})`);
+            grad.addColorStop(1,'transparent');
+            wx.strokeStyle=grad;
+            wx.lineWidth=Math.max(.5,sz*.6);
+            wx.stroke();
+        }
+
+        // Star dot
+        wx.beginPath();
+        wx.arc(sx,sy,Math.max(.3,sz*.4),0,Math.PI*2);
+        wx.fillStyle=`hsla(${star.hue},80%,85%,${Math.min(1,speedFactor*.8+.2)})`;
+        wx.fill();
+    });
+
+    // Central vortex glow
+    const vGrad=wx.createRadialGradient(cx,cy,0,cx,cy,120*speedFactor);
+    vGrad.addColorStop(0,`rgba(139,92,246,${.2*speedFactor})`);
+    vGrad.addColorStop(.5,`rgba(6,182,212,${.08*speedFactor})`);
+    vGrad.addColorStop(1,'transparent');
+    wx.fillStyle=vGrad;
+    wx.fillRect(cx-200,cy-200,400,400);
+}
+
+function animWormhole(){
+    drawWormhole();
+    requestAnimationFrame(animWormhole);
+}
+animWormhole();
+
+/* ═══ SCROLL CONTROLLER ═══ */
+const heroEl=document.getElementById('hero');
+const spacer=document.getElementById('portal-spacer');
+
+function onScroll(){
+    const scrollY=window.scrollY;
+    const vh=window.innerHeight;
+
+    // Phase 1: Hero fade (0 → 1vh)
+    const heroFade=Math.min(1,scrollY/vh);
+    heroEl.style.opacity=Math.max(0,1-heroFade*1.5);
+    heroEl.style.transform=`scale(${1-heroFade*.2})`;
+
+    // Phase 2: Wormhole (0.5vh → 3vh)
+    const wormStart=vh*.4;
+    const wormEnd=vh*2.8;
+    if(scrollY>=wormStart&&scrollY<=wormEnd){
+        wormholeProgress=Math.min(1,(scrollY-wormStart)/(wormEnd-wormStart));
+        wc.style.opacity=1;
+    }else if(scrollY<wormStart){
+        wormholeProgress=0;
+        wc.style.opacity=0;
+    }else{
+        // Fade out wormhole after portal
+        const fadeOut=Math.min(1,(scrollY-wormEnd)/(vh*.5));
+        wormholeProgress=Math.max(0,1-fadeOut);
+        wc.style.opacity=Math.max(0,1-fadeOut);
+    }
+}
+
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+
+/* ═══ VISITS ═══ */
+const apiBase=(window.__MSBROSS_CONFIG__&&window.__MSBROSS_CONFIG__.apiBase)||'';
+fetch(apiBase+'/api/track-visit')
+    .then(()=>fetch(apiBase+'/api/visits'))
+    .then(r=>r.json())
+    .then(d=>{
+        document.getElementById('visits-today').textContent=d.today||'0';
+        document.getElementById('visits-total').textContent=d.total||'0';
     })
-    .catch(() => {
+    .catch(()=>{
         fetch('https://api.counterapi.dev/v1/msbross/global/up')
-            .then(r => r.json())
-            .then(res => {
-                document.getElementById('visits-today').textContent = 'Activo';
-                document.getElementById('visits-total').textContent = res.value || '—';
+            .then(r=>r.json())
+            .then(r=>{
+                document.getElementById('visits-today').textContent='Activo';
+                document.getElementById('visits-total').textContent=r.value||'—';
             })
-            .catch(() => {
-                document.getElementById('visits-today').textContent = 'Activa';
-                document.getElementById('visits-total').textContent = '—';
+            .catch(()=>{
+                document.getElementById('visits-today').textContent='Activa';
+                document.getElementById('visits-total').textContent='—';
             });
     });
 </script>
