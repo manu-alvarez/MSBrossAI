@@ -52,11 +52,7 @@ const MARKETS = [
   { key: '1x2', label: '1X2 (Resultado)', icon: Target },
   { key: 'dc', label: 'Doble Oport.', icon: ArrowRightLeft },
   { key: 'dnb', label: 'Sin Empate', icon: AlignVerticalSpaceAround },
-  { key: 'goals', label: 'Goles (+/-)', icon: Goal },
-  { key: 'btts', label: 'Ambos Marcan', icon: Flame },
-  { key: 'btts_no', label: 'Ambos NO Marcan', icon: ShieldCheck },
-  { key: 'ht', label: '1ª Mitad', icon: Clock },
-  { key: 'sh', label: '2ª Mitad', icon: Clock }
+  { key: 'goals', label: 'Goles (+/-)', icon: Goal }
 ];
 
 const RISKS = [
@@ -95,16 +91,14 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
           league, leagueName: LEAGUES.find(l => l.key === league)?.name || league,
           commenceTime: event.commence_time,
           odds: {
-            home, draw, away, over25: over25Price, under25: under25Price,
-            btts: over25Price > 2.0 ? 2.10 : 1.75,
-            bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
-            over05HT: 1.35, 
-            over05SH: 1.25,
+            home,
+            over25: over25Price,
+            under25: under25Price,
             dc1x: Math.round((1 / (1/home + 1/draw)) * 100) / 100,
             dcx2: Math.round((1 / (1/draw + 1/away)) * 100) / 100,
             dc12: Math.round((1 / (1/home + 1/away)) * 100) / 100,
-            dnb1: Math.round((home * (1 - 1/draw)) * 100) / 100,
-            dnb2: Math.round((away * (1 - 1/draw)) * 100) / 100,
+            dnbHome: Math.round((home * (1 - 1/draw)) * 100) / 100 || 1.10,
+            dnbAway: Math.round((away * (1 - 1/draw)) * 100) / 100 || 1.10
           },
         };
       }).filter((m: Match) => m.odds.home && m.odds.draw && m.odds.away);
@@ -133,31 +127,23 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
   const allPicks: Pick[] = [];
   matches.forEach(m => {
     allPicks.push(
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: m.homeTeam, odds: m.odds.home, probability: calcProb(m.odds.home) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: 'Empate', odds: m.odds.draw, probability: calcProb(m.odds.draw) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: m.awayTeam, odds: m.odds.away, probability: calcProb(m.odds.away) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: '1', odds: m.odds.home, probability: calcProb(m.odds.home) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: 'X', odds: m.odds.draw, probability: calcProb(m.odds.draw) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: '2', odds: m.odds.away, probability: calcProb(m.odds.away) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '+2.5', odds: m.odds.over25, probability: calcProb(m.odds.over25) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '-2.5', odds: m.odds.under25, probability: calcProb(m.odds.under25) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS', selection: 'Ambos Marcan', odds: m.odds.btts, probability: calcProb(m.odds.btts) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS_NO', selection: 'Ninguno/Uno', odds: m.odds.bttsNo, probability: calcProb(m.odds.bttsNo) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1ªMitad', selection: '+0.5 Gol', odds: m.odds.over05HT, probability: calcProb(m.odds.over05HT) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '2ªMitad', selection: '+0.5 Gol', odds: m.odds.over05SH, probability: calcProb(m.odds.over05SH) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '1X', odds: m.odds.dc1x, probability: calcProb(m.odds.dc1x) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: 'X2', odds: m.odds.dcx2, probability: calcProb(m.odds.dcx2) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '12', odds: m.odds.dc12, probability: calcProb(m.odds.dc12) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: m.homeTeam, odds: m.odds.dnb1, probability: calcProb(m.odds.dnb1) },
-      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: m.awayTeam, odds: m.odds.dnb2, probability: calcProb(m.odds.dnb2) }
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: '1', odds: m.odds.dnbHome, probability: calcProb(m.odds.dnbHome) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: '2', odds: m.odds.dnbAway, probability: calcProb(m.odds.dnbAway) }
     );
   });
 
   let allowedTypes: string[] = [];
-  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', 'BTTS_NO', '1ªMitad', '2ªMitad', 'Doble Oport.', 'Sin Empate'];
+  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'Doble Oport.', 'Sin Empate'];
   else if (marketFilter === '1x2') allowedTypes = ['1X2'];
   else if (marketFilter === 'goals') allowedTypes = ['Goles'];
-  else if (marketFilter === 'btts') allowedTypes = ['BTTS'];
-  else if (marketFilter === 'btts_no') allowedTypes = ['BTTS_NO'];
-  else if (marketFilter === 'ht') allowedTypes = ['1ªMitad'];
-  else if (marketFilter === 'sh') allowedTypes = ['2ªMitad'];
   else if (marketFilter === 'dc') allowedTypes = ['Doble Oport.'];
   else if (marketFilter === 'dnb') allowedTypes = ['Sin Empate'];
 
@@ -302,19 +288,17 @@ export default function App() {
 
           <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', flex: 1 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem', flex: 1 }}>
               {MARKETS.map(market => {
                 const active = selectedMarket === market.key;
                 const Icon = market.icon;
                 return (
                   <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
-                    gridColumn: market.key === 'auto' ? '1 / -1' : 'auto',
                     padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
                     borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
-                    cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
-                    justifyContent: 'center'
+                    cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
+                    display: 'flex', alignItems: 'center', gap: '0.75rem'
                   }}>
                     <Icon size={18} color={active ? 'var(--accent)' : 'var(--text-muted)'} /> {market.label}
                   </button>
