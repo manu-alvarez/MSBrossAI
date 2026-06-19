@@ -707,8 +707,8 @@ function initAudio() {
         droneGain = audioCtx.createGain();
         
         // Drone sound setup
-        droneOsc.type = 'sine';
-        droneOsc.frequency.value = 45; // Low sub-bass
+        droneOsc.type = 'triangle';
+        droneOsc.frequency.value = 75; // Sub-bass with harmonics for audibility
         droneOsc.connect(droneGain);
         droneGain.connect(audioCtx.destination);
         droneGain.gain.value = 0;
@@ -759,7 +759,7 @@ window.addEventListener('scroll', () => {
     lastScrollY = window.scrollY;
     
     // Increase volume based on scroll speed
-    droneVolTarget = Math.min(0.15, diff * 0.002);
+    droneVolTarget = Math.min(0.3, diff * 0.004);
 }, {passive: true});
 
 // Smooth out drone volume
