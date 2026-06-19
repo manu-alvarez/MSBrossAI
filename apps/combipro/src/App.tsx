@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Zap, RefreshCw, Lock, Trophy, Globe, Activity, 
+  Target, ShieldCheck, Scale, Flame, XCircle, 
+  Goal, Clock, ArrowRightLeft, AlignVerticalSpaceAround
+} from 'lucide-react';
 
 // ============================================
-// COMBIPRO — Real Odds + Combo Generator
+// COMBIPRO — Ultra-Premium Combo Generator
 // ============================================
 
 const ODDS_API_BASE = 'https://api.the-odds-api.com/v4/sports';
 
 interface Match {
-  id: string;
-  homeTeam: string;
-  awayTeam: string;
-  league: string;
-  leagueName: string;
-  commenceTime: string;
+  id: string; homeTeam: string; awayTeam: string; league: string; leagueName: string; commenceTime: string;
   odds: {
     home: number; draw: number; away: number;
     over25: number; under25: number;
     btts: number; bttsNo: number;
     over05HT: number;
+    dc1x: number; dcx2: number; dc12: number;
+    dnb1: number; dnb2: number;
   };
 }
 
@@ -27,34 +30,34 @@ interface Pick {
 }
 
 interface Combo {
-  id: string; picks: Pick[];
-  totalOdds: number; totalProbability: number;
-  stake: number; potentialWin: number;
-  riskLevel: 'safe' | 'balanced' | 'turbo';
+  id: string; picks: Pick[]; totalOdds: number; totalProbability: number;
+  stake: number; potentialWin: number; riskLevel: 'safe' | 'balanced' | 'turbo';
 }
 
 const LEAGUES = [
-  { key: 'soccer_fifa_world_cup', name: '🌍 Mundial de Fútbol', icon: '🌍' },
-  { key: 'soccer_uefa_champs_league', name: '🏆 Champions League', icon: '🏆' },
-  { key: 'soccer_epl', name: '🇬🇧 Premier League', icon: '🇬🇧' },
-  { key: 'soccer_spain_la_liga', name: '🇪🇸 LaLiga', icon: '🇪🇸' },
-  { key: 'soccer_italy_serie_a', name: '🇮🇹 Serie A', icon: '🇮🇹' },
-  { key: 'soccer_germany_bundesliga', name: '🇩🇪 Bundesliga', icon: '🇩🇪' },
-  { key: 'soccer_france_ligue_one', name: '🇫🇷 Ligue 1', icon: '🇫🇷' },
+  { key: 'soccer_fifa_world_cup', name: 'Mundial de Fútbol', icon: Globe, color: 'var(--yellow)' },
+  { key: 'soccer_uefa_champs_league', name: 'Champions League', icon: Trophy, color: 'var(--text)' },
+  { key: 'soccer_epl', name: 'Premier League', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_spain_la_liga', name: 'LaLiga', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_italy_serie_a', name: 'Serie A', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_germany_bundesliga', name: 'Bundesliga', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_france_ligue_one', name: 'Ligue 1', icon: Activity, color: 'var(--text)' },
 ];
 
 const MARKETS = [
-  { key: 'auto', label: '🤖 Todo (Automático)' },
-  { key: '1x2', label: '📊 1X2 (Resultado)' },
-  { key: 'goals', label: '⚽ Goles (+/-)' },
-  { key: 'btts', label: '🔥 Ambos Marcan' },
-  { key: 'ht', label: '⏱️ 1ª Mitad' }
+  { key: 'auto', label: 'Automático', icon: Zap },
+  { key: '1x2', label: '1X2 (Resultado)', icon: Target },
+  { key: 'dc', label: 'Doble Oport.', icon: ArrowRightLeft },
+  { key: 'dnb', label: 'Apuesta sin Empate', icon: AlignVerticalSpaceAround },
+  { key: 'goals', label: 'Goles (+/-)', icon: Goal },
+  { key: 'btts', label: 'Ambos Marcan', icon: Flame },
+  { key: 'ht', label: '1ª Mitad', icon: Clock }
 ];
 
 const RISKS = [
-  { key: 'safe', label: '🟢 Bajo Riesgo (Seguro)' },
-  { key: 'balanced', label: '🟡 Riesgo Medio' },
-  { key: 'turbo', label: '🔴 Alto Riesgo' }
+  { key: 'safe', label: 'Seguro (Alta Prob.)', icon: ShieldCheck, color: 'var(--green)' },
+  { key: 'balanced', label: 'Medio (Equilibrado)', icon: Scale, color: 'var(--yellow)' },
+  { key: 'turbo', label: 'Alto (Cuotas Altas)', icon: Flame, color: 'var(--red)' }
 ];
 
 async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]> {
@@ -62,10 +65,7 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
   try {
     const promises = leagues.map(async (league) => {
       const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${apiKey}&regions=eu&markets=h2h,totals&oddsFormat=decimal`);
-      if (!res.ok) {
-        console.warn(`Error fetching ${league}: ${res.status}`);
-        return [];
-      }
+      if (!res.ok) return [];
       const data = await res.json();
       return data.map((event: any) => {
         const bookmaker = event.bookmakers?.[0]?.markets;
@@ -74,115 +74,111 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
         
         let over25Price = totals?.find((o: any) => o.name === 'Over')?.price || 1.80;
         let under25Price = totals?.find((o: any) => o.name === 'Under')?.price || 2.00;
+        
+        const home = h2h?.find((o: any) => o.name === event.home_team)?.price || 2.00;
+        const draw = h2h?.find((o: any) => o.name === 'Draw')?.price || 3.30;
+        const away = h2h?.find((o: any) => o.name === event.away_team)?.price || 3.00;
 
         return {
-          id: event.id,
-          homeTeam: event.home_team, awayTeam: event.away_team,
+          id: event.id, homeTeam: event.home_team, awayTeam: event.away_team,
           league, leagueName: LEAGUES.find(l => l.key === league)?.name || league,
           commenceTime: event.commence_time,
           odds: {
-            home: h2h?.find((o: any) => o.name === event.home_team)?.price || 2.00,
-            draw: h2h?.find((o: any) => o.name === 'Draw')?.price || 3.30,
-            away: h2h?.find((o: any) => o.name === event.away_team)?.price || 3.00,
-            over25: over25Price,
-            under25: under25Price,
+            home, draw, away, over25: over25Price, under25: under25Price,
             btts: over25Price > 2.0 ? 2.10 : 1.75,
             bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
             over05HT: 1.35, 
+            dc1x: Math.round((1 / (1/home + 1/draw)) * 100) / 100,
+            dcx2: Math.round((1 / (1/draw + 1/away)) * 100) / 100,
+            dc12: Math.round((1 / (1/home + 1/away)) * 100) / 100,
+            dnb1: Math.round((home * (1 - 1/draw)) * 100) / 100,
+            dnb2: Math.round((away * (1 - 1/draw)) * 100) / 100,
           },
         };
       }).filter((m: Match) => m.odds.home && m.odds.draw && m.odds.away);
     });
     const results = await Promise.all(promises);
-    const flat = results.flat();
-    return flat.length > 0 ? flat : [];
-  } catch (error) { 
-    console.error("Fetch error:", error);
-    return []; 
-  }
+    return results.flat();
+  } catch (error) { return []; }
 }
 
-function calcProbability(odds: number): number {
-  const margin = 0.05;
-  return Math.round((1 / (odds * (1 + margin))) * 100);
-}
+function calcProb(odds: number): number { return Math.round((1 / (odds * 1.05)) * 100); }
 
 function playGenerateSound() {
   try {
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-    if(!AudioContext) return;
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, ctx.currentTime);
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
     gain.gain.setValueAtTime(0, ctx.currentTime);
     gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.4);
-  } catch (e) { console.error('Audio playback failed', e); }
+    osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.4);
+  } catch (e) {}
 }
 
 function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', stake: number, marketFilter: string): Combo[] {
   const allPicks: Pick[] = [];
-  matches.forEach(match => {
+  matches.forEach(m => {
     allPicks.push(
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'Resultado', selection: match.homeTeam, odds: match.odds.home, probability: calcProbability(match.odds.home) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'Resultado', selection: 'Empate', odds: match.odds.draw, probability: calcProbability(match.odds.draw) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'Resultado', selection: match.awayTeam, odds: match.odds.away, probability: calcProbability(match.odds.away) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'Goles', selection: 'Más de 2.5', odds: match.odds.over25, probability: calcProbability(match.odds.over25) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'Goles', selection: 'Menos de 2.5', odds: match.odds.under25, probability: calcProbability(match.odds.under25) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: 'BTTS', selection: 'Ambos marcan', odds: match.odds.btts, probability: calcProbability(match.odds.btts) },
-      { matchId: match.id, match: `${match.homeTeam} vs ${match.awayTeam}`, league: match.leagueName, type: '1ª Mitad', selection: 'Gol 1ª mitad', odds: match.odds.over05HT, probability: calcProbability(match.odds.over05HT) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: m.homeTeam, odds: m.odds.home, probability: calcProb(m.odds.home) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: 'Empate', odds: m.odds.draw, probability: calcProb(m.odds.draw) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1X2', selection: m.awayTeam, odds: m.odds.away, probability: calcProb(m.odds.away) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '+2.5', odds: m.odds.over25, probability: calcProb(m.odds.over25) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '-2.5', odds: m.odds.under25, probability: calcProb(m.odds.under25) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS', selection: 'Ambos Marcan', odds: m.odds.btts, probability: calcProb(m.odds.btts) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1ªMitad', selection: '+0.5 Gol', odds: m.odds.over05HT, probability: calcProb(m.odds.over05HT) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '1X', odds: m.odds.dc1x, probability: calcProb(m.odds.dc1x) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: 'X2', odds: m.odds.dcx2, probability: calcProb(m.odds.dcx2) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '12', odds: m.odds.dc12, probability: calcProb(m.odds.dc12) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: m.homeTeam, odds: m.odds.dnb1, probability: calcProb(m.odds.dnb1) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Sin Empate', selection: m.awayTeam, odds: m.odds.dnb2, probability: calcProb(m.odds.dnb2) }
     );
   });
 
   let allowedTypes: string[] = [];
-  if (marketFilter === 'auto') allowedTypes = ['Resultado', 'Goles', 'BTTS', '1ª Mitad'];
-  else if (marketFilter === '1x2') allowedTypes = ['Resultado'];
+  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', '1ªMitad', 'Doble Oport.', 'Sin Empate'];
+  else if (marketFilter === '1x2') allowedTypes = ['1X2'];
   else if (marketFilter === 'goals') allowedTypes = ['Goles'];
   else if (marketFilter === 'btts') allowedTypes = ['BTTS'];
-  else if (marketFilter === 'ht') allowedTypes = ['1ª Mitad'];
+  else if (marketFilter === 'ht') allowedTypes = ['1ªMitad'];
+  else if (marketFilter === 'dc') allowedTypes = ['Doble Oport.'];
+  else if (marketFilter === 'dnb') allowedTypes = ['Sin Empate'];
 
   const filteredByMarket = allPicks.filter(p => allowedTypes.includes(p.type));
 
-  let minProb: number, minPicks: number, maxPicks: number;
-  if (risk === 'safe') { minProb = 55; minPicks = 2; maxPicks = 3; }
-  else if (risk === 'balanced') { minProb = 35; minPicks = 3; maxPicks = 5; }
-  else { minProb = 20; minPicks = 4; maxPicks = 7; }
+  let minProb = risk === 'safe' ? 60 : risk === 'balanced' ? 40 : 20;
+  let maxPicks = risk === 'safe' ? 3 : risk === 'balanced' ? 5 : 8;
 
-  const filtered = filteredByMarket.filter(p => p.probability >= minProb);
+  const filtered = filteredByMarket.filter(p => p.probability >= minProb && p.odds > 1.05);
   const combos: Combo[] = [];
 
   for (let i = 0; i < 5; i++) {
     const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-    const pickCount = minPicks + Math.floor(Math.random() * (maxPicks - minPicks + 1));
-    const uniqueMatches = new Set<string>();
+    const pickCount = 2 + Math.floor(Math.random() * (maxPicks - 1));
     const uniquePicks: Pick[] = [];
-    for (const pick of shuffled) {
-      if (!uniqueMatches.has(pick.matchId) && uniquePicks.length < pickCount) {
-        uniqueMatches.add(pick.matchId);
-        uniquePicks.push(pick);
+    const usedMatches = new Set();
+    for (const p of shuffled) {
+      if (!usedMatches.has(p.matchId) && uniquePicks.length < pickCount) {
+        usedMatches.add(p.matchId); uniquePicks.push(p);
       }
     }
-    if (uniquePicks.length >= 1) { // Permite apostar a 1 solo si no hay más
-      const totalOdds = uniquePicks.reduce((acc, p) => acc * p.odds, 1);
-      const totalProb = uniquePicks.reduce((acc, p) => acc * (p.probability / 100), 1) * 100;
+    if (uniquePicks.length >= 2) {
+      const tOdds = uniquePicks.reduce((acc, p) => acc * p.odds, 1);
+      const tProb = uniquePicks.reduce((acc, p) => acc * (p.probability / 100), 1) * 100;
       combos.push({
         id: crypto.randomUUID(), picks: uniquePicks,
-        totalOdds: Math.round(totalOdds * 100) / 100,
-        totalProbability: Math.round(totalProb * 10) / 10,
-        stake, potentialWin: Math.round(totalOdds * stake * 100) / 100,
-        riskLevel: risk,
+        totalOdds: Math.round(tOdds * 100) / 100, totalProbability: Math.round(tProb * 10) / 10,
+        stake, potentialWin: Math.round(tOdds * stake * 100) / 100, riskLevel: risk
       });
     }
   }
   return combos.sort((a, b) => b.potentialWin - a.potentialWin);
 }
+
+// --- FADE ANIMATIONS ---
+const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
+const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } } };
 
 export default function App() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('odds_api_key') || (import.meta as any).env.VITE_ODDS_API_KEY || '');
@@ -190,287 +186,224 @@ export default function App() {
   
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(false);
-  const [apiLoading, setApiLoading] = useState(false);
-  const [selectedLeagues, setSelectedLeagues] = useState<string[]>(LEAGUES.map(l => l.key));
   
-  // UX Refactor States
+  const [selectedLeagues, setSelectedLeagues] = useState<string[]>(LEAGUES.map(l => l.key));
   const [risk, setRisk] = useState<'safe' | 'balanced' | 'turbo'>('balanced');
   const [stake, setStake] = useState(10);
   const [selectedMarket, setSelectedMarket] = useState<string>('auto');
-  
   const [combos, setCombos] = useState<Combo[]>([]);
 
   const fetchOdds = useCallback(async () => {
     if (!apiKey) return;
     setLoading(true);
-    setApiLoading(true);
-    const realMatches = await fetchRealOdds(selectedLeagues, apiKey);
-    setMatches(realMatches);
-    setApiLoading(false);
+    setMatches(await fetchRealOdds(selectedLeagues, apiKey));
     setLoading(false);
   }, [selectedLeagues, apiKey]);
 
-  useEffect(() => { 
-    if (apiKey) fetchOdds(); 
-  }, [apiKey, fetchOdds]);
+  useEffect(() => { if (apiKey) fetchOdds(); }, [apiKey, fetchOdds]);
 
-  const saveApiKey = () => {
-    if (inputKey.trim()) {
-      localStorage.setItem('odds_api_key', inputKey.trim());
-      setApiKey(inputKey.trim());
-    }
-  };
-
-  const removeApiKey = () => {
-    localStorage.removeItem('odds_api_key');
-    setApiKey('');
-    setMatches([]);
-    setCombos([]);
-  };
+  const saveApiKey = () => { if (inputKey.trim()) { localStorage.setItem('odds_api_key', inputKey.trim()); setApiKey(inputKey.trim()); } };
+  const removeApiKey = () => { localStorage.removeItem('odds_api_key'); setApiKey(''); setMatches([]); setCombos([]); };
 
   const generate = () => {
     if (matches.length === 0) return;
     playGenerateSound();
-    const newCombos = generateCombos(matches, risk, stake, selectedMarket);
-    setCombos(newCombos);
+    setCombos(generateCombos(matches, risk, stake, selectedMarket));
   };
 
-  const toggleLeague = (key: string) => {
-    setSelectedLeagues(prev => prev.includes(key) ? prev.filter(l => l !== key) : [...prev, key]);
-  };
+  const toggleLeague = (key: string) => setSelectedLeagues(p => p.includes(key) ? p.filter(l => l !== key) : [...p, key]);
 
-  // UI cuando no hay API KEY
   if (!apiKey) {
     return (
-      <div className="animate-fadeIn" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div className="glass-panel" style={{ maxWidth: 500, width: '100%', padding: '3rem 2rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
-          <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--accent)' }}>Acceso API Restringido</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
-            CombiPro funciona <strong>exclusivamente con cuotas y probabilidades 100% reales</strong>. 
-            Para acceder a las bases de datos en vivo, por favor, introduce tu clave de <em>The-Odds API</em>.
-          </p>
-          <input 
-            type="password" 
-            placeholder="Pega tu API Key aquí..." 
-            value={inputKey}
-            onChange={(e) => setInputKey(e.target.value)}
-            style={{ 
-              width: '100%', padding: '1rem', marginBottom: '1rem', 
-              background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', 
-              borderRadius: 8, color: 'var(--text)', outline: 'none',
-              fontFamily: 'monospace'
-            }}
-          />
-          <button onClick={saveApiKey} className="btn-premium" style={{ width: '100%', padding: '1rem', borderRadius: 8, fontWeight: 700 }}>
-            Conectar Base de Datos
-          </button>
-        </div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+        <div className="bg-orbs-container"><div className="orb orb-1"></div><div className="orb orb-2"></div></div>
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-panel" style={{ maxWidth: 450, padding: '3rem', textAlign: 'center' }}>
+          <Lock size={48} color="var(--accent)" style={{ margin: '0 auto 1.5rem' }} />
+          <h2 className="font-display text-gradient" style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '1rem' }}>Restricted Access</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>Para cargar cuotas matemáticas reales necesitas tu clave de The-Odds API.</p>
+          <input type="password" placeholder="API Key..." value={inputKey} onChange={(e) => setInputKey(e.target.value)}
+            style={{ width: '100%', padding: '1rem', marginBottom: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', borderRadius: 12, color: 'var(--text)', outline: 'none', fontFamily: 'monospace' }} />
+          <button onClick={saveApiKey} className="btn-premium font-display" style={{ width: '100%', padding: '1rem', borderRadius: 12, fontWeight: 700 }}>Conectar</button>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="animate-fadeIn">
-      {/* Header Premium */}
-      <header className="glass-panel" style={{ margin: '1rem', padding: '1rem 2rem', borderTop: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: '0 0 24px 24px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <div style={{ 
-              width: 54, height: 54, borderRadius: 16, 
-              background: 'linear-gradient(135deg, var(--accent), var(--accent-cyan))', 
-              display: 'flex', alignItems: 'center', justifyContent: 'center', 
-              fontSize: '1.8rem', boxShadow: '0 4px 20px rgba(249, 115, 22, 0.3)'
-            }}>⚽</div>
-            <div>
-              <h1 className="font-display text-gradient" style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>CombiPro <span style={{fontSize:'0.8rem', verticalAlign:'top', color:'var(--text)', background:'var(--accent)', padding:'2px 6px', borderRadius:'10px'}}>v2.1 Real-Time</span></h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: apiLoading ? 'var(--yellow)' : (matches.length > 0 ? 'var(--green)' : 'var(--red)'), boxShadow: `0 0 10px ${apiLoading ? 'var(--yellow)' : (matches.length > 0 ? 'var(--green)' : 'var(--red)')}` }}></span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  {apiLoading ? 'Sincronizando cuotas...' : (matches.length > 0 ? `API Conectada · ${matches.length} partidos sincronizados` : 'Sin datos disponibles')}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button onClick={fetchOdds} disabled={loading} className="glass-panel" style={{ 
-              padding: '0.75rem 1.5rem', borderRadius: 12, color: 'var(--text)', 
-              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1, transition: 'all 0.3s'
-            }}>
-              {loading ? '⏳ Actualizando...' : '🔄 Recargar Cuotas'}
-            </button>
-            {!((import.meta as any).env.VITE_ODDS_API_KEY) && (
-              <button onClick={removeApiKey} className="glass-panel" style={{ 
-                padding: '0.75rem 1rem', borderRadius: 12, color: 'var(--red)', borderColor: 'rgba(239, 68, 68, 0.3)',
-                cursor: 'pointer', transition: 'all 0.3s'
-              }} title="Desconectar API">
-                Desconectar
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+    <div style={{ position: 'relative' }}>
+      {/* Background Orbs */}
+      <div className="bg-orbs-container"><div className="orb orb-1"></div><div className="orb orb-2"></div><div className="orb orb-3"></div></div>
 
-      <main style={{ maxWidth: 1200, margin: '2rem auto', padding: '0 1rem' }}>
-        
-        {/* Controls Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-          
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Ligas</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-              {LEAGUES.map(league => (
-                <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
-                  padding: '0.5rem 1rem',
-                  background: selectedLeagues.includes(league.key) ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${selectedLeagues.includes(league.key) ? 'var(--accent-cyan)' : 'var(--border)'}`,
-                  borderRadius: 100, color: selectedLeagues.includes(league.key) ? (league.key === 'soccer_fifa_world_cup' ? 'var(--yellow)' : 'var(--text)') : 'var(--text-muted)',
-                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
-                  boxShadow: selectedLeagues.includes(league.key) ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
-                }}>
-                  {league.name}
-                </button>
-              ))}
-            </div>
+      {/* Header */}
+      <motion.header initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }} 
+        className="glass-panel" style={{ margin: '1.5rem auto', maxWidth: 1400, padding: '1.5rem 2rem', borderRadius: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(249, 115, 22, 0.4)' }}>
+            <Activity color="white" size={24} />
           </div>
-
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {MARKETS.map(market => (
-                <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
-                  flex: market.key === 'auto' ? '100%' : '1', minWidth: '120px', padding: '0.75rem',
-                  background: selectedMarket === market.key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${selectedMarket === market.key ? 'var(--accent)' : 'var(--border)'}`,
-                  borderRadius: 12, color: selectedMarket === market.key ? 'var(--text)' : 'var(--text-muted)',
-                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.2s',
-                  boxShadow: selectedMarket === market.key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
-                }}>{market.label}</button>
-              ))}
-            </div>
-          </div>
-
-          <div className="glass-panel" style={{ padding: '1.5rem', gridColumn: '1 / -1' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center' }}>
-              <div style={{ flex: 2, minWidth: '300px' }}>
-                <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>Estrategia de Apuesta</h3>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  {RISKS.map(r => (
-                    <button key={r.key} onClick={() => setRisk(r.key as any)} style={{
-                      flex: 1, padding: '0.75rem',
-                      background: risk === r.key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
-                      border: `1px solid ${risk === r.key ? 'var(--accent)' : 'var(--border)'}`,
-                      borderRadius: 12, color: risk === r.key ? 'var(--text)' : 'var(--text-muted)',
-                      cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.2s',
-                      boxShadow: risk === r.key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
-                    }}>{r.label}</button>
-                  ))}
-                </div>
-              </div>
-              <div style={{ flex: 1, minWidth: '200px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Stake Inicial</span>
-                  <span className="font-display" style={{ fontWeight: 800, color: 'var(--accent-cyan)' }}>{stake}€</span>
-                </div>
-                <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={200} step={5} style={{ width: '100%', accentColor: 'var(--accent-cyan)' }} />
-              </div>
+          <div>
+            <h1 className="font-display text-gradient" style={{ fontSize: '1.8rem', fontWeight: 900, lineHeight: 1.1 }}>CombiPro <span style={{ fontSize:'0.7rem', verticalAlign:'top', background:'var(--accent)', color:'white', padding:'2px 6px', borderRadius:'100px', fontWeight: 800 }}>ULTRA</span></h1>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '4px' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: loading ? 'var(--yellow)' : 'var(--green)', boxShadow: `0 0 10px ${loading ? 'var(--yellow)' : 'var(--green)'}` }} />
+              {loading ? 'Sincronizando...' : `${matches.length} partidos mapeados`}
             </div>
           </div>
         </div>
-
-        {/* Generate Button Premium */}
-        <button className="btn-premium font-display" onClick={generate} disabled={matches.length === 0} style={{
-          width: '100%', padding: '1.5rem', borderRadius: 16, 
-          fontSize: '1.2rem', fontWeight: 900, cursor: matches.length === 0 ? 'not-allowed' : 'pointer', marginBottom: '3rem',
-          textTransform: 'uppercase', letterSpacing: '2px', opacity: matches.length === 0 ? 0.5 : 1
-        }}>
-          ⚡ GENERAR COMBINADAS
-        </button>
-
-        {/* Results / Tickets */}
-        {combos.length > 0 && (
-          <div style={{ marginBottom: '4rem' }}>
-            <h2 className="font-display" style={{ fontSize: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ width: 12, height: 12, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></span>
-              Tickets Generados
-            </h2>
-            
-            {combos.filter(c => c.picks.length > 0).length === 0 && (
-              <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-                No se han encontrado combinadas que cumplan con la Estrategia y el Filtro de Mercados actual. Prueba a seleccionar más mercados o bajar el riesgo.
-              </div>
-            )}
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-              {combos.filter(c => c.picks.length > 0).map((combo, i) => (
-                <div key={combo.id} className="combo-ticket animate-slideInRight" style={{ animationDelay: `${i * 0.1}s`, padding: '2rem' }}>
-                  
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem' }}>
-                    <div>
-                      <span className="font-display text-gradient" style={{ fontSize: '1.5rem', fontWeight: 900 }}>TICKET #{i + 1}</span>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{combo.picks.length} Selecciones · Perfil {combo.riskLevel.toUpperCase()}</div>
-                    </div>
-                    
-                    <div style={{ textAlign: 'right', display: 'flex', gap: '1.5rem' }}>
-                      <div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>CUOTA TOTAL</div>
-                        <div className="font-display" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text)' }}>{combo.totalOdds.toFixed(2)}</div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>GANANCIA EST.</div>
-                        <div className="font-display" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--green)' }}>{combo.potentialWin.toFixed(2)}€</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-                    {combo.picks.map((pick, j) => (
-                      <div key={j} className="glass-panel" style={{ padding: '1rem', borderLeft: `3px solid var(--accent-cyan)` }}>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '0.5px' }}>{pick.league}</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.5rem' }}>{pick.match}</div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{pick.type}: <span style={{ color: 'var(--text)', fontWeight: 600 }}>{pick.selection}</span></div>
-                          <div className="font-display" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent)' }}>{pick.odds.toFixed(2)}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Database */}
-        <div style={{ opacity: 0.8 }}>
-          <h3 className="font-display" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Database: Partidos Reales ({matches.length})</h3>
-          {matches.length === 0 && !loading && (
-             <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-               No hay partidos disponibles actualmente para las ligas seleccionadas.
-             </div>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={fetchOdds} disabled={loading} className="glass-panel glass-panel-hover" style={{ padding: '0.75rem 1.25rem', borderRadius: 12, color: 'var(--text)', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+            <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> {loading ? '...' : 'Recargar'}
+          </button>
+          {!((import.meta as any).env.VITE_ODDS_API_KEY) && (
+             <button onClick={removeApiKey} className="glass-panel glass-panel-hover" style={{ padding: '0.75rem', borderRadius: 12, color: 'var(--red)' }} title="Desconectar"><XCircle size={18} /></button>
           )}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1rem' }}>
-            {matches.map(match => (
-              <div key={match.id} className="glass-panel match-card" style={{ padding: '1.25rem', borderLeft: match.league === 'soccer_fifa_world_cup' ? '3px solid var(--yellow)' : '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.75rem', background: match.league === 'soccer_fifa_world_cup' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255,255,255,0.05)', padding: '4px 8px', borderRadius: '4px', color: match.league === 'soccer_fifa_world_cup' ? 'var(--yellow)' : 'var(--text-muted)', fontWeight: match.league === 'soccer_fifa_world_cup' ? 800 : 400 }}>{match.leagueName}</span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>{new Date(match.commenceTime).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      </motion.header>
+
+      <motion.main variants={containerVariants} initial="hidden" animate="show" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', paddingBottom: '4rem' }}>
+        
+        {/* Settings Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Competiciones</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {LEAGUES.map(league => {
+                const active = selectedLeagues.includes(league.key);
+                const Icon = league.icon;
+                return (
+                  <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
+                    padding: '0.6rem 1rem', background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${active ? 'rgba(255,255,255,0.2)' : 'transparent'}`,
+                    borderRadius: 100, color: active ? league.color : 'var(--text-muted)',
+                    cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s',
+                    display: 'flex', alignItems: 'center', gap: '0.4rem'
+                  }}>
+                    <Icon size={14} /> {league.name}
+                  </button>
+                )
+              })}
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.5rem' }}>
+              {MARKETS.map(market => {
+                const active = selectedMarket === market.key;
+                const Icon = market.icon;
+                return (
+                  <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
+                    padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
+                    borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
+                    cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem'
+                  }}>
+                    <Icon size={18} color={active ? 'var(--accent)' : 'var(--text-muted)'} /> {market.label}
+                  </button>
+                )
+              })}
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Perfil de Riesgo</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
+                {RISKS.map(r => {
+                  const active = risk === r.key;
+                  const Icon = r.icon;
+                  return (
+                    <button key={r.key} onClick={() => setRisk(r.key as any)} style={{
+                      padding: '0.8rem 1rem', background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${active ? 'rgba(255,255,255,0.1)' : 'transparent'}`,
+                      borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
+                      cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
+                      display: 'flex', alignItems: 'center', gap: '0.75rem'
+                    }}>
+                      <Icon size={16} color={active ? r.color : 'var(--text-muted)'} /> {r.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div style={{ marginTop: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Stake Inicial</span>
+                <span className="font-display" style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--accent)' }}>{stake}€</span>
+              </div>
+              <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={500} step={5} />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Generate CTA */}
+        <motion.button variants={itemVariants} whileHover={{ scale: matches.length > 0 ? 1.02 : 1 }} whileTap={{ scale: matches.length > 0 ? 0.98 : 1 }} 
+          className="btn-premium font-display" onClick={generate} disabled={matches.length === 0} 
+          style={{ width: '100%', padding: '1.5rem', borderRadius: 20, fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '3rem' }}>
+          ⚡ Generar Inteligencia Combinada
+        </motion.button>
+
+        {/* Results */}
+        <AnimatePresence>
+          {combos.length > 0 && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ marginBottom: '4rem' }}>
+              <h2 className="font-display text-gradient" style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                Tickets Algorítmicos
+              </h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
+                {combos.map((combo, i) => (
+                  <motion.div key={combo.id} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div className="font-display text-gradient" style={{ fontSize: '1.25rem', fontWeight: 900 }}>TICKET #{i + 1}</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>{combo.picks.length} picks · Nivel {combo.riskLevel.toUpperCase()}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>Cuota <span className="font-display" style={{ fontSize: '1.4rem', color: 'white', fontWeight: 800, marginLeft: '8px' }}>{combo.totalOdds.toFixed(2)}</span></div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--green)', letterSpacing: '1px', marginTop: '4px' }}>Win <span className="font-display" style={{ fontSize: '1.1rem', fontWeight: 800, marginLeft: '8px' }}>{combo.potentialWin.toFixed(2)}€</span></div>
+                      </div>
+                    </div>
+                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      {combo.picks.map((pick, j) => (
+                        <div key={j} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.02)' }}>
+                          <div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '2px' }}>{pick.league}</div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{pick.match}</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>{pick.type} <ArrowRightLeft size={10} style={{margin:'0 4px', display:'inline'}} /> <span style={{ color: 'white', fontWeight: 600 }}>{pick.selection}</span></div>
+                          </div>
+                          <div className="font-display" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent)', background: 'rgba(249, 115, 22, 0.1)', padding: '0.4rem 0.8rem', borderRadius: 8 }}>
+                            {pick.odds.toFixed(2)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Database List Minimalist */}
+        <motion.div variants={itemVariants} style={{ opacity: 0.7 }}>
+          <h3 className="font-display" style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>DB Replicada ({matches.length})</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.75rem' }}>
+            {matches.map(m => (
+              <div key={m.id} className="glass-panel" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)' }}>{m.homeTeam}</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)' }}>{m.awayTeam}</div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem' }}>
-                  <span>{match.homeTeam}</span>
-                  <span style={{ color: 'var(--border)' }}>vs</span>
-                  <span>{match.awayTeam}</span>
-                </div>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>1</span>{match.odds.home}</span>
-                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>X</span>{match.odds.draw}</span>
-                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>2</span>{match.odds.away}</span>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--accent)' }}>{m.leagueName}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{new Date(m.commenceTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </main>
+        </motion.div>
+      </motion.main>
     </div>
   );
 }
