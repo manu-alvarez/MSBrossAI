@@ -1,4 +1,4 @@
-/** API client for communicating with the FastAPI backend or simulating in Offline Local Mode. */
+/** API client for communicating with the FastAPI backend. */
 
 import { API_URL } from "./utils";
 import type { ChatMessage, StreamChunk, Source, ModelInfo, Agent, User } from "../types/chat";
@@ -23,71 +23,36 @@ export function clearToken() {
   if (typeof window !== "undefined") localStorage.removeItem("token");
 }
 
-export function isOfflineMode(): boolean {
-  return false;
-}
+// ── Local Storage DB for Chat History ─────────────────────────
+const LOCAL_CONVS_KEY = "jartosdto_conversations";
+const LOCAL_MSGS_KEY = "jartosdto_messages";
 
-// ── Local Storage Helper for Mock DB ─────────────────────────
-const MOCK_CONVS_KEY = "jartosdto_mock_conversations";
-const MOCK_MSGS_KEY = "jartosdto_mock_messages";
-
-function getMockConversations(): any[] {
+function getConversationsLocal(): any[] {
   if (typeof window === "undefined") return [];
-  const stored = localStorage.getItem(MOCK_CONVS_KEY);
-  if (!stored) {
-    const defaultConvs = [
-      {
-        id: "conv-1",
-        title: "Bienvenido a JartosDTo Offline Local",
-        model_id: "gpt-4o",
-        created_at: new Date().toISOString(),
-        message_count: 2,
-      },
-    ];
-    localStorage.setItem(MOCK_CONVS_KEY, JSON.stringify(defaultConvs));
-    
-    const defaultMsgs: Record<string, ChatMessage[]> = {
-      "conv-1": [
-        {
-          id: "m-1",
-          role: "user",
-          content: "Hola! ¿Qué es JartosDTo?",
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: "m-2",
-          role: "assistant",
-          content: "¡Hola! JartosDTo es la plataforma de chat de IA más avanzada del ecosistema MSBross. En este modo offline local, puedes interactuar de forma 100% interactiva sin coste ni necesidad de configurar backends externos.",
-          created_at: new Date().toISOString(),
-        },
-      ],
-    };
-    localStorage.setItem(MOCK_MSGS_KEY, JSON.stringify(defaultMsgs));
-    return defaultConvs;
-  }
-  return JSON.parse(stored);
+  const stored = localStorage.getItem(LOCAL_CONVS_KEY);
+  return stored ? JSON.parse(stored) : [];
 }
 
-function saveMockConversations(convs: any[]) {
+function saveConversationsLocal(convs: any[]) {
   if (typeof window !== "undefined") {
-    localStorage.setItem(MOCK_CONVS_KEY, JSON.stringify(convs));
+    localStorage.setItem(LOCAL_CONVS_KEY, JSON.stringify(convs));
   }
 }
 
-function getMockMessages(convId: string): ChatMessage[] {
+function getMessagesLocal(convId: string): ChatMessage[] {
   if (typeof window === "undefined") return [];
-  const stored = localStorage.getItem(MOCK_MSGS_KEY);
+  const stored = localStorage.getItem(LOCAL_MSGS_KEY);
   if (!stored) return [];
   const map = JSON.parse(stored);
   return map[convId] || [];
 }
 
-function saveMockMessages(convId: string, msgs: ChatMessage[]) {
+function saveMessagesLocal(convId: string, msgs: ChatMessage[]) {
   if (typeof window !== "undefined") {
-    const stored = localStorage.getItem(MOCK_MSGS_KEY) || "{}";
+    const stored = localStorage.getItem(LOCAL_MSGS_KEY) || "{}";
     const map = JSON.parse(stored);
     map[convId] = msgs;
-    localStorage.setItem(MOCK_MSGS_KEY, JSON.stringify(map));
+    localStorage.setItem(LOCAL_MSGS_KEY, JSON.stringify(map));
   }
 }
 
@@ -102,7 +67,6 @@ async function apiFetch(path: string, opts: RequestInit = {}): Promise<Response>
     headers["Content-Type"] = "application/json";
   }
   
-  // Use current origin and route through proxy
   const baseUrl = typeof window !== "undefined" ? "" : API_URL;
   return fetch(`${baseUrl}/_jartosdto/api/v1${path}`, { ...opts, headers });
 }
@@ -110,14 +74,6 @@ async function apiFetch(path: string, opts: RequestInit = {}): Promise<Response>
 // ── Auth ──────────────────────────────────────────────────
 
 export async function login(email: string, password: string) {
-  if (isOfflineMode()) {
-    setToken("mock-jwt-token-jartosdto");
-    return {
-      access_token: "mock-jwt-token-jartosdto",
-      token_type: "bearer",
-      user: { id: "offline-user", email, display_name: email.split("@")[0], role: "admin" },
-    };
-  }
   const res = await apiFetch("/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
@@ -129,14 +85,6 @@ export async function login(email: string, password: string) {
 }
 
 export async function register(email: string, password: string, displayName?: string) {
-  if (isOfflineMode()) {
-    setToken("mock-jwt-token-jartosdto");
-    return {
-      access_token: "mock-jwt-token-jartosdto",
-      token_type: "bearer",
-      user: { id: "offline-user", email, display_name: displayName || email.split("@")[0], role: "admin" },
-    };
-  }
   const res = await apiFetch("/auth/register", {
     method: "POST",
     body: JSON.stringify({ email, password, display_name: displayName }),
@@ -148,14 +96,6 @@ export async function register(email: string, password: string, displayName?: st
 }
 
 export async function getMe() {
-  if (isOfflineMode()) {
-    return {
-      id: "offline-user",
-      email: "offline-local@msbross.me",
-      display_name: "Orquestador MSBross",
-      role: "admin",
-    };
-  }
   const res = await apiFetch("/auth/me");
   if (!res.ok) throw new Error("Not authenticated");
   return res.json();
@@ -164,78 +104,44 @@ export async function getMe() {
 // ── Conversations ─────────────────────────────────────────
 
 export async function getConversations() {
-  if (isOfflineMode()) {
-    return getMockConversations();
-  }
-  const res = await apiFetch("/conversations/");
-  return res.json();
+  return getConversationsLocal();
 }
 
 export async function getMessages(convId: string) {
-  if (isOfflineMode()) {
-    return getMockMessages(convId);
-  }
-  const res = await apiFetch(`/conversations/${convId}/messages`);
-  return res.json();
+  return getMessagesLocal(convId);
 }
 
 export async function deleteConversation(convId: string) {
-  if (isOfflineMode()) {
-    const convs = getMockConversations().filter(c => c.id !== convId);
-    saveMockConversations(convs);
-    
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(MOCK_MSGS_KEY) || "{}";
-      const map = JSON.parse(stored);
-      delete map[convId];
-      localStorage.setItem(MOCK_MSGS_KEY, JSON.stringify(map));
-    }
-    return;
+  const convs = getConversationsLocal().filter(c => c.id !== convId);
+  saveConversationsLocal(convs);
+  
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem(LOCAL_MSGS_KEY) || "{}";
+    const map = JSON.parse(stored);
+    delete map[convId];
+    localStorage.setItem(LOCAL_MSGS_KEY, JSON.stringify(map));
   }
-  await apiFetch(`/conversations/${convId}`, { method: "DELETE" });
 }
 
 // ── Models ────────────────────────────────────────────────
 
 export async function getModels(): Promise<ModelInfo[]> {
   const keys = useApiStore.getState().keys;
-  const customModels: ModelInfo[] = [];
-
   let serverModels: ModelInfo[] = [];
-  if (isOfflineMode()) {
-    serverModels = [
-      { id: "gpt-4o", provider: "openai", display_name: "GPT-4o (Acceso Rápido)", is_vision: true, is_thinking: false },
-      { id: "claude-3-5-sonnet", provider: "anthropic", display_name: "Claude 3.5 Sonnet", is_vision: true, is_thinking: false },
-      { id: "deepseek-reasoner", provider: "deepseek", display_name: "DeepSeek R1 (Razonamiento)", is_vision: false, is_thinking: true },
-    ];
-  } else {
-    try {
-      const res = await apiFetch("/models/", {
-        headers: {
-          "x-custom-api-keys": JSON.stringify(keys)
-        }
-      });
-      serverModels = await res.json();
-    } catch { }
-  }
-  return [...customModels, ...serverModels];
+  try {
+    const res = await apiFetch("/models/", {
+      headers: {
+        "x-custom-api-keys": JSON.stringify(keys)
+      }
+    });
+    serverModels = await res.json();
+  } catch { }
+  return serverModels;
 }
 
 // ── Agents ────────────────────────────────────────────────
 
 export async function getAgents(): Promise<Agent[]> {
-  if (isOfflineMode()) {
-    return [
-      {
-        id: "orchestrator",
-        name: "Inteligencia Central",
-        description: "Cerebro supremo y orquestador del ecosistema.",
-        system_prompt: "Eres la Inteligencia Central Orquestadora (Godmode).",
-        tools: ["webSearch", "executeCode"],
-        is_public: true,
-      },
-    ];
-  }
   const res = await apiFetch("/agents/");
   return res.json();
 }
@@ -243,14 +149,6 @@ export async function getAgents(): Promise<Agent[]> {
 // ── Documents ─────────────────────────────────────────────
 
 export async function uploadDocument(file: File) {
-  if (isOfflineMode()) {
-    return {
-      name: file.name,
-      type: file.type,
-      url: "#",
-      size: file.size,
-    };
-  }
   const form = new FormData();
   form.append("file", file);
   const res = await apiFetch("/documents/upload", { method: "POST", body: form });
@@ -260,12 +158,6 @@ export async function uploadDocument(file: File) {
 // ── Search ────────────────────────────────────────────────
 
 export async function webSearch(query: string) {
-  if (isOfflineMode()) {
-    return [
-      { title: "MSBross Ecosistema", url: "https://msbross.me", snippet: "Plataforma unificada que hospeda y ejecuta las 20 aplicaciones y herramientas inteligentes de MSBross.", relevance_score: 0.98 },
-      { title: "JartosDTo Docs", url: "https://msbross.me/jartosdto/", snippet: "Guía oficial de integración RAG y APIs conversacionales en iOS nativo.", relevance_score: 0.91 }
-    ];
-  }
   const res = await apiFetch("/search/web", {
     method: "POST",
     body: JSON.stringify({ query }),
@@ -276,12 +168,6 @@ export async function webSearch(query: string) {
 // ── Sandbox ───────────────────────────────────────────────
 
 export async function executeCode(code: string, language = "python") {
-  if (isOfflineMode()) {
-    return {
-      success: true,
-      output: `Python Local Sandbox [MSBross Kernel v2026]:\n---------------------------------------\n>> Compiling standard execution pipeline...\n>> Run complete. Return Code: 0\n>> Output:\n   Ejecutando de forma simulada en entorno de pruebas local.\n   Resultado analítico: Éxito total. Código compilado correctamente.`,
-    };
-  }
   const res = await apiFetch("/sandbox/execute", {
     method: "POST",
     body: JSON.stringify({ code, language }),
@@ -292,21 +178,13 @@ export async function executeCode(code: string, language = "python") {
 // ── Admin ─────────────────────────────────────────────────
 
 export async function getAdminStats() {
-  if (isOfflineMode()) {
-    return {
-      active_users: 20,
-      total_messages: 5800,
-      api_calls_count: 14200,
-      tokens_used: 12080000,
-    };
-  }
   const res = await apiFetch("/admin/stats");
   return res.json();
 }
 
 // ── Streaming Chat ────────────────────────────────────────
 
-export function streamChat(body: {
+export async function streamChat(body: {
   model: string;
   messages: { role: string; content: string }[];
   conversation_id?: string;
@@ -314,108 +192,38 @@ export function streamChat(body: {
   temperature?: number;
   max_tokens?: number;
 }) {
-  if (isOfflineMode()) {
-    const encoder = new TextEncoder();
-    const targetConvId = body.conversation_id || `conv-${Date.now()}`;
-    const userQuery = body.messages[body.messages.length - 1]?.content || "";
-
-    // If new conversation, create it
-    if (!body.conversation_id) {
-      const convs = getMockConversations();
-      convs.unshift({
-        id: targetConvId,
-        title: userQuery.length > 25 ? userQuery.slice(0, 25) + "..." : userQuery || "Nueva conversación",
-        model_id: body.model,
-        created_at: new Date().toISOString(),
-        message_count: 2,
-      });
-      saveMockConversations(convs);
-    }
-
-    // Save user query
-    const existingMsgs = getMockMessages(targetConvId);
-    existingMsgs.push({
-      id: `m-user-${Date.now()}`,
-      role: "user",
-      content: userQuery,
-      created_at: new Date().toISOString(),
-    });
-    saveMockMessages(targetConvId, existingMsgs);
-
-    const stream = new ReadableStream({
-      async start(controller) {
-        // Step 1: Send Meta chunk to map conversation ID
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ type: "meta", conversation_id: targetConvId })}\n\n`)
-        );
-        await new Promise(r => setTimeout(r, 100));
-
-        // Step 2: Send simulated deep thinking phase
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ type: "thinking", content: "Analizando la intención conversacional del usuario...\n" })}\n\n`)
-        );
-        await new Promise(r => setTimeout(r, 600));
-
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ type: "thinking", content: "Extrayendo contextos del almacén local y preparando la síntesis...\n" })}\n\n`)
-        );
-        await new Promise(r => setTimeout(r, 600));
-
-        // Step 3: Stream main response text
-        const responseText = `¡Saludos, colega! Esta respuesta es generada de forma 100% dinámica en modo offline local client-side. JartosDTo está perfectamente optimizado para un rendimiento de latencia ultrabaja en static exports.\n\nHe recibido tu mensaje:\n> "${userQuery}"\n\nToda la funcionalidad del ecosistema MSBrossAI está simulada localmente y lista para su despliegue definitivo.`;
-        
-        const words = responseText.split(" ");
-        let fullGeneratedText = "";
-        
-        for (const word of words) {
-          const textChunk = word + " ";
-          fullGeneratedText += textChunk;
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({ type: "text", content: textChunk })}\n\n`)
-          );
-          await new Promise(r => setTimeout(r, 35));
-        }
-
-        // Step 4: Stream mock sources if web search enabled
-        if (body.web_search) {
-          const sources: Source[] = [
-            {
-              title: "MSBross Portal Central",
-              url: "https://msbross.me",
-              snippet: "Directorio global del ecosistema digital unificado de MSBross.",
-              relevance_score: 0.99,
-            },
-          ];
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({ type: "sources", sources })}\n\n`)
-          );
-        }
-
-        // Save assistant message to mock DB
-        const finalMsgs = getMockMessages(targetConvId);
-        finalMsgs.push({
-          id: `m-assistant-${Date.now()}`,
-          role: "assistant",
-          content: fullGeneratedText,
-          created_at: new Date().toISOString(),
-          model_id: body.model,
-        });
-        saveMockMessages(targetConvId, finalMsgs);
-
-        // Close stream
-        controller.close();
-      },
-    });
-
-    return new Response(stream, {
-      headers: { "Content-Type": "text/event-stream" },
-    });
-  }
-
   const t = getToken();
   const keys = useApiStore.getState().keys;
   const baseUrl = typeof window !== "undefined" ? "" : API_URL;
-  return fetch(`${baseUrl}/_jartosdto/api/v1/chat/completions`, {
+
+  const targetConvId = body.conversation_id || `conv-${Date.now()}`;
+  const userQuery = body.messages[body.messages.length - 1]?.content || "";
+
+  // 1. Save conversation if new
+  if (!body.conversation_id) {
+    const convs = getConversationsLocal();
+    convs.unshift({
+      id: targetConvId,
+      title: userQuery.length > 25 ? userQuery.slice(0, 25) + "..." : userQuery || "Nueva conversación",
+      model_id: body.model,
+      created_at: new Date().toISOString(),
+      message_count: 2,
+    });
+    saveConversationsLocal(convs);
+  }
+
+  // 2. Save User Message
+  const existingMsgs = getMessagesLocal(targetConvId);
+  existingMsgs.push({
+    id: `m-user-${Date.now()}`,
+    role: "user",
+    content: userQuery,
+    created_at: new Date().toISOString(),
+  });
+  saveMessagesLocal(targetConvId, existingMsgs);
+
+  // 3. Fetch from backend
+  const res = await fetch(`${baseUrl}/_jartosdto/api/v1/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -423,5 +231,64 @@ export function streamChat(body: {
       ...(t ? { Authorization: `Bearer ${t}` } : {}),
     },
     body: JSON.stringify({ ...body, stream: true }),
+  });
+
+  if (!res.body) return res;
+
+  // 4. Intercept stream to save Assistant Message
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
+  let fullText = "";
+  let fullThinking = "";
+  let sources: Source[] = [];
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      if (!body.conversation_id) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "meta", conversation_id: targetConvId })}\n\n`));
+      }
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        // Pass chunk directly to frontend
+        controller.enqueue(value);
+        
+        // Accumulate data for saving
+        const chunkStr = decoder.decode(value, { stream: true });
+        const lines = chunkStr.split("\n").filter(l => l.trim());
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.type === "text" && data.content) fullText += data.content;
+              else if (data.type === "thinking" && data.content) fullThinking += data.content;
+              else if (data.type === "sources" && data.sources) sources = data.sources;
+            } catch (e) { }
+          }
+        }
+      }
+      
+      // Save Assistant Message
+      const msgs = getMessagesLocal(targetConvId);
+      msgs.push({
+        id: `m-assistant-${Date.now()}`,
+        role: "assistant",
+        content: fullText,
+        thinking: fullThinking || undefined,
+        sources: sources.length > 0 ? sources : undefined,
+        created_at: new Date().toISOString(),
+        model_id: body.model,
+      });
+      saveMessagesLocal(targetConvId, msgs);
+      
+      controller.close();
+    }
+  });
+
+  return new Response(stream, {
+    headers: { "Content-Type": "text/event-stream" }
   });
 }
