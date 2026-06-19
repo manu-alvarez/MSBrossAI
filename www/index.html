@@ -175,6 +175,45 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+
+/* ═══ CUSTOM CURSOR ═══ */
+@media(pointer: fine){ body { cursor: none; } a, button, .hero-logo, input { cursor: none; } }
+.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 6px; height: 6px; background: var(--accent-1); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; box-shadow: 0 0 10px var(--accent-1); display: none; }
+.cursor-trail { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; width: 34px; height: 34px; border: 1.5px solid rgba(139,92,246,0.4); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; display: none; }
+@media(pointer: fine){ .custom-cursor, .cursor-trail { display: block; } }
+.cursor-hover .custom-cursor { width: 0; height: 0; }
+.cursor-hover .cursor-trail { width: 54px; height: 54px; background: rgba(139,92,246,0.1); border-color: var(--accent-2); box-shadow: 0 0 20px rgba(6,182,212,0.3); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+
+/* ═══ COMMAND PALETTE ═══ */
+.cmd-palette { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.cmd-palette.active { opacity: 1; pointer-events: auto; }
+.cmd-overlay { position: absolute; inset: 0; background: rgba(3,7,18,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.cmd-modal { position: relative; width: 90%; max-width: 650px; background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.2); transform: translateY(-20px) scale(0.98); transition: transform 0.3s cubic-bezier(.16,1,.3,1); }
+.cmd-palette.active .cmd-modal { transform: translateY(0) scale(1); }
+.cmd-search-wrapper { display: flex; align-items: center; padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+.cmd-icon { font-size: 1.2rem; margin-right: 1rem; opacity: 0.5; }
+#cmd-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 1.2rem; outline: none; font-family: 'Inter', sans-serif; }
+#cmd-input::placeholder { color: var(--text-muted); }
+.cmd-laser { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, transparent, var(--accent-2), transparent); animation: laserScan 2.5s linear infinite; transform-origin: left; opacity: 0.6; }
+@keyframes laserScan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.cmd-results { max-height: 400px; overflow-y: auto; padding: 0.5rem; }
+.cmd-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; text-decoration: none; color: var(--text); transition: background 0.2s; cursor: pointer; }
+.cmd-item.selected, .cmd-item:hover { background: rgba(255,255,255,0.06); }
+.cmd-item-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; background: rgba(255,255,255,0.03); }
+.cmd-item-content { flex: 1; }
+.cmd-item-title { font-weight: 600; font-size: 1rem; }
+.cmd-item-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
+.cmd-item-badge { font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 100px; background: rgba(139,92,246,0.1); color: var(--accent-1); font-weight: 700; letter-spacing: 0.05em; border: 1px solid rgba(139,92,246,0.3); }
+
+/* ═══ HUD ═══ */
+.hero-hud { position: absolute; top: 2.5rem; left: 2.5rem; z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); pointer-events: none; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+.hud-right { left: auto; right: 2.5rem; text-align: right; }
+.hud-line { margin-bottom: 0.4rem; letter-spacing: 0.05em; opacity: 0.8; }
+.hud-line span { color: var(--text); font-weight: 700; }
+.blink { animation: hudBlink 1.5s infinite; color: var(--accent-6) !important; text-shadow: 0 0 8px var(--accent-6); }
+@keyframes hudBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@media(max-width: 768px) { .hero-hud { display: none; } }
+
 </style>
 </head>
 <body>
@@ -185,6 +224,17 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
         <img src="/assets/img/og-image.jpg" alt="MSBrossAI" class="hero-logo" id="hero-logo">
         <h1 class="hero-title">MSBrossAI</h1>
         <p class="hero-sub">Ecosistema Digital Personal</p>
+    </div>
+    <div class="hero-hud">
+        <div class="hud-line">SYS.STATUS: <span style="color:var(--accent-3)">ONLINE</span></div>
+        <div class="hud-line">NODES: <span id="hud-nodes">17/17</span></div>
+        <div class="hud-line">LATENCY: <span id="hud-ping">12</span>ms</div>
+        <div class="hud-line">UPLINK: <span id="hud-uplink">ESTABLISHED</span></div>
+    </div>
+    <div class="hero-hud hud-right">
+        <div class="hud-line">ORBITAL.SYNC: <span style="color:var(--accent-2)">LOCKED</span></div>
+        <div class="hud-line">MEM.ALLOC: <span id="hud-mem">2.4</span>GB</div>
+        <div class="hud-line">AI.CORE: <span class="blink">ACTIVE</span></div>
     </div>
     <div class="scroll-hint"><span>Explorar</span><div class="arrow"></div></div>
 </section>
@@ -200,6 +250,19 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
     </div>
     <div class="app-grid" id="app-grid"></div>
 </section>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-palette" id="cmd-palette">
+    <div class="cmd-overlay" id="cmd-overlay"></div>
+    <div class="cmd-modal">
+        <div class="cmd-search-wrapper">
+            <span class="cmd-icon">🔍</span>
+            <input type="text" id="cmd-input" placeholder="Buscar apps o tecnología (Cmd+K)" autocomplete="off">
+            <div class="cmd-laser"></div>
+        </div>
+        <div class="cmd-results" id="cmd-results"></div>
+    </div>
+</div>
 
 <footer>
     <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
@@ -506,6 +569,116 @@ fetch(apiBase+'/api/track-visit')
                 document.getElementById('visits-total').textContent='—';
             });
     });
+
+/* ═══ COMMAND PALETTE LOGIC ═══ */
+const cmdPalette = document.getElementById('cmd-palette');
+const cmdInput = document.getElementById('cmd-input');
+const cmdResults = document.getElementById('cmd-results');
+let cmdOpen = false;
+let selectedCmdIndex = 0;
+
+function renderCmdResults(query) {
+    const q = query.toLowerCase();
+    const filtered = APPS.filter(a => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.badge.toLowerCase().includes(q) || a.tech.some(t => t.toLowerCase().includes(q)));
+    
+    if(filtered.length === 0) {
+        cmdResults.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted)">No hay coincidencias.</div>`;
+        return;
+    }
+    
+    cmdResults.innerHTML = filtered.map((a, i) => `
+        <a href="${a.href}" class="cmd-item ${i===0?'selected':''}" data-index="${i}">
+            <div class="cmd-item-icon">${a.icon}</div>
+            <div class="cmd-item-content">
+                <div class="cmd-item-title">${a.name}</div>
+                <div class="cmd-item-desc">${a.desc}</div>
+            </div>
+            <div class="cmd-item-badge">${a.badge}</div>
+        </a>
+    `).join('');
+    selectedCmdIndex = 0;
+}
+
+window.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        cmdOpen = !cmdOpen;
+        if(cmdOpen) {
+            cmdPalette.classList.add('active');
+            cmdInput.value = '';
+            renderCmdResults('');
+            setTimeout(() => cmdInput.focus(), 50);
+        } else {
+            cmdPalette.classList.remove('active');
+        }
+    }
+    if (e.key === 'Escape' && cmdOpen) {
+        cmdOpen = false;
+        cmdPalette.classList.remove('active');
+    }
+    if (cmdOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+        e.preventDefault();
+        const items = cmdResults.querySelectorAll('.cmd-item');
+        if(!items.length) return;
+        items[selectedCmdIndex].classList.remove('selected');
+        if (e.key === 'ArrowDown') selectedCmdIndex = (selectedCmdIndex + 1) % items.length;
+        else selectedCmdIndex = (selectedCmdIndex - 1 + items.length) % items.length;
+        items[selectedCmdIndex].classList.add('selected');
+        items[selectedCmdIndex].scrollIntoView({block: 'nearest'});
+    }
+    if (cmdOpen && e.key === 'Enter') {
+        e.preventDefault();
+        const selected = cmdResults.querySelector('.cmd-item.selected');
+        if(selected) window.location.href = selected.href;
+    }
+});
+
+document.getElementById('cmd-overlay').addEventListener('click', () => {
+    cmdOpen = false;
+    cmdPalette.classList.remove('active');
+});
+cmdInput.addEventListener('input', e => renderCmdResults(e.target.value));
+
+/* ═══ CUSTOM CURSOR LOGIC ═══ */
+if(window.matchMedia("(pointer: fine)").matches) {
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    document.body.appendChild(cursor);
+    document.body.appendChild(trail);
+
+    let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+    let trailX = mouseX, trailY = mouseY;
+
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+        const target = e.target.closest('a, button, .hero-logo, input, .cmd-item');
+        if(target) document.body.classList.add('cursor-hover');
+        else document.body.classList.remove('cursor-hover');
+    });
+
+    function animCursor() {
+        trailX += (mouseX - trailX) * 0.15;
+        trailY += (mouseY - trailY) * 0.15;
+        trail.style.left = trailX + 'px';
+        trail.style.top = trailY + 'px';
+        requestAnimationFrame(animCursor);
+    }
+    animCursor();
+}
+
+/* ═══ HUD TELEMETRY SIMULATION ═══ */
+setInterval(() => {
+    const ping = document.getElementById('hud-ping');
+    const mem = document.getElementById('hud-mem');
+    if(ping) ping.textContent = Math.floor(10 + Math.random() * 8);
+    if(mem) mem.textContent = (2.3 + Math.random() * 0.2).toFixed(2);
+}, 2000);
+
 </script>
 </body>
 </html>
