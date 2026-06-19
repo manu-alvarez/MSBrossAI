@@ -91,7 +91,7 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
           league, leagueName: LEAGUES.find(l => l.key === league)?.name || league,
           commenceTime: event.commence_time,
           odds: {
-            home,
+            home, draw, away,
             over25: over25Price,
             under25: under25Price,
             dc1x: Math.round((1 / (1/home + 1/draw)) * 100) / 100,
