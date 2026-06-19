@@ -38,15 +38,13 @@ const LEAGUES = [
   { key: 'soccer_fifa_world_cup', name: 'Mundial de Fútbol', icon: Globe, color: 'var(--yellow)' },
   { key: 'soccer_uefa_champs_league', name: 'Champions League', icon: Trophy, color: 'var(--text)' },
   { key: 'soccer_uefa_europa_league', name: 'Europa League', icon: Trophy, color: 'var(--text)' },
-  { key: 'soccer_epl', name: 'Premier League', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_epl', name: 'Premier', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_spain_la_liga', name: 'LaLiga', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_italy_serie_a', name: 'Serie A', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_germany_bundesliga', name: 'Bundesliga', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_france_ligue_one', name: 'Ligue 1', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_netherlands_eredivisie', name: 'Eredivisie', icon: Activity, color: 'var(--text)' },
-  { key: 'soccer_portugal_primeira_liga', name: 'Liga Portugal', icon: Activity, color: 'var(--text)' },
-  { key: 'soccer_usa_mls', name: 'MLS', icon: Activity, color: 'var(--text)' },
-  { key: 'soccer_spain_copa_del_rey', name: 'Copa del Rey', icon: Trophy, color: 'var(--text)' },
+  { key: 'soccer_portugal_primeira_liga', name: 'Liga Portugal', icon: Activity, color: 'var(--text)' }
 ];
 
 const MARKETS = [
@@ -279,17 +277,17 @@ export default function App() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
           <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Competiciones</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignContent: 'flex-start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', flex: 1 }}>
               {LEAGUES.map(league => {
                 const active = selectedLeagues.includes(league.key);
                 const Icon = league.icon;
                 return (
                   <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
-                    padding: '0.6rem 1rem', background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
+                    padding: '0.75rem', background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'rgba(255,255,255,0.2)' : 'transparent'}`,
-                    borderRadius: 100, color: active ? league.color : 'var(--text-muted)',
+                    borderRadius: 12, color: active ? league.color : 'var(--text-muted)',
                     cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s',
-                    display: 'flex', alignItems: 'center', gap: '0.4rem'
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem'
                   }}>
                     <Icon size={14} /> {league.name}
                   </button>
@@ -306,6 +304,7 @@ export default function App() {
                 const Icon = market.icon;
                 return (
                   <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
+                    gridColumn: (market.key === 'auto' || market.key === 'ht') ? '1 / -1' : 'auto',
                     padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
                     borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
