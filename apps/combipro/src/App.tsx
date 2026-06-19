@@ -55,7 +55,8 @@ const MARKETS = [
   { key: 'goals', label: 'Goles (+/-)', icon: Goal },
   { key: 'btts', label: 'Ambos Marcan', icon: Flame },
   { key: 'btts_no', label: 'Ambos NO Marcan', icon: ShieldCheck },
-  { key: 'ht', label: '1ª Mitad', icon: Clock }
+  { key: 'ht', label: '1ª Mitad', icon: Clock },
+  { key: 'sh', label: '2ª Mitad', icon: Clock }
 ];
 
 const RISKS = [
@@ -98,6 +99,7 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
             btts: over25Price > 2.0 ? 2.10 : 1.75,
             bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
             over05HT: 1.35, 
+            over05SH: 1.25,
             dc1x: Math.round((1 / (1/home + 1/draw)) * 100) / 100,
             dcx2: Math.round((1 / (1/draw + 1/away)) * 100) / 100,
             dc12: Math.round((1 / (1/home + 1/away)) * 100) / 100,
@@ -139,6 +141,7 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS', selection: 'Ambos Marcan', odds: m.odds.btts, probability: calcProb(m.odds.btts) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS_NO', selection: 'Ninguno/Uno', odds: m.odds.bttsNo, probability: calcProb(m.odds.bttsNo) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1ªMitad', selection: '+0.5 Gol', odds: m.odds.over05HT, probability: calcProb(m.odds.over05HT) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '2ªMitad', selection: '+0.5 Gol', odds: m.odds.over05SH, probability: calcProb(m.odds.over05SH) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '1X', odds: m.odds.dc1x, probability: calcProb(m.odds.dc1x) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: 'X2', odds: m.odds.dcx2, probability: calcProb(m.odds.dcx2) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '12', odds: m.odds.dc12, probability: calcProb(m.odds.dc12) },
@@ -148,12 +151,13 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
   });
 
   let allowedTypes: string[] = [];
-  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', 'BTTS_NO', '1ªMitad', 'Doble Oport.', 'Sin Empate'];
+  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', 'BTTS_NO', '1ªMitad', '2ªMitad', 'Doble Oport.', 'Sin Empate'];
   else if (marketFilter === '1x2') allowedTypes = ['1X2'];
   else if (marketFilter === 'goals') allowedTypes = ['Goles'];
   else if (marketFilter === 'btts') allowedTypes = ['BTTS'];
   else if (marketFilter === 'btts_no') allowedTypes = ['BTTS_NO'];
   else if (marketFilter === 'ht') allowedTypes = ['1ªMitad'];
+  else if (marketFilter === 'sh') allowedTypes = ['2ªMitad'];
   else if (marketFilter === 'dc') allowedTypes = ['Doble Oport.'];
   else if (marketFilter === 'dnb') allowedTypes = ['Sin Empate'];
 
@@ -304,7 +308,7 @@ export default function App() {
                 const Icon = market.icon;
                 return (
                   <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
-                    gridColumn: (market.key === 'auto' || market.key === 'ht') ? '1 / -1' : 'auto',
+                    gridColumn: market.key === 'auto' ? '1 / -1' : 'auto',
                     padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
                     borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
