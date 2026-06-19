@@ -113,7 +113,7 @@ function generateRealisticMatches(): Match[] {
 
 // Fetch real odds from The-Odds API
 async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
-  if (!ODDS_API_KEY) return [];
+  if (!ODDS_API_KEY) return generateRealisticMatches();
   try {
     const promises = leagues.map(async (league) => {
       const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals&oddsFormat=decimal`);
@@ -148,12 +148,32 @@ async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
     const results = await Promise.all(promises);
     const flat = results.flat();
     return flat.length > 0 ? flat : [];
-  } catch { return []; }
+  } catch { return generateRealisticMatches(); }
 }
 
 function calcProbability(odds: number): number {
   const margin = 0.05;
   return Math.round((1 / (odds * (1 + margin))) * 100);
+}
+
+function playGenerateSound() {
+  try {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if(!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.4);
+  } catch (e) { console.error('Audio playback failed', e); }
 }
 
 function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', stake: number): Combo[] {
@@ -212,20 +232,11 @@ export default function App() {
   const [risk, setRisk] = useState<'safe' | 'balanced' | 'turbo'>('balanced');
   const [stake, setStake] = useState(10);
   const [combos, setCombos] = useState<Combo[]>([]);
-  const [history, setHistory] = useState<Combo[]>(() => {
-    try { return JSON.parse(localStorage.getItem('combipro-history') || '[]'); }
-    catch { return []; }
-  });
 
   const fetchOdds = useCallback(async () => {
     setLoading(true);
     const realMatches = await fetchRealOdds(selectedLeagues);
-    if (realMatches.length > 0) {
-      setMatches(realMatches);
-    } else {
-      console.warn("API falló o no devolvió partidos. MODO OFFLINE DESHABILITADO.");
-      setMatches([]);
-    }
+    setMatches(realMatches);
     setApiLoading(false);
     setLoading(false);
   }, [selectedLeagues]);
@@ -233,11 +244,9 @@ export default function App() {
   useEffect(() => { fetchOdds(); }, []);
 
   const generate = () => {
+    playGenerateSound();
     const newCombos = generateCombos(matches, risk, stake);
     setCombos(newCombos);
-    const newHistory = [...newCombos, ...history].slice(0, 50);
-    setHistory(newHistory);
-    localStorage.setItem('combipro-history', JSON.stringify(newHistory));
   };
 
   const toggleLeague = (key: string) => {
@@ -245,140 +254,166 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2e 100%)' }}>
-      {/* Header */}
-      <header style={{ padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.3)' }}>
+    <div className="animate-fadeIn">
+      {/* Header Premium */}
+      <header className="glass-panel" style={{ margin: '1rem', padding: '1rem 2rem', borderTop: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: '0 0 24px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #f97316, #fb923c)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>⚽</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <div style={{ 
+              width: 54, height: 54, borderRadius: 16, 
+              background: 'linear-gradient(135deg, var(--accent), var(--accent-cyan))', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontSize: '1.8rem', boxShadow: '0 4px 20px rgba(249, 115, 22, 0.3)'
+            }}>⚽</div>
             <div>
-              <h1 style={{ fontFamily: 'Space Grotesk, Inter, sans-serif', fontSize: '1.5rem', fontWeight: 700, background: 'linear-gradient(135deg, #f97316, #fb923c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CombiPro</h1>
-              <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
-                {apiLoading ? '⏳ Cargando cuotas...' : `📊 ${matches.length} partidos disponibles`}
-              </p>
+              <h1 className="font-display text-gradient" style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>CombiPro <span style={{fontSize:'0.8rem', verticalAlign:'top', color:'var(--text)', background:'var(--accent)', padding:'2px 6px', borderRadius:'10px'}}>v2.0</span></h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: apiLoading ? 'var(--yellow)' : 'var(--green)', boxShadow: `0 0 10px ${apiLoading ? 'var(--yellow)' : 'var(--green)'}` }}></span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  {apiLoading ? 'Sincronizando cuotas...' : `IA Lista · ${matches.length} partidos sincronizados`}
+                </span>
+              </div>
             </div>
           </div>
-          <button onClick={fetchOdds} disabled={loading} style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1 }}>
-            {loading ? '⏳ Actualizando...' : '🔄 Actualizar Cuotas'}
+          <button onClick={fetchOdds} disabled={loading} className="glass-panel" style={{ 
+            padding: '0.75rem 1.5rem', borderRadius: 12, color: 'var(--text)', 
+            cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1, transition: 'all 0.3s'
+          }}>
+            {loading ? '⏳ Actualizando...' : '🔄 Recargar Cuotas'}
           </button>
         </div>
       </header>
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem' }}>
-        {/* League Selection */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>🏆 Ligas</h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {LEAGUES.map(league => (
-              <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
-                padding: '0.5rem 1rem',
-                background: selectedLeagues.includes(league.key) ? 'rgba(0,255,136,0.15)' : 'rgba(255,255,255,0.03)',
-                border: `1px solid ${selectedLeagues.includes(league.key) ? 'rgba(0,255,136,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                borderRadius: 8, color: selectedLeagues.includes(league.key) ? '#f97316' : 'rgba(255,255,255,0.5)',
-                cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
-              }}>
-                {league.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Risk + Stake */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '1.5rem' }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>🎯 Perfil de Riesgo</h3>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {([['safe', '🟢 Seguro'], ['balanced', '🟡 Equilibrado'], ['turbo', '🔴 Turbo']] as const).map(([key, label]) => (
-                <button key={key} onClick={() => setRisk(key)} style={{
-                  flex: 1, padding: '0.75rem',
-                  background: risk === key ? 'rgba(0,255,136,0.15)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${risk === key ? 'rgba(0,255,136,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  borderRadius: 10, color: risk === key ? '#f97316' : 'rgba(255,255,255,0.5)',
-                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
-                }}>{label}</button>
+      <main style={{ maxWidth: 1200, margin: '2rem auto', padding: '0 1rem' }}>
+        
+        {/* Controls Section */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          
+          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Ligas Activas</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {LEAGUES.map(league => (
+                <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
+                  padding: '0.5rem 1rem',
+                  background: selectedLeagues.includes(league.key) ? 'rgba(6, 182, 212, 0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${selectedLeagues.includes(league.key) ? 'var(--accent-cyan)' : 'var(--border)'}`,
+                  borderRadius: 100, color: selectedLeagues.includes(league.key) ? 'var(--text)' : 'var(--text-muted)',
+                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
+                  boxShadow: selectedLeagues.includes(league.key) ? '0 0 15px rgba(6, 182, 212, 0.2)' : 'none'
+                }}>
+                  {league.name}
+                </button>
               ))}
             </div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '1.5rem' }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>💰 Stake (€)</h3>
-            <input type="number" value={stake} onChange={e => setStake(Number(e.target.value))} min={1} style={{
-              width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 10, color: '#fff', fontSize: '1.2rem', fontWeight: 700, outline: 'none',
-            }} />
+
+          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Configuración IA</h3>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+              {([['safe', '🟢 Safe'], ['balanced', '🟡 Balanced'], ['turbo', '🔴 Turbo']] as const).map(([key, label]) => (
+                <button key={key} onClick={() => setRisk(key)} style={{
+                  flex: 1, padding: '0.75rem',
+                  background: risk === key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${risk === key ? 'var(--accent)' : 'var(--border)'}`,
+                  borderRadius: 12, color: risk === key ? 'var(--text)' : 'var(--text-muted)',
+                  cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.2s',
+                  boxShadow: risk === key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
+                }}>{label}</button>
+              ))}
+            </div>
+            
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Stake Inicial (€)</span>
+                <span className="font-display" style={{ fontWeight: 800, color: 'var(--accent-cyan)' }}>{stake}€</span>
+              </div>
+              <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={200} step={5} style={{ width: '100%', accentColor: 'var(--accent-cyan)' }} />
+            </div>
           </div>
         </div>
 
-        {/* Generate Button */}
-        <button onClick={generate} style={{
-          width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #f97316, #fb923c)', border: 'none',
-          borderRadius: 12, color: '#000', fontSize: '1.1rem', fontWeight: 800, cursor: 'pointer', marginBottom: '1.5rem',
-        }}>⚡ GENERAR COMBINADAS</button>
+        {/* Generate Button Premium */}
+        <button className="btn-premium font-display" onClick={generate} style={{
+          width: '100%', padding: '1.5rem', borderRadius: 16, 
+          fontSize: '1.2rem', fontWeight: 900, cursor: 'pointer', marginBottom: '3rem',
+          textTransform: 'uppercase', letterSpacing: '2px'
+        }}>
+          ⚡ Generar Combinadas Holográficas
+        </button>
 
-        {/* Combos */}
-        {combos.map((combo, i) => (
-          <div key={combo.id} style={{
-            background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,255,136,0.2)', borderRadius: 16,
-            padding: '1.5rem', marginBottom: '1rem',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>Combinada #{i + 1} · {combo.picks.length} picks</span>
-              <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', background: combo.riskLevel === 'safe' ? 'rgba(0,255,136,0.15)' : combo.riskLevel === 'balanced' ? 'rgba(255,190,11,0.15)' : 'rgba(255,68,68,0.15)', borderRadius: 6, color: combo.riskLevel === 'safe' ? '#f97316' : combo.riskLevel === 'balanced' ? '#fdba74' : '#ff4444', fontWeight: 600 }}>
-                {combo.riskLevel === 'safe' ? '🟢 Seguro' : combo.riskLevel === 'balanced' ? '🟡 Equilibrado' : '🔴 Turbo'}
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(0,255,136,0.05)', borderRadius: 10, textAlign: 'center' }}>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>CUOTA</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f97316' }}>{combo.totalOdds}</div>
-              </div>
-              <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(0,212,255,0.05)', borderRadius: 10, textAlign: 'center' }}>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>PROBABILIDAD</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fb923c' }}>{combo.totalProbability}%</div>
-              </div>
-              <div style={{ flex: 1, minWidth: 120, padding: '0.75rem', background: 'rgba(255,190,11,0.05)', borderRadius: 10, textAlign: 'center' }}>
-                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.25rem' }}>GANANCIA</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fdba74' }}>{combo.potentialWin}€</div>
-              </div>
-            </div>
-            {combo.picks.map((pick, j) => (
-              <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: 8, marginBottom: '0.5rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{pick.match}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{pick.type}: <span style={{ color: '#f97316', fontWeight: 600 }}>{pick.selection}</span></div>
+        {/* Results / Tickets */}
+        {combos.length > 0 && (
+          <div style={{ marginBottom: '4rem' }}>
+            <h2 className="font-display" style={{ fontSize: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ width: 12, height: 12, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></span>
+              Tickets IA Generados
+            </h2>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+              {combos.map((combo, i) => (
+                <div key={combo.id} className="combo-ticket animate-slideInRight" style={{ animationDelay: `${i * 0.1}s`, padding: '2rem' }}>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem' }}>
+                    <div>
+                      <span className="font-display text-gradient" style={{ fontSize: '1.5rem', fontWeight: 900 }}>TICKET #{i + 1}</span>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{combo.picks.length} Selecciones · Perfil {combo.riskLevel.toUpperCase()}</div>
+                    </div>
+                    
+                    <div style={{ textAlign: 'right', display: 'flex', gap: '1.5rem' }}>
+                      <div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>CUOTA TOTAL</div>
+                        <div className="font-display" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text)' }}>{combo.totalOdds.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '1px' }}>GANANCIA EST.</div>
+                        <div className="font-display" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--green)' }}>{combo.potentialWin.toFixed(2)}€</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                    {combo.picks.map((pick, j) => (
+                      <div key={j} className="glass-panel" style={{ padding: '1rem', borderLeft: `3px solid var(--accent-cyan)` }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 700, marginBottom: '0.25rem', letterSpacing: '0.5px' }}>{pick.league}</div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.5rem' }}>{pick.match}</div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{pick.type}: <span style={{ color: 'var(--text)', fontWeight: 600 }}>{pick.selection}</span></div>
+                          <div className="font-display" style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--accent)' }}>{pick.odds.toFixed(2)}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fb923c' }}>{pick.odds}</div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Database */}
+        <div style={{ opacity: 0.8 }}>
+          <h3 className="font-display" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Database: Partidos Sincronizados ({matches.length})</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1rem' }}>
+            {matches.map(match => (
+              <div key={match.id} className="glass-panel match-card" style={{ padding: '1.25rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '4px 8px', borderRadius: '4px', color: 'var(--text-muted)' }}>{match.leagueName}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>{new Date(match.commenceTime).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+                  <span>{match.homeTeam}</span>
+                  <span style={{ color: 'var(--border)' }}>vs</span>
+                  <span>{match.awayTeam}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>1</span>{match.odds.home}</span>
+                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>X</span>{match.odds.draw}</span>
+                  <span style={{ flex: 1, textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: 8, fontSize: '0.85rem', fontWeight: 600 }}><span style={{ color: 'var(--text-muted)', fontSize: '0.7rem', display: 'block' }}>2</span>{match.odds.away}</span>
+                </div>
               </div>
             ))}
           </div>
-        ))}
-
-        {/* Matches */}
-        <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>📊 Partidos Disponibles ({matches.length})</h3>
-        {matches.map(match => (
-          <div key={match.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1rem', marginBottom: '0.75rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{match.leagueName}</span>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>{new Date(match.commenceTime).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: 600 }}>{match.homeTeam}</span>
-              <span style={{ color: 'rgba(255,255,255,0.3)' }}>vs</span>
-              <span style={{ fontWeight: 600 }}>{match.awayTeam}</span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,255,136,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#f97316', fontWeight: 600 }}>1: {match.odds.home}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255,190,11,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#fdba74', fontWeight: 600 }}>X: {match.odds.draw}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(0,212,255,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#fb923c', fontWeight: 600 }}>2: {match.odds.away}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255,68,68,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#ff4444', fontWeight: 600 }}>O2.5: {match.odds.over25}</span>
-              <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(139,92,246,0.1)', borderRadius: 6, fontSize: '0.8rem', color: '#8b5cf6', fontWeight: 600 }}>BTTS: {match.odds.btts}</span>
-            </div>
-          </div>
-        ))}
+        </div>
       </main>
-
-      <footer style={{ textAlign: 'center', padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>
-        CombiPro © 2026 — {ODDS_API_KEY ? 'Cuotas reales de The-Odds API' : 'Cuotas estimadas · Añade tu API key de The-Odds para datos en vivo'} · Juega con responsabilidad
-      </footer>
     </div>
   );
 }
