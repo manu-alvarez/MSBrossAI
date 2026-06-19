@@ -43,7 +43,20 @@ const LEAGUES = [
   { key: 'soccer_france_ligue_one', name: '🇫🇷 Ligue 1', icon: '🇫🇷' },
 ];
 
-// Fetch real odds from The-Odds API
+const MARKETS = [
+  { key: 'auto', label: '🤖 Todo (Automático)' },
+  { key: '1x2', label: '📊 1X2 (Resultado)' },
+  { key: 'goals', label: '⚽ Goles (+/-)' },
+  { key: 'btts', label: '🔥 Ambos Marcan' },
+  { key: 'ht', label: '⏱️ 1ª Mitad' }
+];
+
+const RISKS = [
+  { key: 'safe', label: '🟢 Bajo Riesgo (Seguro)' },
+  { key: 'balanced', label: '🟡 Riesgo Medio' },
+  { key: 'turbo', label: '🔴 Alto Riesgo' }
+];
+
 async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]> {
   if (!apiKey) return [];
   try {
@@ -75,7 +88,7 @@ async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]
             under25: under25Price,
             btts: over25Price > 2.0 ? 2.10 : 1.75,
             bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
-            over05HT: 1.35, // Est. value since API might lack first half totals
+            over05HT: 1.35, 
           },
         };
       }).filter((m: Match) => m.odds.home && m.odds.draw && m.odds.away);
@@ -114,7 +127,7 @@ function playGenerateSound() {
   } catch (e) { console.error('Audio playback failed', e); }
 }
 
-function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', stake: number): Combo[] {
+function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', stake: number, marketFilter: string): Combo[] {
   const allPicks: Pick[] = [];
   matches.forEach(match => {
     allPicks.push(
@@ -128,12 +141,21 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
     );
   });
 
-  let minProb: number, minPicks: number, maxPicks: number;
-  if (risk === 'safe') { minProb = 55; minPicks = 3; maxPicks = 4; }
-  else if (risk === 'balanced') { minProb = 35; minPicks = 4; maxPicks = 6; }
-  else { minProb = 20; minPicks = 6; maxPicks = 8; }
+  let allowedTypes: string[] = [];
+  if (marketFilter === 'auto') allowedTypes = ['Resultado', 'Goles', 'BTTS', '1ª Mitad'];
+  else if (marketFilter === '1x2') allowedTypes = ['Resultado'];
+  else if (marketFilter === 'goals') allowedTypes = ['Goles'];
+  else if (marketFilter === 'btts') allowedTypes = ['BTTS'];
+  else if (marketFilter === 'ht') allowedTypes = ['1ª Mitad'];
 
-  const filtered = allPicks.filter(p => p.probability >= minProb);
+  const filteredByMarket = allPicks.filter(p => allowedTypes.includes(p.type));
+
+  let minProb: number, minPicks: number, maxPicks: number;
+  if (risk === 'safe') { minProb = 55; minPicks = 2; maxPicks = 3; }
+  else if (risk === 'balanced') { minProb = 35; minPicks = 3; maxPicks = 5; }
+  else { minProb = 20; minPicks = 4; maxPicks = 7; }
+
+  const filtered = filteredByMarket.filter(p => p.probability >= minProb);
   const combos: Combo[] = [];
 
   for (let i = 0; i < 5; i++) {
@@ -147,7 +169,7 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
         uniquePicks.push(pick);
       }
     }
-    if (uniquePicks.length >= 2) {
+    if (uniquePicks.length >= 1) { // Permite apostar a 1 solo si no hay más
       const totalOdds = uniquePicks.reduce((acc, p) => acc * p.odds, 1);
       const totalProb = uniquePicks.reduce((acc, p) => acc * (p.probability / 100), 1) * 100;
       combos.push({
@@ -170,8 +192,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [apiLoading, setApiLoading] = useState(false);
   const [selectedLeagues, setSelectedLeagues] = useState<string[]>(LEAGUES.map(l => l.key));
+  
+  // UX Refactor States
   const [risk, setRisk] = useState<'safe' | 'balanced' | 'turbo'>('balanced');
   const [stake, setStake] = useState(10);
+  const [selectedMarket, setSelectedMarket] = useState<string>('auto');
+  
   const [combos, setCombos] = useState<Combo[]>([]);
 
   const fetchOdds = useCallback(async () => {
@@ -205,7 +231,7 @@ export default function App() {
   const generate = () => {
     if (matches.length === 0) return;
     playGenerateSound();
-    const newCombos = generateCombos(matches, risk, stake);
+    const newCombos = generateCombos(matches, risk, stake, selectedMarket);
     setCombos(newCombos);
   };
 
@@ -273,12 +299,14 @@ export default function App() {
             }}>
               {loading ? '⏳ Actualizando...' : '🔄 Recargar Cuotas'}
             </button>
-            <button onClick={removeApiKey} className="glass-panel" style={{ 
-              padding: '0.75rem 1rem', borderRadius: 12, color: 'var(--red)', borderColor: 'rgba(239, 68, 68, 0.3)',
-              cursor: 'pointer', transition: 'all 0.3s'
-            }} title="Desconectar API">
-              Desconectar
-            </button>
+            {!((import.meta as any).env.VITE_ODDS_API_KEY) && (
+              <button onClick={removeApiKey} className="glass-panel" style={{ 
+                padding: '0.75rem 1rem', borderRadius: 12, color: 'var(--red)', borderColor: 'rgba(239, 68, 68, 0.3)',
+                cursor: 'pointer', transition: 'all 0.3s'
+              }} title="Desconectar API">
+                Desconectar
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -286,19 +314,19 @@ export default function App() {
       <main style={{ maxWidth: 1200, margin: '2rem auto', padding: '0 1rem' }}>
         
         {/* Controls Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
           
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Ligas Activas</h3>
+            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Ligas</h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
               {LEAGUES.map(league => (
                 <button key={league.key} onClick={() => toggleLeague(league.key)} style={{
                   padding: '0.5rem 1rem',
-                  background: selectedLeagues.includes(league.key) ? 'rgba(6, 182, 212, 0.1)' : 'rgba(255,255,255,0.02)',
+                  background: selectedLeagues.includes(league.key) ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
                   border: `1px solid ${selectedLeagues.includes(league.key) ? 'var(--accent-cyan)' : 'var(--border)'}`,
                   borderRadius: 100, color: selectedLeagues.includes(league.key) ? (league.key === 'soccer_fifa_world_cup' ? 'var(--yellow)' : 'var(--text)') : 'var(--text-muted)',
                   cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
-                  boxShadow: selectedLeagues.includes(league.key) ? '0 0 15px rgba(6, 182, 212, 0.2)' : 'none'
+                  boxShadow: selectedLeagues.includes(league.key) ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
                 }}>
                   {league.name}
                 </button>
@@ -307,26 +335,45 @@ export default function App() {
           </div>
 
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Configuración IA</h3>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-              {([['safe', '🟢 Safe'], ['balanced', '🟡 Balanced'], ['turbo', '🔴 Turbo']] as const).map(([key, label]) => (
-                <button key={key} onClick={() => setRisk(key)} style={{
-                  flex: 1, padding: '0.75rem',
-                  background: risk === key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${risk === key ? 'var(--accent)' : 'var(--border)'}`,
-                  borderRadius: 12, color: risk === key ? 'var(--text)' : 'var(--text-muted)',
+            <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {MARKETS.map(market => (
+                <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
+                  flex: market.key === 'auto' ? '100%' : '1', minWidth: '120px', padding: '0.75rem',
+                  background: selectedMarket === market.key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${selectedMarket === market.key ? 'var(--accent)' : 'var(--border)'}`,
+                  borderRadius: 12, color: selectedMarket === market.key ? 'var(--text)' : 'var(--text-muted)',
                   cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.2s',
-                  boxShadow: risk === key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
-                }}>{label}</button>
+                  boxShadow: selectedMarket === market.key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
+                }}>{market.label}</button>
               ))}
             </div>
-            
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Stake Inicial (€)</span>
-                <span className="font-display" style={{ fontWeight: 800, color: 'var(--accent-cyan)' }}>{stake}€</span>
+          </div>
+
+          <div className="glass-panel" style={{ padding: '1.5rem', gridColumn: '1 / -1' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center' }}>
+              <div style={{ flex: 2, minWidth: '300px' }}>
+                <h3 className="font-display" style={{ fontSize: '0.9rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem' }}>Estrategia de Apuesta</h3>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {RISKS.map(r => (
+                    <button key={r.key} onClick={() => setRisk(r.key as any)} style={{
+                      flex: 1, padding: '0.75rem',
+                      background: risk === r.key ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${risk === r.key ? 'var(--accent)' : 'var(--border)'}`,
+                      borderRadius: 12, color: risk === r.key ? 'var(--text)' : 'var(--text-muted)',
+                      cursor: 'pointer', fontSize: '0.85rem', fontWeight: 700, transition: 'all 0.2s',
+                      boxShadow: risk === r.key ? '0 0 15px rgba(249, 115, 22, 0.2)' : 'none'
+                    }}>{r.label}</button>
+                  ))}
+                </div>
               </div>
-              <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={200} step={5} style={{ width: '100%', accentColor: 'var(--accent-cyan)' }} />
+              <div style={{ flex: 1, minWidth: '200px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Stake Inicial</span>
+                  <span className="font-display" style={{ fontWeight: 800, color: 'var(--accent-cyan)' }}>{stake}€</span>
+                </div>
+                <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={200} step={5} style={{ width: '100%', accentColor: 'var(--accent-cyan)' }} />
+              </div>
             </div>
           </div>
         </div>
@@ -345,11 +392,17 @@ export default function App() {
           <div style={{ marginBottom: '4rem' }}>
             <h2 className="font-display" style={{ fontSize: '1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <span style={{ width: 12, height: 12, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></span>
-              Tickets IA Generados
+              Tickets Generados
             </h2>
             
+            {combos.filter(c => c.picks.length > 0).length === 0 && (
+              <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                No se han encontrado combinadas que cumplan con la Estrategia y el Filtro de Mercados actual. Prueba a seleccionar más mercados o bajar el riesgo.
+              </div>
+            )}
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-              {combos.map((combo, i) => (
+              {combos.filter(c => c.picks.length > 0).map((combo, i) => (
                 <div key={combo.id} className="combo-ticket animate-slideInRight" style={{ animationDelay: `${i * 0.1}s`, padding: '2rem' }}>
                   
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem' }}>
