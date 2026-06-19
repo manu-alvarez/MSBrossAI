@@ -242,7 +242,7 @@ export default function App() {
             <Activity color="white" size={24} />
           </div>
           <div>
-            <h1 className="font-display text-gradient" style={{ fontSize: '1.8rem', fontWeight: 900, lineHeight: 1.1 }}>CombiPro <span style={{ fontSize:'0.7rem', verticalAlign:'top', background:'var(--accent)', color:'white', padding:'2px 6px', borderRadius:'100px', fontWeight: 800 }}>ULTRA</span></h1>
+            <h1 className="font-display text-gradient" style={{ fontSize: '1.8rem', fontWeight: 900, lineHeight: 1.1 }}>CombiPro</h1>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '4px' }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: loading ? 'var(--yellow)' : 'var(--green)', boxShadow: `0 0 10px ${loading ? 'var(--yellow)' : 'var(--green)'}` }} />
               {loading ? 'Sincronizando...' : `${matches.length} partidos mapeados`}
@@ -340,7 +340,7 @@ export default function App() {
         <motion.button variants={itemVariants} whileHover={{ scale: matches.length > 0 ? 1.02 : 1 }} whileTap={{ scale: matches.length > 0 ? 0.98 : 1 }} 
           className="btn-premium font-display" onClick={generate} disabled={matches.length === 0} 
           style={{ width: '100%', padding: '1.5rem', borderRadius: 20, fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '3rem' }}>
-          ⚡ Generar Inteligencia Combinada
+          ⚡ Generar Combinadas
         </motion.button>
 
         {/* Results */}

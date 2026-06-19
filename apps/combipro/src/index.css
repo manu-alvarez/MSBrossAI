@@ -93,7 +93,7 @@ body {
 
 /* --- Typography --- */
 .text-gradient {
-  background: linear-gradient(135deg, #fff, var(--accent));
+  background: linear-gradient(135deg, #fb923c, #ea580c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -102,26 +102,28 @@ body {
 /* --- Buttons & Inputs --- */
 .btn-premium {
   position: relative;
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  border: none;
-  color: white;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.1);
 }
 
 .btn-premium::before {
   content: '';
   position: absolute;
   top: 0; left: -100%; width: 50%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.1), transparent);
   transform: skewX(-20deg);
   transition: all 0.5s ease;
 }
 
 .btn-premium:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+  color: #fff;
 }
 
 .btn-premium:hover::before {
