@@ -58,7 +58,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 #wormhole-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity .3s}
 
 /* ═══ PORTAL SPACER ═══ */
-.portal-spacer{height:100vh;position:relative;z-index:0}
+.portal-spacer{height:30vh;position:relative;z-index:0}
 
 /* ═══ APPS ═══ */
 .apps-container{position:relative;z-index:5;max-width:1400px;width:100%;padding:6rem 2rem 4rem;margin:0 auto}
@@ -168,7 +168,7 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
     .hero-title{font-size:2.2rem}
     .app-grid{grid-template-columns:1fr}
     .apps-container{padding:3rem 1rem}
-    .portal-spacer{height:80vh}
+    .portal-spacer{height:20vh}
     .section-header h2{font-size:1.8rem}
 }
 ::-webkit-scrollbar{width:8px}
@@ -544,14 +544,14 @@ function onScroll(){
     const scrollY=window.scrollY;
     const vh=window.innerHeight;
 
-    // Phase 1: Hero fade (0 → 1vh)
-    const heroFade=Math.min(1,scrollY/vh);
-    heroEl.style.opacity=Math.max(0,1-heroFade*1.5);
+    // Phase 1: Hero fade (0 → 0.5vh)
+    const heroFade=Math.min(1,scrollY/(vh*0.5));
+    heroEl.style.opacity=Math.max(0,1-heroFade*2);
     heroEl.style.transform=`scale(${1-heroFade*.2})`;
 
     // Phase 2: Wormhole continuo (empieza antes y se queda fijo)
-    const wormStart=vh*.3;
-    const wormFull=vh*.8;
+    const wormStart=vh*.1;
+    const wormFull=vh*.4;
     if(scrollY>=wormStart){
         wormholeProgress=Math.min(1,(scrollY-wormStart)/(wormFull-wormStart));
         wc.style.opacity=Math.min(1,(scrollY-wormStart)/(vh*.3));
