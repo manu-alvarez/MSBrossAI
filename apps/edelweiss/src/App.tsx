@@ -585,7 +585,7 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #02040a 0%, #0f172a 50%, #02040a 100%)', color: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #09090b 100%)', color: '#f4f4f5' }}>
       {/* Header */}
       <header style={{
         padding: '1rem 2rem',
@@ -600,15 +600,15 @@ export default function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{
             width: 50, height: 50, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #f97316, #ea580c)',
+            background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1.5rem',
-            boxShadow: '0 0 15px rgba(234, 88, 12, 0.5)',
+            boxShadow: '0 0 15px rgba(236, 72, 153, 0.5)',
           }}>
             👁️
           </div>
           <div>
-            <h1 style={{ fontFamily: 'Fredoka One', fontSize: '1.5rem', color: '#f97316' }}>
+            <h1 style={{ fontFamily: 'Fredoka One', fontSize: '1.5rem', color: '#f9a8d4' }}>
               Edelweiss
             </h1>
             <p style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Juegos para mis ojitos ✨</p>
@@ -617,10 +617,10 @@ export default function App() {
         {selectedGame && (
           <button onClick={() => setSelectedGame(null)} style={{
             padding: '0.5rem 1rem',
-            background: 'rgba(234, 88, 12, 0.1)',
-            border: '1px solid rgba(234, 88, 12, 0.3)',
+            background: 'rgba(244, 114, 182, 0.1)',
+            border: '1px solid rgba(244, 114, 182, 0.3)',
             borderRadius: '10px',
-            color: '#ea580c',
+            color: '#f472b6',
             fontWeight: 700,
             cursor: 'pointer',
             fontSize: '0.9rem',
