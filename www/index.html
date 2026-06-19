@@ -205,14 +205,37 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
 .cmd-item-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
 .cmd-item-badge { font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 100px; background: rgba(139,92,246,0.1); color: var(--accent-1); font-weight: 700; letter-spacing: 0.05em; border: 1px solid rgba(139,92,246,0.3); }
 
-/* ═══ HUD ═══ */
-.hero-hud { position: absolute; top: 2.5rem; left: 2.5rem; z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); pointer-events: none; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
-.hud-right { left: auto; right: 2.5rem; text-align: right; }
-.hud-line { margin-bottom: 0.4rem; letter-spacing: 0.05em; opacity: 0.8; }
-.hud-line span { color: var(--text); font-weight: 700; }
-.blink { animation: hudBlink 1.5s infinite; color: var(--accent-6) !important; text-shadow: 0 0 8px var(--accent-6); }
-@keyframes hudBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-@media(max-width: 768px) { .hero-hud { display: none; } }
+
+
+/* ═══ AUDIO UI TOGGLE ═══ */
+.audio-toggle { position: absolute; top: 2.5rem; right: 2.5rem; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.3s; backdrop-filter: blur(10px); }
+.audio-toggle:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: scale(1.1); box-shadow: 0 0 20px rgba(139,92,246,0.3); }
+
+/* ═══ CARD GLITCH & PARALLAX HOVER ═══ */
+.app-card { transform-style: preserve-3d; }
+.card-inner { transform-style: preserve-3d; transition: transform 0.3s cubic-bezier(.16,1,.3,1); }
+.app-card:hover .card-inner { transform: translateZ(20px); }
+.app-card:hover .card-header { transform: translateZ(30px); transition: transform 0.3s; }
+.app-card:hover .card-icon { transform: translateZ(40px) scale(1.1); transition: transform 0.3s; }
+.app-card:hover .card-desc { transform: translateZ(20px); transition: transform 0.3s; }
+.app-card:hover .card-footer { transform: translateZ(25px); transition: transform 0.3s; }
+
+/* Glitch Animation */
+@keyframes cardGlitch {
+  0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+  20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -2px); filter: hue-rotate(-90deg); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); filter: hue-rotate(45deg); }
+  60% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 2px); filter: hue-rotate(-45deg); }
+  80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 1px); filter: hue-rotate(20deg); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); filter: hue-rotate(0); }
+}
+.app-card::before { transition: all 0.2s; }
+.app-card:hover::after {
+    content: ''; position: absolute; inset: 0; background: inherit;
+    border-radius: inherit; z-index: 10; pointer-events: none;
+    animation: cardGlitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
+    opacity: 0.15; mix-blend-mode: overlay;
+}
 
 </style>
 </head>
@@ -225,17 +248,10 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
         <h1 class="hero-title">MSBrossAI</h1>
         <p class="hero-sub">Ecosistema Digital Personal</p>
     </div>
-    <div class="hero-hud">
-        <div class="hud-line">SYS.STATUS: <span style="color:var(--accent-3)">ONLINE</span></div>
-        <div class="hud-line">NODES: <span id="hud-nodes">17/17</span></div>
-        <div class="hud-line">LATENCY: <span id="hud-ping">12</span>ms</div>
-        <div class="hud-line">UPLINK: <span id="hud-uplink">ESTABLISHED</span></div>
-    </div>
-    <div class="hero-hud hud-right">
-        <div class="hud-line">ORBITAL.SYNC: <span style="color:var(--accent-2)">LOCKED</span></div>
-        <div class="hud-line">MEM.ALLOC: <span id="hud-mem">2.4</span>GB</div>
-        <div class="hud-line">AI.CORE: <span class="blink">ACTIVE</span></div>
-    </div>
+        <button class="audio-toggle" id="audio-toggle" aria-label="Toggle Audio">
+        <svg id="audio-icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        <svg id="audio-icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+    </button>
     <div class="scroll-hint"><span>Explorar</span><div class="arrow"></div></div>
 </section>
 
@@ -671,13 +687,93 @@ if(window.matchMedia("(pointer: fine)").matches) {
     animCursor();
 }
 
-/* ═══ HUD TELEMETRY SIMULATION ═══ */
+
+
+
+/* ═══ UI AUDIO SOUNDSCAPE ═══ */
+let audioCtx = null;
+let droneOsc = null;
+let droneGain = null;
+let isAudioEnabled = false;
+
+const audioToggle = document.getElementById('audio-toggle');
+const iconOff = document.getElementById('audio-icon-off');
+const iconOn = document.getElementById('audio-icon-on');
+
+function initAudio() {
+    if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        droneOsc = audioCtx.createOscillator();
+        droneGain = audioCtx.createGain();
+        
+        // Drone sound setup
+        droneOsc.type = 'sine';
+        droneOsc.frequency.value = 45; // Low sub-bass
+        droneOsc.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+        droneGain.gain.value = 0;
+        droneOsc.start();
+    }
+}
+
+function playTechClick() {
+    if(!isAudioEnabled || !audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+    
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.06);
+}
+
+audioToggle.addEventListener('click', () => {
+    isAudioEnabled = !isAudioEnabled;
+    if(isAudioEnabled) {
+        initAudio();
+        audioCtx.resume();
+        iconOff.style.display = 'none';
+        iconOn.style.display = 'block';
+    } else {
+        iconOff.style.display = 'block';
+        iconOn.style.display = 'none';
+        if(droneGain) droneGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    }
+});
+
+// Drone volume based on scroll speed
+let lastScrollY = window.scrollY;
+let droneVolTarget = 0;
+window.addEventListener('scroll', () => {
+    if(!isAudioEnabled || !audioCtx) return;
+    const diff = Math.abs(window.scrollY - lastScrollY);
+    lastScrollY = window.scrollY;
+    
+    // Increase volume based on scroll speed
+    droneVolTarget = Math.min(0.15, diff * 0.002);
+}, {passive: true});
+
+// Smooth out drone volume
 setInterval(() => {
-    const ping = document.getElementById('hud-ping');
-    const mem = document.getElementById('hud-mem');
-    if(ping) ping.textContent = Math.floor(10 + Math.random() * 8);
-    if(mem) mem.textContent = (2.3 + Math.random() * 0.2).toFixed(2);
-}, 2000);
+    if(!isAudioEnabled || !droneGain) return;
+    droneVolTarget *= 0.9; // Decay
+    const currentGain = droneGain.gain.value;
+    droneGain.gain.setTargetAtTime(currentGain + (droneVolTarget - currentGain) * 0.1, audioCtx.currentTime, 0.1);
+}, 50);
+
+// Attach hover sound to cards
+document.querySelectorAll('.app-card').forEach(card => {
+    card.addEventListener('mouseenter', playTechClick);
+});
 
 </script>
 </body>
