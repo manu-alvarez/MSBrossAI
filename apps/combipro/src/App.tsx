@@ -37,6 +37,7 @@ interface Combo {
 const LEAGUES = [
   { key: 'soccer_fifa_world_cup', name: 'Mundial de Fútbol', icon: Globe, color: 'var(--yellow)' },
   { key: 'soccer_uefa_champs_league', name: 'Champions League', icon: Trophy, color: 'var(--text)' },
+  { key: 'soccer_uefa_europa_league', name: 'Europa League', icon: Trophy, color: 'var(--text)' },
   { key: 'soccer_epl', name: 'Premier League', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_spain_la_liga', name: 'LaLiga', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_italy_serie_a', name: 'Serie A', icon: Activity, color: 'var(--text)' },
@@ -48,7 +49,7 @@ const MARKETS = [
   { key: 'auto', label: 'Automático', icon: Zap },
   { key: '1x2', label: '1X2 (Resultado)', icon: Target },
   { key: 'dc', label: 'Doble Oport.', icon: ArrowRightLeft },
-  { key: 'dnb', label: 'Apuesta sin Empate', icon: AlignVerticalSpaceAround },
+  { key: 'dnb', label: 'Sin Empate', icon: AlignVerticalSpaceAround },
   { key: 'goals', label: 'Goles (+/-)', icon: Goal },
   { key: 'btts', label: 'Ambos Marcan', icon: Flame },
   { key: 'ht', label: '1ª Mitad', icon: Clock }
@@ -263,9 +264,9 @@ export default function App() {
         
         {/* Settings Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem' }}>
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Competiciones</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignContent: 'flex-start' }}>
               {LEAGUES.map(league => {
                 const active = selectedLeagues.includes(league.key);
                 const Icon = league.icon;
@@ -284,19 +285,21 @@ export default function App() {
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem' }}>
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', flex: 1 }}>
               {MARKETS.map(market => {
                 const active = selectedMarket === market.key;
                 const Icon = market.icon;
                 return (
                   <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
+                    gridColumn: market.key === 'auto' ? '1 / -1' : 'auto',
                     padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
                     borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
                     cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem'
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
+                    justifyContent: 'center'
                   }}>
                     <Icon size={18} color={active ? 'var(--accent)' : 'var(--text-muted)'} /> {market.label}
                   </button>
@@ -305,8 +308,8 @@ export default function App() {
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
+          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1 }}>
               <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Perfil de Riesgo</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
                 {RISKS.map(r => {
