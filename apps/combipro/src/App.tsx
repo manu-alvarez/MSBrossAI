@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 // COMBIPRO — Real Odds + Combo Generator
 // ============================================
 
-const ODDS_API_KEY = (import.meta as any).env.VITE_ODDS_API_KEY || '';
 const ODDS_API_BASE = 'https://api.the-odds-api.com/v4/sports';
 
 interface Match {
@@ -35,6 +34,7 @@ interface Combo {
 }
 
 const LEAGUES = [
+  { key: 'soccer_fifa_world_cup', name: '🌍 Mundial de Fútbol', icon: '🌍' },
   { key: 'soccer_uefa_champs_league', name: '🏆 Champions League', icon: '🏆' },
   { key: 'soccer_epl', name: '🇬🇧 Premier League', icon: '🇬🇧' },
   { key: 'soccer_spain_la_liga', name: '🇪🇸 LaLiga', icon: '🇪🇸' },
@@ -43,81 +43,16 @@ const LEAGUES = [
   { key: 'soccer_france_ligue_one', name: '🇫🇷 Ligue 1', icon: '🇫🇷' },
 ];
 
-// Realistic offline data with REAL teams
-function generateRealisticMatches(): Match[] {
-  const now = new Date();
-  const matches: Match[] = [];
-  let id = 1;
-
-  const fixtures: [string, string, string, string, number, number, number][] = [
-    // LaLiga
-    ['Real Madrid', 'Barcelona', 'LaLiga', '🇪🇸 LaLiga', 2.10, 3.40, 3.20],
-    ['Atlético Madrid', 'Sevilla', 'LaLiga', '🇪🇸 LaLiga', 1.90, 3.40, 3.80],
-    ['Real Sociedad', 'Villarreal', 'LaLiga', '🇪🇸 LaLiga', 2.20, 3.30, 3.10],
-    ['Athletic Bilbao', 'Real Betis', 'LaLiga', '🇪🇸 LaLiga', 2.00, 3.30, 3.50],
-    ['Girona', 'Valencia', 'LaLiga', '🇪🇸 LaLiga', 1.80, 3.60, 4.00],
-    // Premier League
-    ['Man City', 'Liverpool', 'EPL', '🇬🇧 Premier League', 2.00, 3.50, 3.40],
-    ['Arsenal', 'Chelsea', 'EPL', '🇬🇧 Premier League', 2.00, 3.30, 3.50],
-    ['Man United', 'Tottenham', 'EPL', '🇬🇧 Premier League', 2.30, 3.40, 2.90],
-    ['Newcastle', 'Aston Villa', 'EPL', '🇬🇧 Premier League', 2.10, 3.40, 3.20],
-    ['Brighton', 'West Ham', 'EPL', '🇬🇧 Premier League', 1.90, 3.50, 3.80],
-    // Champions League
-    ['Bayern Munich', 'PSG', 'UCL', '🏆 Champions League', 1.90, 3.60, 3.70],
-    ['Inter Milan', 'Benfica', 'UCL', '🏆 Champions League', 1.70, 3.60, 4.50],
-    ['Dortmund', 'Napoli', 'UCL', '🏆 Champions League', 2.20, 3.40, 3.10],
-    ['Barcelona', 'Atletico Madrid', 'UCL', '🏆 Champions League', 2.00, 3.30, 3.50],
-    // Serie A
-    ['Inter Milan', 'AC Milan', 'SerieA', '🇮🇹 Serie A', 2.00, 3.30, 3.50],
-    ['Juventus', 'Napoli', 'SerieA', '🇮🇹 Serie A', 2.40, 3.20, 2.90],
-    ['Roma', 'Lazio', 'SerieA', '🇮🇹 Serie A', 2.20, 3.30, 3.10],
-    ['Atalanta', 'Fiorentina', 'SerieA', '🇮🇹 Serie A', 1.80, 3.60, 4.00],
-    // Bundesliga
-    ['Bayern Munich', 'Dortmund', 'Bundesliga', '🇩🇪 Bundesliga', 1.70, 3.80, 4.50],
-    ['Leverkusen', 'RB Leipzig', 'Bundesliga', '🇩🇪 Bundesliga', 1.90, 3.50, 3.70],
-    ['Stuttgart', 'Frankfurt', 'Bundesliga', '🇩🇪 Bundesliga', 2.10, 3.40, 3.20],
-    // Ligue 1
-    ['PSG', 'Marseille', 'Ligue1', '🇫🇷 Ligue 1', 1.50, 4.20, 6.00],
-    ['Monaco', 'Lyon', 'Ligue1', '🇫🇷 Ligue 1', 2.00, 3.40, 3.40],
-    ['Lille', 'Nice', 'Ligue1', '🇫🇷 Ligue 1', 2.10, 3.30, 3.20],
-  ];
-
-  for (const [home, away, league, leagueName, h, d, a] of fixtures) {
-    const daysAhead = Math.floor(Math.random() * 7) + 1;
-    const matchDate = new Date(now);
-    matchDate.setDate(matchDate.getDate() + daysAhead);
-    matchDate.setHours([14, 16, 18, 20, 21][Math.floor(Math.random() * 5)], [0, 30, 45][Math.floor(Math.random() * 3)], 0);
-
-    const over25 = +(1.50 + Math.random() * 0.50).toFixed(2);
-    const under25 = +((1 / (1 - 1/over25) + 0.1)).toFixed(2);
-    const btts = +(1.55 + Math.random() * 0.40).toFixed(2);
-    const bttsNo = +((1 / (1 - 1/btts) + 0.1)).toFixed(2);
-    const over05HT = +(1.25 + Math.random() * 0.25).toFixed(2);
-
-    matches.push({
-      id: String(id++),
-      homeTeam: home, awayTeam: away,
-      league, leagueName,
-      commenceTime: matchDate.toISOString(),
-      odds: {
-        home: h, draw: d, away: a,
-        over25, under25: +under25,
-        btts, bttsNo: +bttsNo,
-        over05HT: +over05HT,
-      },
-    });
-  }
-
-  return matches;
-}
-
 // Fetch real odds from The-Odds API
-async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
-  if (!ODDS_API_KEY) return generateRealisticMatches();
+async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]> {
+  if (!apiKey) return [];
   try {
     const promises = leagues.map(async (league) => {
-      const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals&oddsFormat=decimal`);
-      if (!res.ok) return [];
+      const res = await fetch(`${ODDS_API_BASE}/${league}/odds/?apiKey=${apiKey}&regions=eu&markets=h2h,totals&oddsFormat=decimal`);
+      if (!res.ok) {
+        console.warn(`Error fetching ${league}: ${res.status}`);
+        return [];
+      }
       const data = await res.json();
       return data.map((event: any) => {
         const bookmaker = event.bookmakers?.[0]?.markets;
@@ -140,7 +75,7 @@ async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
             under25: under25Price,
             btts: over25Price > 2.0 ? 2.10 : 1.75,
             bttsNo: over25Price > 2.0 ? 1.65 : 2.00,
-            over05HT: 1.35,
+            over05HT: 1.35, // Est. value since API might lack first half totals
           },
         };
       }).filter((m: Match) => m.odds.home && m.odds.draw && m.odds.away);
@@ -148,7 +83,10 @@ async function fetchRealOdds(leagues: string[]): Promise<Match[]> {
     const results = await Promise.all(promises);
     const flat = results.flat();
     return flat.length > 0 ? flat : [];
-  } catch { return generateRealisticMatches(); }
+  } catch (error) { 
+    console.error("Fetch error:", error);
+    return []; 
+  }
 }
 
 function calcProbability(odds: number): number {
@@ -225,25 +163,47 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
 }
 
 export default function App() {
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('odds_api_key') || (import.meta as any).env.VITE_ODDS_API_KEY || '');
+  const [inputKey, setInputKey] = useState('');
+  
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(false);
-  const [apiLoading, setApiLoading] = useState(true);
+  const [apiLoading, setApiLoading] = useState(false);
   const [selectedLeagues, setSelectedLeagues] = useState<string[]>(LEAGUES.map(l => l.key));
   const [risk, setRisk] = useState<'safe' | 'balanced' | 'turbo'>('balanced');
   const [stake, setStake] = useState(10);
   const [combos, setCombos] = useState<Combo[]>([]);
 
   const fetchOdds = useCallback(async () => {
+    if (!apiKey) return;
     setLoading(true);
-    const realMatches = await fetchRealOdds(selectedLeagues);
+    setApiLoading(true);
+    const realMatches = await fetchRealOdds(selectedLeagues, apiKey);
     setMatches(realMatches);
     setApiLoading(false);
     setLoading(false);
-  }, [selectedLeagues]);
+  }, [selectedLeagues, apiKey]);
 
-  useEffect(() => { fetchOdds(); }, []);
+  useEffect(() => { 
+    if (apiKey) fetchOdds(); 
+  }, [apiKey, fetchOdds]);
+
+  const saveApiKey = () => {
+    if (inputKey.trim()) {
+      localStorage.setItem('odds_api_key', inputKey.trim());
+      setApiKey(inputKey.trim());
+    }
+  };
+
+  const removeApiKey = () => {
+    localStorage.removeItem('odds_api_key');
+    setApiKey('');
+    setMatches([]);
+    setCombos([]);
+  };
 
   const generate = () => {
+    if (matches.length === 0) return;
     playGenerateSound();
     const newCombos = generateCombos(matches, risk, stake);
     setCombos(newCombos);
@@ -252,6 +212,37 @@ export default function App() {
   const toggleLeague = (key: string) => {
     setSelectedLeagues(prev => prev.includes(key) ? prev.filter(l => l !== key) : [...prev, key]);
   };
+
+  // UI cuando no hay API KEY
+  if (!apiKey) {
+    return (
+      <div className="animate-fadeIn" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+        <div className="glass-panel" style={{ maxWidth: 500, width: '100%', padding: '3rem 2rem', textAlign: 'center' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+          <h2 className="font-display" style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--accent)' }}>Acceso API Restringido</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+            CombiPro funciona <strong>exclusivamente con cuotas y probabilidades 100% reales</strong>. 
+            Para acceder a las bases de datos en vivo, por favor, introduce tu clave de <em>The-Odds API</em>.
+          </p>
+          <input 
+            type="password" 
+            placeholder="Pega tu API Key aquí..." 
+            value={inputKey}
+            onChange={(e) => setInputKey(e.target.value)}
+            style={{ 
+              width: '100%', padding: '1rem', marginBottom: '1rem', 
+              background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', 
+              borderRadius: 8, color: 'var(--text)', outline: 'none',
+              fontFamily: 'monospace'
+            }}
+          />
+          <button onClick={saveApiKey} className="btn-premium" style={{ width: '100%', padding: '1rem', borderRadius: 8, fontWeight: 700 }}>
+            Conectar Base de Datos
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fadeIn">
@@ -266,21 +257,29 @@ export default function App() {
               fontSize: '1.8rem', boxShadow: '0 4px 20px rgba(249, 115, 22, 0.3)'
             }}>⚽</div>
             <div>
-              <h1 className="font-display text-gradient" style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>CombiPro <span style={{fontSize:'0.8rem', verticalAlign:'top', color:'var(--text)', background:'var(--accent)', padding:'2px 6px', borderRadius:'10px'}}>v2.0</span></h1>
+              <h1 className="font-display text-gradient" style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>CombiPro <span style={{fontSize:'0.8rem', verticalAlign:'top', color:'var(--text)', background:'var(--accent)', padding:'2px 6px', borderRadius:'10px'}}>v2.1 Real-Time</span></h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: apiLoading ? 'var(--yellow)' : 'var(--green)', boxShadow: `0 0 10px ${apiLoading ? 'var(--yellow)' : 'var(--green)'}` }}></span>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: apiLoading ? 'var(--yellow)' : (matches.length > 0 ? 'var(--green)' : 'var(--red)'), boxShadow: `0 0 10px ${apiLoading ? 'var(--yellow)' : (matches.length > 0 ? 'var(--green)' : 'var(--red)')}` }}></span>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  {apiLoading ? 'Sincronizando cuotas...' : `IA Lista · ${matches.length} partidos sincronizados`}
+                  {apiLoading ? 'Sincronizando cuotas...' : (matches.length > 0 ? `API Conectada · ${matches.length} partidos sincronizados` : 'Sin datos disponibles')}
                 </span>
               </div>
             </div>
           </div>
-          <button onClick={fetchOdds} disabled={loading} className="glass-panel" style={{ 
-            padding: '0.75rem 1.5rem', borderRadius: 12, color: 'var(--text)', 
-            cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1, transition: 'all 0.3s'
-          }}>
-            {loading ? '⏳ Actualizando...' : '🔄 Recargar Cuotas'}
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button onClick={fetchOdds} disabled={loading} className="glass-panel" style={{ 
+              padding: '0.75rem 1.5rem', borderRadius: 12, color: 'var(--text)', 
+              cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1, transition: 'all 0.3s'
+            }}>
+              {loading ? '⏳ Actualizando...' : '🔄 Recargar Cuotas'}
+            </button>
+            <button onClick={removeApiKey} className="glass-panel" style={{ 
+              padding: '0.75rem 1rem', borderRadius: 12, color: 'var(--red)', borderColor: 'rgba(239, 68, 68, 0.3)',
+              cursor: 'pointer', transition: 'all 0.3s'
+            }} title="Desconectar API">
+              Desconectar
+            </button>
+          </div>
         </div>
       </header>
 
@@ -297,7 +296,7 @@ export default function App() {
                   padding: '0.5rem 1rem',
                   background: selectedLeagues.includes(league.key) ? 'rgba(6, 182, 212, 0.1)' : 'rgba(255,255,255,0.02)',
                   border: `1px solid ${selectedLeagues.includes(league.key) ? 'var(--accent-cyan)' : 'var(--border)'}`,
-                  borderRadius: 100, color: selectedLeagues.includes(league.key) ? 'var(--text)' : 'var(--text-muted)',
+                  borderRadius: 100, color: selectedLeagues.includes(league.key) ? (league.key === 'soccer_fifa_world_cup' ? 'var(--yellow)' : 'var(--text)') : 'var(--text-muted)',
                   cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s',
                   boxShadow: selectedLeagues.includes(league.key) ? '0 0 15px rgba(6, 182, 212, 0.2)' : 'none'
                 }}>
@@ -333,12 +332,12 @@ export default function App() {
         </div>
 
         {/* Generate Button Premium */}
-        <button className="btn-premium font-display" onClick={generate} style={{
+        <button className="btn-premium font-display" onClick={generate} disabled={matches.length === 0} style={{
           width: '100%', padding: '1.5rem', borderRadius: 16, 
-          fontSize: '1.2rem', fontWeight: 900, cursor: 'pointer', marginBottom: '3rem',
-          textTransform: 'uppercase', letterSpacing: '2px'
+          fontSize: '1.2rem', fontWeight: 900, cursor: matches.length === 0 ? 'not-allowed' : 'pointer', marginBottom: '3rem',
+          textTransform: 'uppercase', letterSpacing: '2px', opacity: matches.length === 0 ? 0.5 : 1
         }}>
-          ⚡ Generar Combinadas Holográficas
+          ⚡ GENERAR COMBINADAS
         </button>
 
         {/* Results / Tickets */}
@@ -391,12 +390,17 @@ export default function App() {
 
         {/* Database */}
         <div style={{ opacity: 0.8 }}>
-          <h3 className="font-display" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Database: Partidos Sincronizados ({matches.length})</h3>
+          <h3 className="font-display" style={{ fontSize: '1.2rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Database: Partidos Reales ({matches.length})</h3>
+          {matches.length === 0 && !loading && (
+             <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+               No hay partidos disponibles actualmente para las ligas seleccionadas.
+             </div>
+          )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1rem' }}>
             {matches.map(match => (
-              <div key={match.id} className="glass-panel match-card" style={{ padding: '1.25rem' }}>
+              <div key={match.id} className="glass-panel match-card" style={{ padding: '1.25rem', borderLeft: match.league === 'soccer_fifa_world_cup' ? '3px solid var(--yellow)' : '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.05)', padding: '4px 8px', borderRadius: '4px', color: 'var(--text-muted)' }}>{match.leagueName}</span>
+                  <span style={{ fontSize: '0.75rem', background: match.league === 'soccer_fifa_world_cup' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255,255,255,0.05)', padding: '4px 8px', borderRadius: '4px', color: match.league === 'soccer_fifa_world_cup' ? 'var(--yellow)' : 'var(--text-muted)', fontWeight: match.league === 'soccer_fifa_world_cup' ? 800 : 400 }}>{match.leagueName}</span>
                   <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>{new Date(match.commenceTime).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem' }}>
