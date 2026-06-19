@@ -43,6 +43,10 @@ const LEAGUES = [
   { key: 'soccer_italy_serie_a', name: 'Serie A', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_germany_bundesliga', name: 'Bundesliga', icon: Activity, color: 'var(--text)' },
   { key: 'soccer_france_ligue_one', name: 'Ligue 1', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_netherlands_eredivisie', name: 'Eredivisie', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_portugal_primeira_liga', name: 'Liga Portugal', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_usa_mls', name: 'MLS', icon: Activity, color: 'var(--text)' },
+  { key: 'soccer_spain_copa_del_rey', name: 'Copa del Rey', icon: Trophy, color: 'var(--text)' },
 ];
 
 const MARKETS = [
@@ -52,6 +56,7 @@ const MARKETS = [
   { key: 'dnb', label: 'Sin Empate', icon: AlignVerticalSpaceAround },
   { key: 'goals', label: 'Goles (+/-)', icon: Goal },
   { key: 'btts', label: 'Ambos Marcan', icon: Flame },
+  { key: 'btts_no', label: 'Ambos NO Marcan', icon: ShieldCheck },
   { key: 'ht', label: '1ª Mitad', icon: Clock }
 ];
 
@@ -60,6 +65,12 @@ const RISKS = [
   { key: 'balanced', label: 'Medio (Equilibrado)', icon: Scale, color: 'var(--yellow)' },
   { key: 'turbo', label: 'Alto (Cuotas Altas)', icon: Flame, color: 'var(--red)' }
 ];
+
+const RISK_DESCRIPTIONS = {
+  safe: 'Prioriza pronósticos muy probables (>60%). Ideal para asegurar pequeñas ganancias de forma consistente.',
+  balanced: 'Busca el equilibrio perfecto entre riesgo y beneficio combinando favoritos y valor.',
+  turbo: 'Selecciona cuotas altas maximizando el retorno. Alto riesgo, alta recompensa potencial.'
+};
 
 async function fetchRealOdds(leagues: string[], apiKey: string): Promise<Match[]> {
   if (!apiKey) return [];
@@ -128,6 +139,7 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '+2.5', odds: m.odds.over25, probability: calcProb(m.odds.over25) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Goles', selection: '-2.5', odds: m.odds.under25, probability: calcProb(m.odds.under25) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS', selection: 'Ambos Marcan', odds: m.odds.btts, probability: calcProb(m.odds.btts) },
+      { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'BTTS_NO', selection: 'Ninguno/Uno', odds: m.odds.bttsNo, probability: calcProb(m.odds.bttsNo) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: '1ªMitad', selection: '+0.5 Gol', odds: m.odds.over05HT, probability: calcProb(m.odds.over05HT) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: '1X', odds: m.odds.dc1x, probability: calcProb(m.odds.dc1x) },
       { matchId: m.id, match: `${m.homeTeam} vs ${m.awayTeam}`, league: m.leagueName, type: 'Doble Oport.', selection: 'X2', odds: m.odds.dcx2, probability: calcProb(m.odds.dcx2) },
@@ -138,10 +150,11 @@ function generateCombos(matches: Match[], risk: 'safe' | 'balanced' | 'turbo', s
   });
 
   let allowedTypes: string[] = [];
-  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', '1ªMitad', 'Doble Oport.', 'Sin Empate'];
+  if (marketFilter === 'auto') allowedTypes = ['1X2', 'Goles', 'BTTS', 'BTTS_NO', '1ªMitad', 'Doble Oport.', 'Sin Empate'];
   else if (marketFilter === '1x2') allowedTypes = ['1X2'];
   else if (marketFilter === 'goals') allowedTypes = ['Goles'];
   else if (marketFilter === 'btts') allowedTypes = ['BTTS'];
+  else if (marketFilter === 'btts_no') allowedTypes = ['BTTS_NO'];
   else if (marketFilter === 'ht') allowedTypes = ['1ªMitad'];
   else if (marketFilter === 'dc') allowedTypes = ['Doble Oport.'];
   else if (marketFilter === 'dnb') allowedTypes = ['Sin Empate'];
@@ -293,7 +306,6 @@ export default function App() {
                 const Icon = market.icon;
                 return (
                   <button key={market.key} onClick={() => setSelectedMarket(market.key)} style={{
-                    gridColumn: market.key === 'auto' ? '1 / -1' : 'auto',
                     padding: '0.75rem', background: active ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.02)',
                     border: `1px solid ${active ? 'var(--accent)' : 'transparent'}`,
                     borderRadius: 12, color: active ? 'white' : 'var(--text-muted)',
@@ -327,6 +339,11 @@ export default function App() {
                     </button>
                   )
                 })}
+              </div>
+              <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.03)' }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                  {(RISK_DESCRIPTIONS as any)[risk]}
+                </p>
               </div>
             </div>
             <div style={{ marginTop: '2rem' }}>
