@@ -246,6 +246,7 @@ export default function App() {
                     <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' }}>{res.time}h</div>
                   </div>
                 </div>
+                </div>
               ))}
           </div>
         )}
