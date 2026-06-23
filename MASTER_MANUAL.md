@@ -259,11 +259,5 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 2. **Service Workers y `basePath` en Next.js:**
    Al montar aplicaciones estáticas bajo `/app/<nombre>/`, los Service Workers customizados (como en `elitescout` o `perfume-trading`) deben interceptar e inyectar **explícitamente** el prefijo de la ruta. Usar caché en `/catalog` sin inyectar `/app/<nombre>/catalog` causará que el PWA falle en modo offline y bloquee peticiones de red.
 
-3. **Estandarización UI (Logo MSBrossAI):**
-   No se permiten imágenes externas recortadas para logos de barra de navegación. El logo corporativo debe renderizarse **siempre** mediante HTML/CSS estricto:
-   - Tipografía: `Inter`, peso `900`.
-   - Estilo: `<span style="color:#8b5cf6">MS</span>BrossAI`.
-   - Evitar sobrecarga de text-shadows (efectos neón) para garantizar máxima legibilidad en dispositivos móviles.
-
-4. **Limpieza Rigurosa del Sistema de Archivos:**
+3. **Limpieza Rigurosa del Sistema de Archivos:**
    Los procesos de "build" o refactorización masiva dejan rastros (`.DS_Store`, `index 2.html`, tests unitarios de prototipado). Antes de presentar o hacer push a `main`, el repositorio debe estar purgado de `.test.ts`, logs locales y scripts de un solo uso. Un repositorio limpio es síntoma de Ingeniería Nivel 3.
