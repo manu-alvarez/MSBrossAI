@@ -7,17 +7,7 @@ const withPWA = withPWAInit({
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
   runtimeCaching: [
-    {
-      urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-      handler: "CacheFirst",
-      options: {
-        cacheName: "supabase-assets",
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 60 * 60 * 24 * 30,
-        },
-      },
-    },
+
     {
       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|mp3|mp4)$/i,
       handler: "CacheFirst",
@@ -49,17 +39,7 @@ const nextConfig: NextConfig = {
   output: "export",
   basePath: "/app/cuentos-magicos",
   images: {
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "ujktxhqxhxkbrhczbhcf.supabase.co",
-      },
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-      },
-    ],
+    unoptimized: true
   },
 };
 

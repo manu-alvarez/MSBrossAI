@@ -12,19 +12,13 @@ import type { TemplateType, TemplateLang } from '@/lib/email-templates';
 import { cn } from '@/lib/utils';
 import { CurrencyDisplay } from '@/components/ui/currency-display';
 
-// --- IA MOCK ---
-function simulateAIExtraction(text: string) {
-  return new Promise<any>((resolve) => {
+// AI Backend Connection (To be implemented)
+async function extractDataWithAI(text: string) {
+  // TODO: Connect to MSBrossAI backend endpoint
+  return new Promise<any>((resolve, reject) => {
+    // Fail gracefully since AI is not connected yet
     setTimeout(() => {
-      // Very basic simulated extraction logic for demo purposes
-      resolve({
-        partnerName: 'Boutique Parisienne',
-        brandName: 'Dior',
-        productName: 'Sauvage EDT 100ml',
-        quantity: 120,
-        priceUnit: 65.00,
-        status: 'Generado por IA',
-      });
+      reject(new Error("AI backend not connected"));
     }, 1500);
   });
 }
@@ -37,14 +31,14 @@ export default function EmailPage() {
   const [type, setType] = useState<TemplateType>('offer');
   const [copied, setCopied] = useState<'subject' | 'body' | null>(null);
   const [vars, setVars] = useState({
-    partnerName: 'GlobalFragance GmbH',
-    productName: 'Bleu de Chanel EDP 100ml',
-    brandName: 'Chanel',
-    quantity: 50,
-    priceUnit: '$78.50',
-    totalAmount: '$3,925.00',
-    incoterm: 'FOB',
-    invoiceNumber: 'INV-2026-0001',
+    partnerName: '',
+    productName: '',
+    brandName: '',
+    quantity: 0,
+    priceUnit: '',
+    totalAmount: '',
+    incoterm: '',
+    invoiceNumber: '',
     validUntil: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
   });
 
@@ -62,15 +56,20 @@ export default function EmailPage() {
   };
 
   // Inbox State
-  const [inboxText, setInboxText] = useState("Hola Perfume Trading,\n\nEstamos interesados en adquirir 120 unidades de Dior Sauvage EDT 100ml para nuestra próxima campaña en Francia.\nNuestro precio objetivo es de $65.00 por unidad.\n\nPor favor, enviad la factura proforma si estáis de acuerdo.\n\nSaludos,\nJean Pierre\nBoutique Parisienne");
+  const [inboxText, setInboxText] = useState("");
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractedData, setExtractedData] = useState<any>(null);
 
   const handleExtract = async () => {
     setIsExtracting(true);
-    const data = await simulateAIExtraction(inboxText);
-    setExtractedData(data);
-    setIsExtracting(false);
+    try {
+      const data = await extractDataWithAI(inboxText);
+      setExtractedData(data);
+    } catch (e) {
+      console.warn("Extracción AI fallida o no implementada", e);
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   return (

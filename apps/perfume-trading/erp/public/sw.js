@@ -1,15 +1,16 @@
 // Perfume ERP - Service Worker
 // Offline-first caching strategy
 
-const CACHE_NAME = 'perfume-erp-v1';
+const CACHE_NAME = 'perfume-erp-v2';
+const BASE = '/app/perfume-trading';
 const STATIC_ASSETS = [
-  '/',
-  '/catalog',
-  '/trading',
-  '/partners',
-  '/invoices',
-  '/settings',
-  '/manifest.json',
+  `${BASE}/`,
+  `${BASE}/catalog/`,
+  `${BASE}/trading/`,
+  `${BASE}/partners/`,
+  `${BASE}/invoices/`,
+  `${BASE}/settings/`,
+  `${BASE}/manifest.json`,
 ];
 
 // Install: cache static assets

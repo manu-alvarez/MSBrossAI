@@ -91,21 +91,27 @@ export default function MonitorPage() {
     setLogs((prev) => [...prev.slice(-50), { time, level, msg }]);
   };
 
-  const simulateProcessing = () => {
+  const startProcessing = async () => {
     if (processing) return;
     setProcessing(true);
-    setProcessingMsg("Procesando V67391283...");
-    addLog("INFO", "Inicio procesamiento V67391283 · 2 descripciones");
+    setProcessingMsg("Iniciando motor INFOCOL...");
+    addLog("INFO", "Lanzando infocol run --dry-run (modo seguro)");
 
-    setTimeout(() => {
-      addLog("INFO", "Códigos asignados: YYDDDYT + XADDD2T");
-    }, 1500);
-
-    setTimeout(() => {
-      addLog("SUCCESS", "Expediente V67391283 procesado · 2 códigos aplicados · 9.4s");
+    try {
+      const res = await fetch("/app/mapfre/api/run", { method: "POST" });
+      const data = await res.json();
+      
+      if (data.success) {
+        addLog("SUCCESS", "Procesamiento completado con éxito");
+      } else {
+        addLog("ERROR", `Fallo en el motor: ${data.error}`);
+      }
+    } catch (err: any) {
+      addLog("ERROR", `Error de red: ${err.message}`);
+    } finally {
       setProcessing(false);
       setProcessingMsg("");
-    }, 3000);
+    }
   };
 
   return (
@@ -131,7 +137,7 @@ export default function MonitorPage() {
         </div>
         <button
           type="button"
-          onClick={simulateProcessing}
+          onClick={startProcessing}
           disabled={processing}
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-primary/50 disabled:opacity-60 disabled:cursor-not-allowed"
         >
@@ -261,7 +267,7 @@ export default function MonitorPage() {
               ))}
               <button
                 type="button"
-                onClick={simulateProcessing}
+                onClick={startProcessing}
                 disabled={processing}
                 className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-2 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors disabled:opacity-50"
               >

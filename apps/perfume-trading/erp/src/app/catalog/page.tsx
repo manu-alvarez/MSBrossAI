@@ -70,30 +70,8 @@ export default function CatalogPage() {
     if (!newProduct.ean) return;
     setIsSearchingBarcode(true);
 
-    // Mock Enterprise Database para los EAN más comunes de prueba B2B (Evita bloqueos de CORS de APIs comerciales de pago)
-    const enterpriseDB: Record<string, { brand: string, name: string }> = {
-      "3348901250146": { brand: "Dior", name: "Sauvage Eau de Toilette" },
-      "3616300026489": { brand: "Joop!", name: "Wow! Fresh Eau de Toilette" },
-      "3145891073607": { brand: "Chanel", name: "Bleu de Chanel EDP" },
-      "3346470111166": { brand: "Paco Rabanne", name: "1 Million Eau de Toilette" },
-      "8411061778153": { brand: "Carolina Herrera", name: "Good Girl Eau de Parfum" },
-      "3432240504337": { brand: "Yves Saint Laurent", name: "Y Eau de Parfum" },
-    };
-
     try {
-      // 1. Fast Lookup en base de datos interna Enterprise
-      if (enterpriseDB[newProduct.ean]) {
-        await new Promise(resolve => setTimeout(resolve, 600)); // Simular latencia de red realista
-        setNewProduct(prev => ({
-          ...prev,
-          brand: enterpriseDB[newProduct.ean].brand,
-          name: enterpriseDB[newProduct.ean].name,
-        }));
-        setIsSearchingBarcode(false);
-        return;
-      }
-
-      // 2. Fallback a OpenBeautyFacts (API Abierta compatible con CORS)
+      // 1. Fetch from OpenBeautyFacts (API Abierta compatible con CORS)
       const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${newProduct.ean}`);
       const data = await res.json();
       
@@ -123,7 +101,7 @@ export default function CatalogPage() {
 
   const handleAddProduct = () => {
     if (!newProduct.brand || !newProduct.name || !newProduct.ean) return;
-    const id = Date.now().toString(); // Temporary mock ID since we don't have a create API yet
+    const id = crypto.randomUUID();
     setCatalogData([{
       id, brand: newProduct.brand, name: newProduct.name,
       concentration: newProduct.concentration, size: `${newProduct.size}ml`,

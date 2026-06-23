@@ -58,7 +58,9 @@ const Dashboard: React.FC = () => {
       <Grid container spacing={3} sx={{ mb: 4, position: 'relative', zIndex: 1 }}>
         {stats.map((stat, i) => (
           <Grid size={{ xs: 6, md: 3 }} key={stat.id}>
+            <Box className="portal-card">
             <MotionPaper
+              className="portal-card-inner"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
@@ -71,12 +73,9 @@ const Dashboard: React.FC = () => {
                 gap: 2,
                 cursor: 'pointer',
                 borderRadius: 4,
-                bgcolor: 'background.paper',
-                border: '1px solid rgba(255,255,255,0.05)',
-                '&:hover': {
-                  boxShadow: `0 8px 30px ${stat.color}25`,
-                  borderColor: `${stat.color}50`
-                }
+                bgcolor: 'transparent',
+                border: 'none',
+                boxShadow: 'none',
               }}
             >
               <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: `${stat.color}15`, color: stat.color, display: 'flex' }}>
@@ -89,6 +88,7 @@ const Dashboard: React.FC = () => {
                 </Typography>
               </Box>
             </MotionPaper>
+            </Box>
           </Grid>
         ))}
       </Grid>
@@ -135,17 +135,20 @@ const Dashboard: React.FC = () => {
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Ratio de Ejecución</Typography>
+          <Box className="portal-card">
           <MotionPaper
+            className="portal-card-inner"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.6 }}
-            sx={{ p: 3, borderRadius: 4, textAlign: 'center', bgcolor: 'primary.main', color: 'primary.contrastText', boxShadow: '0 10px 40px rgba(0, 245, 255, 0.3)' }}
+            sx={{ p: 3, borderRadius: 4, textAlign: 'center', bgcolor: 'primary.main', color: 'primary.contrastText', boxShadow: 'none', border: 'none' }}
            >
             <Typography variant="h2" sx={{ fontWeight: 900 }}>
               {tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}%
             </Typography>
             <Typography sx={{ opacity: 0.8, fontWeight: 600 }}>Tareas Completadas</Typography>
           </MotionPaper>
+          </Box>
         </Grid>
       </Grid>
     </Box>

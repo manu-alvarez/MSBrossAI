@@ -6,34 +6,12 @@ import { Printer, ArrowLeft, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-// ─── Mock invoice detail ───
-const mockInvoices: Record<string, {
+const localInvoices: Record<string, {
   number: string; partner: string; partnerAddress: string; type: string;
   incoterm: string; issueDate: string; dueDate: string; status: string;
   items: Array<{ brand: string; product: string; ean: string; qty: number; price: number; total: number }>;
   totalNet: number; taxPercent: number; totalGross: number;
-}> = {
-  '1': {
-    number: 'INV-2026-0001', partner: 'GlobalFragance GmbH',
-    partnerAddress: 'Industriestr. 42, 10115 Berlin, Alemania',
-    type: 'Offer', incoterm: 'EXW', issueDate: '2026-05-01', dueDate: '2026-06-15',
-    status: 'Paid',
-    items: [
-      { brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', ean: '3145891073607', qty: 50, price: 78.50, total: 3925.00 },
-    ],
-    totalNet: 3925.00, taxPercent: 21, totalGross: 4749.25,
-  },
-  '2': {
-    number: 'INV-2026-0002', partner: 'Parfums World SA',
-    partnerAddress: '12 Rue de la Paix, 75002 Paris, Francia',
-    type: 'Offer', incoterm: 'FOB', issueDate: '2026-05-10', dueDate: '2026-07-01',
-    status: 'Pending',
-    items: [
-      { brand: 'Dior', product: 'Sauvage EDT 100ml Tester', ean: '3348901250141', qty: 120, price: 62.00, total: 7440.00 },
-    ],
-    totalNet: 7440.00, taxPercent: 21, totalGross: 9002.40,
-  },
-};
+}> = {};
 
 function formatCurrency(val: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -43,7 +21,7 @@ function formatCurrency(val: number) {
 
 export default function InvoiceViewPage() {
   const params = useParams();
-  const inv = mockInvoices[params.id as string];
+  const inv = localInvoices[params.id as string];
 
   if (!inv) {
     return (

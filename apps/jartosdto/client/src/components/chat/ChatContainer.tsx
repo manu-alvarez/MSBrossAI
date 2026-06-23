@@ -104,7 +104,8 @@ export default function ChatContainer() {
   }, [messages, selectedModel, webSearchEnabled, conversationId, temperature, maxTokens, addMessage, updateLastAssistant, setIsStreaming, setConversationId]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", flex: 1 }}>
+    <div className="portal-card" style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 32px)", margin: "16px", flex: 1 }}>
+      <div className="portal-card-inner" style={{ display: "flex", flexDirection: "column", height: "100%", borderRadius: "18px" }}>
       {/* Messages area */}
       <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", paddingTop: 20, paddingBottom: 20 }}>
         {messages.length === 0 ? (
@@ -118,6 +119,7 @@ export default function ChatContainer() {
 
       {/* Input */}
       <MessageInput onSend={handleSend} disabled={isStreaming} />
+      </div>
     </div>
   );
 }

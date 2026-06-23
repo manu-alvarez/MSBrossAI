@@ -35,7 +35,7 @@ export function useSearch(options: SearchOptions = {}) {
   const { data, isLoading, error, refetch } = useQuery<SearchResponse>({
     queryKey: ["search", submittedQuery, filters, selectedLayers, options.type, options.origin, options.destination, options.transportMode],
     queryFn: async () => {
-      const res = await fetch(apiUrl("/_elitescout/api/search"), {
+      const res = await fetch(apiUrl("/app/elitescout/api/search/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

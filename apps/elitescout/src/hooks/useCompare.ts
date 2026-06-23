@@ -18,7 +18,7 @@ export function useCompare() {
     error,
   } = useMutation<ComparisonResult>({
     mutationFn: async () => {
-      const res = await fetch(apiUrl("/_elitescout/api/compare"), {
+      const res = await fetch(apiUrl("/app/elitescout/api/compare/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -59,10 +59,11 @@ const App: React.FC = () => {
           {filtered.map((tool, i) => {
             const isFav = favorites.includes(tool.name);
             return (
-            <a key={i} href={tool.url} target="_blank" rel="noopener noreferrer"
-              style={{ position: 'relative', display: 'block', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, textDecoration: 'none', color: '#f8fafc', transition: 'all 0.3s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#14b8a6'; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 10px 30px -10px rgba(20,184,166,0.3)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = 'none'; }}>
+            <div key={i} className="portal-card">
+            <a href={tool.url} target="_blank" rel="noopener noreferrer" className="portal-card-inner"
+              style={{ display: 'block', padding: '1.5rem', textDecoration: 'none', color: '#f8fafc', transition: 'all 0.3s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; }}>
               <button onClick={(e) => toggleFavorite(e, tool.name)} style={{ position: 'absolute', top: '1.2rem', right: '1.2rem', background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', opacity: isFav ? 1 : 0.3, transition: 'all 0.2s' }} title="Favorito">
                  {isFav ? '⭐' : '☆'}
               </button>
@@ -73,6 +74,7 @@ const App: React.FC = () => {
                 {tool.shortcut && <span style={{ padding: '0.2rem 0.6rem', background: 'rgba(255,255,255,0.05)', borderRadius: 100, fontSize: '0.75rem', color: '#64748b' }}>{tool.shortcut}</span>}
               </div>
             </a>
+            </div>
           )})}
         </div>
         {filtered.length === 0 && <p style={{ textAlign: 'center', color: '#64748b', padding: '4rem' }}>No se encontraron herramientas</p>}

@@ -118,6 +118,7 @@ def process_expediente(
     expediente: Expediente,
     config: AppConfig,
     report: SessionReport,
+    dry_run: bool = False,
 ) -> bool:
     try:
         console.print(f"\n[bold]Procesando:[/] {expediente.id} - {expediente.description}")
@@ -154,10 +155,13 @@ def process_expediente(
             console=console,
         ) as progress:
             task = progress.add_task("[green]Rellenando formulario...", total=None)
-            form_filler.fill_from_analysis(result, desc)
+            if not dry_run:
+                form_filler.fill_from_analysis(result, desc)
+            else:
+                console.print("[yellow]--dry-run activo: Omitiendo guardado en portal.[/]")
             progress.update(task, completed=True)
 
-        if config.require_human_confirm:
+        if config.require_human_confirm and not dry_run:
             display_confirm_warning()
             browser.wait_for_human_confirm()
 
@@ -203,7 +207,8 @@ def cli() -> None:
 @cli.command()
 @click.option("--headless", is_flag=True, help="Run browser in headless mode")
 @click.option("--no-confirm", is_flag=True, help="Skip human confirmation (auto-accept)")
-def run(headless: bool, no_confirm: bool) -> None:
+@click.option("--dry-run", is_flag=True, help="Execute analysis but do not save data to the portal")
+def run(headless: bool, no_confirm: bool, dry_run: bool) -> None:
     """Execute full automation session."""
     config = load_config()
     setup_logging(config.logging.level)
@@ -287,6 +292,7 @@ def run(headless: bool, no_confirm: bool) -> None:
                 expediente=expediente,
                 config=config,
                 report=report,
+                dry_run=dry_run,
             )
             if not success and not config.auto_process_all:
                 if not click.confirm("Continue with next expediente?", default=True):
@@ -381,159 +387,6 @@ def status() -> None:
         console.print("\n[bold green]System is ready. Run 'infocol run' to start.[/]")
     else:
         console.print("\n[bold yellow]Please address the failing checks above.[/]")
-
-
-@cli.command()
-def demo() -> None:
-    """Run a simulated demo of the full automation flow."""
-    import random as _random
-
-    console.print(Panel.fit(
-        "[bold cyan]INFOCOL v1.0.0-beta[/]\n"
-        "[yellow]MODO DEMO - Simulacion del flujo completo[/]\n"
-        "Automatizacion de partes MAPFRE - Sistema inteligente de descuento de expedientes\n"
-        "[dim]Pedro Gonzalez · Fontanero · Logrono, La Rioja · 2026[/]",
-        border_style="cyan",
-    ))
-
-    time.sleep(0.8)
-
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        console=console,
-    ) as progress:
-        task = progress.add_task("[cyan]Iniciando navegador Chromium...", total=None)
-        time.sleep(0.6)
-        progress.update(task, completed=True)
-
-        task = progress.add_task("[cyan]Accediendo a InfoCol (https://infocol.mapfre.es)...", total=None)
-        for _ in range(3):
-            time.sleep(0.2)
-            pass
-        progress.update(task, completed=True)
-
-        task = progress.add_task("[cyan]Iniciando sesion...", total=None)
-        time.sleep(0.4)
-        progress.update(task, completed=True)
-
-    time.sleep(0.3)
-
-    console.print("[bold green]✅  Sesion iniciada correctamente[/]")
-
-    time.sleep(0.4)
-
-    demo_expedientes = [
-        Expediente(id="V67391281", description="Fuga de agua en tuberia del bano - Reparacion urgente", notes="Piso 3° - Humedad en pared"),
-        Expediente(id="V67391291", description="Rotura de tuberia en cocina - Sustitucion tramo", notes="Bajo comercio - Acceso limitado"),
-        Expediente(id="V67391301", description="Cambio de grifo monomando lavabo", notes="Cliente mayor - Revision general"),
-    ]
-
-    display_expediente_table(demo_expedientes)
-    time.sleep(0.8)
-
-    config = load_config()
-    displacement_calc = DisplacementCalculator(
-        threshold_km=config.displacement.threshold_km,
-        rate_per_km=config.displacement.rate_per_km,
-    )
-
-    for i, exp in enumerate(demo_expedientes, 1):
-        console.print(f"\n[bold cyan]━━━ Procesando expediente {i}/{len(demo_expedientes)}: {exp.id} ━━━[/]")
-        time.sleep(0.5)
-
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            console=console,
-        ) as progress:
-            task = progress.add_task("[cyan]Leyendo descripcion del expediente...", total=None)
-            time.sleep(0.3)
-            progress.update(task, completed=True)
-
-            task = progress.add_task("[green]Analizando con IA (Claude API)...", total=None)
-            time.sleep(0.5)
-            progress.update(task, completed=True)
-
-        demo_results = [
-            AnalysisResult(
-                primary_codes=[
-                    TariffCode(code="YYDDDYT", description="Exclusion", category="primary"),
-                    TariffCode(code="XADDD2T", description="Con cala", category="secondary"),
-                ],
-                displacement_km=25.0,
-                displacement_amount=2.50,
-                material_cost=45.00,
-                confidence=0.97,
-                reasoning="Fuga en tuberia requiere exclusion con cala (destape con excavacion). "
-                          "Desplazamiento desde Logrono a localidad >20km. Material: tuberia PEX 20mm.",
-            ),
-            AnalysisResult(
-                primary_codes=[
-                    TariffCode(code="YYDDDYT", description="Exclusion sin cala", category="primary"),
-                    TariffCode(code="XADDD1T", description="Suplemento sin cala", category="secondary"),
-                ],
-                displacement_km=0.0,
-                material_cost=120.00,
-                confidence=0.95,
-                reasoning="Rotura de tuberia en cocina. Exclusion sin cala (destape basico). "
-                          "Material: tuberia + codos + valvulas. Sin desplazamiento adicional.",
-            ),
-            AnalysisResult(
-                primary_codes=[
-                    TariffCode(code="JEDDD1T", description="Sustitucion de griferia", category="primary"),
-                ],
-                displacement_km=0.0,
-                material_cost=35.00,
-                confidence=0.99,
-                reasoning="Cambio de grifo monomando estandar. Sustitucion de griferia simple. "
-                          "Material: grifo monomando cromado basico.",
-            ),
-        ]
-
-        if i <= len(demo_expedientes):
-            result = demo_results[i - 1]
-            display_analysis_result(exp.id, result)
-        time.sleep(0.4)
-
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            console=console,
-        ) as progress:
-            task = progress.add_task("[green]Rellenando formulario en InfoCol...", total=None)
-            time.sleep(0.4)
-            progress.update(task, completed=True)
-
-        console.print("  [dim]✓ Descripcion: rellenada[/]")
-        console.print("  [dim]✓ Preguntas: respondidas[/]")
-        console.print("  [dim]✓ Codigos tarifa: aplicados[/]")
-        console.print("  [dim]✓ Desplazamiento: calculado[/]")
-        time.sleep(0.3)
-
-        display_confirm_warning()
-
-        if i < len(demo_expedientes):
-            console.print("\n[cyan]Continuando al siguiente expediente en 3 segundos...[/]")
-            time.sleep(2)
-
-    time.sleep(0.5)
-
-    report = SessionReport(
-        expedientes_processed=3,
-        expedientes_success=3,
-        expedientes_failed=0,
-        total_time_seconds=142.0,
-        start_time=datetime.now(),
-        end_time=datetime.now(),
-    )
-    display_report(report)
-
-    console.print("\n[bold yellow]🏁 FIN DE LA DEMO[/]")
-    console.print("[dim]Para usar con expedientes reales: infocol config --set-api-key <tu-clave> && infocol run[/]")
 
 
 @cli.command()

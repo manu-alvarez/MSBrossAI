@@ -264,7 +264,8 @@ export default function Home() {
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <Card variant="bordered" className="p-3.5">
+        <div className="portal-card">
+        <Card variant="bordered" className="portal-card-inner p-3.5">
           <div className="flex items-center gap-2 mb-1">
             <Zap className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span className="text-xs text-surface-500 dark:text-surface-400">
@@ -275,7 +276,9 @@ export default function Home() {
             {weekVolume.toLocaleString()} kg
           </p>
         </Card>
-        <Card variant="bordered" className="p-3.5">
+        </div>
+        <div className="portal-card">
+        <Card variant="bordered" className="portal-card-inner p-3.5">
           <div className="flex items-center gap-2 mb-1">
             <Trophy className="w-4 h-4 text-amber-500" />
             <span className="text-xs text-surface-500 dark:text-surface-400">
@@ -286,6 +289,7 @@ export default function Home() {
             {weekSessionsCount}/{daysRemaining}
           </p>
         </Card>
+        </div>
       </div>
     </div>
   );

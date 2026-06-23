@@ -93,7 +93,7 @@ export default function TradingPage() {
 
   const handleCreateTrade = () => {
     if (!newTrade.partner || !newTrade.product) return;
-    const id = Date.now().toString(); // Mock ID for now
+    const id = crypto.randomUUID();
     const total = newTrade.quantity * newTrade.priceUnit;
     const margin = newTrade.marketPrice > 0
       ? Math.round(((newTrade.marketPrice - newTrade.priceUnit) / newTrade.marketPrice) * 1000) / 10

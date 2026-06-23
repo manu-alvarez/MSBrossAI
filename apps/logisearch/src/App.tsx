@@ -22,7 +22,7 @@ import CostAnalyzer from './components/CostAnalyzer'
 import DunnageGuide from './components/DunnageGuide'
 import EmailTemplates from './components/EmailTemplates'
 import ToolSelector from './components/ToolSelector'
-import { saveSearch, saveRFQ } from './lib/supabase'
+import { saveSearch, saveRFQ } from './lib/storage'
 import { createTrelloCard } from './services/trello'
 import GlobalAlerts from './components/GlobalAlerts'
 import CreativeStudio from './components/CreativeStudio'
@@ -222,15 +222,17 @@ function App() {
                   </Typography>
                   <Typography variant="subtitle1">Búsqueda inteligente + herramientas especializadas</Typography>
                 </Box>
-                <Card sx={{ width: '100%', maxWidth: 800, p: 0, border: '1px solid', borderColor: 'divider', overflow: 'hidden' }}>
+                <Box className="portal-card" sx={{ width: '100%', maxWidth: 800, p: 0, overflow: 'visible', borderRadius: '20px' }}>
+                  <Box className="portal-card-inner" sx={{ p: 0, borderRadius: '18px' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
                     <Box sx={{ width: 48, height: 48, borderRadius: 2.5, bgcolor: 'rgba(0, 229, 255, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, ml: 1 }}>
                       <SmartIcon sx={{ color: 'primary.main' }} />
                     </Box>
-                    <TextField fullWidth value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') handleSearch() }} placeholder="Pega un tracking, busca ruta, calcula CBM, rastrea buque..." variant="standard" slotProps={{ input: { disableUnderline: true, sx: { fontSize: '1.05rem', py: 1.5, px: 1 } } }} />
+                    <TextField fullWidth value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') handleSearch() }} placeholder="Pega un tracking, busca ruta, calcula CBM, rastrea buque..." variant="standard" slotProps={{ input: { disableUnderline: true, sx: { fontSize: '1.05rem', py: 1.5, px: 1, color: 'white' } } }} />
                     <Button variant="contained" onClick={() => handleSearch()} disabled={!query.trim()} sx={{ minWidth: 140, py: 1.5 }} startIcon={isLoading ? undefined : <SearchIcon />}>{isLoading ? '...' : 'Buscar'}</Button>
                   </Box>
-                </Card>
+                  </Box>
+                </Box>
                 <Fade in={isLoading} unmountOnExit>
                   <Card sx={{ width: '100%', maxWidth: 650, p: 3, textAlign: 'center' }}><Typography sx={{ color: 'primary.main' }}>Procesando búsqueda con IA...</Typography></Card>
                 </Fade>
@@ -267,7 +269,7 @@ function App() {
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><AnchorIcon sx={{ fontSize: 18, color: 'text.disabled' }} /><Typography variant="caption" sx={{ color: 'text.disabled' }}>LogiSearch AI v2 © 2026</Typography></Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}><WifiIcon sx={{ fontSize: 14, color: 'primary.main' }} /><Typography variant="caption" sx={{ color: 'text.disabled' }}>Gemini 2.0 + Tavily + Supabase</Typography></Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}><WifiIcon sx={{ fontSize: 14, color: 'primary.main' }} /><Typography variant="caption" sx={{ color: 'text.disabled' }}>Gemini 2.0 + Tavily + Local Storage</Typography></Box>
           </Box>
         </Container>
       </Box>

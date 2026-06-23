@@ -6,8 +6,8 @@
  *   - Pages: Network-first with offline fallback
  */
 
-const CACHE_STATIC = 'elitescout-static-v2';
-const CACHE_API = 'elitescout-api-v2';
+const CACHE_STATIC = 'elitescout-static-v4';
+const CACHE_API = 'elitescout-api-v4';
 const API_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
 const PRECACHE = [
@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   // Strategy 1: API search — Network-first with cache fallback
-  if (url.pathname === '/api/search' && event.request.method === 'POST') {
+  if (url.pathname === '/app/elitescout/api/search/' && event.request.method === 'POST') {
     event.respondWith(handleAPISearch(event.request));
     return;
   }
@@ -67,7 +67,8 @@ self.addEventListener('fetch', (event) => {
 // ━━━ API SEARCH HANDLER ━━━
 async function handleAPISearch(request) {
   const body = await request.clone().text();
-  const cacheKey = new Request('/api/search?body=' + btoa(body).slice(0, 100));
+  const safeBody = encodeURIComponent(body);
+  const cacheKey = new Request('/app/elitescout/api/search/?body=' + btoa(safeBody).slice(0, 100));
 
   try {
     const networkResponse = await fetch(request);

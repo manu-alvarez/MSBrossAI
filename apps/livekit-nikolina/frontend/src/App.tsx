@@ -129,11 +129,13 @@ export default function App() {
             </p>
 
             {!token ? (
-              <button onClick={connectToVoice} style={{
-                padding: '1rem 3rem', background: 'linear-gradient(135deg, #06b6d4, #22d3ee)',
-                border: 'none', borderRadius: 30, color: '#000', fontSize: '1.2rem', fontWeight: 800, cursor: 'pointer',
-                boxShadow: '0 0 20px rgba(212,175,55,0.3)'
-              }}>📻 Iniciar Canal Seguro (LiveKit)</button>
+              <div className="portal-card" style={{ display: 'inline-block', borderRadius: 30, padding: 2 }}>
+                <button onClick={connectToVoice} className="portal-card-inner" style={{
+                  padding: '1rem 3rem', background: 'transparent',
+                  border: 'none', borderRadius: 28, color: '#fff', fontSize: '1.2rem', fontWeight: 800, cursor: 'pointer',
+                  display: 'inline-block'
+                }}>📻 Iniciar Canal Seguro (LiveKit)</button>
+              </div>
             ) : (
               <LiveKitRoom
                 serverUrl={LIVEKIT_URL}
@@ -179,16 +181,11 @@ export default function App() {
             {menuItems.length === 0 ? <p style={{ color: '#666' }}>No hay platos en la DB.</p> : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {filteredMenu.map((item: any) => (
-                  <div key={item.id} style={{ 
-                    background: 'rgba(255,255,255,0.02)', 
-                    border: '1px solid rgba(255,255,255,0.06)', 
-                    borderRadius: 16, 
-                    overflow: 'hidden',
+                  <div key={item.id} className="portal-card" style={{ height: '100%' }}>
+                  <div className="portal-card-inner" style={{ 
                     display: 'flex',
                     flexDirection: 'column',
                     height: '100%',
-                    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
-                    backdropFilter: 'blur(5px)'
                   }}>
                     {item.image_url && (
                       <div style={{ height: 180, overflow: 'hidden', position: 'relative', background: 'rgba(0,0,0,0.3)' }}>
@@ -224,6 +221,7 @@ export default function App() {
                       )}
                     </div>
                   </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -236,7 +234,8 @@ export default function App() {
             <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>📅 Reservas en Tiempo Real</h2>
             {reservations.length === 0 ? <p style={{ color: '#666' }}>Sin reservas todavía.</p> :
               reservations.map((res: any) => (
-                <div key={res.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.25rem', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div key={res.id} className="portal-card" style={{ marginBottom: '0.75rem' }}>
+                <div className="portal-card-inner" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                   <div>
                     <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.25rem' }}>{res.customer_name}</h3>
                     <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' }}>📞 {res.customer_phone || 'Sin tel'} · 👥 {res.num_guests} personas · ID: {res.id}</p>
@@ -257,12 +256,14 @@ export default function App() {
             <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>📞 Historial de Interacciones</h2>
             {calls.length === 0 ? <p style={{ color: '#666' }}>Sin llamadas registradas.</p> :
               calls.map((c: any) => (
-                <div key={c.id} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.25rem', marginBottom: '0.75rem' }}>
+                <div key={c.id} className="portal-card" style={{ marginBottom: '0.75rem' }}>
+                <div className="portal-card-inner" style={{ padding: '1.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>Inicio: {c.started_at}</span>
                     <span style={{ fontSize: '0.85rem', color: '#06b6d4' }}>⏱️ {c.duration_seconds || '?'}s</span>
                   </div>
                   <p style={{ fontSize: '0.9rem', color: '#f8f8f0', lineHeight: 1.5 }}>{c.transcript_summary || 'Sin transcripción procesada.'}</p>
+                </div>
                 </div>
               ))
             }
@@ -274,17 +275,23 @@ export default function App() {
           <div>
             <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>⚙️ Estado de Base de Datos</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-              <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
+              <div className="portal-card">
+              <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>BACKEND LOCAL</h3>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: isConnectedBackend ? '#06ff8f' : '#ffbe0b' }}>{isConnectedBackend ? '🟢 Estable' : '🔴 Abortado'}</div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
+              </div>
+              <div className="portal-card">
+              <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>RESERVAS TOTALES</h3>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#06b6d4' }}>{reservations.length}</div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
+              </div>
+              <div className="portal-card">
+              <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>LLAMADAS LOG</h3>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#06b6d4' }}>{calls.length}</div>
+              </div>
               </div>
             </div>
             <p style={{ marginTop: '2rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', textAlign: 'center' }}>

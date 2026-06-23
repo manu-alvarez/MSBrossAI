@@ -585,30 +585,74 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #09090b 100%)', color: '#f4f4f5' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg, #030712)', color: 'var(--text, #f8fafc)', position: 'relative', overflowX: 'hidden' }}>
+      <style>{`
+        :root {
+          --app-accent: #ec4899;
+        }
+        @property --border-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+        @keyframes borderSpin { to { --border-angle: 360deg; } }
+        .portal-card {
+          position: relative;
+          background: rgba(255,255,255,0.02);
+          border-radius: 20px;
+          padding: 2px;
+          color: var(--text, #f8fafc);
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          transform-style: preserve-3d;
+        }
+        .portal-card::before {
+          content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1.5px;
+          background: linear-gradient(var(--border-angle, 0deg), var(--app-accent), transparent 40%, transparent 60%, var(--app-accent));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor; mask-composite: exclude;
+          animation: borderSpin 4s linear infinite; opacity: 0.5; transition: opacity 0.4s;
+        }
+        .portal-card:hover::before { opacity: 1; }
+        .portal-card-inner {
+          background: rgba(8,12,24,0.85);
+          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+          border-radius: 19px; padding: 1.8rem;
+          display: flex; flex-direction: column; gap: 0.8rem;
+          position: relative; overflow: hidden; height: 100%;
+          transform-style: preserve-3d; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .portal-card:hover .portal-card-inner { transform: translateZ(20px); }
+        .portal-card:hover { transform: translateY(-10px) scale(1.03); }
+        
+        .header-portal {
+          position: relative;
+          background: rgba(8,12,24,0.85);
+          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          padding: 1.5rem 2rem;
+          display: flex; align-items: center; justify-content: space-between;
+          z-index: 10;
+        }
+        .header-portal::after {
+          content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1.5px;
+          background: linear-gradient(90deg, transparent, var(--app-accent), transparent);
+          animation: borderSpin 4s linear infinite; /* Reuse animation logic or static glow */
+          box-shadow: 0 0 15px var(--app-accent);
+        }
+      `}</style>
+      
       {/* Header */}
-      <header style={{
-        padding: '1rem 2rem',
-        background: 'rgba(24, 24, 27, 0.8)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-        boxShadow: '0 2px 20px rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
+      <header className="header-portal">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{
-            width: 50, height: 50, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+            width: 54, height: 54, borderRadius: '14px',
+            background: 'linear-gradient(135deg, var(--app-accent), transparent)',
+            border: '1px solid rgba(255,255,255,0.1)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.5rem',
-            boxShadow: '0 0 15px rgba(236, 72, 153, 0.5)',
+            fontSize: '1.6rem',
+            boxShadow: '0 0 20px rgba(236, 72, 153, 0.3)',
           }}>
             👁️
           </div>
           <div>
-            <h1 style={{ fontFamily: 'Fredoka One', fontSize: '1.5rem', color: '#f9a8d4' }}>
+            <h1 style={{ fontFamily: 'Inter', fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#f8fafc' }}>
               Edelweiss
             </h1>
             <p style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Juegos para mis ojitos ✨</p>
@@ -634,16 +678,10 @@ export default function App() {
       {/* Main Content */}
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
         {selectedGame ? (
-          <div style={{
-            background: 'rgba(39, 39, 42, 0.6)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: '25px',
-            padding: '2rem',
-            boxShadow: '0 4px 30px rgba(0,0,0,0.5)',
-            animation: 'slideIn 0.5s ease',
-            backdropFilter: 'blur(10px)',
-          }}>
-            <selectedGame.component />
+          <div className="portal-card" style={{ maxWidth: '800px', margin: '0 auto', animation: 'slideIn 0.5s ease' }}>
+            <div className="portal-card-inner">
+              <selectedGame.component />
+            </div>
           </div>
         ) : (
           <>
@@ -664,36 +702,34 @@ export default function App() {
                 <button
                   key={game.id}
                   onClick={() => setSelectedGame(game)}
+                  className="portal-card"
                   style={{
-                    padding: '1.5rem',
-                    background: 'rgba(39, 39, 42, 0.4)',
-                    border: `1px solid ${game.color}40`,
-                    borderRadius: '20px',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
                     animation: `slideIn 0.5s ease ${i * 0.1}s both`,
-                    textAlign: 'center',
-                    backdropFilter: 'blur(5px)',
-                  }}
-                  onMouseEnter={e => {
-                    (e.target as HTMLElement).style.transform = 'translateY(-5px)';
-                    (e.target as HTMLElement).style.boxShadow = `0 10px 30px ${game.color}20`;
-                    (e.target as HTMLElement).style.background = 'rgba(63, 63, 70, 0.6)';
-                  }}
-                  onMouseLeave={e => {
-                    (e.target as HTMLElement).style.transform = 'translateY(0)';
-                    (e.target as HTMLElement).style.boxShadow = 'none';
-                    (e.target as HTMLElement).style.background = 'rgba(39, 39, 42, 0.4)';
+                    textAlign: 'left',
+                    border: 'none',
+                    display: 'block',
+                    width: '100%',
                   }}
                 >
-                  <div style={{ fontSize: '3rem', marginBottom: '0.5rem', animation: 'float 3s ease-in-out infinite' }}>
-                    {game.icon}
-                  </div>
-                  <div style={{ fontFamily: 'Fredoka One', fontSize: '1.1rem', color: game.color, marginBottom: '0.25rem' }}>
-                    {game.name}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>
-                    {game.description}
+                  <div className="portal-card-inner">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.8rem' }}>
+                      <div style={{
+                        width: 44, height: 44, borderRadius: '12px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem',
+                        background: 'linear-gradient(135deg, var(--app-accent), transparent)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        boxShadow: '0 0 15px rgba(236, 72, 153, 0.2)',
+                      }}>
+                        {game.icon}
+                      </div>
+                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '1.1rem', color: '#f8fafc' }}>
+                        {game.name}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted, #64748b)', lineHeight: 1.6 }}>
+                      {game.description}
+                    </div>
                   </div>
                 </button>
               ))}

@@ -153,10 +153,12 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * idx + 0.5 }}
               onClick={() => cat.isFamily ? router.push('/family-travel') : handleSearch(cat.query)}
-              className={`group relative flex flex-col items-start p-6 glass rounded-3xl text-left hover:border-gold/30 transition-all duration-500 overflow-hidden h-48 ${
-                (cat as any).isHighlight ? 'ring-2 ring-gold/40 border-gold/30 scale-105 shadow-[0_0_30px_rgba(218,165,32,0.15)]' : ''
+              className={`group portal-card relative flex flex-col items-start rounded-3xl text-left transition-all duration-500 overflow-hidden h-48 ${
+                (cat as any).isHighlight ? 'scale-105 shadow-[0_0_30px_rgba(218,165,32,0.15)]' : ''
               }`}
+              style={{ padding: 0 }}
             >
+              <div className="portal-card-inner flex flex-col items-start p-6 h-full w-full relative" style={{ borderRadius: '1.4rem' }}>
               <div className={`absolute -right-4 -bottom-4 text-7xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125`}>
                 {cat.icon}
               </div>
@@ -172,6 +174,7 @@ export default function HomePage() {
               
               <div className="mt-auto flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gold opacity-0 group-hover:opacity-100 transition-opacity">
                 Ver Ofertas <span className="text-base">→</span>
+              </div>
               </div>
             </motion.button>
           ))}

@@ -74,13 +74,15 @@ export default function App() {
         </Box>
 
         {/* Bottom Dock */}
-        <Box sx={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 1000,
-          bgcolor: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(30px)', borderRadius: 100,
-          border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px rgba(0,0,0,1)' }}>
-          <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons={false}
-            sx={{ '& .MuiTabs-indicator': { display: 'none' }, '& .MuiTab-root': { minWidth: 80, py: 1.5 } }}>
-            {tabs.map(t => <Tab key={t.id} icon={t.icon} label={t.label} />)}
-          </Tabs>
+        <Box className="portal-card" sx={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 1000 }}>
+          <Box className="portal-card-inner" sx={{
+            bgcolor: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(30px)', borderRadius: 100,
+            boxShadow: '0 20px 40px rgba(0,0,0,1)' }}>
+            <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons={false}
+              sx={{ '& .MuiTabs-indicator': { display: 'none' }, '& .MuiTab-root': { minWidth: 80, py: 1.5 } }}>
+              {tabs.map(t => <Tab key={t.id} icon={t.icon} label={t.label} />)}
+            </Tabs>
+          </Box>
         </Box>
 
         {/* History FAB */}

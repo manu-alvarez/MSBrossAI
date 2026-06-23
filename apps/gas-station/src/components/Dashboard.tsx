@@ -78,21 +78,24 @@ export default function Dashboard({ user, onNavigate }: Props) {
         {cards.map((card, i) => (
           <Grid size={{ xs: 6, md: 3 }} key={i}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-              <Card sx={{ cursor: 'pointer', '&:hover': { borderColor: 'primary.main', transform: 'translateY(-2px)', transition: 'all 0.2s' } }} onClick={card.onClick}>
-                <CardContent sx={{ textAlign: 'center', py: 2 }}>
-                  <Box sx={{ color: card.color, mb: 1 }}>{card.icon}</Box>
-                  <Typography variant="h4" fontWeight={700}>{card.value}</Typography>
-                  <Typography variant="body2" fontWeight={600}>{card.title}</Typography>
-                  <Typography variant="caption" color="text.secondary">{card.desc}</Typography>
-                </CardContent>
-              </Card>
+              <Box className="portal-card" sx={{ cursor: 'pointer', '&:hover': { transform: 'translateY(-2px)', transition: 'all 0.2s' } }} onClick={card.onClick}>
+                <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none' }}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <Box sx={{ color: card.color, mb: 1 }}>{card.icon}</Box>
+                    <Typography variant="h4" fontWeight={700}>{card.value}</Typography>
+                    <Typography variant="body2" fontWeight={600}>{card.title}</Typography>
+                    <Typography variant="caption" color="text.secondary">{card.desc}</Typography>
+                  </CardContent>
+                </Card>
+              </Box>
             </motion.div>
           </Grid>
         ))}
       </Grid>
 
       {alerts.length > 0 && (
-        <Card sx={{ mb: 3, borderColor: 'warning.main' }}>
+        <Box className="portal-card" sx={{ mb: 3 }}>
+        <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none' }}>
           <CardContent>
             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
               <WarningAmberIcon color="warning" /> Productos Próximos a Caducar
@@ -106,11 +109,13 @@ export default function Dashboard({ user, onNavigate }: Props) {
             <Button size="small" sx={{ mt: 1 }} onClick={() => onNavigate('expiry')}>Ver todas</Button>
           </CardContent>
         </Card>
+        </Box>
       )}
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
+          <Box className="portal-card" sx={{ height: '100%' }}>
+          <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none', height: '100%' }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 1 }}>Incidencias Recientes</Typography>
               {stats.recent?.length > 0 ? stats.recent.slice(0, 5).map((inc: any, i: number) => (
@@ -121,9 +126,11 @@ export default function Dashboard({ user, onNavigate }: Props) {
               )) : <Typography variant="body2" color="text.secondary">Sin incidencias recientes</Typography>}
             </CardContent>
           </Card>
+          </Box>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
+          <Box className="portal-card" sx={{ height: '100%' }}>
+          <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none', height: '100%' }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 1 }}>Checklists - {shift === 'mañana' ? 'Apertura' : 'Cierre'}</Typography>
               {summary.entries?.length > 0 ? summary.entries
@@ -140,6 +147,7 @@ export default function Dashboard({ user, onNavigate }: Props) {
               )) : <Typography variant="body2" color="text.secondary">Sin tareas registradas hoy</Typography>}
             </CardContent>
           </Card>
+          </Box>
         </Grid>
       </Grid>
 

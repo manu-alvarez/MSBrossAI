@@ -65,8 +65,6 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border);
-  background: var(--bg-secondary);
   z-index: 10;
 }
 
@@ -74,7 +72,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  height: 100%;
 }
 
 @media (max-width: 768px) {
@@ -84,10 +82,42 @@ body {
   .panel-sidebar {
     width: 100%;
     height: 50vh;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
   }
   .panel-preview {
     height: 50vh;
   }
 }
+
+/* ═══ PREMIUM PORTAL STYLES ═══ */
+.portal-card {
+  position: relative;
+  background: rgba(255,255,255,0.02);
+  border-radius: 20px;
+  padding: 2px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  height: 100%;
+}
+
+.portal-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 2px;
+  background: linear-gradient(var(--border-angle, 0deg), var(--accent), transparent 40%, transparent 60%, var(--accent));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: borderSpin 4s linear infinite; opacity: 0.7; transition: opacity 0.4s;
+}
+
+.portal-card:hover::before { opacity: 1; box-shadow: 0 0 30px var(--accent-glow); }
+
+.portal-card-inner {
+  background: rgba(8,12,24,0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden; height: 100%; width: 100%;
+}
+
+@keyframes borderSpin { to { --border-angle: 360deg; } }
+@property --border-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+

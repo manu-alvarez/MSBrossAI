@@ -29,7 +29,7 @@ export async function fetchLiveDestinations(
   accommodationType?: string
 ): Promise<AIDestination[]> {
   try {
-    const res = await fetch(apiUrl('/_elitescout/api/family-travel'), {
+    const res = await fetch(apiUrl('/app/elitescout/api/family-travel/'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

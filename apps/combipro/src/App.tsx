@@ -238,7 +238,8 @@ export default function App() {
 
       {/* Header */}
       <motion.header initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }} 
-        className="glass-panel" style={{ margin: '1.5rem auto', maxWidth: 1400, padding: '1.5rem 2rem', borderRadius: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        className="portal-card" style={{ margin: '1.5rem auto', maxWidth: 1400, borderRadius: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0' }}>
+        <div className="portal-card-inner" style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: 22, flexDirection: 'row' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(249, 115, 22, 0.4)' }}>
             <Activity color="white" size={24} />
@@ -259,13 +260,15 @@ export default function App() {
              <button onClick={removeApiKey} className="glass-panel glass-panel-hover" style={{ padding: '0.75rem', borderRadius: 12, color: 'var(--red)' }} title="Desconectar"><XCircle size={18} /></button>
           )}
         </div>
+        </div>
       </motion.header>
 
       <motion.main variants={containerVariants} initial="hidden" animate="show" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', paddingBottom: '4rem' }}>
         
         {/* Settings Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <motion.div variants={itemVariants} className="portal-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0' }}>
+            <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Filtro de Competiciones</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', flex: 1 }}>
               {LEAGUES.map(league => {
@@ -284,9 +287,11 @@ export default function App() {
                 )
               })}
             </div>
+            </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <motion.div variants={itemVariants} className="portal-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0' }}>
+            <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
             <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Mercados a Combinar</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem', flex: 1 }}>
               {MARKETS.map(market => {
@@ -305,9 +310,11 @@ export default function App() {
                 )
               })}
             </div>
+            </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+          <motion.div variants={itemVariants} className="portal-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: '0' }}>
+            <div className="portal-card-inner" style={{ padding: '1.5rem', justifyContent: 'space-between' }}>
             <div style={{ flex: 1 }}>
               <h3 className="font-display" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem' }}>Perfil de Riesgo</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
@@ -340,6 +347,7 @@ export default function App() {
               </div>
               <input type="range" value={stake} onChange={e => setStake(Number(e.target.value))} min={5} max={500} step={5} />
             </div>
+            </div>
           </motion.div>
         </div>
 
@@ -360,7 +368,8 @@ export default function App() {
               
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
                 {combos.map((combo, i) => (
-                  <motion.div key={combo.id} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
+                  <motion.div key={combo.id} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="portal-card" style={{ padding: '0', overflow: 'hidden' }}>
+                    <div className="portal-card-inner" style={{ padding: '0' }}>
                     <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <div className="font-display text-gradient" style={{ fontSize: '1.25rem', fontWeight: 900 }}>TICKET #{i + 1}</div>
@@ -384,6 +393,7 @@ export default function App() {
                           </div>
                         </div>
                       ))}
+                    </div>
                     </div>
                   </motion.div>
                 ))}

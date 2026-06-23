@@ -54,12 +54,14 @@ export default function Home() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 90, damping: 18 }}
-        className="glass-card relative overflow-hidden rounded-3xl border border-primary/20 p-6 sm:p-10 lg:p-14"
+        className="portal-card relative overflow-hidden"
+      >
+        <div className="portal-card-inner glass-card p-6 sm:p-10 lg:p-14"
         style={{
           backgroundImage:
             "radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 50%), radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--secondary) 8%, transparent) 0%, transparent 50%)",
         }}
-      >
+        >
         <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-primary/30 blur-[100px] animate-pulse-glow" />
         <div className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-secondary/20 blur-[100px]" />
         <div className="pointer-events-none absolute inset-0 bg-noise opacity-[0.03]" />
@@ -119,12 +121,12 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="portal-card inline-block" style={{ borderRadius: 30, padding: 2 }}>
                 <Button
                   size="lg"
-                  className="px-6 shadow-xl shadow-primary/30 hover:shadow-primary/50"
+                  className="portal-card-inner px-6"
                   style={{
-                    backgroundImage: "linear-gradient(135deg, #ff2d52 0%, #e60028 100%)",
+                    backgroundColor: "transparent", border: "none", color: "white"
                   }}
                 >
                   Abrir Dashboard
@@ -234,6 +236,7 @@ export default function Home() {
             <div className="absolute -bottom-8 -right-8 -z-10 h-40 w-40 rounded-full bg-primary/30 blur-3xl" />
           </motion.div>
         </motion.div>
+        </div>
       </motion.section>
 
       <motion.section
@@ -247,8 +250,9 @@ export default function Home() {
             key={f.title}
             variants={itemVariants}
             whileHover={{ y: -2 }}
-            className="glass group rounded-2xl border border-border/30 p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+            className="portal-card"
           >
+            <div className="portal-card-inner glass group rounded-2xl border border-border/30 p-5 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
             <div
               className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${f.iconBg} ring-1 ${f.iconRing} backdrop-blur-xl`}
             >
@@ -256,6 +260,7 @@ export default function Home() {
             </div>
             <h3 className="text-sm font-semibold text-foreground">{f.title}</h3>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{f.text}</p>
+            </div>
           </motion.div>
         ))}
       </motion.section>
@@ -264,13 +269,15 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="grid gap-px overflow-hidden rounded-2xl border border-border/30 bg-border/30 sm:grid-cols-4"
+        className="grid gap-px overflow-hidden sm:grid-cols-4"
       >
         {stats.map((s) => (
-          <div key={s.label} className="bg-card/60 p-5 transition-colors hover:bg-card/80">
+          <div key={s.label} className="portal-card">
+          <div className="portal-card-inner bg-card/60 p-5 transition-colors hover:bg-card/80">
             <p className="text-3xl font-bold tracking-tight tabular-nums">{s.value}</p>
             <p className="mt-1 text-xs font-medium text-foreground">{s.label}</p>
             <p className="mt-0.5 text-[10px] text-muted-foreground">{s.change}</p>
+          </div>
           </div>
         ))}
       </motion.section>

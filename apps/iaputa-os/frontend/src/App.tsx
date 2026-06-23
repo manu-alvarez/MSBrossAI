@@ -475,7 +475,8 @@ export default function App() {
 
         {/* Floating Bottom Dock */}
         <footer className="sleek-dock-container">
-          <form className="sleek-input-dock" onSubmit={handleSubmit}>
+          <div className="portal-card" style={{ width: '100%', maxWidth: 800, pointerEvents: 'auto' }}>
+          <form className="portal-card-inner sleek-input-dock" onSubmit={handleSubmit} style={{ background: 'rgba(10,10,10,0.85)' }}>
             <input 
               type="file" 
               accept="image/*" 
@@ -515,6 +516,7 @@ export default function App() {
               </button>
             )}
           </form>
+          </div>
           <div className="dock-footer-text">IAPuta OS Multi-LLM Environment. Output may vary.</div>
         </footer>
       </div>

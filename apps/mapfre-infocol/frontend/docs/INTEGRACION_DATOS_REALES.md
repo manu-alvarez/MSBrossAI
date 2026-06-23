@@ -39,7 +39,7 @@ infocol status
 #   Chromium: instalado
 #   Anthropic SDK: 0.40.0+
 #   Keychain: disponible
-#   Modo: demo
+#   Modo: dry-run
 ```
 
 Si algún item falla, ver sección "Troubleshooting" del README.
@@ -85,9 +85,9 @@ La herramienta cumple con RGPD/LOPD:
 - Conserva credenciales en el llavero del sistema (cifrado)
 - Tiene un humano en el loop para cada envío
 
-Quedo a tu disposición para una demo presencial.
+Quedo a tu disposición para realizar una prueba (dry-run).
 
-Saludos,
+Un saludo,
 Pedro
 ```
 
@@ -264,7 +264,7 @@ Edita `config/settings.yaml`:
 
 ```yaml
 infocol:
-  mode: production  # ← cambiar de 'demo' a 'production'
+  mode: production
   dry_run: false    # ← cambiar de true a false
   
 browser:
@@ -399,11 +399,11 @@ alerts:
 
 ## 8. Rollback
 
-Si algo va mal, puedes revertir al modo demo o pausar:
+Si algo va mal, puedes revertir al modo dry-run o pausar:
 
 ```bash
-# Volver a modo demo (no toca el portal real)
-infocol config set mode demo
+# Volver a modo dry-run (no toca el portal real)
+infocol run --dry-run
 
 # Pausar el watcher (si lo tenías corriendo)
 infocol run --watch --pause

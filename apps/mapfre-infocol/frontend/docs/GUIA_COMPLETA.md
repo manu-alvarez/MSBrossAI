@@ -125,7 +125,7 @@ INFOCOL automatiza los pasos 1-6, dejando al fontanero solo la confirmación fin
 │  │ sanitizer  │    │             │    │              │           │
 │  └────────────┘    └─────────────┘    └──────────────┘           │
 │                                                                   │
-│  CLI: infocol {run, config, status, logs, demo}                  │
+│  CLI: infocol {run, config, status, logs}                        │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -192,7 +192,7 @@ infocol config            # Gestión de configuración
 
 infocol status            # Estado del sistema
 infocol logs              # Ver logs recientes
-infocol demo              # Modo demo (sin credenciales)
+infocol run --dry-run     # Modo dry-run (análisis real sin guardado)
 ```
 
 #### `src/infocol/browser.py` (Playwright automation)
@@ -452,7 +452,7 @@ frontend/src/
 
 - Todas las páginas son `client components` (usan `motion` y `useState`)
 - Sin Server Components activos (la UI es altamente interactiva)
-- Sin fetch inicial: los datos son mock/demo en esta versión
+- Sin fetch inicial: se realiza conexión con credenciales.
 - Instant navigation activada en `next.config.ts`:
   ```ts
   export default {
@@ -482,7 +482,7 @@ Todas las páginas compilan estáticamente excepto la ruta dinámica `[id]`.
 
 ## 5. Flujo de datos completo
 
-### 5.1 Happy path (modo demo → real)
+### 5.1 Happy path (modo dry-run → real)
 
 ```
 [Usuario abre frontend]
@@ -518,21 +518,12 @@ Todas las páginas compilan estáticamente excepto la ruta dinámica `[id]`.
 [Frontend: actualiza Dashboard con métricas]
 ```
 
-### 5.2 Modo demo (sin credenciales)
+### 5.2 Modo dry-run (sin guardado)
 
-Para presentaciones y desarrollo sin credenciales reales, `infocol demo`:
+Para presentaciones y pruebas sin confirmar expedientes reales, usa `--dry-run`:
 
-```python
-# src/infocol/main.py
-@cli.command()
-def demo():
-    """Ejecuta flujo completo con datos sintéticos."""
-    demo_data = generate_synthetic_expedientes(n=12)
-    for exp in demo_data:
-        result = analyze_synthetic(exp)
-        render_preview(result)
-        # NO envía al portal real
-        # NO llama a Claude (usa respuestas cacheadas)
+```bash
+infocol run --dry-run
 ```
 
 ---

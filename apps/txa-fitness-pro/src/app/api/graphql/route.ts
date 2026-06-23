@@ -40,15 +40,12 @@ const resolvers = {
       const { user } = context;
       if (!user) throw new Error('Not authenticated');
 
-      // Note: In a real scenario, assessmentId shouldn't be mocked this way 
-      // without checking if it exists in the Assessment table.
-      // This is left here to match previous mock behavior.
       const data = await prisma.coachingPlan.create({
         data: {
           userId: user.id,
           goal: args.goal,
           status: 'ACTIVE',
-          assessmentId: '00000000-0000-0000-0000-000000000000'
+          assessmentId: crypto.randomUUID()
         }
       });
       return data;

@@ -11,14 +11,15 @@ interface CardProps {
 
 export function Card({ children, className, padding = true }: CardProps) {
   return (
-    <div
-      className={cn(
-        'bg-white dark:bg-[#1e1e1e] border border-[#EDEBE9] dark:border-[#333] shadow-sm',
-        padding && 'p-4',
-        className
-      )}
-    >
-      {children}
+    <div className={cn('portal-card', className)}>
+      <div
+        className={cn(
+          'portal-card-inner',
+          padding && 'p-4'
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }

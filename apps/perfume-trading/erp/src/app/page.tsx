@@ -19,46 +19,11 @@ import { getDashboardKpis } from '@/app/actions';
 
 // ─── Mock KPI Data Removed ───
 
-const monthlyData = [
-  { month: 'Ene', sales: 85, purchases: 45 },
-  { month: 'Feb', sales: 92, purchases: 52 },
-  { month: 'Mar', sales: 78, purchases: 48 },
-  { month: 'Abr', sales: 110, purchases: 63 },
-  { month: 'May', sales: 124, purchases: 58 },
-  { month: 'Jun', sales: 95, purchases: 71 },
-];
-
-const tradingActivity = [
-  { day: 'Lun', offers: 12, bids: 8 },
-  { day: 'Mar', offers: 18, bids: 5 },
-  { day: 'Mié', offers: 15, bids: 10 },
-  { day: 'Jue', offers: 22, bids: 7 },
-  { day: 'Vie', offers: 20, bids: 12 },
-  { day: 'Sáb', offers: 8, bids: 3 },
-  { day: 'Dom', offers: 5, bids: 2 },
-];
-
-// ─── Mock Stock Alerts ───
-const stockAlerts: StockAlert[] = [
-  { product_id: '1', product_name: 'Aventus EDP 100ml', brand_name: 'Creed', batch_code: 'LOT-2024-A', quantity: 12, threshold: 20, alert_type: 'low_stock' },
-  { product_id: '2', product_name: 'Luna Rossa Carbon 150ml', brand_name: 'Prada', batch_code: 'LOT-2023-B', quantity: 8, threshold: 20, alert_type: 'low_stock' },
-  { product_id: '3', product_name: 'Black Orchid EDP 50ml', brand_name: 'Tom Ford', batch_code: 'LOT-2024-C', quantity: 5, threshold: 20, alert_type: 'low_stock' },
-  { product_id: '4', product_name: 'Sauvage EDT 100ml Tester', brand_name: 'Dior', batch_code: 'LOT-2022-D', quantity: 45, threshold: 20, alert_type: 'expiring', expiry_date: '2026-08-15' },
-];
-
-const recentActivity = [
-  { msg: 'Creed Aventus — Stock crítico (12 uds)', time: 'hace 1h', type: 'critical' as const },
-  { msg: 'Nueva oferta recibida de GlobalFragance GmbH', time: 'hace 3h', type: 'info' as const },
-  { msg: 'Factura INV-2026-0004 marcada como Pagada', time: 'hace 5h', type: 'success' as const },
-  { msg: 'Prada Luna Rossa batch LOT-2023-B por expirar', time: 'hace 6h', type: 'warning' as const },
-];
-
-const recentOffers = [
-  { brand: 'Chanel', product: 'Bleu de Chanel EDP 100ml', qty: 50, price: 78.50, status: 'Activa' as const },
-  { brand: 'Dior', product: 'Sauvage EDT 100ml Tester', qty: 100, price: 62.00, status: 'Pendiente' as const },
-  { brand: 'Creed', product: 'Aventus EDP 100ml', qty: 10, price: 245.00, status: 'Cerrada' as const },
-  { brand: 'Tom Ford', product: 'Ombre Leather EDP 100ml', qty: 25, price: 115.00, status: 'Activa' as const },
-];
+const monthlyData: any[] = [];
+const tradingActivity: any[] = [];
+const stockAlerts: StockAlert[] = [];
+const recentActivity: any[] = [];
+const recentOffers: any[] = [];
 
 const activityColors = {
   critical: 'bg-red-500',
@@ -241,7 +206,7 @@ export default function Dashboard() {
           <CardContent className="space-y-4">
             {recentActivity.map((act, idx) => (
               <div key={idx} className="flex items-start space-x-3">
-                <div className={cn('w-2 h-2 mt-1 rounded-full shrink-0', activityColors[act.type])} />
+                <div className={cn('w-2 h-2 mt-1 rounded-full shrink-0', activityColors[act.type as keyof typeof activityColors])} />
                 <div>
                   <p className="text-xs font-medium text-[#323130] dark:text-[#e0e0e0]">{act.msg}</p>
                   <p className="text-[10px] text-[#605E5C] dark:text-[#888]">{act.time}</p>
@@ -278,7 +243,7 @@ export default function Dashboard() {
                     <CurrencyDisplay amountUSD={offer.price} size="sm" />
                   </td>
                   <td className="px-4 py-3">
-                    <span className={cn('px-2 py-0.5 rounded-full text-[10px] font-bold', statusStyles[offer.status])}>
+                    <span className={cn('px-2 py-0.5 rounded-full text-[10px] font-bold', statusStyles[offer.status as keyof typeof statusStyles])}>
                       {offer.status}
                     </span>
                   </td>

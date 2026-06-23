@@ -155,10 +155,11 @@ export default function App() {
   };
 
   return (
-    <div className="app-layout">
+    <div className="app-layout" style={{ padding: '20px', gap: '20px', background: 'radial-gradient(circle at 50% 50%, #0a0a1a, #030712)' }}>
       
       {/* 🔴 CONTROL PANEL (Chat) */}
-      <div className="panel-sidebar">
+      <div className="panel-sidebar portal-card">
+        <div className="portal-card-inner">
         
         {/* Header */}
         <div style={{ padding: '20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -241,10 +242,13 @@ export default function App() {
             Presiona Enter para generar · Shift + Enter para salto de línea
           </p>
         </div>
+        
+        </div>
       </div>
 
       {/* 🟢 PREVIEW OUTLET (Sandbox & Code) */}
-      <div className="panel-preview">
+      <div className="panel-preview portal-card">
+        <div className="portal-card-inner">
         
         {/* Sandbox Tabs */}
         <div style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid var(--border)', background: 'var(--bg-primary)' }}>
@@ -316,6 +320,8 @@ export default function App() {
               </pre>
             </div>
           )}
+        </div>
+        
         </div>
       </div>
     </div>

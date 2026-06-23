@@ -90,7 +90,7 @@ export default function InvoicesPage() {
 
   const handleCreateInvoice = () => {
     if (!newInv.partner || newInv.totalNet <= 0) return;
-    const id = Date.now().toString(); // Mock ID for now
+    const id = crypto.randomUUID();
     const gross = newInv.totalNet * (1 + newInv.taxPercent / 100);
     const invNum = `INV-${new Date().getFullYear()}-${Math.floor(Math.random()*10000).toString().padStart(4, '0')}`;
     setInvoices([{

@@ -12,7 +12,7 @@ import {
     ArrowForward as ArrowIcon,
     History as HistoryIcon,
 } from '@mui/icons-material'
-import { getSearchHistory, type SearchQuery } from '../lib/supabase'
+import { getSearchHistory, type SearchQuery } from '../lib/storage'
 
 interface SearchHistoryProps {
     open: boolean

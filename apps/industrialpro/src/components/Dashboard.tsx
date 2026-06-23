@@ -48,14 +48,16 @@ export default function Dashboard({ user, onNavigate }: Props) {
         {cards.map((card, i) => (
           <Grid size={{ xs: 6, md: 3 }} key={i}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-              <Card sx={{ cursor: 'pointer', '&:hover': { borderColor: '#3b82f6', transform: 'translateY(-2px)', transition: 'all 0.2s' } }} onClick={card.onClick}>
-                <CardContent sx={{ textAlign: 'center', py: 2 }}>
-                  <Box sx={{ color: card.color, mb: 1 }}>{card.icon}</Box>
-                  <Typography variant="h4" fontWeight={700}>{card.value}</Typography>
-                  <Typography variant="body2" fontWeight={600}>{card.title}</Typography>
-                  <Typography variant="caption" color="text.secondary">{card.desc}</Typography>
-                </CardContent>
-              </Card>
+              <Box className="portal-card" sx={{ cursor: 'pointer', '&:hover': { transform: 'translateY(-2px)', transition: 'all 0.2s' } }} onClick={card.onClick}>
+                <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none' }}>
+                  <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                    <Box sx={{ color: card.color, mb: 1 }}>{card.icon}</Box>
+                    <Typography variant="h4" fontWeight={700}>{card.value}</Typography>
+                    <Typography variant="body2" fontWeight={600}>{card.title}</Typography>
+                    <Typography variant="caption" color="text.secondary">{card.desc}</Typography>
+                  </CardContent>
+                </Card>
+              </Box>
             </motion.div>
           </Grid>
         ))}
@@ -68,7 +70,8 @@ export default function Dashboard({ user, onNavigate }: Props) {
           return (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={op.id}>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }}>
-                <Card sx={{ cursor: 'pointer', '&:hover': { borderColor: 'rgba(59,130,246,0.3)' } }} onClick={() => onNavigate('operations')}>
+                <Box className="portal-card" sx={{ cursor: 'pointer' }}>
+                <Card className="portal-card-inner" sx={{ border: 'none', background: 'transparent', boxShadow: 'none' }} onClick={() => onNavigate('operations')}>
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="subtitle1" fontWeight={700}>{op.name}</Typography>
@@ -79,6 +82,7 @@ export default function Dashboard({ user, onNavigate }: Props) {
                     </Typography>
                   </CardContent>
                 </Card>
+                </Box>
               </motion.div>
             </Grid>
           );

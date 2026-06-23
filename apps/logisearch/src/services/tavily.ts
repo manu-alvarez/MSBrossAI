@@ -1,6 +1,6 @@
 // Web Search Service — Tavily API
 // Provides real-time web data for logistics queries
-import { TAVILY_API_KEY } from '../lib/supabase'
+import { TAVILY_API_KEY } from '../lib/storage'
 
 interface TavilyResult {
   title: string

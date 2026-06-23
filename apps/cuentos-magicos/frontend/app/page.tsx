@@ -79,7 +79,8 @@ export default function HomePage() {
         </p>
 
         {/* Content type selector */}
-        <div className="w-full max-w-4xl mb-12 bg-black/40 border border-amber-500/20 backdrop-blur-xl p-6 md:p-8 rounded-[2.5rem] shadow-[0_15px_50px_rgba(245,158,11,0.2)]">
+        <div className="portal-card w-full max-w-4xl mb-12" style={{ borderRadius: '2.5rem', padding: 0 }}>
+          <div className="portal-card-inner p-6 md:p-8" style={{ borderRadius: '2.3rem' }}>
           <p className="text-base md:text-lg text-amber-200 font-bold mb-6 flex items-center justify-center gap-2">
             ⭐ ¿Qué ingredientes llevará tu cuento mágico? ⭐
           </p>
@@ -124,6 +125,7 @@ export default function HomePage() {
                 </button>
               );
             })}
+          </div>
           </div>
         </div>
 
@@ -199,8 +201,9 @@ export default function HomePage() {
           ].map((s, i) => (
             <div
               key={s.step}
-              className={`theme-card rounded-[2.5rem] bg-black/50 border-3 ${s.color} p-8 backdrop-blur-md shadow-2xl flex flex-col justify-between hover:scale-[1.04] transition duration-300`}
+              className={`portal-card rounded-[2.5rem] p-0 shadow-2xl flex flex-col justify-between hover:scale-[1.04] transition duration-300`}
             >
+              <div className="portal-card-inner p-8 flex flex-col justify-between" style={{ borderRadius: '2.3rem' }}>
               <div>
                 <div className={`w-16 h-16 ${s.iconBg} rounded-2xl flex items-center justify-center text-4xl mb-6 bounce-gentle shadow-md`}>
                   {s.icon}
@@ -212,6 +215,7 @@ export default function HomePage() {
               <div className="mt-6 text-xs font-black uppercase text-amber-300 flex items-center gap-1.5">
                 <span>🚀 Paso</span>
                 <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center font-bold">{s.step}</span>
+              </div>
               </div>
             </div>
           ))}

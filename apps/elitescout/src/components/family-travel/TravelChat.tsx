@@ -36,7 +36,7 @@ export function TravelChat() {
     setLoading(true)
 
     try {
-      const res = await fetch('/_elitescout/api/chat', {
+      const res = await fetch('/app/elitescout/api/chat/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

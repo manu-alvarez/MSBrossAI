@@ -159,12 +159,20 @@ class RestaurantDB:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
+                CREATE TABLE IF NOT EXISTS knowledge_base (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    keyword TEXT NOT NULL UNIQUE,
+                    content TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+
                 CREATE INDEX IF NOT EXISTS idx_reservations_date ON reservations(date);
                 CREATE INDEX IF NOT EXISTS idx_reservations_status ON reservations(status);
                 CREATE INDEX IF NOT EXISTS idx_call_log_started ON call_log(started_at);
                 CREATE INDEX IF NOT EXISTS idx_pipeline_configs_active ON pipeline_configs(is_active);
                 CREATE INDEX IF NOT EXISTS idx_menu_items_category ON menu_items(category);
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_menu_items_name_unique ON menu_items(name);
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_knowledge_keyword ON knowledge_base(keyword);
                 """
             )
 
@@ -436,6 +444,21 @@ class RestaurantDB:
                     ),
                 )
                 logger.info("Migration: Added Gemini 2.5 Flash Native Audio pipeline")
+
+            # Seed knowledge base (RAG replacement)
+            if conn.execute("SELECT COUNT(*) AS c FROM knowledge_base").fetchone()["c"] == 0:
+                knowledge_data = [
+                    ("mascotas", "El restaurante admite mascotas en la zona de terraza exterior. En el interior solo se admiten perros guía."),
+                    ("vestimenta", "El código de vestimenta es 'smart casual'. No se permite ropa de baño ni chanclas."),
+                    ("corcho", "El descorche de botellas traídas del exterior tiene un coste de 15€ por botella."),
+                    ("historia", "El restaurante fue fundado en 1998 por la familia Álvarez, combinando la tradición mediterránea con toques vanguardistas."),
+                    ("cumpleaños", "Para cumpleaños, ofrecemos un postre de cortesía al homenajeado si se avisa con antelación en la reserva.")
+                ]
+                conn.executemany(
+                    "INSERT INTO knowledge_base (keyword, content) VALUES (?, ?)",
+                    knowledge_data,
+                )
+                logger.info("Seeded default knowledge base")
 
             conn.commit()
         finally:
@@ -1039,6 +1062,22 @@ class RestaurantDB:
         finally:
             conn.close()
 
+    # ------------------------------------------------------------------
+    # Knowledge Base (RAG)
+    # ------------------------------------------------------------------
+
+    def query_knowledge_base(self, query: str) -> str:
+        """Search the knowledge base by looking for keywords in the query."""
+        conn = self._get_conn()
+        try:
+            rows = conn.execute("SELECT keyword, content FROM knowledge_base").fetchall()
+            query_lower = query.lower()
+            for row in rows:
+                if row["keyword"] in query_lower:
+                    return row["content"]
+            return ""
+        finally:
+            conn.close()
 
 # Singleton instance
 db = RestaurantDB()

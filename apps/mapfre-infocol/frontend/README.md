@@ -79,14 +79,14 @@ npm install
 ### 3. Configuración inicial (sin credenciales reales)
 
 ```bash
-# Genera config/settings.local.yaml con valores de demo
-infocol config init --demo
+# Genera config/settings.local.yaml con valores predeterminados
+infocol config init
 
 # Verifica que todo funciona
 infocol status
 
-# Ejecuta una demo con datos sintéticos
-infocol demo
+# Ejecuta un análisis de expedientes reales sin guardar los datos (modo seguro)
+infocol run --dry-run
 ```
 
 ### 4. Lanzar el frontend
@@ -232,7 +232,7 @@ pytest tests/ -v --tb=short
 
 | Fase | Estado | Descripción |
 |------|--------|-------------|
-| **MVP** | ✅ Completado | 8 módulos Python, 15 tests, CLI funcional, demo mode |
+| **MVP** | ✅ Completado | 8 módulos Python, 15 tests, CLI funcional, dry-run mode |
 | **Frontend** | ✅ Completado | 5 páginas, MAPFRE brand, Motion, shadcn-style UI |
 | **Real data** | 🟡 Listo para activar | Solo requiere credenciales InfoCol reales |
 | **Multi-usuario** | 📅 Q3 2026 | Roles, permisos, base de datos central |
@@ -248,7 +248,7 @@ infocol run                        # Procesa todos los pendientes
 infocol run --id V67391281         # Procesa uno específico
 infocol status                     # Estado del sistema
 infocol config show                # Muestra config actual
-infocol demo                       # Modo demo (sin credenciales)
+infocol run --dry-run              # Modo dry-run (análisis real sin guardado)
 infocol logs                       # Ver logs recientes
 
 # Frontend

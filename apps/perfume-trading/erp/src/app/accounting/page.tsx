@@ -17,36 +17,15 @@ import { CurrencyDisplay } from '@/components/ui/currency-display';
 
 // ─── Mock Financial Data ───
 const financialKPIs = [
-  { title: 'Ingresos Netos (YTD)', value: 1450000, change: '+18.2%', positive: true, icon: TrendingUp },
-  { title: 'Margen Bruto', value: 485000, change: '+5.4%', positive: true, icon: PieChart },
-  { title: 'Patrimonio Neto', value: 2100500, change: '+12.1%', positive: true, icon: Wallet },
-  { title: 'EBITDA', value: 320000, change: '-2.1%', positive: false, icon: Calculator },
+  { title: 'Ingresos Netos (YTD)', value: 0, change: '0%', positive: true, icon: TrendingUp },
+  { title: 'Margen Bruto', value: 0, change: '0%', positive: true, icon: PieChart },
+  { title: 'Patrimonio Neto', value: 0, change: '0%', positive: true, icon: Wallet },
+  { title: 'EBITDA', value: 0, change: '0%', positive: false, icon: Calculator },
 ];
 
-const pnlData = [
-  { month: 'Ene', ingresos: 120000, cogs: 65000, gastos: 25000 },
-  { month: 'Feb', ingresos: 135000, cogs: 70000, gastos: 26000 },
-  { month: 'Mar', ingresos: 110000, cogs: 60000, gastos: 24000 },
-  { month: 'Abr', ingresos: 145000, cogs: 75000, gastos: 27000 },
-  { month: 'May', ingresos: 160000, cogs: 82000, gastos: 28000 },
-  { month: 'Jun', ingresos: 155000, cogs: 80000, gastos: 27500 },
-];
-
-const cashFlowData = [
-  { week: 'Sem 1', entradas: 45000, salidas: 30000, balance: 15000 },
-  { week: 'Sem 2', entradas: 52000, salidas: 60000, balance: 7000 },
-  { week: 'Sem 3', entradas: 38000, salidas: 25000, balance: 20000 },
-  { week: 'Sem 4', entradas: 65000, salidas: 40000, balance: 45000 },
-];
-
-const ledgerTransactions = [
-  { id: 'TRX-9901', date: '2026-05-28', account: '[4000] Ventas Mayoristas', desc: 'Lote 100x Creed Aventus', type: 'credit', amount: 24500, status: 'Completado' },
-  { id: 'TRX-9902', date: '2026-05-28', account: '[6000] Compras Perfumería', desc: 'Reposición Dior Sauvage', type: 'debit', amount: 15200, status: 'Procesando' },
-  { id: 'TRX-9903', date: '2026-05-27', account: '[6200] Gastos Logística', desc: 'Flete DHL Express DE-ES', type: 'debit', amount: 850, status: 'Completado' },
-  { id: 'TRX-9904', date: '2026-05-26', account: '[4000] Ventas B2B', desc: 'Factura INV-0042', type: 'credit', amount: 12400, status: 'Completado' },
-  { id: 'TRX-9905', date: '2026-05-25', account: '[6400] Gastos Personal', desc: 'Nóminas Mayo', type: 'debit', amount: 18500, status: 'Completado' },
-  { id: 'TRX-9906', date: '2026-05-25', account: '[4300] Servicios Consultoría', desc: 'Análisis de mercado fragancias', type: 'credit', amount: 3200, status: 'Pendiente' },
-];
+const pnlData: any[] = [];
+const cashFlowData: any[] = [];
+const ledgerTransactions: any[] = [];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
