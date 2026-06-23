@@ -248,3 +248,22 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 5. **Resiliencia de SQLite:** Al instanciar bases de datos SQLite en Python, añade siempre `check_same_thread=False` y un timeout elevado (`timeout=20.0`) para evitar bloqueos por transacciones concurrentes de los agentes de voz y la web.
 6. **Compilaciones Next.js / SSG:** Al usar `output: export`, asegúrate de mover funciones como `generateStaticParams()` a componentes de servidor o archivos `layout.tsx` si el archivo `page.tsx` utiliza la directiva `'use client'`, garantizando la correcta compilación y exportación de archivos HTML estáticos.
 
+
+---
+
+## 🛑 9. Lecciones Críticas y Troubleshooting (Auditoría Junio 2026)
+
+1. **Next.js `trailingSlash: true` y API POSTs:**
+   Si una app Next.js tiene `trailingSlash: true` en `next.config.ts`, TODAS las peticiones `fetch()` hacia la API interna **deben terminar con `/`** (ej: `/api/search/`). Si no, Next.js emite un HTTP 308 Redirect automático. En peticiones `POST`, esto provoca que el body (payload) se pierda durante la redirección, rompiendo la aplicación silenciosamente en producción con errores JSON parse o de `DOCTYPE`.
+
+2. **Service Workers y `basePath` en Next.js:**
+   Al montar aplicaciones estáticas bajo `/app/<nombre>/`, los Service Workers customizados (como en `elitescout` o `perfume-trading`) deben interceptar e inyectar **explícitamente** el prefijo de la ruta. Usar caché en `/catalog` sin inyectar `/app/<nombre>/catalog` causará que el PWA falle en modo offline y bloquee peticiones de red.
+
+3. **Estandarización UI (Logo MSBrossAI):**
+   No se permiten imágenes externas recortadas para logos de barra de navegación. El logo corporativo debe renderizarse **siempre** mediante HTML/CSS estricto:
+   - Tipografía: `Inter`, peso `900`.
+   - Estilo: `<span style="color:#8b5cf6">MS</span>BrossAI`.
+   - Evitar sobrecarga de text-shadows (efectos neón) para garantizar máxima legibilidad en dispositivos móviles.
+
+4. **Limpieza Rigurosa del Sistema de Archivos:**
+   Los procesos de "build" o refactorización masiva dejan rastros (`.DS_Store`, `index 2.html`, tests unitarios de prototipado). Antes de presentar o hacer push a `main`, el repositorio debe estar purgado de `.test.ts`, logs locales y scripts de un solo uso. Un repositorio limpio es síntoma de Ingeniería Nivel 3.
