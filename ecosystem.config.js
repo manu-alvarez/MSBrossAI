@@ -58,7 +58,7 @@ module.exports = {
     {
       name: 'nikolina-agent',
       script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
-      args: 'src/agent.py dev',
+      args: 'src/agent.py start',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
       env: {
         PYTHONPATH: './agent/src:./server/src'
