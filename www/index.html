@@ -369,15 +369,28 @@ const obs=new IntersectionObserver(es=>{
 cards.forEach(c=>obs.observe(c));
 
 /* ═══════════════════════════════════════════════════════
+   PERFORMANCE — Mobile/low-power detection
+   ═══════════════════════════════════════════════════════ */
+const isMobile='ontouchstart'in window||navigator.maxTouchPoints>0||window.innerWidth<768;
+const dprClamp=Math.min(window.devicePixelRatio||1,isMobile?1:2);
+
+/* ═══════════════════════════════════════════════════════
    HERO CANVAS — Gravitational particle field
    ═══════════════════════════════════════════════════════ */
 const hc=document.getElementById('hero-canvas');
 const hx=hc.getContext('2d');
 let W,H,pts=[],mouse={x:-999,y:-999};
-function resize(){W=hc.width=window.innerWidth;H=hc.height=window.innerHeight}
+function resize(){
+    W=Math.floor(window.innerWidth*dprClamp);
+    H=Math.floor(window.innerHeight*dprClamp);
+    hc.width=W;hc.height=H;
+    hc.style.width=window.innerWidth+'px';
+    hc.style.height=window.innerHeight+'px';
+    hx.setTransform(dprClamp,0,0,dprClamp,0,0);
+}
 resize();
 window.addEventListener('resize',resize);
-document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+if(!isMobile)document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
 
 class P{
     constructor(){this.reset()}
@@ -391,10 +404,13 @@ class P{
     }
     update(){
         this.angle+=this.speed;
-        this.x=W/2+Math.cos(this.angle)*this.dist;
-        this.y=H/2+Math.sin(this.angle)*this.dist*.55;
-        const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<130){this.x-=dx*.04;this.y-=dy*.04}
+        const lW=window.innerWidth,lH=window.innerHeight;
+        this.x=lW/2+Math.cos(this.angle)*this.dist;
+        this.y=lH/2+Math.sin(this.angle)*this.dist*.55;
+        if(!isMobile){
+            const dx=mouse.x-this.x,dy=mouse.y-this.y,d2=dx*dx+dy*dy;
+            if(d2<16900){const f=.04;this.x-=dx*f;this.y-=dy*f}
+        }
     }
     draw(){
         hx.beginPath();
@@ -403,15 +419,33 @@ class P{
         hx.fill();
     }
 }
-const pN=Math.min(130,Math.floor(W*H/9000));
+const pN=isMobile?Math.min(45,Math.floor(window.innerWidth*window.innerHeight/20000)):Math.min(130,Math.floor(window.innerWidth*window.innerHeight/9000));
 for(let i=0;i<pN;i++)pts.push(new P);
+
+/* Connection line threshold — skip entirely on mobile */
+const LINE_DIST=90;
+const LINE_DIST2=LINE_DIST*LINE_DIST;
+
 function heroAnim(){
-    hx.clearRect(0,0,W,H);
+    hx.clearRect(0,0,window.innerWidth,window.innerHeight);
     for(let i=0;i<pts.length;i++){
         pts[i].update();pts[i].draw();
-        for(let j=i+1;j<pts.length;j++){
-            const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-            if(d<90){hx.beginPath();hx.moveTo(pts[i].x,pts[i].y);hx.lineTo(pts[j].x,pts[j].y);hx.strokeStyle=`rgba(139,92,246,${.15*(1-d/90)})`;hx.lineWidth=.5;hx.stroke()}
+    }
+    /* O(n²) line connections — desktop only */
+    if(!isMobile){
+        hx.lineWidth=.5;
+        for(let i=0;i<pts.length;i++){
+            for(let j=i+1;j<pts.length;j++){
+                const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d2=dx*dx+dy*dy;
+                if(d2<LINE_DIST2){
+                    const d=Math.sqrt(d2);
+                    hx.beginPath();
+                    hx.moveTo(pts[i].x,pts[i].y);
+                    hx.lineTo(pts[j].x,pts[j].y);
+                    hx.strokeStyle=`rgba(0,229,255,${.12*(1-d/LINE_DIST)})`;
+                    hx.stroke();
+                }
+            }
         }
     }
     requestAnimationFrame(heroAnim);
@@ -424,11 +458,18 @@ heroAnim();
 const wc=document.getElementById('wormhole-canvas');
 const wx=wc.getContext('2d');
 let wW,wH;
-function wResize(){wW=wc.width=window.innerWidth;wH=wc.height=window.innerHeight}
+function wResize(){
+    wW=Math.floor(window.innerWidth*dprClamp);
+    wH=Math.floor(window.innerHeight*dprClamp);
+    wc.width=wW;wc.height=wH;
+    wc.style.width=window.innerWidth+'px';
+    wc.style.height=window.innerHeight+'px';
+    wx.setTransform(dprClamp,0,0,dprClamp,0,0);
+}
 wResize();
 window.addEventListener('resize',wResize);
 
-const STAR_COUNT=600;
+const STAR_COUNT=isMobile?180:600;
 const stars=[];
 for(let i=0;i<STAR_COUNT;i++){
     stars.push({
@@ -441,34 +482,36 @@ for(let i=0;i<STAR_COUNT;i++){
     });
 }
 
-// Nebula rings
+/* Nebula rings — fewer on mobile, no shadowBlur */
+const RING_COUNT=isMobile?4:8;
 const rings=[];
-for(let i=0;i<8;i++){
+for(let i=0;i<RING_COUNT;i++){
     rings.push({
-        z:i*.4+.5,
+        z:i*(.4*(8/RING_COUNT))+.5,
         rotation:Math.random()*Math.PI*2,
         rotSpeed:.003+Math.random()*.005,
-        hue:250+i*15,
+        hue:250+i*(15*(8/RING_COUNT)),
         radius:.3+Math.random()*.2,
     });
 }
 
-let wormholeProgress=0; // 0=inactive, 1=full speed
+let wormholeProgress=0;
 
 function drawWormhole(){
+    const lW=window.innerWidth,lH=window.innerHeight;
     wx.fillStyle='rgba(3,7,18,0.15)';
-    wx.fillRect(0,0,wW,wH);
+    wx.fillRect(0,0,lW,lH);
 
     if(wormholeProgress<=0)return;
 
-    const cx=wW/2,cy=wH/2;
+    const cx=lW/2,cy=lH/2;
     const speedFactor=wormholeProgress;
 
-    // Draw nebula rings
+    /* Nebula rings — no shadowBlur (GPU saver) */
     rings.forEach(ring=>{
         ring.rotation+=ring.rotSpeed*speedFactor;
         const perspective=1/(ring.z*.8+.2);
-        const r=ring.radius*Math.min(wW,wH)*perspective;
+        const r=ring.radius*Math.min(lW,lH)*perspective;
         const alpha=Math.min(1,speedFactor)*(.15+.1*Math.sin(ring.rotation*3));
 
         wx.save();
@@ -478,17 +521,16 @@ function drawWormhole(){
         wx.ellipse(0,0,r,r*.7,0,0,Math.PI*2);
         wx.strokeStyle=`hsla(${ring.hue},70%,60%,${alpha})`;
         wx.lineWidth=2*perspective;
-        wx.shadowBlur=20*perspective;
-        wx.shadowColor=`hsla(${ring.hue},80%,50%,.4)`;
+        /* shadowBlur only on desktop — massive GPU cost on mobile */
+        if(!isMobile){wx.shadowBlur=20*perspective;wx.shadowColor=`hsla(${ring.hue},80%,50%,.4)`}
         wx.stroke();
         wx.restore();
 
-        // Move ring toward camera
         ring.z-=.008*speedFactor;
         if(ring.z<.1){ring.z=3;ring.hue=250+Math.random()*60}
     });
 
-    // Draw stars
+    /* Stars — simple lines on mobile, gradient trails on desktop */
     stars.forEach(star=>{
         star.z-=star.speed*speedFactor*2;
         if(star.z<=.01){
@@ -497,14 +539,13 @@ function drawWormhole(){
             star.z=3;
         }
         const perspective=1/star.z;
-        const sx=cx+star.x*wW*perspective*.4;
-        const sy=cy+star.y*wH*perspective*.4;
+        const sx=cx+star.x*lW*perspective*.4;
+        const sy=cy+star.y*lH*perspective*.4;
         const sz=star.size*perspective*.8;
 
-        if(sx<-10||sx>wW+10||sy<-10||sy>wH+10)return;
+        if(sx<-10||sx>lW+10||sy<-10||sy>lH+10)return;
 
-        // Star trail
-        const trailLen=Math.min(40,sz*8*speedFactor);
+        const trailLen=Math.min(isMobile?20:40,sz*(isMobile?4:8)*speedFactor);
         const dx=sx-cx,dy=sy-cy;
         const dist=Math.sqrt(dx*dx+dy*dy);
         if(dist>0&&trailLen>2){
@@ -512,24 +553,28 @@ function drawWormhole(){
             wx.beginPath();
             wx.moveTo(sx,sy);
             wx.lineTo(sx-nx*trailLen,sy-ny*trailLen);
-            const grad=wx.createLinearGradient(sx,sy,sx-nx*trailLen,sy-ny*trailLen);
-            grad.addColorStop(0,`hsla(${star.hue},80%,80%,${Math.min(.9,speedFactor)})`);
-            grad.addColorStop(1,'transparent');
-            wx.strokeStyle=grad;
+            if(isMobile){
+                /* Simple solid line — no createLinearGradient per star */
+                wx.strokeStyle=`hsla(${star.hue},80%,80%,${Math.min(.7,speedFactor)})`;
+            }else{
+                const grad=wx.createLinearGradient(sx,sy,sx-nx*trailLen,sy-ny*trailLen);
+                grad.addColorStop(0,`hsla(${star.hue},80%,80%,${Math.min(.9,speedFactor)})`);
+                grad.addColorStop(1,'transparent');
+                wx.strokeStyle=grad;
+            }
             wx.lineWidth=Math.max(.5,sz*.6);
             wx.stroke();
         }
 
-        // Star dot
         wx.beginPath();
         wx.arc(sx,sy,Math.max(.3,sz*.4),0,Math.PI*2);
         wx.fillStyle=`hsla(${star.hue},80%,85%,${Math.min(1,speedFactor*.8+.2)})`;
         wx.fill();
     });
 
-    // Central vortex glow
+    /* Central vortex glow */
     const vGrad=wx.createRadialGradient(cx,cy,0,cx,cy,120*speedFactor);
-    vGrad.addColorStop(0,`rgba(139,92,246,${.2*speedFactor})`);
+    vGrad.addColorStop(0,`rgba(0,229,255,${.2*speedFactor})`);
     vGrad.addColorStop(.5,`rgba(6,182,212,${.08*speedFactor})`);
     vGrad.addColorStop(1,'transparent');
     wx.fillStyle=vGrad;
