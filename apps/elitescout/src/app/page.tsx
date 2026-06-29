@@ -9,7 +9,6 @@ import { TravelSearchForm } from "@/components/search/TravelSearchForm";
 const CATEGORIES = [
   { label: "Viajes", icon: "🌍", query: "ofertas viaje pack completo", color: "gold", description: "Vuelos + Hotel + Transporte" },
   { label: "Tecnología", icon: "🚀", query: "gadgets ultima hora", color: "cyan", description: "Lanzamientos y ofertas" },
-  { label: "Family Travel", icon: "✈️", query: "family-travel", color: "gold", description: "Family Travel Finder IA | Tavily + Groq + Gemini", isFamily: true, isHighlight: true },
   { label: "Moda", icon: "💎", query: "luxury fashion deals", color: "gold", description: "Firmas exclusivas" },
   { label: "Hogar", icon: "🏰", query: "smart home elite", color: "cyan", description: "Diseño y domótica" },
 ];
@@ -106,7 +105,7 @@ export default function HomePage() {
       </div>
 
       {/* Search Section */}
-      <div className="w-full max-w-4xl z-10 mb-20 min-h-[140px]">
+      <div className="w-full max-w-4xl z-10 mb-12 min-h-[140px]">
         <AnimatePresence mode="wait">
           {searchMode === "product" ? (
             <motion.div
@@ -138,6 +137,56 @@ export default function HomePage() {
         </AnimatePresence>
       </div>
 
+      {/* ═══ FAMILY MODE — Dedicated Premium Banner ═══ */}
+      <motion.div
+        className="w-full max-w-6xl z-10 mb-14"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <button
+          onClick={() => router.push('/family-travel')}
+          className="group w-full relative overflow-hidden rounded-3xl border border-white/[0.08] transition-all duration-500 hover:border-[#FF6B6B]/30 hover:shadow-[0_0_40px_rgba(255,107,107,0.1)]"
+        >
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FF6B6B]/10 via-[#4ECDC4]/8 to-[#FFE66D]/10 opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(255,107,107,0.08),transparent_60%)]" />
+          
+          <div className="relative flex items-center gap-6 p-6 md:p-8">
+            {/* Icon block */}
+            <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-[#FF6B6B]/20 to-[#4ECDC4]/20 border border-white/10 flex items-center justify-center text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-500">
+              ✈️
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 text-left">
+              <div className="flex items-center gap-3 mb-1">
+                <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[#FF6B6B] transition-colors">
+                  Family Mode
+                </h3>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-[#FF6B6B]/15 text-[#FF6B6B] border border-[#FF6B6B]/20">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B6B] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B6B]"></span>
+                  </span>
+                  Personal
+                </span>
+              </div>
+              <p className="text-sm text-white/50 leading-relaxed max-w-xl">
+                Buscador de viajes familiares con IA — Destinos ideales desde Mequinenza para 2 adultos + 1 niña. 
+                Comparador coche / avión / tren, mapa interactivo y chat IA personalizado.
+              </p>
+            </div>
+
+            {/* CTA arrow */}
+            <div className="hidden md:flex flex-shrink-0 items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#FF6B6B] opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
+              Abrir
+              <span className="text-xl">→</span>
+            </div>
+          </div>
+        </button>
+      </motion.div>
+
       {/* Categories / Quick Deals */}
       <div className="w-full max-w-6xl z-10">
         <div className="flex items-center justify-between mb-8 px-2">
@@ -145,17 +194,15 @@ export default function HomePage() {
           <div className="h-px flex-1 mx-6 bg-gradient-to-r from-white/10 to-transparent" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {CATEGORIES.map((cat, idx) => (
             <motion.button
               key={cat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * idx + 0.5 }}
-              onClick={() => cat.isFamily ? router.push('/family-travel') : handleSearch(cat.query)}
-              className={`group portal-card relative flex flex-col items-start rounded-3xl text-left transition-all duration-500 overflow-hidden h-48 ${
-                (cat as any).isHighlight ? 'scale-105 shadow-[0_0_30px_rgba(218,165,32,0.15)]' : ''
-              }`}
+              onClick={() => handleSearch(cat.query)}
+              className="group portal-card relative flex flex-col items-start rounded-3xl text-left transition-all duration-500 overflow-hidden h-48"
               style={{ padding: 0 }}
             >
               <div className="portal-card-inner flex flex-col items-start p-6 h-full w-full relative" style={{ borderRadius: '1.4rem' }}>
@@ -190,3 +237,4 @@ export default function HomePage() {
     </div>
   );
 }
+
