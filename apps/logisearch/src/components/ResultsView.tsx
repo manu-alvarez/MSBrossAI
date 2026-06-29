@@ -67,9 +67,9 @@ const DOCUMENTS = [
 ]
 
 const MODE_CONFIG: Record<string, { icon: typeof ShipIcon; label: string; color: string }> = {
-  mar: { icon: ShipIcon, label: 'Marítimo', color: '#ef4444' },
-  aire: { icon: PlaneIcon, label: 'Aéreo', color: '#A78BFA' },
-  tierra: { icon: TruckIcon, label: 'Terrestre', color: '#34D399' },
+  mar: { icon: ShipIcon, label: 'Marítimo', color: '#00E5FF' },
+  aire: { icon: PlaneIcon, label: 'Aéreo', color: '#22D3EE' },
+  tierra: { icon: TruckIcon, label: 'Terrestre', color: '#06B6D4' },
 }
 
 // Animation variants
@@ -105,7 +105,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
     const TitleIcon = isExpert ? SparklesIcon : GlobeIcon
     const BgIcon = isExpert ? ExpertIcon : GlobeIcon
     const titleText = isExpert ? 'Análisis Experto' : 'Respuesta General'
-    const primaryColor = isExpert ? '#A78BFA' : '#34D399'
+    const primaryColor = isExpert ? '#22D3EE' : '#06B6D4'
 
     return (
       <MotionCard
@@ -114,7 +114,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
         sx={{ p: { xs: 2, md: 4 }, position: 'relative', overflow: 'hidden' }}
       >
         <Box sx={{ position: 'absolute', top: -50, right: -50, opacity: 0.1, pointerEvents: 'none' }}>
-          <BgIcon sx={{ fontSize: 240, color: 'secondary.main' }} />
+          <BgIcon sx={{ fontSize: 240, color: 'primary.dark' }} />
         </Box>
         <Typography variant="h5" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1.5, color: primaryColor }}>
           <TitleIcon />
@@ -130,10 +130,10 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
           '& h3': { fontSize: '1.2rem', color: primaryColor },
           '& p': { mb: 2 },
           '& ul, & ol': { pl: 3, mb: 2 },
-          '& li': { mb: 1, '&::marker': { color: isExpert ? 'secondary.main' : '#34D399' } },
+          '& li': { mb: 1, '&::marker': { color: isExpert ? 'primary.main' : '#06B6D4' } },
           '& strong': { color: 'white', fontWeight: 700 },
           '& code': { bgcolor: 'rgba(255,255,255,0.1)', px: 1, py: 0.2, borderRadius: 1, fontFamily: 'monospace', fontSize: '0.9em' },
-          '& a': { color: '#fca5a5', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
+          '& a': { color: '#00E5FF', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
         }}>
           <ReactMarkdown>{expertData}</ReactMarkdown>
         </Box>
@@ -215,7 +215,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
               sx={{
                 p: 2.5,
                 height: '100%',
-                ...(item.highlight && { borderColor: alpha('#ef4444', 0.3) }),
+                ...(item.highlight && { borderColor: alpha('#00E5FF', 0.3) }),
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
@@ -289,7 +289,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
                     <Typography
                       variant="h5"
                       sx={{
-                        background: 'linear-gradient(135deg, #ef4444, #f87171)',
+                        background: 'linear-gradient(135deg, #00E5FF, #00B8D4)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         fontWeight: 700,
@@ -437,7 +437,7 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
                 <Stack spacing={0.5}>
                   {(routeData?.risks as string[]).map((risk, idx) => (
                     <Box key={idx} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                      <WarningIcon sx={{ color: 'warning.main', fontSize: 14 }} />
+                      <WarningIcon sx={{ color: 'primary.light', fontSize: 14 }} />
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>{risk}</Typography>
                     </Box>
                   ))}
@@ -482,10 +482,39 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
       {/* ─── Carriers ─── */}
       <MotionCard custom={9} initial="hidden" animate="visible" variants={cardVariants}>
         <CardContent>
-          <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <UsersIcon sx={{ color: 'primary.main' }} />
-            Transportistas Recomendados
-          </Typography>
+          <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <UsersIcon sx={{ color: 'primary.main' }} />
+              Transportistas Recomendados
+            </Typography>
+            {carriers.length > 0 && (
+              <Button 
+                variant="outlined" 
+                size="small" 
+                startIcon={<FileTextIcon />}
+                onClick={() => {
+                  const header = ['Transportista', 'Rating', 'Tiempo de Tránsito', 'Precio'];
+                  const rows = carriers.map(c => [
+                    `"${(c.name as string || '').replace(/"/g, '""')}"`, 
+                    Number(c.rating) || 4, 
+                    `"${(c.transitTime as string || '').replace(/"/g, '""')}"`, 
+                    `"${(c.priceLevel as string || c.price as string || '').replace(/"/g, '""')}"`
+                  ].join(','));
+                  const csv = [header.join(','), ...rows].join('\n');
+                  const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', `transportistas_${origin.replace(/[^a-z0-9]/gi, '_')}_${destination.replace(/[^a-z0-9]/gi, '_')}.csv`);
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+              >
+                Exportar CSV
+              </Button>
+            )}
+          </Box>
 
           {carriers.length > 0 ? (
             <Grid container spacing={2}>
@@ -496,9 +525,9 @@ export default function ResultsView({ origin, destination, mode, searchMode = 'e
                       p: 2.5,
                       bgcolor: 'rgba(255,255,255,0.04)',
                       border: '1px solid',
-                      borderColor: idx === 0 ? alpha('#ef4444', 0.3) : 'divider',
+                      borderColor: idx === 0 ? alpha('#00E5FF', 0.3) : 'divider',
                       '&:hover': {
-                        borderColor: alpha('#ef4444', 0.5),
+                        borderColor: alpha('#00E5FF', 0.5),
                         transform: 'translateY(-2px)',
                         boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
                       },

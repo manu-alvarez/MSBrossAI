@@ -13,9 +13,9 @@ const theme = createTheme({
             contrastText: '#000000', // Texto oscuro sobre botones cyan para max legibilidad
         },
         secondary: {
-            main: '#8B5CF6',
-            light: '#A78BFA',
-            dark: '#6D28D9',
+            main: '#0891B2',
+            light: '#22D3EE',
+            dark: '#0E7490',
         },
         background: {
             default: '#050505',  // Casi negro absoluto (Deep Black)
@@ -27,9 +27,9 @@ const theme = createTheme({
             dark: '#000000',
         },
         success: {
-            main: '#10B981',
-            light: '#34D399',
-            dark: '#059669',
+            main: '#06B6D4',
+            light: '#67E8F9',
+            dark: '#0891B2',
         },
         warning: {
             main: '#F59E0B',
@@ -248,7 +248,7 @@ const theme = createTheme({
                             borderColor: 'rgba(0, 180, 216, 0.4)',
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#ef4444',
+                            borderColor: '#00E5FF',
                             boxShadow: '0 0 0 4px rgba(0, 180, 216, 0.15)',
                         },
                     },
@@ -262,14 +262,14 @@ const theme = createTheme({
                     borderRadius: 20,
                 },
                 colorPrimary: {
-                    background: alpha('#ef4444', 0.15),
-                    color: '#f87171',
-                    border: `1px solid ${alpha('#ef4444', 0.3)}`,
+                    background: alpha('#00E5FF', 0.15),
+                    color: '#84FFFF',
+                    border: `1px solid ${alpha('#00E5FF', 0.3)}`,
                 },
                 colorSuccess: {
-                    background: alpha('#10B981', 0.15),
-                    color: '#34D399',
-                    border: `1px solid ${alpha('#10B981', 0.3)}`,
+                    background: alpha('#06B6D4', 0.15),
+                    color: '#67E8F9',
+                    border: `1px solid ${alpha('#06B6D4', 0.3)}`,
                 },
             },
         },
@@ -330,10 +330,10 @@ const theme = createTheme({
                 root: {
                     color: 'rgba(255, 255, 255, 0.15)',
                     '&.Mui-active': {
-                        color: '#ef4444',
+                        color: '#00E5FF',
                     },
                     '&.Mui-completed': {
-                        color: '#10B981',
+                        color: '#06B6D4',
                     },
                 },
             },

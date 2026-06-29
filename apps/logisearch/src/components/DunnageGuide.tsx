@@ -87,7 +87,7 @@ export default function DunnageGuide() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <Box sx={{ p: 3, borderRadius: 2, border: '2px solid', borderColor: alpha('#fca5a5', 0.3), bgcolor: alpha('#fca5a5', 0.05), height: '100%' }}>
+          <Box sx={{ p: 3, borderRadius: 2, border: '2px solid', borderColor: alpha('#00E5FF', 0.3), bgcolor: alpha('#00E5FF', 0.05), height: '100%' }}>
             <Typography variant="h6" sx={{ mb: 2 }}>Resultado</Typography>
             <Stack spacing={2}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -8,9 +8,9 @@ import {
 import { alpha } from '@mui/material/styles'
 
 const MODE_RATES = {
-  mar: { label: 'Marítimo', symbol: 'USD', color: '#fca5a5', rate: 0.35 },
-  aire: { label: 'Aéreo', symbol: 'USD', color: '#A78BFA', rate: 4.50 },
-  tierra: { label: 'Terrestre', symbol: 'EUR', color: '#34D399', rate: 1.50 },
+  mar: { label: 'Marítimo', symbol: 'USD', color: '#00E5FF', rate: 0.35 },
+  aire: { label: 'Aéreo', symbol: 'USD', color: '#00B8D4', rate: 4.50 },
+  tierra: { label: 'Terrestre', symbol: 'EUR', color: '#06b6d4', rate: 1.50 },
 }
 
 export default function CostAnalyzer() {
@@ -27,11 +27,12 @@ export default function CostAnalyzer() {
   const m = MODE_RATES[mode]
 
   const handleCalc = () => {
-    const subtotal = costPerUnit * units
-    const freightEach = shipmentCost / units
+    const safeUnits = units > 0 ? units : 1
+    const subtotal = costPerUnit * safeUnits
+    const freightEach = shipmentCost / safeUnits
     const marginAmount = (subtotal + shipmentCost) * (margin / 100)
     const grandTotal = subtotal + shipmentCost + marginAmount
-    const totalPerUnit = grandTotal / units
+    const totalPerUnit = grandTotal / safeUnits
     setResult({ subtotal, freightEach, marginAmount, totalPerUnit, grandTotal })
   }
 
@@ -56,7 +57,7 @@ export default function CostAnalyzer() {
           <Chip
             key={ut}
             label={ut.charAt(0).toUpperCase() + ut.slice(1)}
-            color={unitType === ut ? 'secondary' : 'default'}
+            color={unitType === ut ? 'primary' : 'default'}
             variant={unitType === ut ? 'filled' : 'outlined'}
             onClick={() => setUnitType(ut)}
           />
@@ -106,13 +107,13 @@ export default function CostAnalyzer() {
             <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="overline" sx={{ color: 'text.disabled' }}>Flete/{unitType}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: 'warning.main' }}>{m.symbol} {result.freightEach.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.light' }}>{m.symbol} {result.freightEach.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="overline" sx={{ color: 'text.disabled' }}>Margen</Typography>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: 'secondary.main' }}>{m.symbol} {result.marginAmount.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>{m.symbol} {result.marginAmount.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
@@ -125,7 +126,7 @@ export default function CostAnalyzer() {
 
           <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center' }}>
             <Typography variant="overline" sx={{ color: 'text.disabled' }}>COSTE TOTAL DEL ENVÍO</Typography>
-            <Typography variant="h4" sx={{ fontWeight: 900, background: 'linear-gradient(135deg, #fca5a5, #fecaca)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <Typography variant="h4" sx={{ fontWeight: 900, background: 'linear-gradient(135deg, #00E5FF, #00B8D4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               {m.symbol} {result.grandTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
             </Typography>
           </Box>

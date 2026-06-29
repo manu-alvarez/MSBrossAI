@@ -137,7 +137,7 @@ export default function RfqDialog({ open, onClose, content, onSave, canSave, ori
                     onClick={handleExportPdf}
                     disabled={!content}
                     size="small"
-                    color="secondary"
+                    color="primary"
                 >
                     Exportar PDF
                 </Button>

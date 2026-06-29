@@ -26,16 +26,16 @@ export interface ToolDef {
 }
 
 const TOOLS: ToolDef[] = [
-  { id: 'route', label: 'Ruta Logística', desc: 'Cotización y análisis de rutas', icon: ShipIcon, color: '#fca5a5', badge: 'AI' },
-  { id: 'expert', label: 'Consulta Experto', desc: 'Legislación, normativas y más', icon: ExpertIcon, color: '#A78BFA', badge: 'AI' },
-  { id: 'general', label: 'Búsqueda General', desc: 'Cualquier otra consulta', icon: GlobeIcon, color: '#34D399', badge: 'AI' },
-  { id: 'container', label: 'Container Tracker', desc: 'Rastrear contenedores', icon: ContainerIcon, color: '#009CDE' },
-  { id: 'vessel', label: 'Vessel Tracker', desc: 'Localizar buques', icon: AnchorIcon, color: '#0077BE' },
-  { id: 'cbm', label: 'Calculadora CBM', desc: 'Capacidad y volumen', icon: DimensionsIcon, color: '#F59E0B' },
-  { id: 'cost', label: 'Coste por Unidad', desc: 'Pallet, caja o unidad', icon: MoneyIcon, color: '#10B981' },
-  { id: 'dunnage', label: 'Guía de Estiba', desc: 'Void fill y sujeción', icon: WarningIcon, color: '#EF4444' },
-  { id: 'email', label: 'Plantillas Email', desc: 'Correos profesionales', icon: EmailIcon, color: '#8B5CF6' },
-  { id: 'creative', label: 'Estudio Creativo', desc: 'Generar banners e imágenes', icon: BrushIcon, color: '#EC4899', badge: 'AI' },
+  { id: 'route', label: 'Ruta Logística', desc: 'Cotización y análisis de rutas', icon: ShipIcon, color: '#00E5FF', badge: 'AI' },
+  { id: 'expert', label: 'Consulta Experto', desc: 'Legislación, normativas y más', icon: ExpertIcon, color: '#00B8D4', badge: 'AI' },
+  { id: 'general', label: 'Búsqueda General', desc: 'Cualquier otra consulta', icon: GlobeIcon, color: '#009CDE', badge: 'AI' },
+  { id: 'container', label: 'Container Tracker', desc: 'Rastrear contenedores', icon: ContainerIcon, color: '#06b6d4' },
+  { id: 'vessel', label: 'Vessel Tracker', desc: 'Localizar buques', icon: AnchorIcon, color: '#0891b2' },
+  { id: 'cbm', label: 'Calculadora CBM', desc: 'Capacidad y volumen', icon: DimensionsIcon, color: '#0ea5e9' },
+  { id: 'cost', label: 'Coste por Unidad', desc: 'Pallet, caja o unidad', icon: MoneyIcon, color: '#22d3ee' },
+  { id: 'dunnage', label: 'Guía de Estiba', desc: 'Void fill y sujeción', icon: WarningIcon, color: '#38bdf8' },
+  { id: 'email', label: 'Plantillas Email', desc: 'Correos profesionales', icon: EmailIcon, color: '#84FFFF' },
+  { id: 'creative', label: 'Estudio Creativo', desc: 'Generar banners e imágenes', icon: BrushIcon, color: '#00E5FF', badge: 'AI' },
 ]
 
 interface ToolSelectorProps {

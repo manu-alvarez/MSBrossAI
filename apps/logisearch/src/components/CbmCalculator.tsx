@@ -37,9 +37,9 @@ export default function CbmCalculator() {
   const length = selectedPallet.name === 'Personalizado' ? customLength : parseFloat(selectedPallet.dimensions.split(' x ')[0])
   const width = selectedPallet.name === 'Personalizado' ? customWidth : parseFloat(selectedPallet.dimensions.split(' x ')[1])
   const palletCbm = length * width * height
-  const maxPalletsPerContainer = selectedContainer.cbm / palletCbm
-  const palletsFloor = Math.floor((parseFloat(selectedContainer.internal.split(' x ')[0]) / length) *
-    (parseFloat(selectedContainer.internal.split(' x ')[1]) / width))
+  const maxPalletsPerContainer = palletCbm > 0 ? selectedContainer.cbm / palletCbm : 0
+  const palletsFloor = (length > 0 && width > 0) ? Math.floor((parseFloat(selectedContainer.internal.split(' x ')[0]) / length) *
+    (parseFloat(selectedContainer.internal.split(' x ')[1]) / width)) : 0
 
   return (
     <Card sx={{ p: 3 }}>
@@ -82,7 +82,7 @@ export default function CbmCalculator() {
                 key={pt.name}
                 label={pt.name}
                 size="small"
-                color={selectedPallet.name === pt.name ? 'secondary' : 'default'}
+                color={selectedPallet.name === pt.name ? 'primary' : 'default'}
                 variant={selectedPallet.name === pt.name ? 'filled' : 'outlined'}
                 onClick={() => setSelectedPallet(pt)}
               />
@@ -115,8 +115,8 @@ export default function CbmCalculator() {
         </Grid>
       </Grid>
 
-      <Box sx={{ mt: 3, p: 3, borderRadius: 2, border: '2px solid', borderColor: alpha('#fca5a5', 0.4), bgcolor: alpha('#fca5a5', 0.06), textAlign: 'center' }}>
-        <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #fca5a5, #fecaca)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+      <Box sx={{ mt: 3, p: 3, borderRadius: 2, border: '2px solid', borderColor: alpha('#00E5FF', 0.4), bgcolor: alpha('#00E5FF', 0.06), textAlign: 'center' }}>
+        <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(135deg, #00E5FF, #00B8D4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           {palletCbm.toFixed(2)} CBM
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
@@ -136,7 +136,7 @@ export default function CbmCalculator() {
           </Grid>
           <Grid size={{ xs: 4 }}>
             <Box sx={{ p: 1.5, bgcolor: 'rgba(255,255,255,0.04)', borderRadius: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
                 {Math.max(0, palletsFloor)}
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.disabled' }}>
@@ -146,7 +146,7 @@ export default function CbmCalculator() {
           </Grid>
           <Grid size={{ xs: 4 }}>
             <Box sx={{ p: 1.5, bgcolor: 'rgba(255,255,255,0.04)', borderRadius: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, color: 'warning.main' }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.light' }}>
                 {(selectedContainer.cbm - palletCbm * Math.floor(maxPalletsPerContainer)).toFixed(1)}
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.disabled' }}>

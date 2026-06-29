@@ -65,7 +65,7 @@ export default function CreativeStudio() {
   return (
     <Card sx={{ p: { xs: 2, md: 4 }, maxWidth: 900, mx: 'auto', mt: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: 'secondary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: 'primary.dark', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Brush sx={{ color: 'white', fontSize: 24 }} />
         </Box>
         <Box>
@@ -108,7 +108,7 @@ export default function CreativeStudio() {
 
         <Button 
           variant="contained" 
-          color="secondary" 
+          color="primary" 
           size="large" 
           startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <AutoFixHigh />}
           onClick={generateImage}
@@ -122,7 +122,7 @@ export default function CreativeStudio() {
           <Box sx={{ mt: 4, textAlign: 'center', position: 'relative', minHeight: 300, bgcolor: 'background.default', borderRadius: 2, border: '1px dashed', borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
             {loading ? (
               <Stack spacing={2} sx={{ alignItems: 'center' }}>
-                <CircularProgress color="secondary" />
+                <CircularProgress color="primary" />
                 <Typography variant="body2" color="text.secondary">Pintando píxeles logísticos...</Typography>
               </Stack>
             ) : imageUrl ? (

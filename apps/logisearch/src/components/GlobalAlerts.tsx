@@ -50,7 +50,7 @@ export default function GlobalAlerts() {
     <Collapse in={open}>
       <Box sx={{ mb: 3, position: 'relative' }}>
         <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 1 }}>
-          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', backgroundColor: '#ef4444', animation: 'pulse 2s infinite' }}></span>
+          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00E5FF', animation: 'pulse 2s infinite' }}></span>
           RADAR LOGÍSTICO GLOBAL EN TIEMPO REAL
         </Typography>
         
