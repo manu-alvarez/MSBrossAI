@@ -275,3 +275,6 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 
 6. **Enrutamiento WebRTC / LiveKit en Proxy (Junio 2026):**
    No aplicar autonegociación de esquema (`wss://{host}/rtc`) en backends (como Atenea) si el Agente de IA (Worker) reside y escucha en una instancia separada en la nube (`livekit.cloud`). Esto fuerza al frontend a conectarse al proxy local, provocando errores silenciosos o que el cliente espere en una sala vacía. Las aplicaciones web deben consumir **estrictamente** la variable `LIVEKIT_URL` inyectada en el `.env`, sincronizada directamente con `api_keys_vault.json` y el entorno del agente.
+
+7. **Silencio Total del Agente de Voz (Silent Hangs):**
+   Si el cliente conecta correctamente a la sala de LiveKit (pide micrófono) pero el Agente no saluda ni responde, **verificar de inmediato las claves del proveedor LLM (ej. `GOOGLE_API_KEY`) en el `.env` del worker (`livekit-nikolina/.env`)**. Una clave inválida o revocada provocará que la conexión WebSocket hacia Gemini Realtime API fracase silenciosamente y el hilo de la sesión de voz quede bloqueado infinitamente sin disparar errores en el cliente web. Consultar siempre `api_keys_vault.json` como fuente de verdad.
