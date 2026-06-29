@@ -272,3 +272,6 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 
 5. **Paleta Cromática Unificada — LogiSearch (Junio 2026):**
    LogiSearch opera bajo una paleta premium **Dark + Cyan** (`#00E5FF`, `#00B8D4`, `#06B6D4`, `#0891B2`). Todos los componentes deben respetar exclusivamente estos tonos. No usar rojos, morados ni verdes en la UI principal. El `theme.ts` define `primary`, `secondary` y `success` en tonos cyan.
+
+6. **Enrutamiento WebRTC / LiveKit en Proxy (Junio 2026):**
+   No aplicar autonegociación de esquema (`wss://{host}/rtc`) en backends (como Atenea) si el Agente de IA (Worker) reside y escucha en una instancia separada en la nube (`livekit.cloud`). Esto fuerza al frontend a conectarse al proxy local, provocando errores silenciosos o que el cliente espere en una sala vacía. Las aplicaciones web deben consumir **estrictamente** la variable `LIVEKIT_URL` inyectada en el `.env`, sincronizada directamente con `api_keys_vault.json` y el entorno del agente.
