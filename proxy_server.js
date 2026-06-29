@@ -63,9 +63,48 @@ app.get('/__config', (req, res) => {
   });
 });
 
-// ── Health check ──
-app.get('/__health', (req, res) => {
-  res.json({ status: 'ok', service: 'msbross-proxy', uptime: process.uptime() });
+// ── Health check (comprehensive — pings all backends) ──
+const net = require('net');
+function checkPort(port, timeout = 500) {
+  return new Promise(resolve => {
+    const sock = new net.Socket();
+    sock.setTimeout(timeout);
+    sock.on('connect', () => { sock.destroy(); resolve(true); });
+    sock.on('error', () => resolve(false));
+    sock.on('timeout', () => { sock.destroy(); resolve(false); });
+    sock.connect(port, '127.0.0.1');
+  });
+}
+
+const BACKEND_MAP = {
+  'nikolina-api-hub': 8001,
+  'elitescout-server': 8003,
+  'traductor-pro': 8004,
+  'msbross-backend': 8005,
+  'iaputa-backend': 8006,
+  'cuentos-magicos': 8007,
+  'web-restaurante-atenea': 8009,
+  'jartosdto-backend': 8010,
+  'gas-station': 3005,
+  'perfume-trading': 3011,
+  'mapfre-infocol': 3333,
+  'txa-fitness-pro': 3456,
+};
+
+app.get('/__health', async (req, res) => {
+  const checks = await Promise.all(
+    Object.entries(BACKEND_MAP).map(async ([name, port]) => ({
+      name, port, online: await checkPort(port),
+    }))
+  );
+  const online = checks.filter(c => c.online).length;
+  const total = checks.length;
+  res.json({
+    status: online === total ? 'healthy' : online > 0 ? 'degraded' : 'down',
+    proxy: { uptime: Math.floor(process.uptime()), memMB: Math.round(process.memoryUsage.rss() / 1024 / 1024) },
+    services: { online, total },
+    backends: checks.reduce((acc, c) => { acc[c.name] = c.online ? 'up' : 'down'; return acc; }, {}),
+  });
 });
 
 // ── Visit Tracking ──
