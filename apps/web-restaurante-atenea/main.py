@@ -93,15 +93,9 @@ def get_public_token(request: Request):
     if not api_key or not api_secret:
         raise HTTPException(status_code=500, detail="LiveKit not configured")
 
-    # Negotiate correct LiveKit URL based on request protocol
-    # For HTTPS via msbross.me: Nginx on port 443 proxies /rtc -> ws://localhost:7880
-    is_secure = request.url.scheme == "https"
-    host = request.url.hostname
-
-    if is_secure and host not in ("localhost", "127.0.0.1"):
-        livekit_url = f"wss://{host}/rtc"
-    else:
-        livekit_url = os.getenv("LIVEKIT_URL", "ws://localhost:7880")
+    livekit_url = os.getenv("LIVEKIT_URL")
+    if not livekit_url:
+        raise HTTPException(status_code=500, detail="LIVEKIT_URL not configured")
 
     from livekit.api import AccessToken, VideoGrants
 
