@@ -12,27 +12,8 @@ import {
 
 const ODDS_API_BASE = 'https://api.the-odds-api.com/v4/sports';
 
-interface Match {
-  id: string; homeTeam: string; awayTeam: string; league: string; leagueName: string; commenceTime: string;
-  odds: {
-    home: number; draw: number; away: number;
-    over25: number; under25: number;
-    btts: number; bttsNo: number;
-    over05HT: number;
-    dc1x: number; dcx2: number; dc12: number;
-    dnb1: number; dnb2: number;
-  };
-}
-
-interface Pick {
-  matchId: string; match: string; league: string;
-  type: string; selection: string; odds: number; probability: number;
-}
-
-interface Combo {
-  id: string; picks: Pick[]; totalOdds: number; totalProbability: number;
-  stake: number; potentialWin: number; riskLevel: 'safe' | 'balanced' | 'turbo';
-}
+import { Match, Pick, Combo, HistoryCombo } from './types';
+import HistoryPanel from './components/HistoryPanel';
 
 const LEAGUES = [
   { key: 'soccer_fifa_world_cup', name: 'Mundial de Fútbol', icon: Globe, color: 'var(--yellow)' },
@@ -194,6 +175,24 @@ export default function App() {
   const [stake, setStake] = useState(10);
   const [selectedMarket, setSelectedMarket] = useState<string>('auto');
   const [combos, setCombos] = useState<Combo[]>([]);
+  const [history, setHistory] = useState<HistoryCombo[]>(() => {
+    const saved = localStorage.getItem('combipro_history');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('combipro_history', JSON.stringify(history));
+  }, [history]);
+
+  const updateHistoryStatus = (id: string, status: 'pending' | 'won' | 'lost') => {
+    setHistory(prev => prev.map(c => c.id === id ? { ...c, status } : c));
+  };
+
+  const clearHistory = () => {
+    if (confirm('¿Estás seguro de que quieres limpiar todo el historial?')) {
+      setHistory([]);
+    }
+  };
 
   const fetchOdds = useCallback(async () => {
     if (!apiKey) return;
@@ -210,7 +209,16 @@ export default function App() {
   const generate = () => {
     if (matches.length === 0) return;
     playGenerateSound();
-    setCombos(generateCombos(matches, risk, stake, selectedMarket));
+    const newCombos = generateCombos(matches, risk, stake, selectedMarket);
+    setCombos(newCombos);
+    
+    // Save to history
+    const historyCombos: HistoryCombo[] = newCombos.map(c => ({
+      ...c,
+      date: new Date().toISOString(),
+      status: 'pending'
+    }));
+    setHistory(prev => [...historyCombos, ...prev]);
   };
 
   const toggleLeague = (key: string) => setSelectedLeagues(p => p.includes(key) ? p.filter(l => l !== key) : [...p, key]);
@@ -420,6 +428,13 @@ export default function App() {
             ))}
           </div>
         </motion.div>
+
+        {/* History Dashboard */}
+        <HistoryPanel 
+          history={history} 
+          onUpdateStatus={updateHistoryStatus} 
+          onClearHistory={clearHistory} 
+        />
       </motion.main>
     </div>
   );

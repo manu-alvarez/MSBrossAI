@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Grid, FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Box } from '@mui/material';
 import { motion } from 'framer-motion';
+// @ts-ignore
+import { franc } from 'franc-min';
 import UnifiedInput from './UnifiedInput';
 import ResultPanel from './ResultPanel';
 import { processText, Modo, Provider, LANGUAGES, TRANSLATION_MODES, ProcessResult } from '../api';
+
+const FRANC_MAP: Record<string, string> = {
+  'spa': 'es', 'eng': 'en', 'fra': 'fr', 'por': 'pt',
+  'ita': 'it', 'deu': 'de', 'nld': 'nl', 'cmn': 'zh', 'zho': 'zh',
+  'jpn': 'ja', 'kor': 'ko', 'rus': 'ru', 'arb': 'ar'
+};
 
 interface Props {
   provider: Provider;
@@ -18,6 +26,16 @@ export default function TraducirTab({ provider, onResult }: Props) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ProcessResult>({ traduccion: '', resumen: '' });
   const [error, setError] = useState('');
+
+  // Auto-detect language
+  useEffect(() => {
+    if (texto.trim().length > 10 && origen === 'auto') {
+      const code3 = franc(texto);
+      if (code3 && FRANC_MAP[code3]) {
+        setOrigen(FRANC_MAP[code3]);
+      }
+    }
+  }, [texto, origen]);
 
   const handleProcesar = async () => {
     if (!texto.trim()) return;
