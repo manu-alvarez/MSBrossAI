@@ -60,12 +60,17 @@ Toda petición (WAN o LAN local) converge en el proxy central en el puerto **808
 |:---|:---:|:---|
 | `/_nikolina` | **8001** | API Hub Nikolina (FastAPI + JWT) |
 | `/_industrialpro` | **8002** | IndustrialPro Backend (FastAPI Task Manager) |
-| `/_elitescout` | **8003** | EliteScout API (FastAPI Finder) |
+| `/app/elitescout` | **8003** | EliteScout API (Next.js SSR) |
 | `/_traductor` | **8004** | Traductor PRO Server (Express AI) |
 | `/_msbross` | **8005** | MSBrOSs (Adele Voice Server) |
 | `/_iaputa` | **8006** | IAPuta OS (FastAPI AI Assistant) |
 | `/_cuentosmagicos` | **8007** | Cuentos Mágicos (FastAPI Story Backend) |
 | `/_atenea` | **8009** | Atenea Restaurant (FastAPI + SQLite) |
+| `/_jartosdto` | **8010** | JartosDTo (RAG & Multi-LLM FastAPI) |
+| `/_gas-station` | **3005** | Gas Station ERP (FastAPI Checklist) |
+| `/app/perfume-trading` | **3011** | Perfume Trading ERP (Next.js SSR) |
+| `/app/mapfre` | **3333** | Mapfre InfoCol (Next.js SSR) |
+| `/app/txafitnesspro` | **3456** | TXA Fitness Pro (Next.js SSR) |
 
 ---
 
@@ -261,3 +266,9 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 
 3. **Limpieza Rigurosa del Sistema de Archivos:**
    Los procesos de "build" o refactorización masiva dejan rastros (`.DS_Store`, `index 2.html`, tests unitarios de prototipado). Antes de presentar o hacer push a `main`, el repositorio debe estar purgado de `.test.ts`, logs locales y scripts de un solo uso. Un repositorio limpio es síntoma de Ingeniería Nivel 3.
+
+4. **Caché del Proxy y Builds Estáticos (Junio 2026):**
+   Los archivos `index.html` y `sw.js` se sirven con `Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0` para garantizar que los cambios se reflejen instantáneamente. Los assets con hash de Vite (ej: `index-DVobJVVn.js`) se sirven con `max-age=31536000, immutable` para aprovechar caché agresiva del navegador sin riesgo de stale content.
+
+5. **Paleta Cromática Unificada — LogiSearch (Junio 2026):**
+   LogiSearch opera bajo una paleta premium **Dark + Cyan** (`#00E5FF`, `#00B8D4`, `#06B6D4`, `#0891B2`). Todos los componentes deben respetar exclusivamente estos tonos. No usar rojos, morados ni verdes en la UI principal. El `theme.ts` define `primary`, `secondary` y `success` en tonos cyan.
