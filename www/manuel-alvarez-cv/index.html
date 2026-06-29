@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MSBrossAI — Manuel Alvarez CV & Portfolio">
-    <title>MSBrossAI • Manuel Alvarez CV & Portfolio</title>
+    <meta name="description" content="Manuel Álvarez Diánez — Técnico en Sistemas Microinformáticos y Redes · Soporte IT · Perfil Logístico e Industrial">
+    <title>MSBrossAI • Manuel Álvarez Diánez — CV &amp; Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -22,131 +22,139 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative; }
         
-        /* Ambient Background Orbs */
-        .orb {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: 0;
-        }
+        .orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
         .orb-1 { background: var(--accent); top: -200px; right: -200px; }
         .orb-2 { background: #8b5cf6; bottom: -200px; left: -200px; }
 
-        .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
+        .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
-        .title { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; text-decoration: none; }
+        .title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
         .badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.8rem; border-radius: 100px; background: var(--accent); color: white; }
         .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px; color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
         .back-btn:hover { background: var(--card-hover); border-color: var(--accent); transform: translateX(-4px); }
-        .content { flex: 1; padding: 2rem 0; }
+        .content { flex: 1; padding: 1rem 0; }
         .footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.8rem; }
         .footer a { color: var(--accent); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
-        .status-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-                .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-        
-        .feature-card {
-            position: relative;
-            background: rgba(255,255,255,0.02);
-            border-radius: 20px;
-            padding: 2px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-style: preserve-3d;
-            text-decoration: none;
+
+        /* ═══ PROFILE HERO ═══ */
+        .profile-hero {
+            display: flex; align-items: center; gap: 2.5rem;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
+            padding: 2.5rem; backdrop-filter: blur(20px); margin-bottom: 2rem;
+        }
+        .profile-photo-wrap {
+            flex-shrink: 0;
+            width: 160px; height: 160px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            padding: 3px;
+            box-shadow: 0 0 40px rgba(59,130,246,0.2);
+        }
+        .profile-photo {
+            width: 100%; height: 100%; border-radius: 50%;
+            object-fit: cover; display: block;
+        }
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 1.8rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 0.3rem; }
+        .profile-tagline {
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--accent); margin-bottom: 1rem;
+        }
+        .profile-bio { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+
+        .contact-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.2rem; }
+        .contact-pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.35rem 0.9rem; border-radius: 100px;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--card-border);
+            font-size: 0.78rem; color: var(--text-muted); text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .contact-pill:hover { background: rgba(59,130,246,0.1); border-color: var(--accent); color: var(--text); }
+
+        /* ═══ SECTIONS ═══ */
+        .section { margin-bottom: 2rem; }
+        .section-title {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--accent); margin-bottom: 1rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .card {
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
+            padding: 1.5rem; margin-bottom: 0.8rem; transition: all 0.3s ease;
+        }
+        .card:hover { background: var(--card-hover); border-color: rgba(59,130,246,0.2); transform: translateX(4px); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
+        .card-title { font-weight: 700; font-size: 1rem; }
+        .card-company { font-weight: 600; color: var(--accent); font-size: 0.85rem; }
+        .card-date { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+        .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.3rem; }
+
+        /* ═══ SKILLS GRID ═══ */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.6rem; }
+        .skill-chip {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.7rem 1rem; border-radius: 12px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            font-size: 0.85rem; font-weight: 500; transition: all 0.3s ease;
+        }
+        .skill-chip:hover { background: var(--card-hover); border-color: rgba(59,130,246,0.2); }
+        .skill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+        /* ═══ CERTS GRID ═══ */
+        .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.6rem; }
+        .cert-card {
+            display: flex; align-items: center; gap: 0.8rem;
+            padding: 1rem 1.2rem; border-radius: 14px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+        .cert-card:hover { background: var(--card-hover); border-color: rgba(59,130,246,0.2); }
+        .cert-icon { font-size: 1.3rem; }
+        .cert-name { font-size: 0.85rem; font-weight: 600; }
+
+        /* ═══ DOWNLOAD BUTTONS ═══ */
+        .actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .action-btn {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            padding: 0.8rem 1.6rem; border-radius: 100px;
+            font-size: 0.9rem; font-weight: 700; text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .action-btn-primary {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white; box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+        }
+        .action-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(59,130,246,0.4); }
+        .action-btn-secondary {
+            background: var(--card-bg); border: 1px solid var(--card-border);
             color: var(--text);
         }
-        
-        .feature-card::before {
-            content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1.5px;
-            background: linear-gradient(var(--border-angle, 0deg), var(--accent), transparent 40%, transparent 60%, var(--accent));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude;
-            animation: borderSpin 4s linear infinite; opacity: 0.5; transition: opacity 0.4s;
+        .action-btn-secondary:hover { background: var(--card-hover); border-color: var(--accent); }
+        .action-btn svg { width: 18px; height: 18px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeInUp 0.5s ease forwards; }
+
+        @media (max-width: 640px) {
+            .profile-hero { flex-direction: column; text-align: center; gap: 1.5rem; padding: 1.5rem; }
+            .profile-photo-wrap { width: 130px; height: 130px; }
+            .profile-name { font-size: 1.4rem; }
+            .contact-row { justify-content: center; }
+            .header { flex-wrap: wrap; gap: 0.5rem; }
+            .title { font-size: 1.2rem; }
+            .actions { justify-content: center; }
         }
-        .feature-card:hover::before { opacity: 1; }
 
-        .feature-card-inner {
-            background: rgba(8,12,24,0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 19px; padding: 1.8rem;
-            display: flex; flex-direction: column; gap: 0.8rem;
-            position: relative; overflow: hidden; height: 100%;
-            transform-style: preserve-3d; transition: transform 0.3s cubic-bezier(.16,1,.3,1);
-        }
-        .feature-card:hover { transform: translateY(-10px) scale(1.03); }
-        .feature-card:hover .feature-card-inner { transform: translateZ(20px); }
-        .feature-card:hover .feature-icon { transform: translateZ(40px) scale(1.1); }
-        .feature-card:hover .feature-title { transform: translateZ(15px); }
-        .feature-card:hover .feature-desc { transform: translateZ(10px); }
-
-        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), transparent); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
-        .feature-title { font-weight: 700; margin-bottom: 0.2rem; }
-        .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-        
-        .run-btn { 
-            position: relative; 
-            display: inline-flex; align-items: center; gap: 0.75rem; 
-            padding: 1rem 2rem; 
-            background: rgba(8,12,24,0.85); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 100px; 
-            color: var(--text); text-decoration: none; font-size: 1.1rem; font-weight: 800; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
-            z-index: 1;
-        }
-        .run-btn::before {
-            content: ''; position: absolute; inset: 0; border-radius: 100px; padding: 2px;
-            background: linear-gradient(var(--border-angle, 0deg), var(--accent), transparent 40%, transparent 60%, var(--accent));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude;
-            animation: borderSpin 4s linear infinite; opacity: 0.8; transition: opacity 0.4s;
-            z-index: -1; pointer-events: none;
-        }
-        .run-btn:hover { transform: translateY(-2px) scale(1.05); }
-        .run-btn:hover::before { opacity: 1; box-shadow: 0 0 30px var(--accent); }
-        .run-btn svg { width: 24px; height: 24px; color: var(--accent); }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fadeInUp 0.6s ease forwards; }
-
-/* ═══ PREMIUM STYLES INJECTED ═══ */
-@keyframes cardGlitch {
-  0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
-  20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -2px); filter: hue-rotate(-90deg); }
-  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); filter: hue-rotate(45deg); }
-  60% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 2px); filter: hue-rotate(-45deg); }
-  80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 1px); filter: hue-rotate(20deg); }
-  100% { clip-path: inset(0 0 0 0); transform: translate(0); filter: hue-rotate(0); }
-}
-.feature-card:hover::after {
-    content: ''; position: absolute; inset: 0; background: inherit;
-    border-radius: inherit; z-index: 10; pointer-events: none;
-    animation: cardGlitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
-    opacity: 0.15; mix-blend-mode: overlay;
-}
-@keyframes borderSpin { to { --border-angle: 360deg; } }
-@property --border-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-
-/* Custom Cursor */
-@media(pointer: fine){ body { cursor: none; } a, button, input { cursor: none; } }
-.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; box-shadow: 0 0 10px var(--accent); display: none; }
-.cursor-trail { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; width: 34px; height: 34px; border: 1.5px solid var(--accent); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; display: none; opacity: 0.5; }
-@media(pointer: fine){ .custom-cursor, .cursor-trail { display: block; } }
-.cursor-hover .custom-cursor { width: 0; height: 0; }
-.cursor-hover .cursor-trail { width: 54px; height: 54px; background: rgba(255,255,255,0.05); border-color: var(--text); box-shadow: 0 0 20px var(--accent); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
-
-</style>
+        /* Custom Cursor */
+        @media(pointer: fine){ body { cursor: none; } a, button, input { cursor: none; } }
+        .custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; box-shadow: 0 0 10px var(--accent); display: none; }
+        .cursor-trail { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; width: 34px; height: 34px; border: 1.5px solid var(--accent); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; display: none; opacity: 0.5; }
+        @media(pointer: fine){ .custom-cursor, .cursor-trail { display: block; } }
+        .cursor-hover .custom-cursor { width: 0; height: 0; }
+        .cursor-hover .cursor-trail { width: 54px; height: 54px; background: rgba(255,255,255,0.05); border-color: var(--text); box-shadow: 0 0 20px var(--accent); backdrop-filter: blur(2px); }
+    </style>
 </head>
 <body>
     <div class="orb orb-1"></div>
@@ -159,8 +167,8 @@
                 <span style="color: #8b5cf6;">MS</span><span style="color: #ffffff;">BrossAI</span>
             </span>
         </a>
-            <h1 class="title">Manuel Alvarez CV</h1>
-            <span class="badge">PORTFOLIO</span>
+            <h1 class="title">Manuel Álvarez Diánez</h1>
+            <span class="badge">CV</span>
         </header>
 
         <nav style="margin-bottom: 1.5rem;">
@@ -168,76 +176,165 @@
         </nav>
 
         <main class="content">
-            <div class="status-card animate-in">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <span class="status-dot"></span>
-                    <span style="font-weight: 600;">Manuel Alvarez Dianez — Portfolio Profesional</span>
-                    <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">v2026</span>
+            <!-- ═══ PROFILE HERO ═══ -->
+            <div class="profile-hero animate-in">
+                <div class="profile-photo-wrap">
+                    <img src="profile-photo.png" alt="Manuel Álvarez Diánez" class="profile-photo">
                 </div>
-                <p style="color: var(--text-muted); line-height: 1.6;">
-                    Curriculum Vitae y portafolio profesional interactivo de Manuel Alvarez Dianez. Administrador de Sistemas de alto rendimiento, especialista en Soporte IT Multiplataforma, despliegue automatizado de pipelines de integración continua y desarrollo de soluciones de Inteligencia Artificial aplicada.
-                </p>
+                <div class="profile-info">
+                    <h2 class="profile-name">Manuel Álvarez Diánez</h2>
+                    <div class="profile-tagline">Técnico en Sistemas Microinformáticos y Redes · Soporte IT · Perfil Logístico e Industrial</div>
+                    <p class="profile-bio">
+                        Técnico en Sistemas Microinformáticos y Redes, con experiencia multiplataforma, en virtualización y administración básica de entornos de red. Perfil orientado al sentido práctico y la eficiencia: desarrollo utilidades personalizadas e integro herramientas de Inteligencia Artificial para simplificar flujos operativos. Complemento mi perfil técnico con una sólida trayectoria en logística y producción industrial en compañías de referencia como Procter &amp; Gamble, GB Foods y Döhler.
+                    </p>
+                    <div class="contact-row">
+                        <a href="mailto:manuelalvarezdianez@hotmail.com" class="contact-pill">📧 manuelalvarezdianez@hotmail.com</a>
+                        <a href="tel:+34651352065" class="contact-pill">📱 651 352 065</a>
+                        <a href="https://linkedin.com/in/manu-alvarez-dev" target="_blank" class="contact-pill">💼 LinkedIn</a>
+                        <a href="https://github.com/manu-alvarez" target="_blank" class="contact-pill">🐙 GitHub</a>
+                        <a href="https://msbross.me" target="_blank" class="contact-pill">🌐 msbross.me</a>
+                    </div>
+                </div>
             </div>
 
-            <div style="text-align: center; margin-bottom: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                <a href="https://manu-alvarez.github.io" target="_blank" rel="noopener noreferrer" class="run-btn">
-                    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z"/></svg>
+            <!-- ═══ ACTION BUTTONS ═══ -->
+            <div class="actions animate-in" style="animation-delay: 0.1s;">
+                <a href="Manuel Alvarez - CV.pdf" target="_blank" class="action-btn action-btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    DESCARGAR CV (PDF)
+                </a>
+                <a href="https://manu-alvarez.github.io" target="_blank" rel="noopener noreferrer" class="action-btn action-btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     VER PORTFOLIO
                 </a>
-                <a href="Manuel Alvarez - CV.pdf" target="_blank" class="run-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: var(--text); box-shadow: none;">
-                    <svg viewBox="0 0 24 24" width="24" height="24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-right: 0.25rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    DESCARGAR PDF
-                </a>
             </div>
 
-            <div class="feature-grid">
-                <div class="feature-card animate-in" style="animation-delay: 0.0s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">👨‍💻</div>
-                    <div class="feature-title">Trayectoria Profesional</div>
-                    <div class="feature-desc">Resumen estructurado de experiencia y roles ocupados en soporte, operaciones IT y sistemas.</div>
+            <!-- ═══ COMPETENCIAS ═══ -->
+            <div class="section animate-in" style="animation-delay: 0.15s;">
+                <div class="section-title">Competencias Clave</div>
+                <div class="skills-grid">
+                    <div class="skill-chip"><span class="skill-dot" style="background: #3b82f6;"></span>Sistemas Windows / Linux</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #10b981;"></span>Redes y conectividad</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #8b5cf6;"></span>Virtualización</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #f59e0b;"></span>Soporte técnico e incidencias</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #ec4899;"></span>Integración de herramientas IA</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #06b6d4;"></span>SAP</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #84cc16;"></span>Control de stock e inventarios</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #f97316;"></span>Carretilla retráctil</div>
+                    <div class="skill-chip"><span class="skill-dot" style="background: #6366f1;"></span>Gestión de almacén y producción</div>
+                </div>
+            </div>
+
+            <!-- ═══ EXPERIENCIA PROFESIONAL ═══ -->
+            <div class="section animate-in" style="animation-delay: 0.2s;">
+                <div class="section-title">Experiencia Profesional</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Expendedor de Gasolinera</div>
+                            <div class="card-company">Newton Energies</div>
+                        </div>
+                        <span class="card-date">Abr 2026 – Jun 2026</span>
+                    </div>
+                    <p class="card-desc">Atención al cliente, arqueo de caja, recepción de pedidos, reposición y control de inventario.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Operario de Producción</div>
+                            <div class="card-company">Döhler</div>
+                        </div>
+                        <span class="card-date">Feb 2026 – Abr 2026</span>
+                    </div>
+                    <p class="card-desc">Operación de maquinaria industrial, control de calidad, inspección de procesos productivos y mantenimiento preventivo básico.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Técnico Informático</div>
+                            <div class="card-company">Teringo S.L.U.</div>
+                        </div>
+                        <span class="card-date">Oct 2025 – Dic 2025</span>
+                    </div>
+                    <p class="card-desc">Soporte técnico a usuarios, administración básica de sistemas, resolución de incidencias e instalación y configuración de equipos informáticos.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Operario Logístico</div>
+                            <div class="card-company">Procter &amp; Gamble</div>
+                        </div>
+                        <span class="card-date">Feb 2025 – Jun 2025 · Oct 2020 – Ago 2022</span>
+                    </div>
+                    <p class="card-desc">Preparación de pedidos, picking, ubicación de mercancías, carga y descarga, gestión de almacén y utilización de PDA.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Carretillero Retráctil</div>
+                            <div class="card-company">GB Foods</div>
+                        </div>
+                        <span class="card-date">Oct 2023 – Ene 2025</span>
+                    </div>
+                    <p class="card-desc">Ubicación de mercancía en altura mediante carretilla retráctil, expediciones, abastecimiento de líneas de producción, control de stock y uso de SAP.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Operario de Producción</div>
+                            <div class="card-company">Diversas empresas del sector industrial y alimentario</div>
+                        </div>
+                        <span class="card-date">Varios periodos</span>
+                    </div>
+                    <p class="card-desc">Funciones de producción, control de calidad, envasado, abastecimiento de líneas y manejo de maquinaria industrial.</p>
+                </div>
+            </div>
+
+            <!-- ═══ CERTIFICACIONES ═══ -->
+            <div class="section animate-in" style="animation-delay: 0.25s;">
+                <div class="section-title">Certificaciones</div>
+                <div class="certs-grid">
+                    <div class="cert-card"><span class="cert-icon">🏗️</span><span class="cert-name">Carnet de Carretillas y Elevadoras</span></div>
+                    <div class="cert-card"><span class="cert-icon">📊</span><span class="cert-name">Six Sigma Yellow Belt</span></div>
+                    <div class="cert-card"><span class="cert-icon">📋</span><span class="cert-name">Kanban Essentials Certified (KEC)</span></div>
+                    <div class="cert-card"><span class="cert-icon">🔄</span><span class="cert-name">Scrum Fundamentals Certified (SFC)</span></div>
+                    <div class="cert-card"><span class="cert-icon">🌐</span><span class="cert-name">Cisco CCST Networking</span></div>
+                    <div class="cert-card"><span class="cert-icon">🔒</span><span class="cert-name">Cisco CCST Cybersecurity</span></div>
+                </div>
+            </div>
+
+            <!-- ═══ FORMACIÓN ═══ -->
+            <div class="section animate-in" style="animation-delay: 0.3s;">
+                <div class="section-title">Formación Académica</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Técnico en Sistemas Microinformáticos y Redes (SMR)</div>
+                            <div class="card-company">ILERNA</div>
+                        </div>
+                        <span class="card-date">2022 – 2023</span>
                     </div>
                 </div>
-                <div class="feature-card animate-in" style="animation-delay: 0.1s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">🚀</div>
-                    <div class="feature-title">Ecosistema MSBrossAI</div>
-                    <div class="feature-desc">Acceso unificado y directo a todas las 20+ herramientas y recursos inteligentes autogenerados.</div>
-                    </div>
-                </div>
-                <div class="feature-card animate-in" style="animation-delay: 0.2s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">⚙️</div>
-                    <div class="feature-title">Habilidades IT</div>
-                    <div class="feature-desc">Administración de sistemas operativos (Windows/Linux/Mac), redes, virtualización y automatizaciones.</div>
-                    </div>
-                </div>
-                <div class="feature-card animate-in" style="animation-delay: 0.3s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">🤖</div>
-                    <div class="feature-title">Integración de Inteligencia Artificial</div>
-                    <div class="feature-desc">Despliegue práctico de LLMs, embeddings semánticos avanzados y optimización de flujos con APIs.</div>
-                    </div>
-                </div>
-                <div class="feature-card animate-in" style="animation-delay: 0.4s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">📦</div>
-                    <div class="feature-title">Proyectos Open Source</div>
-                    <div class="feature-desc">Acceso rápido a repositorios públicos de código limpio, guías técnicas y documentación de primer nivel.</div>
-                    </div>
-                </div>
-                <div class="feature-card animate-in" style="animation-delay: 0.5s;">
-                    <div class="feature-card-inner">
-                        <div class="feature-icon">📬</div>
-                    <div class="feature-title">Canales de Contacto</div>
-                    <div class="feature-desc">Enlaces profesionales validados a LinkedIn, correo de soporte y portales del desarrollador.</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Educación Secundaria Obligatoria (ESO)</div>
+                            <div class="card-company">IES El Coronil</div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </main>
 
         <footer class="footer">
-            <p>MSBrossAI © 2026 — Manuel Alvarez CV</p>
+            <p>MSBrossAI © 2026 — Manuel Álvarez Diánez</p>
             <p style="margin-top: 0.5rem;">
                 <a href="/">Ecosistema</a> • 
                 <a href="https://github.com/manu-alvarez/MSBrossAI">GitHub</a>
