@@ -65,7 +65,7 @@ Organiza la respuesta usando los siguientes títulos en formato Markdown (##):
 Por favor, usa un tono motivador, cercano y coherente. El formato debe ser limpio en Markdown, usando viñetas y negritas para facilitar la lectura.`;
 
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.1-flash-lite",
         contents: prompt,
     });
 

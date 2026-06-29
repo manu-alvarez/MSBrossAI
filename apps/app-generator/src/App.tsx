@@ -35,7 +35,7 @@ function getNextKey(): string {
 }
 
 function buildApiUrl(key: string): string {
-  return `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  return `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${key}`;
 }
 
 const SYSTEM_INSTRUCTION = `Eres MSBross APP Generator, un Ingeniero Frontend Experto.

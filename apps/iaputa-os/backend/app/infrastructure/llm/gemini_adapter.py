@@ -23,7 +23,7 @@ class GeminiAdapter(LLMPort):
             contents.append({"role": "user", "parts": [{"text": user_text}]})
             
             response = self.client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-3.1-flash-lite',
                 contents=contents
             )
             text = response.text

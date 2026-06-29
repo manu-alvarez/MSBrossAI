@@ -42,7 +42,7 @@ class Settings(BaseSettings):
 
     # Google AI Studio
     GOOGLE_API_KEY: str = ""
-    GOOGLE_MODEL: str = "gemini-2.0-flash"
+    GOOGLE_MODEL: str = "gemini-3.1-flash-tts"
     
     # Gemini TTS (native audio model via Gemini API)
     # Voices: Puck (warm/storytelling), Charon (deep/authoritative), Kore (balanced), Fenrir (energetic)

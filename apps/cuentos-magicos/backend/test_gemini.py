@@ -9,7 +9,7 @@ async def test_gemini(env_path):
     voice = os.getenv("GEMINI_TTS_VOICE", "Puck")
     print(f"[{env_path}] Testing Google key: {api_key[:10]}... with voice: {voice}")
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-tts:generateContent?key={api_key}"
     
     payload = {
         "contents": [{

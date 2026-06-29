@@ -57,7 +57,7 @@ export class GeminiProvider implements AIProvider {
   }
 
   getDefaultModel(): string {
-    return 'gemini-2.0-flash';
+    return 'gemini-3.1-flash-lite';
   }
 }
 

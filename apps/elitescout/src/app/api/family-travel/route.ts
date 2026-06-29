@@ -177,7 +177,7 @@ function heuristicFamilyScore(amenities: string[], name = "", hotelName = ''): n
 }
 
 async function geminiRequest(prompt: string, key: string): Promise<string> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${key}`;
   const res = await fetchWithTimeout(
     url,
     {

@@ -86,7 +86,7 @@ async def llm_validate_family_friendliness(
     try:
         import google.generativeai as genai
         genai.configure(api_key=gemini_api_key)
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        model = genai.GenerativeModel("gemini-3.5-flash")
 
         prompt = f"""
         Evalúa si este hotel es adecuado para una familia con un niño de 3 años.

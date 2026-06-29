@@ -66,7 +66,7 @@ async def analyze_vision_image(image_b64: str, prompt: str = None, source: str =
     )
 
     # Determine the model based on user prompt (defaulting to gemini)
-    vision_model = "google/gemini-2.5-flash"
+    vision_model = "google/gemini-3.1-flash-lite"
     lower_prompt = analysis_prompt.lower()
     if "claude" in lower_prompt: vision_model = "anthropic/claude-3.7-sonnet"
     elif "gpt-4o" in lower_prompt or "gpt 4" in lower_prompt: vision_model = "openai/gpt-4o"
@@ -120,7 +120,7 @@ async def analyze_vision_image(image_b64: str, prompt: str = None, source: str =
             image = Image.open(io.BytesIO(base64.b64decode(image_b64)))
             
             response = client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-3.1-flash-lite',
                 contents=[analysis_prompt, image]
             )
             return response.text, f"/{path_name}" if path_name else None

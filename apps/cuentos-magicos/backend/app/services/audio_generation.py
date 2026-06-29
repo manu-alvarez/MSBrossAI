@@ -59,7 +59,7 @@ SPANISH_VOICE_CHAIN = [
 # Gemini 2.0 Flash TTS endpoint
 GEMINI_TTS_ENDPOINT = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.0-flash:generateContent"
+    "gemini-3.1-flash-tts:generateContent"
 )
 
 # Professional storyteller system prompt for Gemini TTS

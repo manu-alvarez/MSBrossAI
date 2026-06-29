@@ -37,7 +37,7 @@ export async function generateText(
   try {
     const client = getClient();
     const model = client.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       systemInstruction: systemPrompt,
       generationConfig: jsonMode
         ? { responseMimeType: "application/json" }
@@ -84,7 +84,7 @@ export async function* streamText(
 ): AsyncGenerator<string> {
   const client = getClient();
   const model = client.getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-3.5-flash",
     systemInstruction: systemPrompt,
   });
 

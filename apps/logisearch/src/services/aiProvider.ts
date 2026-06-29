@@ -61,7 +61,7 @@ const GEMINI_CONFIG: AIProviderConfig = {
     name: 'Gemini',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/models',
     keys: [], // populated dynamically
-    model: 'gemini-2.0-flash',
+    model: 'gemini-3.5-flash',
     buildRequest: (prompt: string, model: string) => {
         // Key is appended in the send function
         return {
