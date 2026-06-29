@@ -243,6 +243,7 @@ footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-siz
 }
 
 </style>
+  <script async defer data-website-id="8e08d6d5-a3d8-4f17-b76e-52debeaf2e70" src="https://analytics.msbross.me/umami.js"></script>
 </head>
 <body>
 
@@ -329,7 +330,7 @@ const APPS=[
 const grid=document.getElementById('app-grid');
 APPS.forEach((a,i)=>{
 grid.innerHTML+=`
-<a href="${a.href}" class="app-card" style="--card-accent:${a.accent}" data-delay="${i*60}">
+<a href="${a.href}" class="app-card" style="--card-accent:${a.accent}" data-delay="${i*60}" data-umami-event="Launch App" data-umami-event-app="${a.name}">
   <div class="card-inner">
     <div class="card-header">
       <div class="card-icon">${a.icon}</div>
@@ -949,6 +950,18 @@ document.querySelectorAll('.app-card').forEach(card => {
   });
 })();
 
-</script>
+  </script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
