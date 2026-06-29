@@ -165,19 +165,30 @@ export default function EmailTemplates() {
   const [toast, setToast] = useState<string | null>(null)
 
   const handleCopy = async (t: Template) => {
+    let success = false;
     try {
       await navigator.clipboard.writeText(t.body)
+      success = true;
     } catch {
-      const ta = document.createElement('textarea')
-      ta.value = t.body
-      document.body.appendChild(ta)
-      ta.select()
-      document.execCommand('copy')
-      document.body.removeChild(ta)
+      try {
+        const ta = document.createElement('textarea')
+        ta.value = t.body
+        document.body.appendChild(ta)
+        ta.select()
+        success = document.execCommand('copy')
+        document.body.removeChild(ta)
+      } catch (e) {
+        success = false;
+      }
     }
-    setCopiedId(t.id)
-    setToast(`Plantilla "${t.title}" copiada`)
-    setTimeout(() => setCopiedId(null), 2000)
+    
+    if (success) {
+      setCopiedId(t.id)
+      setToast(`Plantilla "${t.title}" copiada`)
+      setTimeout(() => setCopiedId(null), 2000)
+    } else {
+      setToast(`Error al copiar: Permiso denegado`)
+    }
   }
 
   const categories = [...new Set(TEMPLATES.map(t => t.category))]

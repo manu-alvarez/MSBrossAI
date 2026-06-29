@@ -22,14 +22,14 @@ export default function ContainerTracker() {
   const [containerNo, setContainerNo] = useState('')
   const [recent, setRecent] = useState<string[]>([])
 
-  const normalized = containerNo.replace(/\s+/g, '').toUpperCase()
+  const normalized = containerNo.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()
 
   const handleTrack = () => {
-    if (normalized.length < 4) return
+    if (!isValid) return
     setRecent(prev => [normalized, ...prev.filter(c => c !== normalized)].slice(0, 5))
   }
 
-  const isValid = normalized.length >= 4 && normalized.length <= 11
+  const isValid = normalized.length >= 4 && normalized.length <= 17 // Standard BIC is 11, but BL numbers can be up to 17
 
   return (
     <Card sx={{ p: 3 }}>

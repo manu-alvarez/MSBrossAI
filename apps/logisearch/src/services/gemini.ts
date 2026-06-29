@@ -7,14 +7,16 @@ export async function sendToGemini(prompt: string): Promise<string> {
   return sendToAI(prompt)
 }
 
-// Helper: parse JSON from Gemini response (handles markdown code blocks)
+// Helper: parse JSON from Gemini response (handles markdown code blocks and conversational text)
 function parseGeminiJSON(text: string): Record<string, unknown> | null {
   try {
-    // Remove markdown code block if present
-    const cleaned = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
-    return JSON.parse(cleaned)
-  } catch {
-    return null
+    // Attempt to extract JSON from code blocks or raw braces
+    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || text.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+    const cleaned = jsonMatch ? jsonMatch[1] || jsonMatch[0] : text;
+    return JSON.parse(cleaned.trim());
+  } catch (error) {
+    console.error('Failed to parse Gemini JSON:', error);
+    return null;
   }
 }
 

@@ -200,8 +200,7 @@ function App() {
             <AnchorIcon sx={{ fontSize: 22, color: 'white' }} />
           </Box>
           <Typography variant="h6" onClick={handleHome} sx={{ fontWeight: 800, color: 'white', flexGrow: 0, cursor: 'pointer' }}>LogiSearch</Typography>
-          <Chip label="v2" size="small" color="primary" sx={{ ml: 1, fontWeight: 700, fontSize: '0.6rem', height: 20 }} />
-          <Chip label="AI" size="small" color="secondary" sx={{ ml: 0.5, fontWeight: 700, fontSize: '0.6rem', height: 20 }} />
+
           <Box sx={{ flexGrow: 1 }} />
           <Tooltip title="Historial">
             <Button startIcon={<HistoryIcon />} onClick={() => setShowHistory(true)} sx={{ color: 'text.secondary', '&:hover': { color: 'white' }, mr: 1 }} size="small">Historial</Button>
