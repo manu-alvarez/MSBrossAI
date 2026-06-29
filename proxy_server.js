@@ -180,8 +180,10 @@ for (const name of NEXT_APPS) {
   app.use(prefix, express.static(appDir, { 
     index: false,
     setHeaders: (res, path) => {
-      if (path.endsWith('.html')) {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      if (path.endsWith('.html') || path.endsWith('sw.js')) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+      } else {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // Cache assets for a year
       }
       if (path.endsWith('opengraph-image')) {
         res.setHeader('Content-Type', 'image/png');
