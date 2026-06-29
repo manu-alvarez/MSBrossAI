@@ -238,7 +238,7 @@ AVAILABLE_MODELS = [
     "llama3.2:1b",
     "llama3.2:3b",
     # Gemini models
-    "gemini-2.5-flash-native-audio-latest",
+    "gemini-3.1-flash-live-preview",
     "gemini-1.5-flash",
     "gemini-1.5-flash-8b",
 ]
@@ -274,7 +274,7 @@ PIPELINE_CATALOG = {
             "gemini",
         ],
         "models": [
-            "gemini-2.5-flash-native-audio-latest",
+            "gemini-3.1-flash-live-preview",
             "gemini-1.5-flash",
             "gemini-1.5-flash-8b",
         ],
@@ -369,7 +369,7 @@ def _sync_llm_config_with_active_pipeline() -> None:
 
     if architecture == "realtime" and realtime_provider in {"gemini", "google"}:
         update["model_name"] = (
-            pipeline.get("realtime_model") or "gemini-2.5-flash-native-audio-latest"
+            pipeline.get("realtime_model") or "gemini-3.1-flash-live-preview"
         )
         update["voice"] = (
             pipeline.get("realtime_voice")

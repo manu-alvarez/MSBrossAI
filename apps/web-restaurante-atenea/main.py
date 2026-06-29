@@ -84,9 +84,27 @@ def create_reservation_public(res: ReservationCreate):
     return create_reservation(res)
 
 
+async def _dispatch_agent(url: str, key: str, secret: str, room: str) -> None:
+    if not url:
+        return
+    http_url = url.replace("wss://", "https://").replace("ws://", "http://")
+    try:
+        from livekit.api import LiveKitAPI
+        from livekit.api.agent_dispatch_service import CreateAgentDispatchRequest
+        lkapi = LiveKitAPI(http_url, key, secret)
+        dispatch_req = CreateAgentDispatchRequest()
+        dispatch_req.agent_name = "msb-assistant"
+        dispatch_req.room = room
+        dispatch_req.metadata = ""
+        await lkapi.agent_dispatch.create_dispatch(dispatch_req)
+        await lkapi.aclose()
+        logger.info(f"Agent dispatched to room '{room}'")
+    except Exception as exc:
+        logger.warning(f"Agent dispatch failed (may already be in room): {exc}")
+
 @app.post("/api/public/token")
-def get_public_token(request: Request):
-    """Returns a LiveKit token with protocol-negotiated WebSocket URL."""
+async def get_public_token(request: Request):
+    """Returns a LiveKit token with protocol-negotiated WebSocket URL and dispatches the Agent."""
     api_key = os.getenv("LIVEKIT_API_KEY")
     api_secret = os.getenv("LIVEKIT_API_SECRET")
 
@@ -98,6 +116,7 @@ def get_public_token(request: Request):
         raise HTTPException(status_code=500, detail="LIVEKIT_URL not configured")
 
     from livekit.api import AccessToken, VideoGrants
+    import asyncio
 
     identity = f"atenea-web-{datetime.now().timestamp():.0f}"
     token = AccessToken(api_key, api_secret)
@@ -110,6 +129,8 @@ def get_public_token(request: Request):
         can_publish_data=True,
         can_subscribe=True,
     ))
+    
+    asyncio.create_task(_dispatch_agent(livekit_url, api_key, api_secret, "atenea-room"))
 
     return {
         "accessToken": token.to_jwt(),
