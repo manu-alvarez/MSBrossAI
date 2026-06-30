@@ -12,7 +12,7 @@ body { background: #030712; color: #f8fafc; }
 }
 .portal-card::before {
   content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 2px;
-  background: linear-gradient(var(--border-angle, 0deg), #22c55e, transparent 40%, transparent 60%, #22c55e);
+  background: linear-gradient(var(--border-angle, 0deg), #14b8a6, transparent 40%, transparent 60%, #14b8a6);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;

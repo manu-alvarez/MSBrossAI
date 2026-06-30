@@ -752,9 +752,12 @@ class RestaurantDB:
         source: str = "phone",
     ) -> dict:
         conn = self._get_conn()
+        # OMNICRON OPTIMIZATION: Disable Python's implicit transaction manager 
+        # to guarantee absolute control over the EXCLUSIVE lock in WAL mode.
+        conn.isolation_level = None
         try:
-            # 1. ATOMIC LOCK: Block DB for other concurrent writers until commit or rollback
-            conn.execute("BEGIN EXCLUSIVE TRANSACTION")
+            # 1. ATOMIC LOCK: Block DB for other concurrent writers/readers until commit or rollback
+            conn.execute("BEGIN EXCLUSIVE")
             
             # 2. Re-implement the check_availability logic using the locked connection
             info = dict(conn.execute("SELECT * FROM restaurant_info WHERE id = 1").fetchone())
@@ -784,7 +787,7 @@ class RestaurantDB:
             available = [dict(r) for r in rows]
 
             if not available:
-                conn.rollback()
+                conn.execute("ROLLBACK")
                 raise ValueError(
                     f"No tables available for {num_guests} guests on {date} at {time}."
                 )
@@ -809,8 +812,9 @@ class RestaurantDB:
                     source,
                 ),
             )
-            conn.commit()
             reservation_id = cursor.lastrowid
+            conn.execute("COMMIT")
+
             return {
                 "reservation_id": reservation_id,
                 "customer_name": customer_name,
@@ -822,7 +826,11 @@ class RestaurantDB:
                 "status": "confirmed",
             }
         except Exception as e:
-            conn.rollback() # Release the lock if anything fails
+            # Only rollback if we haven't already
+            try:
+                conn.execute("ROLLBACK")
+            except sqlite3.OperationalError:
+                pass
             raise e
         finally:
             conn.close()
@@ -966,43 +974,31 @@ class RestaurantDB:
         try:
             date = date or datetime.now().strftime("%Y-%m-%d")
 
-            today_res = conn.execute(
-                "SELECT COUNT(*) AS c FROM reservations WHERE date = ? AND status = 'confirmed'",
-                (date,),
-            ).fetchone()
-            total_guests = conn.execute(
-                "SELECT COALESCE(SUM(num_guests), 0) AS s FROM reservations WHERE date = ? AND status = 'confirmed'",
-                (date,),
-            ).fetchone()
-            total_tables = conn.execute(
-                "SELECT COUNT(*) AS c FROM tables WHERE is_active = 1"
-            ).fetchone()
-            cancelled = conn.execute(
-                "SELECT COUNT(*) AS c FROM reservations WHERE date = ? AND status = 'cancelled'",
-                (date,),
-            ).fetchone()
-
-            # New: Global stats to show activity even if today is empty
-            total_reservations = conn.execute(
-                "SELECT COUNT(*) AS c FROM reservations"
-            ).fetchone()
-            next_7_days = conn.execute(
-                "SELECT COUNT(*) AS c FROM reservations WHERE date >= ? AND date <= date(?, '+7 days') AND status = 'confirmed'",
-                (date, date),
-            ).fetchone()
-            total_calls = conn.execute(
-                "SELECT COUNT(*) AS c FROM call_log"
-            ).fetchone()
+            # OMNICRON OPTIMIZATION: Single-pass conditional aggregation
+            # Eliminates 6 sequential I/O round-trips and prevents snapshot inconsistencies
+            query = """
+                SELECT 
+                    (SELECT COUNT(*) FROM tables WHERE is_active = 1) as total_tables,
+                    (SELECT COUNT(*) FROM call_log) as total_calls,
+                    COUNT(r.id) as total_reservations,
+                    SUM(CASE WHEN r.date = ? AND r.status = 'confirmed' THEN 1 ELSE 0 END) as reservations_today,
+                    SUM(CASE WHEN r.date = ? AND r.status = 'confirmed' THEN r.num_guests ELSE 0 END) as guests_today,
+                    SUM(CASE WHEN r.date = ? AND r.status = 'cancelled' THEN 1 ELSE 0 END) as cancellations_today,
+                    SUM(CASE WHEN r.date >= ? AND r.date <= date(?, '+7 days') AND r.status = 'confirmed' THEN 1 ELSE 0 END) as reservations_next_7_days
+                FROM reservations r
+            """
+            
+            row = conn.execute(query, (date, date, date, date, date)).fetchone()
 
             return {
                 "date": date,
-                "reservations_today": today_res["c"],
-                "guests_today": total_guests["s"],
-                "total_tables": total_tables["c"],
-                "cancellations_today": cancelled["c"],
-                "total_reservations": total_reservations["c"],
-                "reservations_next_7_days": next_7_days["c"],
-                "total_calls": total_calls["c"],
+                "reservations_today": row["reservations_today"] or 0,
+                "guests_today": row["guests_today"] or 0,
+                "total_tables": row["total_tables"] or 0,
+                "cancellations_today": row["cancellations_today"] or 0,
+                "total_reservations": row["total_reservations"] or 0,
+                "reservations_next_7_days": row["reservations_next_7_days"] or 0,
+                "total_calls": row["total_calls"] or 0,
             }
         finally:
             conn.close()

@@ -133,7 +133,7 @@ export default function StoriesListClient({ initialStories = [], totalCount = 0 
       setIsLoading(true);
       try {
         // In the browser, this proxy path works perfectly.
-        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? `http://${window.location.hostname}:8007` : "http://localhost:8007");
         const res = await fetch(`${apiBase}/api/stories/?page=1&page_size=50`);
         if (res.ok) {
           const data = await res.json();

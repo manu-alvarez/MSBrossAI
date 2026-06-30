@@ -107,7 +107,7 @@ export default function StoryForm({ initialContentType = "text_image_audio" }: S
     finalTheme = `${finalTheme} (El protagonista es un/a ${selectedAvatar.label} llamado/a ${childName})`;
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? `http://${window.location.hostname}:8007` : "http://localhost:8007");
       const res = await fetch(`${apiBase}/api/stories/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

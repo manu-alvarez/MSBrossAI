@@ -567,7 +567,7 @@ async def reset_agent(current_user: str = Depends(get_current_user)):
 
 
 @app.get("/api/dev/status")
-async def get_agent_status(current_user: str = Depends(get_current_user)):
+def get_agent_status(current_user: str = Depends(get_current_user)):
     # Uptime of the server process itself
     uptime_raw = (
         os.popen('ps -p $(pgrep -f "server.py") -o etimes= 2>/dev/null || echo 0')
@@ -657,7 +657,7 @@ async def get_agent_status(current_user: str = Depends(get_current_user)):
 
 
 @app.get("/api/dev/logs")
-async def get_recent_logs(limit: int = 50, current_user: str = Depends(get_current_user)):
+def get_recent_logs(limit: int = 50, current_user: str = Depends(get_current_user)):
     try:
         result = subprocess.run(
             [

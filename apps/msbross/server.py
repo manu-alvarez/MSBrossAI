@@ -383,10 +383,22 @@ class MSBrOSsHandler(http.server.SimpleHTTPRequestHandler):
     # ─── TOOLS ──────────────────────────────────────────────────────────
 
     def _tool_calc(self, body):
+        import ast, operator
+        
+        def eval_expr(node):
+            if isinstance(node, ast.Num): return node.n
+            elif isinstance(node, ast.BinOp):
+                ops = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.Pow: operator.pow}
+                if type(node.op) in ops: return ops[type(node.op)](eval_expr(node.left), eval_expr(node.right))
+            elif isinstance(node, ast.UnaryOp):
+                if isinstance(node.op, ast.USub): return -eval_expr(node.operand)
+                if isinstance(node.op, ast.UAdd): return eval_expr(node.operand)
+            raise TypeError(node)
+
         expr = body.get('expression', '')
         try:
             safe = re.sub(r'[^0-9+\-*/.()% ]', '', expr)
-            result = eval(safe, {"__builtins__": {}}, {"abs": abs, "round": round, "min": min, "max": max, "pow": pow})
+            result = eval_expr(ast.parse(safe, mode='eval').body)
             entry = {'expression': expr, 'result': result, 'time': time.time()}
             tools_state['calculator_history'].append(entry)
             self._json(entry)

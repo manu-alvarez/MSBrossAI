@@ -54,7 +54,7 @@ export default function StoryPlayer({ story, chapters }: StoryPlayerProps) {
   const printRef = useRef<HTMLDivElement>(null!);
 
   const current = localChapters[currentIndex] || null;
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? `http://${window.location.hostname}:8007` : "http://localhost:8007");
 
   const [retrying, setRetrying] = useState(false);
   const [printOpen, setPrintOpen] = useState(false);

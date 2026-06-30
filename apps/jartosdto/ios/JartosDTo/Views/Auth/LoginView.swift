@@ -7,7 +7,11 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
+    #if targetEnvironment(simulator)
     @State private var serverURL = "http://localhost:8100/api/v1"
+    #else
+    @State private var serverURL = "http://msbross.me:8100/api/v1"
+    #endif
     @State private var error: String?
     @State private var loading = false
     @State private var showSettings = false

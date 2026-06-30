@@ -5,7 +5,12 @@ import Foundation
 final class APIService {
     static let shared = APIService()
 
+    #if targetEnvironment(simulator)
     var baseURL = "http://localhost:8100/api/v1"
+    #else
+    var baseURL = "http://msbross.me:8100/api/v1"
+    #endif
+
     var token: String? {
         didSet { UserDefaults.standard.set(token, forKey: "auth_token") }
     }

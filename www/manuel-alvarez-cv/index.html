@@ -26,6 +26,21 @@
         .orb-1 { background: var(--accent); top: -200px; right: -200px; }
         .orb-2 { background: #8b5cf6; bottom: -200px; left: -200px; }
 
+        
+        /* Ambient Background Orbs */
+        .orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 { background: var(--accent); top: -200px; right: -200px; }
+        .orb-2 { background: var(--accent); bottom: -200px; left: -200px; }
+
         .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
         .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; text-decoration: none; }
@@ -159,8 +174,7 @@
 <body>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-
-    <div class="container">
+<div class="container">
         <header class="header">
             <a href="/" class="logo" style="text-decoration: none; display: inline-block;">
             <span style="font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -0.04em;">

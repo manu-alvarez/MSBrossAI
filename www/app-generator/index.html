@@ -11,6 +11,21 @@
         :root { --bg: #030712; --card-bg: rgba(255,255,255,0.03); --card-border: rgba(255,255,255,0.06); --text: #f8fafc; --text-muted: #64748b; --accent: #f472b6; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        
+        /* Ambient Background Orbs */
+        .orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 { background: var(--accent); top: -200px; right: -200px; }
+        .orb-2 { background: var(--accent); bottom: -200px; left: -200px; }
+
         .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); }
         .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--accent), #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
@@ -22,7 +37,7 @@
         .footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.8rem; }
         .footer a { color: var(--accent); text-decoration: none; }
         .status-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; display: inline-block; margin-right: 0.5rem; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
                 .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
         
@@ -61,7 +76,7 @@
         .feature-card:hover .feature-title { transform: translateZ(15px); }
         .feature-card:hover .feature-desc { transform: translateZ(10px); }
 
-        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), transparent); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), transparent); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent); }
         .feature-title { font-weight: 700; margin-bottom: 0.2rem; }
         .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
         
@@ -122,6 +137,8 @@
 </style>
 </head>
 <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
     <div class="container">
         <header class="header">
             <a href="/" class="logo" style="text-decoration: none; display: inline-block;">

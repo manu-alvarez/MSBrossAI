@@ -23,6 +23,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; position: relative; }
         
+        
         /* Ambient Background Orbs */
         .orb {
             position: absolute;
@@ -30,11 +31,11 @@
             height: 600px;
             border-radius: 50%;
             filter: blur(140px);
-            opacity: 0.08;
+            opacity: 0.15;
             pointer-events: none;
             z-index: 0;
         }
-        .orb-1 { background: var(--accent-cyan); top: -200px; right: -200px; }
+        .orb-1 { background: var(--accent); top: -200px; right: -200px; }
         .orb-2 { background: var(--accent); bottom: -200px; left: -200px; }
 
         .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 2rem; min-height: 100vh; display: flex; flex-direction: column; }
@@ -89,7 +90,7 @@
         .feature-card:hover .feature-title { transform: translateZ(15px); }
         .feature-card:hover .feature-desc { transform: translateZ(10px); }
 
-        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), transparent); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), transparent); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent); }
         .feature-title { font-weight: 700; margin-bottom: 0.2rem; }
         .feature-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
         
@@ -152,8 +153,7 @@
 <body>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-
-    <div class="container">
+<div class="container">
         <header class="header">
             <a href="/" class="logo" style="text-decoration: none; display: inline-block;">
             <span style="font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -0.04em;">
@@ -161,7 +161,7 @@
             </span>
         </a>
             <h1 class="title">EliteScout</h1>
-            <span class="badge" style="background: var(--accent-cyan); color: #000;">ONLINE</span>
+            <span class="badge">ONLINE</span>
         </header>
 
         <nav style="margin-bottom: 1.5rem;">
@@ -171,7 +171,7 @@
         <main class="content">
             <div class="status-card animate-in">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <span class="status-dot" style="background: #10b981;"></span>
+                    <span class="status-dot"></span>
                     <span style="font-weight: 600;">EliteScout</span>
                     <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-cyan);">ACTIVO</span>
                 </div>

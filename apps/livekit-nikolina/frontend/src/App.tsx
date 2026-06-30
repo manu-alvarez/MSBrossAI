@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   LiveKitRoom,
   RoomAudioRenderer,
@@ -15,7 +15,7 @@ const API_BASE = (import.meta as any).env.VITE_API_BASE_URL || '/_nikolina/api';
 const LIVEKIT_URL = (import.meta as any).env.VITE_LIVEKIT_URL || 
   (typeof window !== 'undefined' && window.location.protocol === 'https:'
     ? `wss://${window.location.host}/rtc`
-    : 'ws://127.0.0.1:7880');
+    : (typeof window !== 'undefined' ? `ws://${window.location.hostname}:7880` : 'ws://127.0.0.1:7880'));
 
 type TabType = 'assistant' | 'menu' | 'reservations' | 'calls' | 'admin';
 
@@ -30,22 +30,7 @@ export default function App() {
   const [reservations, setReservations] = useState<any[]>([]);
   const [calls, setCalls] = useState<any[]>([]);
 
-  // Fetch real data from Local SQLite when backend connects
-  useEffect(() => {
-    fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(3000) })
-      .then(r => {
-        if (r.ok) {
-          setIsConnectedBackend(true);
-          fetchData();
-        }
-      })
-      .catch((e) => {
-        console.error('Core Backend offline:', e);
-        setIsConnectedBackend(false);
-      });
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const p1 = fetch(`${API_BASE}/restaurant`).then(r => r.json());
       const p2 = fetch(`${API_BASE}/menu`).then(r => r.json());
@@ -59,7 +44,22 @@ export default function App() {
     } catch (e) {
       console.error('Error fetching dashboard data:', e);
     }
-  };
+  }, []);
+
+  // Fetch real data from Local SQLite when backend connects
+  useEffect(() => {
+    fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(3000) })
+      .then(r => {
+        if (r.ok) {
+          setIsConnectedBackend(true);
+          fetchData();
+        }
+      })
+      .catch((e) => {
+        console.error('Core Backend offline:', e);
+        setIsConnectedBackend(false);
+      });
+  }, [fetchData]);
 
   const connectToVoice = async () => {
     try {
@@ -82,8 +82,8 @@ export default function App() {
     }
   };
 
-  const categories = ['Todos', ...Array.from(new Set(menuItems.map(m => m.category)))];
-  const filteredMenu = menuFilter === 'Todos' ? menuItems : menuItems.filter(m => m.category === menuFilter);
+  const categories = useMemo(() => ['Todos', ...Array.from(new Set(menuItems.map(m => m.category)))], [menuItems]);
+  const filteredMenu = useMemo(() => menuFilter === 'Todos' ? menuItems : menuItems.filter(m => m.category === menuFilter), [menuItems, menuFilter]);
 
   const tabs: { id: TabType; icon: string; label: string }[] = [
     { id: 'assistant', icon: '🎙️', label: 'Asistente' },
@@ -95,7 +95,7 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a12 0%, #1a1020 50%, #0a1520 100%)', color: 'white' }}>
-      <header style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(212,175,55,0.1)', background: 'rgba(0,0,0,0.3)' }}>
+      <header style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(6,182,212,0.1)', background: 'rgba(0,0,0,0.3)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #06b6d4, #22d3ee)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>🎙️</div>
@@ -109,8 +109,8 @@ export default function App() {
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-                padding: '0.5rem 1rem', background: activeTab === tab.id ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
-                border: `1px solid ${activeTab === tab.id ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
+                padding: '0.5rem 1rem', background: activeTab === tab.id ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)',
+                border: `1px solid ${activeTab === tab.id ? 'rgba(6,182,212,0.3)' : 'rgba(255,255,255,0.06)'}`,
                 borderRadius: 8, color: activeTab === tab.id ? '#06b6d4' : 'rgba(255,255,255,0.5)',
                 cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, transition: 'all 0.2s', flex: '1 1 auto', textAlign: 'center'
               }}>{tab.icon} <span className="tab-label">{tab.label}</span></button>
@@ -125,7 +125,7 @@ export default function App() {
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
             <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2rem', color: '#06b6d4', marginBottom: '1rem' }}>Conecta con la IA</h2>
             <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '3rem' }}>
-              Motor WebRTC de baja latencia impulsado por Gemini 2.5 Flash Native.
+              Motor WebRTC de baja latencia impulsado por Gemini 3.1 Flash Live Preview.
             </p>
 
             {!token ? (
@@ -143,7 +143,7 @@ export default function App() {
                 connect={true}
                 audio={true}
                 video={false}
-                style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                style={{ height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
               >
                 <RoomAudioRenderer />
                 
@@ -157,7 +157,7 @@ export default function App() {
             )}
 
             {!isConnectedBackend && (
-              <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(255,165,0,0.1)', border: '1px solid rgba(255,165,0,0.3)', borderRadius: 12, color: '#fbbf24' }}>
+              <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', borderRadius: 12, color: '#06b6d4' }}>
                 ⏳ El motor backend de Nikolina se está inicializando. Espera unos segundos y recarga la página. Si el problema persiste, contacta con el administrador del sistema.
               </div>
             )}
@@ -279,7 +279,7 @@ export default function App() {
               <div className="portal-card">
               <div className="portal-card-inner" style={{ padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>BACKEND LOCAL</h3>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: isConnectedBackend ? '#06ff8f' : '#ffbe0b' }}>{isConnectedBackend ? '🟢 Estable' : '🔴 Abortado'}</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: isConnectedBackend ? '#06ff8f' : '#06b6d4' }}>{isConnectedBackend ? '🟢 Estable' : '🔴 Abortado'}</div>
               </div>
               </div>
               <div className="portal-card">
@@ -321,7 +321,7 @@ function AssistantStatus() {
       boxShadow: `0 0 60px ${
         roomState === ConnectionState.Connected ? 'rgba(6,255,143,0.4)' :
         roomState === ConnectionState.Connecting ? 'rgba(0,245,255,0.4)' :
-        'rgba(212,175,55,0.4)'
+        'rgba(6,182,212,0.4)'
       }`,
       display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem',
     }}>

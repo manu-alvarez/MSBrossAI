@@ -53,7 +53,7 @@ const FollowTheStar: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#C084FC', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         ⭐ ¡Sigue la Estrella!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -156,7 +156,7 @@ const ColorMatch: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c09060', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         🎨 ¡Encuentra el Color!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -248,7 +248,7 @@ const ShapeFinder: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#60A5FA', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         🔍 ¡Encuentra la Forma!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -317,7 +317,7 @@ const HighContrast: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c08080', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         👁️ Alto Contraste
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -401,7 +401,7 @@ const EyePatchTimer: React.FC = () => {
   if (done) {
     return (
       <div style={{ textAlign: 'center' }}>
-        <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#34D399', marginBottom: '1rem' }}>
+        <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '1rem' }}>
           🎉 ¡Tiempo cumplido!
         </h2>
         <div style={{ fontSize: '5rem', animation: 'bounce 1s ease infinite' }}>👏</div>
@@ -427,7 +427,7 @@ const EyePatchTimer: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#34D399', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         ⏱️ Tiempo del Parche
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -521,7 +521,7 @@ const FindDifference: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#c0a040', marginBottom: '0.5rem' }}>
+      <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
         🔎 ¡Encuentra el Diferente!
       </h2>
       <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
@@ -652,10 +652,10 @@ export default function App() {
             👁️
           </div>
           <div>
-            <h1 style={{ fontFamily: 'Inter', fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#f8fafc' }}>
+            <h1 style={{ fontFamily: 'Inter', fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--app-accent)' }}>
               Edelweiss
             </h1>
-            <p style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Juegos para mis ojitos ✨</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--app-accent)' }}>Juegos para mis ojitos ✨</p>
           </div>
         </div>
         {selectedGame && (
@@ -686,7 +686,7 @@ export default function App() {
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: '#fbcfe8', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontFamily: 'Fredoka One', fontSize: '2rem', color: 'var(--app-accent)', marginBottom: '0.5rem' }}>
                 ¡Elige tu juego! 🎮
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '1.1rem' }}>
@@ -723,7 +723,7 @@ export default function App() {
                       }}>
                         {game.icon}
                       </div>
-                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '1.1rem', color: '#f8fafc' }}>
+                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '1.1rem', color: 'var(--app-accent)' }}>
                         {game.name}
                       </div>
                     </div>

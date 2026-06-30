@@ -8,7 +8,7 @@ import './index.css';
 const isProduction = window.location.hostname === 'msbross.me';
 const API_BASE = isProduction
   ? '/_iaputa/api'
-  : ((import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:8006/api');
+  : ((import.meta as any).env.VITE_API_BASE_URL || `http://${window.location.hostname}:8006/api`);
 const API_KEY = (import.meta as any).env.VITE_API_KEY || '';
 const USE_PHP_GATEWAY = false;
 
