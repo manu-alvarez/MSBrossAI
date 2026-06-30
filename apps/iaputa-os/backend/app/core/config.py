@@ -23,11 +23,11 @@ class Settings(BaseSettings):
     GOOGLE_PROJECT_ID: Optional[str] = None
     GOOGLE_STUDIO_API_KEY: Optional[str] = None
     SENTRY_DSN: Optional[str] = None
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file="../.env", env_file_encoding="utf-8", extra="ignore")
 
     def get_cors_origins(self) -> List[str]:
-        if self.CORS_ORIGINS == "*": return ["*", "https://msbross.me", "https://msbrossai.alvarezconsult.com"]
-        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()] + ["https://msbross.me", "https://msbrossai.alvarezconsult.com"]
+        if self.CORS_ORIGINS == "*": return ["*", "https://msbross.me"]
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()] + ["https://msbross.me"]
 
 settings = Settings()
 for folder in ["temp_audio", "temp_vision", "scripts"]:

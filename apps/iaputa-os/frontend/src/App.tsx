@@ -60,7 +60,8 @@ export default function App() {
   const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      const cleanText = text.replace(/[*#_`~]/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       
       const setVoiceAndSpeak = () => {
         let voices = window.speechSynthesis.getVoices();
@@ -75,7 +76,7 @@ export default function App() {
         }
         
         utterance.lang = 'es-ES';
-        utterance.rate = 1.0;
+        utterance.rate = 1.2;
         utterance.pitch = 1.05; 
         utterance.onstart = () => { setSpeaking(true); setOrbState('speaking'); };
         utterance.onend = () => { setSpeaking(false); setOrbState('idle'); };
@@ -320,8 +321,27 @@ export default function App() {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       setStream(mediaStream);
       setVisionModeActive(true);
-    } catch (err) {
-      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error al acceder a la cámara: ${String(err)}`, timestamp: new Date() }]);
+    } catch (err: any) {
+      if (err.name === 'OverconstrainedError' || err.name === 'NotFoundError') {
+        try {
+          // Fallback to any available camera if environment camera fails
+          const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
+          setStream(fallbackStream);
+          setVisionModeActive(true);
+          return;
+        } catch (fallbackErr: any) {
+          err = fallbackErr;
+        }
+      }
+      
+      let errorMsg = String(err);
+      if (err.name === 'NotAllowedError') {
+        errorMsg = 'Permiso denegado. Por favor, habilita el acceso a la cámara en la configuración de tu navegador (el candado en la barra de direcciones) o en los ajustes de privacidad de tu sistema operativo.';
+      } else if (err.name === 'NotFoundError') {
+        errorMsg = 'No se encontró ninguna cámara conectada al dispositivo.';
+      }
+
+      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'system', content: `❌ Error al acceder a la cámara: ${errorMsg}`, timestamp: new Date() }]);
     }
   };
 
