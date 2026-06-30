@@ -49,7 +49,7 @@ app.include_router(api_router, prefix="/api")
 
 ALLOWED_ORIGINS = os.getenv(
     "CORS_ORIGINS",
-    "https://livekit.alvarezconsult.com,http://localhost:5173,http://localhost:5174"
+    "https://livekit.msbross.me,http://localhost:5173,http://localhost:5174"
 ).split(",")
 
 app.add_middleware(
@@ -429,7 +429,7 @@ async def generate_token(request: TokenRequest):
     livekit_url = os.getenv("LIVEKIT_URL")  # For agent worker (ws://localhost:7880)
     livekit_public_url = os.getenv(
         "LIVEKIT_PUBLIC_URL"
-    )  # For client tokens (wss://livekit.alvarezconsult.com)
+    )  # For client tokens (wss://livekit.msbross.me)
     livekit_http_url = os.getenv("LIVEKIT_HTTP_URL")
 
     # Use PUBLIC URL for client tokens if available, otherwise use default URL
