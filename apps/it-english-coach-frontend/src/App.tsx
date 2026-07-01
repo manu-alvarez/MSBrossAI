@@ -4,15 +4,19 @@ import { Settings, BookOpen, MessageSquare, Headphones, FileText, ChevronRight, 
 import { TEMARIO } from './lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import ReadingView from './views/ReadingView';
+import ListeningView from './views/ListeningView';
+import TutorView from './views/TutorView';
+
 function App() {
   const { activeTab, setActiveTab } = useAppStore();
 
   const renderContent = () => {
     switch (activeTab) {
       case 'temario': return <TemarioView />;
-      case 'practica': return <div className="p-8 text-center text-muted">Práctica de Reading (En construcción React V3)</div>;
-      case 'pruebas': return <div className="p-8 text-center text-muted">Listening / Pruebas (En construcción React V3)</div>;
-      case 'tutor': return <div className="p-8 text-center text-muted">Tutor IA Chat (En construcción React V3)</div>;
+      case 'practica': return <ReadingView />;
+      case 'pruebas': return <ListeningView />;
+      case 'tutor': return <TutorView />;
     }
   };
 
@@ -29,7 +33,6 @@ function App() {
         </div>
         <div className="flex-1">
           <h1 className="text-xl font-extrabold tracking-tight text-gradient">IT English Coach</h1>
-          <p className="text-muted text-sm mt-1">BeastMode Ultra GodMode V3</p>
         </div>
         <button className="h-10 w-10 rounded-xl glass-panel flex items-center justify-center hover:scale-105 transition-transform">
           <Settings size={20} className="text-neon-cyan" />
