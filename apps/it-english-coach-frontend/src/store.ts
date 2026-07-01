@@ -17,8 +17,8 @@ export interface Progress {
 
 interface AppState {
   // Navigation
-  activeTab: 'temario' | 'practica' | 'pruebas' | 'tutor';
-  setActiveTab: (tab: 'temario' | 'practica' | 'pruebas' | 'tutor') => void;
+  activeTab: 'dashboard' | 'temario' | 'practica' | 'pruebas' | 'tutor' | 'settings';
+  setActiveTab: (tab: 'dashboard' | 'temario' | 'practica' | 'pruebas' | 'tutor' | 'settings') => void;
   
   // Settings
   settings: Settings;
@@ -42,7 +42,7 @@ const defaultSettings: Settings = {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      activeTab: 'temario',
+      activeTab: 'dashboard',
       setActiveTab: (tab) => set({ activeTab: tab }),
       
       settings: defaultSettings,
