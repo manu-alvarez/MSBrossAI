@@ -1,4 +1,4 @@
-import React from 'react';
+
 import ReactECharts from 'echarts-for-react';
 import { useAppStore } from '../store';
 import { TEMARIO, READING, LISTENING } from '../lib/data';
