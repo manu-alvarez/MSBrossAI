@@ -27,7 +27,7 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'nikolina-livekit-server',
-      script: path.join(__dirname, 'apps/livekit-nikolina/server/livekit-server'),
+      script: 'livekit-server',
       args: '--dev --bind 127.0.0.1 --node-ip 127.0.0.1',
       cwd: __dirname,
       out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.log'),
