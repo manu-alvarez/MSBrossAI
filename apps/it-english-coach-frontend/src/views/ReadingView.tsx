@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { PRACTICA } from '../lib/data';
 import { motion } from 'framer-motion';
 import { FileText, BookOpen } from 'lucide-react';

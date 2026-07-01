@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Send, Bot, User, Settings2 } from 'lucide-react';
+import { Send, Bot } from 'lucide-react';
 import { chat as chatLLM } from '../lib/llm';
-import { useAppStore } from '../store';
 
 export default function TutorView() {
   const [messages, setMessages] = useState<{role:string, content:string}[]>([{role:'assistant', content:'Hello! I am your IT English Coach. Tell me about your role or ask me to practice an interview.'}]);
