@@ -94,7 +94,7 @@ app.post('/_coach/api/evaluate', express.json(), async (req, res) => {
       });
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contents })
@@ -155,7 +155,7 @@ app.get('/__health', async (req, res) => {
 });
 
 // ── Visit Tracking ──
-const visitsFile = path.join(__dirname, 'visits.json');
+const visitsFile = path.join(__dirname, 'data', 'visits.json');
 let visitsData = { total: 0, today: 0, lastDate: new Date().toDateString() };
 if (fs.existsSync(visitsFile)) {
   try { visitsData = JSON.parse(fs.readFileSync(visitsFile, 'utf8')); } catch(e){}
