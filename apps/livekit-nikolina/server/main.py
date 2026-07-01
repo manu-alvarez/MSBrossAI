@@ -476,7 +476,7 @@ async def _dispatch_agent(url: str, key: str, secret: str, room: str) -> None:
     try:
         lkapi = LiveKitAPI(url, key, secret)
         dispatch_req = CreateAgentDispatchRequest()
-        dispatch_req.agent_name = "msb-assistant"
+        dispatch_req.agent_name = "it-coach-agent" if room.startswith("coach") else "msb-assistant"
         dispatch_req.room = room
         dispatch_req.metadata = ""
         await lkapi.agent_dispatch.create_dispatch(dispatch_req)

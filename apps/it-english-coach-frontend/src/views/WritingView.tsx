@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { WRITING, CATS } from '../lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PenTool, Send, Loader2 } from 'lucide-react';
-import { chat } from '../lib/llm';
 import SkillsRadar from '../components/SkillsRadar';
 
 export default function WritingView() {
@@ -20,10 +19,16 @@ export default function WritingView() {
 
     setEvaluating(id);
     try {
-      const response = await chat([
-        { role: 'system', content: `You are an expert IT English Teacher. The user was asked to write: "${promptText}". The user wrote: "${userText}". Provide a short, constructive evaluation. Rate their English level (A1-C2) based on the text, point out grammar mistakes if any, and suggest a better way to write it. Keep it concise, using markdown.` }
-      ]);
-      setFeedbacks(prev => ({ ...prev, [id]: response || "No feedback received." }));
+      const response = await fetch('/_coach/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: `You are an expert IT English Teacher. The user was asked to write: "${promptText}". The user wrote: "${userText}". Provide a short, constructive evaluation. Rate their English level (A1-C2) based on the text, point out grammar mistakes if any, and suggest a better way to write it. Keep it concise, using markdown.`
+        })
+      });
+      if (!response.ok) throw new Error('API Error');
+      const data = await response.json();
+      setFeedbacks(prev => ({ ...prev, [id]: data.text || "No feedback received." }));
     } catch (err) {
       setFeedbacks(prev => ({ ...prev, [id]: "Error evaluating the text. Please try again later." }));
     }

@@ -1,34 +1,57 @@
 import { useState, useEffect } from 'react';
 import { SPEAKING, CATS } from '../lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, CheckCircle2, Circle } from 'lucide-react';
+import { Mic, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import SkillsRadar from '../components/SkillsRadar';
+import { LiveKitRoom, RoomAudioRenderer, VoiceAssistantControlBar } from '@livekit/components-react';
+import '@livekit/components-styles';
 
 export default function SpeakingView() {
   const [activeTimer, setActiveTimer] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [checklistState, setChecklistState] = useState<Record<string, boolean[]>>({});
+  
+  // LiveKit State
+  const [lkToken, setLkToken] = useState<string | null>(null);
+  const [lkUrl, setLkUrl] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
 
+  // Fetch Proxy config on mount to know the LiveKit URL
   useEffect(() => {
-    let interval: any;
-    if (activeTimer && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0 && activeTimer) {
-      handleComplete(activeTimer);
-    }
-    return () => clearInterval(interval);
-  }, [activeTimer, timeLeft]);
+    fetch('/__config')
+      .then(r => r.json())
+      .then(cfg => {
+        if (cfg.livekitUrl) setLkUrl(cfg.livekitUrl);
+      })
+      .catch(() => setLkUrl('wss://nikolina-1jg7t00i.livekit.cloud')); // fallback
+  }, []);
 
-  const startTimer = (id: string) => {
+  const startLiveKit = async (id: string) => {
+    setConnecting(true);
     setActiveTimer(id);
-    setTimeLeft(60); // 1 minute prep/speaking time
+    try {
+      const roomName = `coach-${id}-${Math.floor(Math.random() * 10000)}`;
+      const res = await fetch('/_nikolina/api/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          participant_identity: `user-${Math.floor(Math.random()*1000)}`,
+          room_name: roomName
+        })
+      });
+      if (!res.ok) throw new Error('Error fetching token');
+      const data = await res.json();
+      setLkToken(data.accessToken);
+    } catch (e) {
+      console.error(e);
+      setActiveTimer(null);
+    }
+    setConnecting(false);
   };
 
   const handleComplete = (id: string) => {
     setActiveTimer(null);
+    setLkToken(null);
     setCompleted(prev => ({ ...prev, [id]: true }));
     if (!checklistState[id]) {
       setChecklistState(prev => ({ ...prev, [id]: SPEAKING.find(s => s.id === id)?.checklist.map(() => false) || [] }));
@@ -43,12 +66,6 @@ export default function SpeakingView() {
     });
   };
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="space-y-6 pb-12 w-full max-w-6xl mx-auto flex flex-col xl:flex-row gap-6">
       
@@ -56,8 +73,8 @@ export default function SpeakingView() {
       <div className="flex-1 space-y-6">
         <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Speaking Practice</h2>
-            <p className="text-muted text-sm">Simula reuniones y entrevistas. Practica en voz alta y auto-evalúa tus respuestas.</p>
+            <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Speaking Practice (Live Agent)</h2>
+            <p className="text-muted text-sm">Simula reuniones con un tutor de IA nativo. Habla en tiempo real por micrófono.</p>
           </div>
           <Mic size={28} className="text-neon-cyan opacity-80" />
         </div>
@@ -93,24 +110,36 @@ export default function SpeakingView() {
                       
                       {!completed[item.id] && activeTimer !== item.id && (
                         <button 
-                          onClick={() => startTimer(item.id)}
-                          className="bg-neon-cyan/10 hover:bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all hover:scale-105"
+                          onClick={() => startLiveKit(item.id)}
+                          disabled={connecting || !lkUrl}
+                          className="bg-neon-cyan/10 hover:bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all hover:scale-105 disabled:opacity-50"
                         >
-                          <Mic size={20} /> Empezar a Hablar
+                          {connecting ? <Loader2 size={20} className="animate-spin" /> : <Mic size={20} />} 
+                          {connecting ? 'Conectando al Tutor...' : 'Llamar al Tutor IA'}
                         </button>
                       )}
 
-                      {activeTimer === item.id && (
-                        <div className="flex flex-col items-center animate-pulse">
-                          <div className="w-20 h-20 rounded-full border-4 border-neon-cyan flex items-center justify-center mb-4">
-                            <span className="text-2xl font-mono text-neon-cyan">{formatTime(timeLeft)}</span>
-                          </div>
-                          <button 
-                            onClick={() => handleComplete(item.id)}
-                            className="text-xs text-muted hover:text-white underline"
+                      {activeTimer === item.id && lkToken && lkUrl && (
+                        <div className="flex flex-col items-center w-full max-w-sm mt-4">
+                          <LiveKitRoom
+                            serverUrl={lkUrl}
+                            token={lkToken}
+                            connect={true}
+                            audio={true}
+                            video={false}
+                            className="w-full flex flex-col items-center p-4 bg-surface rounded-xl border border-neon-cyan/30"
                           >
-                            Terminar antes
-                          </button>
+                            <RoomAudioRenderer />
+                            <div className="h-16 w-full flex justify-center items-center mb-4">
+                              <VoiceAssistantControlBar />
+                            </div>
+                            <button 
+                              onClick={() => handleComplete(item.id)}
+                              className="bg-red-500/20 text-red-400 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-500/30 transition-colors"
+                            >
+                              Finalizar Llamada
+                            </button>
+                          </LiveKitRoom>
                         </div>
                       )}
                     </div>
@@ -120,7 +149,7 @@ export default function SpeakingView() {
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden">
                           <div className="bg-surface/50 border border-matrix-green/30 rounded-xl p-5">
                             <h4 className="text-xs font-bold text-matrix-green mb-3 uppercase tracking-wider">Checklist de Auto-Evaluación</h4>
-                            <p className="text-sm text-gray-400 mb-4">¿Mencionaste los siguientes puntos clave en tu respuesta?</p>
+                            <p className="text-sm text-gray-400 mb-4">¿Mencionaste los siguientes puntos clave durante tu conversación?</p>
                             <div className="space-y-2">
                               {item.checklist.map((check: string, idx: number) => {
                                 const isChecked = checklistState[item.id]?.[idx];

@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🛡️  [Husky] Scanning for secrets (API Keys)..."
+
+FORBIDDEN_PATTERNS="AIzaSy|gsk_|sk-proj-|sk-or-v1-"
+
+# Check if any staged files (excluding pre-commit itself) contain forbidden patterns
+if git diff --cached -G"$FORBIDDEN_PATTERNS" --name-only | grep -v "\.husky/pre-commit" | grep -q .; then
+    echo ""
+    echo "🚨🚨🚨 [SECURITY BREACH DETECTED] 🚨🚨🚨"
+    echo "You are trying to commit a secret API Key!"
+    echo "Files affected:"
+    git diff --cached -G"$FORBIDDEN_PATTERNS" --name-only | grep -v "\.husky/pre-commit"
+    echo ""
+    echo "Commit aborted. Please remove the key and try again."
+    echo "🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨"
+    exit 1
+fi
+
+echo "✅ [Husky] Scan passed. No secrets detected."

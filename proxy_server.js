@@ -74,6 +74,42 @@ app.get('/__config', (req, res) => {
   });
 });
 
+// ── IT English Coach AI Endpoint ──
+app.post('/_coach/api/evaluate', express.json(), async (req, res) => {
+  try {
+    const vault = require('./api_keys_vault.json');
+    const geminiKey = vault?.LLM_PROVIDERS?.GOOGLE_GEMINI?.[0]?.key;
+    if (!geminiKey) return res.status(500).json({ error: 'Gemini Key missing' });
+
+    const { messages = [], system } = req.body;
+    const contents = [];
+    if (system) {
+      contents.push({ role: 'user', parts: [{ text: `SYSTEM INSTRUCTION: ${system}` }] });
+      contents.push({ role: 'model', parts: [{ text: 'Understood.' }] });
+    }
+    for (const msg of messages) {
+      contents.push({
+        role: msg.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: msg.content }]
+      });
+    }
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents })
+    });
+    
+    if (!response.ok) throw new Error(`Gemini API error: ${response.status}`);
+    const data = await response.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    res.json({ text });
+  } catch (error) {
+    console.error('Coach API Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // ── Health check (comprehensive — pings all backends) ──
 const net = require('net');
 function checkPort(port, timeout = 500) {

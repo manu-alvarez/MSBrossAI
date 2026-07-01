@@ -71,6 +71,23 @@ module.exports = {
       min_uptime: '15s',
       max_memory_restart: '1G'
     },
+    {
+      name: 'it-coach-agent',
+      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      args: 'src/coach_agent.py start',
+      cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
+      env: {
+        PYTHONPATH: './agent/src:./server/src',
+        LIVEKIT_WORKER_PORT: 8082
+      },
+      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/coach_agent.log'),
+      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/coach_agent.error.log'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '1G'
+    },
 
     // ──────────────────────────────────────────────
     // Gas Station (Checklist & Inventory Backend)
