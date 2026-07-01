@@ -318,6 +318,20 @@ module.exports = {
     },
 
     // ──────────────────────────────────────────────
+    // IT ENGLISH COACH (CORS Proxy & Backend)
+    // ──────────────────────────────────────────────
+    {
+      name: 'it-english-backend',
+      script: 'server.js',
+      cwd: path.join(__dirname, 'apps/it-english-coach'),
+      autorestart: true,
+      max_restarts: 15,
+      exp_backoff_delay: 1000,
+      min_uptime: '15s',
+      max_memory_restart: '300M'
+    },
+
+    // ──────────────────────────────────────────────
     // CLOUDFLARE TUNNEL (Exposes proxy on boot)
     // ──────────────────────────────────────────────
     {

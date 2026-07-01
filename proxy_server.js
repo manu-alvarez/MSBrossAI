@@ -274,6 +274,7 @@ app.use('/app/mapfre', createProxyMiddleware({
 app.use('/_traductor',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8004', '/_traductor')));
 app.use('/_msbross',       createProxyMiddleware(proxyOpts('http://127.0.0.1:8005', '/_msbross')));
 app.use('/_iaputa',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8006', '/_iaputa')));
+app.use('/_itenglish',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8787', '/_itenglish')));
 app.use('/_cuentosmagicos',createProxyMiddleware(proxyOpts('http://127.0.0.1:8007', '/_cuentosmagicos')));
 app.use('/_jartosdto',     createProxyMiddleware(proxyOpts('http://127.0.0.1:8010', '/_jartosdto')));
 app.use('/_atenea',        createProxyMiddleware(proxyOpts('http://127.0.0.1:8009', '/_atenea')));
