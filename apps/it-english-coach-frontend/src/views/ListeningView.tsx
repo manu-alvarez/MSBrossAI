@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
-import { PRUEBAS } from '../lib/data';
-import { motion } from 'framer-motion';
+import { LISTENING, CATS } from '../lib/data';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Headphones, Play, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function ListeningView() {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [playing, setPlaying] = useState<string | null>(null);
 
-  const handleSelect = (qId: string, opt: string) => {
-    setAnswers(prev => ({ ...prev, [qId]: opt }));
+  const handleSelect = (rId: string, qIdx: number, optIdx: number) => {
+    setAnswers(prev => ({ ...prev, [`${rId}-${qIdx}`]: optIdx }));
   };
 
-  const playTTS = (text: string, id: string) => {
+  const playTTS = (lines: {who:string, text:string}[], id: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US';
-      u.rate = 0.9;
-      u.onend = () => setPlaying(null);
       setPlaying(id);
-      window.speechSynthesis.speak(u);
+      
+      const playLine = (idx: number) => {
+        if (idx >= lines.length) {
+          setPlaying(null);
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(lines[idx].text);
+        u.lang = 'en-US';
+        u.rate = 0.9;
+        u.onend = () => playLine(idx + 1);
+        window.speechSynthesis.speak(u);
+      };
+      
+      playLine(0);
     }
   };
 
@@ -27,76 +36,87 @@ export default function ListeningView() {
     <div className="space-y-6 pb-12">
       <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Listening & Grammar</h2>
-          <p className="text-muted text-sm">Entrena tu oído y vocabulario IT.</p>
+          <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Listening Practice</h2>
+          <p className="text-muted text-sm">Escucha el diálogo y responde las preguntas.</p>
         </div>
         <Headphones size={28} className="text-neon-cyan opacity-80" />
       </div>
 
-      <div className="space-y-5">
-        {PRUEBAS.map((q, i) => {
-          const userAnswer = answers[q.id];
-          const isCorrect = userAnswer === q.answer;
-          const isAnswered = userAnswer !== undefined;
+      <div className="space-y-8">
+        {LISTENING.map((item: any, i: number) => (
+          <motion.div 
+            key={item.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="glass-panel rounded-2xl p-6"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-surface border border-border text-neon-cyan">{item.level}</span>
+              <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-surface border border-border text-muted uppercase">{(CATS as any)[item.cat]?.label || item.cat}</span>
+              <h3 className="text-lg font-bold text-white">{item.title}</h3>
+            </div>
 
-          return (
-            <motion.div 
-              key={q.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className={`glass-panel rounded-2xl p-5 border-l-4 ${isAnswered ? (isCorrect ? 'border-l-matrix-green' : 'border-l-red-500') : 'border-l-transparent'}`}
-            >
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => playTTS(q.text.replace('___', q.answer), q.id)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${playing === q.id ? 'bg-neon-cyan text-deep-void animate-pulse' : 'bg-surface border border-border text-neon-cyan hover:bg-neon-cyan/20'}`}
-                >
-                  <Play size={16} className="ml-1" />
-                </button>
-                <div className="flex-1">
-                  <p className="text-base text-gray-200 mb-4 leading-relaxed font-medium">
-                    {q.text.split('___').map((part, idx, arr) => (
-                      <React.Fragment key={idx}>
-                        {part}
-                        {idx < arr.length - 1 && (
-                          <span className={`inline-block px-3 py-0.5 mx-1 rounded border-b-2 font-mono text-sm ${isAnswered ? (isCorrect ? 'text-matrix-green border-matrix-green' : 'text-red-400 border-red-400') : 'text-muted border-border'}`}>
-                            {userAnswer || "___"}
-                          </span>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {q.options.map(opt => {
-                      const isSelected = userAnswer === opt;
-                      const isWinningOpt = isAnswered && opt === q.answer;
-                      const isLosingOpt = isSelected && !isCorrect;
-                      
-                      let btnClass = "bg-surface border-border/50 text-muted hover:border-neon-cyan/50 hover:text-white";
-                      if (isWinningOpt) btnClass = "bg-matrix-green/20 border-matrix-green text-matrix-green";
-                      else if (isLosingOpt) btnClass = "bg-red-500/20 border-red-500 text-red-400";
-                      
-                      return (
-                        <button 
-                          key={opt}
-                          disabled={isAnswered}
-                          onClick={() => handleSelect(q.id, opt)}
-                          className={`flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all ${btnClass}`}
-                        >
-                          {opt}
-                          {isWinningOpt && <CheckCircle2 size={16} />}
-                          {isLosingOpt && <XCircle size={16} />}
-                        </button>
-                      );
-                    })}
+            <div className="bg-[#02050A]/50 border border-border/30 rounded-xl p-5 mb-6 flex flex-col items-center">
+              <button 
+                onClick={() => playTTS(item.lines, item.id)}
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${playing === item.id ? 'bg-neon-cyan text-deep-void animate-pulse scale-110 shadow-[0_0_30px_rgba(0,255,204,0.4)]' : 'bg-surface border border-neon-cyan/50 text-neon-cyan hover:bg-neon-cyan/20'}`}
+              >
+                <Play size={28} className="ml-1" />
+              </button>
+              <p className="text-xs text-muted mt-4 font-mono">{playing === item.id ? 'PLAYING AUDIO...' : 'PLAY DIALOGUE'}</p>
+            </div>
+            
+            <div className="space-y-6">
+              <h4 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Comprehension Check</h4>
+              {item.qs.map((q: any, qIdx: number) => {
+                const ansKey = `${item.id}-${qIdx}`;
+                const userAns = answers[ansKey];
+                const isAnswered = userAns !== undefined;
+                const isCorrect = userAns === q.a;
+                
+                return (
+                  <div key={qIdx} className={`bg-surface/50 border rounded-xl p-4 transition-colors ${isAnswered ? (isCorrect ? 'border-matrix-green/50' : 'border-red-500/50') : 'border-border/50'}`}>
+                    <p className="text-sm font-medium text-white mb-3">{q.q}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {q.opts.map((opt: string, oIdx: number) => {
+                        const isSelected = userAns === oIdx;
+                        const isWinningOpt = isAnswered && oIdx === q.a;
+                        const isLosingOpt = isSelected && !isCorrect;
+                        
+                        let btnClass = "bg-surface border-border/50 text-muted hover:border-neon-cyan/50 hover:text-white";
+                        if (isWinningOpt) btnClass = "bg-matrix-green/20 border-matrix-green text-matrix-green";
+                        else if (isLosingOpt) btnClass = "bg-red-500/20 border-red-500 text-red-400";
+                        
+                        return (
+                          <button 
+                            key={oIdx}
+                            disabled={isAnswered}
+                            onClick={() => handleSelect(item.id, qIdx, oIdx)}
+                            className={`flex items-center justify-between text-left px-3 py-2 rounded-lg border text-xs transition-all ${btnClass}`}
+                          >
+                            <span>{opt}</span>
+                            {isWinningOpt && <CheckCircle2 size={14} className="shrink-0 ml-2" />}
+                            {isLosingOpt && <XCircle size={14} className="shrink-0 ml-2" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <AnimatePresence>
+                      {isAnswered && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden">
+                          <div className={`mt-3 text-xs p-3 rounded-lg bg-surface/80 border ${isCorrect ? 'border-matrix-green/20 text-matrix-green' : 'border-red-500/20 text-red-400'}`}>
+                            {q.ex}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+                );
+              })}
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

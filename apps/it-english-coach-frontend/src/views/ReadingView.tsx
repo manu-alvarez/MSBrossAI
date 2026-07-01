@@ -1,21 +1,27 @@
-
-import { PRACTICA } from '../lib/data';
-import { motion } from 'framer-motion';
-import { FileText, BookOpen } from 'lucide-react';
+import { useState } from 'react';
+import { READING, CATS } from '../lib/data';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FileText, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function ReadingView() {
+  const [answers, setAnswers] = useState<Record<string, number>>({});
+
+  const handleSelect = (rId: string, qIdx: number, optIdx: number) => {
+    setAnswers(prev => ({ ...prev, [`${rId}-${qIdx}`]: optIdx }));
+  };
+
   return (
     <div className="space-y-6 pb-12">
       <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Reading Practice</h2>
+          <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Reading & Comprehension</h2>
           <p className="text-muted text-sm">Mejora tu comprensión lectora de IT.</p>
         </div>
         <FileText size={28} className="text-matrix-green opacity-80" />
       </div>
 
-      <div className="space-y-5">
-        {PRACTICA.map((item, i) => (
+      <div className="space-y-8">
+        {READING.map((item: any, i: number) => (
           <motion.div 
             key={item.id}
             initial={{ opacity: 0, y: 20 }}
@@ -25,32 +31,61 @@ export default function ReadingView() {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-surface border border-border text-matrix-green">{item.level}</span>
+              <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-surface border border-border text-muted uppercase">{(CATS as any)[item.cat]?.label || item.cat}</span>
               <h3 className="text-lg font-bold text-white">{item.title}</h3>
             </div>
             
-            <div className="bg-[#02050A]/50 border border-border/30 rounded-xl p-4 relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-neon-cyan to-matrix-green opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              {item.text.split('\n').map((line, idx) => {
-                const isUser = line.startsWith('User:');
-                const isIT = line.startsWith('IT:');
-                
-                if (isUser || isIT) {
-                  return (
-                    <p key={idx} className={`mb-2 text-sm leading-relaxed ${isIT ? 'text-neon-cyan' : 'text-gray-300'}`}>
-                      <span className="font-bold opacity-70 mr-2">{isUser ? 'User:' : 'IT:'}</span>
-                      {line.replace(/^(User|IT):\s*/, '')}
-                    </p>
-                  );
-                }
-                
-                return <p key={idx} className="mb-2 text-sm leading-relaxed text-gray-300">{line}</p>;
-              })}
+            <div className="bg-[#02050A]/50 border border-border/30 rounded-xl p-5 mb-6 text-sm text-gray-300 leading-relaxed">
+              {item.text}
             </div>
             
-            <div className="mt-4 flex justify-end">
-              <button className="flex items-center gap-2 text-xs font-medium text-neon-cyan hover:text-white transition-colors bg-neon-cyan/10 hover:bg-neon-cyan/20 px-3 py-1.5 rounded-lg border border-neon-cyan/20">
-                <BookOpen size={14} /> Traducir
-              </button>
+            <div className="space-y-6">
+              <h4 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Comprehension Check</h4>
+              {item.qs.map((q: any, qIdx: number) => {
+                const ansKey = `${item.id}-${qIdx}`;
+                const userAns = answers[ansKey];
+                const isAnswered = userAns !== undefined;
+                const isCorrect = userAns === q.a;
+                
+                return (
+                  <div key={qIdx} className={`bg-surface/50 border rounded-xl p-4 transition-colors ${isAnswered ? (isCorrect ? 'border-matrix-green/50' : 'border-red-500/50') : 'border-border/50'}`}>
+                    <p className="text-sm font-medium text-white mb-3">{q.q}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {q.opts.map((opt: string, oIdx: number) => {
+                        const isSelected = userAns === oIdx;
+                        const isWinningOpt = isAnswered && oIdx === q.a;
+                        const isLosingOpt = isSelected && !isCorrect;
+                        
+                        let btnClass = "bg-surface border-border/50 text-muted hover:border-neon-cyan/50 hover:text-white";
+                        if (isWinningOpt) btnClass = "bg-matrix-green/20 border-matrix-green text-matrix-green";
+                        else if (isLosingOpt) btnClass = "bg-red-500/20 border-red-500 text-red-400";
+                        
+                        return (
+                          <button 
+                            key={oIdx}
+                            disabled={isAnswered}
+                            onClick={() => handleSelect(item.id, qIdx, oIdx)}
+                            className={`flex items-center justify-between text-left px-3 py-2 rounded-lg border text-xs transition-all ${btnClass}`}
+                          >
+                            <span>{opt}</span>
+                            {isWinningOpt && <CheckCircle2 size={14} className="shrink-0 ml-2" />}
+                            {isLosingOpt && <XCircle size={14} className="shrink-0 ml-2" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <AnimatePresence>
+                      {isAnswered && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden">
+                          <div className={`mt-3 text-xs p-3 rounded-lg bg-surface/80 border ${isCorrect ? 'border-matrix-green/20 text-matrix-green' : 'border-red-500/20 text-red-400'}`}>
+                            {q.ex}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
             </div>
           </motion.div>
         ))}
