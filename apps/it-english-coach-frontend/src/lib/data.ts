@@ -280,3 +280,33 @@ export const DICTATION = [
  "Let's automate this task with a script.",
  "I'll follow up with you after the meeting.",
 ];
+
+export const WRITING = [
+  {id:"w1",level:"A2",cat:"helpdesk",title:"Ticket Update",
+   prompt:"Write a short email to a user (David) telling him that his password has been reset. Tell him his new temporary password is 'Temp1234!' and ask him to log in and change it.",
+   hint:"Dear David, Your password has been reset..."},
+  {id:"w2",level:"B1",cat:"networks",title:"Network Outage Notice",
+   prompt:"Write a notice to all staff about a planned network outage this Friday at 10 PM. It will last for two hours. Apologize for the inconvenience.",
+   hint:"Subject: Planned Network Outage. Dear team, Please be advised..."},
+  {id:"w3",level:"B2",cat:"agile",title:"Daily Status Update",
+   prompt:"Write a Slack message to your team for the Daily Standup. State what you did yesterday (fixed the login bug), what you will do today (start the database migration), and mention a blocker (waiting for API keys from the DevOps team).",
+   hint:"Hi team, yesterday I fixed... today I am going to... My blocker is..."},
+  {id:"w4",level:"C1",cat:"systems",title:"Incident Escalation",
+   prompt:"Draft an urgent email to the Level 3 Support Team. Escalate an issue where the main payment gateway API is throwing 500 Internal Server Errors. Mention that Level 1 and 2 have already checked the logs and found a timeout issue with the external provider. Request immediate assistance.",
+   hint:"Hi L3 Team, I am escalating a critical incident regarding..."}
+];
+
+export const SPEAKING = [
+  {id:"sp1",level:"A2",cat:"life",title:"Introducing Yourself",
+   prompt:"You are meeting a new colleague. Introduce yourself, state your role (Junior IT Support), and ask them what department they work in.",
+   checklist:["Said 'Hello' or 'Hi'","Stated your name","Mentioned your role in IT","Asked about their department"]},
+  {id:"sp2",level:"B1",cat:"helpdesk",title:"Guiding a User",
+   prompt:"A user's computer is frozen. Tell them step-by-step to hold the power button for 10 seconds to force a shutdown, wait a few seconds, and turn it back on.",
+   checklist:["Used clear imperatives (e.g., 'Please hold...')","Mentioned the power button","Specified 10 seconds","Instructed to turn it back on"]},
+  {id:"sp3",level:"B2",cat:"interview",title:"Explaining a Concept",
+   prompt:"An interviewer asks you: 'Can you explain in simple terms what a VPN is and why we use it?' Give a 30-second answer.",
+   checklist:["Defined VPN (Virtual Private Network)","Explained it creates a secure/encrypted tunnel","Mentioned remote access or security","Kept it simple and clear"]},
+  {id:"sp4",level:"C1",cat:"tech",title:"Proposing a Solution",
+   prompt:"In a meeting, propose migrating an old on-premise application to AWS. Mention benefits like scalability and high availability, but also acknowledge the initial setup cost.",
+   checklist:["Proposed the AWS migration clearly","Mentioned 'scalability'","Mentioned 'high availability'","Acknowledged the 'setup cost' or 'initial cost'"]}
+];

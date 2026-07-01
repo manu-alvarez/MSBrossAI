@@ -15,10 +15,12 @@ export interface Progress {
   status: Record<string, boolean>; // moduleId -> isCompleted
 }
 
+export type TabType = 'dashboard' | 'temario' | 'practica' | 'pruebas' | 'writing' | 'speaking' | 'tutor' | 'settings';
+
 interface AppState {
   // Navigation
-  activeTab: 'dashboard' | 'temario' | 'practica' | 'pruebas' | 'tutor' | 'settings';
-  setActiveTab: (tab: 'dashboard' | 'temario' | 'practica' | 'pruebas' | 'tutor' | 'settings') => void;
+  activeTab: TabType;
+  setActiveTab: (tab: TabType) => void;
   
   // Settings
   settings: Settings;

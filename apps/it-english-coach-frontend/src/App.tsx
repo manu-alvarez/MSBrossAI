@@ -1,12 +1,14 @@
 import React from 'react';
 import { useAppStore } from './store';
-import { Settings, BookOpen, MessageSquare, Headphones, FileText, LayoutDashboard } from 'lucide-react';
+import { Settings, BookOpen, MessageSquare, Headphones, FileText, LayoutDashboard, PenTool, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import DashboardView from './views/DashboardView';
 import TemarioView from './views/TemarioView';
 import ReadingView from './views/ReadingView';
 import ListeningView from './views/ListeningView';
+import WritingView from './views/WritingView';
+import SpeakingView from './views/SpeakingView';
 import TutorView from './views/TutorView';
 import SettingsView from './views/SettingsView';
 
@@ -19,6 +21,8 @@ function App() {
       case 'temario': return <TemarioView />;
       case 'practica': return <ReadingView />;
       case 'pruebas': return <ListeningView />;
+      case 'writing': return <WritingView />;
+      case 'speaking': return <SpeakingView />;
       case 'tutor': return <TutorView />;
       case 'settings': return <SettingsView />;
       default: return <DashboardView />;
@@ -44,7 +48,9 @@ function App() {
           <SidebarBtn icon={<LayoutDashboard size={20} />} label="Panel General" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
           <SidebarBtn icon={<BookOpen size={20} />} label="Temario" active={activeTab==='temario'} onClick={()=>setActiveTab('temario')} />
           <SidebarBtn icon={<FileText size={20} />} label="Reading" active={activeTab==='practica'} onClick={()=>setActiveTab('practica')} />
+          <SidebarBtn icon={<PenTool size={20} />} label="Writing" active={activeTab==='writing'} onClick={()=>setActiveTab('writing')} />
           <SidebarBtn icon={<Headphones size={20} />} label="Listening" active={activeTab==='pruebas'} onClick={()=>setActiveTab('pruebas')} />
+          <SidebarBtn icon={<Mic size={20} />} label="Speaking" active={activeTab==='speaking'} onClick={()=>setActiveTab('speaking')} />
           <SidebarBtn icon={<MessageSquare size={20} />} label="Tutor IA" active={activeTab==='tutor'} onClick={()=>setActiveTab('tutor')} />
         </nav>
 
@@ -87,9 +93,12 @@ function App() {
       {/* Bottom Nav (Mobile Only) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A101C] border-t border-border/30 rounded-t-3xl pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <div className="max-w-md mx-auto flex justify-between p-2">
-          <NavBtn icon={<LayoutDashboard size={22} />} label="Panel General" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
+          <NavBtn icon={<LayoutDashboard size={22} />} label="General" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
           <NavBtn icon={<BookOpen size={22} />} label="Temario" active={activeTab==='temario'} onClick={()=>setActiveTab('temario')} />
-          <NavBtn icon={<FileText size={22} />} label="Reading" active={activeTab==='practica'} onClick={()=>setActiveTab('practica')} />
+          <NavBtn icon={<FileText size={22} />} label="Read" active={activeTab==='practica'} onClick={()=>setActiveTab('practica')} />
+          <NavBtn icon={<PenTool size={22} />} label="Write" active={activeTab==='writing'} onClick={()=>setActiveTab('writing')} />
+          <NavBtn icon={<Headphones size={22} />} label="Listen" active={activeTab==='pruebas'} onClick={()=>setActiveTab('pruebas')} />
+          <NavBtn icon={<Mic size={22} />} label="Speak" active={activeTab==='speaking'} onClick={()=>setActiveTab('speaking')} />
           <NavBtn icon={<MessageSquare size={22} />} label="Tutor" active={activeTab==='tutor'} onClick={()=>setActiveTab('tutor')} />
         </div>
       </nav>

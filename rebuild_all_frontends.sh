@@ -94,6 +94,9 @@ build_vite "$BASE_DIR/apps/traductor-pro/frontend" "traductor"
 echo "▶ Procesando Atenea..."
 build_vite "$BASE_DIR/apps/web-restaurante-atenea/frontend" "atenea"
 
+echo "▶ Procesando IT English Coach..."
+build_vite "$BASE_DIR/apps/it-english-coach-frontend" "it-english-coach"
+
 # Special cases:
 echo "▶ Procesando EliteScout (Standalone Next.js)..."
 cd "$BASE_DIR/apps/elitescout"
