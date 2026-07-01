@@ -41,7 +41,7 @@ function App() {
         </div>
 
         <nav className="flex-1 space-y-2">
-          <SidebarBtn icon={<LayoutDashboard size={20} />} label="Overview" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
+          <SidebarBtn icon={<LayoutDashboard size={20} />} label="Panel General" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
           <SidebarBtn icon={<BookOpen size={20} />} label="Temario" active={activeTab==='temario'} onClick={()=>setActiveTab('temario')} />
           <SidebarBtn icon={<FileText size={20} />} label="Reading" active={activeTab==='practica'} onClick={()=>setActiveTab('practica')} />
           <SidebarBtn icon={<Headphones size={20} />} label="Listening" active={activeTab==='pruebas'} onClick={()=>setActiveTab('pruebas')} />
@@ -87,7 +87,7 @@ function App() {
       {/* Bottom Nav (Mobile Only) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0A101C] border-t border-border/30 rounded-t-3xl pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <div className="max-w-md mx-auto flex justify-between p-2">
-          <NavBtn icon={<LayoutDashboard size={22} />} label="Home" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
+          <NavBtn icon={<LayoutDashboard size={22} />} label="Panel General" active={activeTab==='dashboard'} onClick={()=>setActiveTab('dashboard')} />
           <NavBtn icon={<BookOpen size={22} />} label="Temario" active={activeTab==='temario'} onClick={()=>setActiveTab('temario')} />
           <NavBtn icon={<FileText size={22} />} label="Reading" active={activeTab==='practica'} onClick={()=>setActiveTab('practica')} />
           <NavBtn icon={<MessageSquare size={22} />} label="Tutor" active={activeTab==='tutor'} onClick={()=>setActiveTab('tutor')} />

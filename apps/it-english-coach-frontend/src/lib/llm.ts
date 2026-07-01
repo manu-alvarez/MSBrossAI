@@ -28,16 +28,15 @@ function providerFetch(url: string, opts: RequestInit) {
   return fetch(url, opts);
 }
 
-export async function chat(messages: {role: string, content: string}[], system?: string) {
+async function providerChat(pid: string, messages: {role: string, content: string}[], system?: string) {
   const { settings } = useAppStore.getState();
-  const pid = settings.provider;
   const P = PROVIDERS[pid as keyof typeof PROVIDERS];
   const key = settings.keys[pid];
   const model = (settings.models[pid] || "").trim();
   
-  if (pid !== "custom" && !key) throw new Error("Falta la API key de " + P.label + ". Configúrala en Ajustes.");
-  if (pid === "custom" && (!settings.customBase || !key)) throw new Error("Configura Base URL y API key en Ajustes.");
-  if (!model) throw new Error("Falta el modelo en Ajustes.");
+  if (pid !== "custom" && !key) throw new Error("Missing Key");
+  if (pid === "custom" && (!settings.customBase || !key)) throw new Error("Missing Custom Base or Key");
+  if (!model) throw new Error("Missing Model");
 
   if (P.kind === "anthropic") {
     const res = await providerFetch(P.url, {
@@ -91,4 +90,37 @@ export async function chat(messages: {role: string, content: string}[], system?:
   if (!res.ok) throw new Error("HTTP " + res.status + " · " + await readErr(res));
   const d = await res.json();
   return d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : "";
+}
+
+export async function chat(messages: {role: string, content: string}[], system?: string) {
+  const { settings } = useAppStore.getState();
+  const initialProvider = settings.provider;
+  
+  // Create fallback chain
+  const fallbackOrder = ["gemini", "openai", "groq", "openrouter", "custom"];
+  const chain = [initialProvider, ...fallbackOrder.filter(p => p !== initialProvider)];
+
+  let lastError = null;
+
+  for (const pid of chain) {
+    try {
+      // Check if provider can be used (has key)
+      if (pid !== "custom" && !settings.keys[pid]) continue;
+      if (pid === "custom" && (!settings.customBase || !settings.keys.custom)) continue;
+      if (!settings.models[pid]) continue;
+
+      if (pid !== initialProvider) {
+        console.warn(`[Fallback] Primary provider failed. Rotating to fallback: ${pid}`);
+      }
+
+      const result = await providerChat(pid, messages, system);
+      return result;
+    } catch (e: any) {
+      console.error(`[Fallback] Provider ${pid} failed:`, e);
+      lastError = e;
+      // continue to next provider
+    }
+  }
+
+  throw new Error("Todos los proveedores fallaron. Error final: " + (lastError?.message || "Desconocido"));
 }

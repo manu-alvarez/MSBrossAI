@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { READING, CATS } from '../lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle2, XCircle } from 'lucide-react';
+import SkillsRadar from '../components/SkillsRadar';
 
 export default function ReadingView() {
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -11,14 +12,17 @@ export default function ReadingView() {
   };
 
   return (
-    <div className="space-y-6 pb-12">
-      <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Reading & Comprehension</h2>
-          <p className="text-muted text-sm">Mejora tu comprensión lectora de IT.</p>
+    <div className="space-y-6 pb-12 w-full max-w-6xl mx-auto flex flex-col xl:flex-row gap-6">
+      
+      {/* Main Content */}
+      <div className="flex-1 space-y-6">
+        <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-mono text-neon-cyan tracking-wider uppercase mb-1">Reading & Comprehension</h2>
+            <p className="text-muted text-sm">Mejora tu comprensión lectora de IT.</p>
+          </div>
+          <FileText size={28} className="text-matrix-green opacity-80" />
         </div>
-        <FileText size={28} className="text-matrix-green opacity-80" />
-      </div>
 
       <div className="space-y-8">
         {READING.map((item: any, i: number) => (
@@ -90,6 +94,20 @@ export default function ReadingView() {
           </motion.div>
         ))}
       </div>
+      </div>
+
+      {/* Sidebar with Radar */}
+      <div className="xl:w-80 shrink-0">
+        <div className="glass-panel p-6 rounded-2xl sticky top-8">
+          <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-neon-cyan"></span> Skills Radar
+          </h3>
+          <div className="h-[250px]">
+            <SkillsRadar />
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
