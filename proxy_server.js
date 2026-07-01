@@ -41,12 +41,23 @@ app.use(limiter);
 // ── CORS: Restricted in Production ──
 app.use((req, res, next) => {
   const origin = req.headers.origin || '';
-  const allowedOrigins = ['https://msbross.me', 'https://www.msbross.me', 'http://localhost:8080', 'http://127.0.0.1:8080'];
-  if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://192.168.') || origin.startsWith('http://10.')) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', 'https://msbross.me');
+  const isDev = process.env.NODE_ENV === 'development';
+  const allowedOrigins = [
+    'https://msbross.me', 
+    'https://www.msbross.me', 
+    'http://localhost:8080', 
+    'http://127.0.0.1:8080'
+  ];
+
+  let allowOrigin = 'https://msbross.me'; // default fallback
+  
+  if (allowedOrigins.includes(origin)) {
+    allowOrigin = origin;
+  } else if (isDev && origin && (origin.startsWith('http://192.168.') || origin.startsWith('http://10.'))) {
+    allowOrigin = origin;
   }
+
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');

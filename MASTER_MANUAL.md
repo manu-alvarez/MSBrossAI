@@ -278,3 +278,9 @@ Para mantener la **Soberanía Neural (Nivel 3)** sin romper compatibilidades:
 
 7. **Silencio Total del Agente de Voz (Silent Hangs):**
    Si el cliente conecta correctamente a la sala de LiveKit (pide micrófono) pero el Agente no saluda ni responde, **verificar de inmediato las claves del proveedor LLM (ej. `GOOGLE_API_KEY`) en el `.env` del worker (`livekit-nikolina/.env`)**. Una clave inválida o revocada provocará que la conexión WebSocket hacia Gemini Realtime API fracase silenciosamente y el hilo de la sesión de voz quede bloqueado infinitamente sin disparar errores en el cliente web. Consultar siempre `api_keys_vault.json` como fuente de verdad.
+
+## 🔐 10. Seguridad y Bastionado (Hardening)
+El ecosistema implementa políticas estrictas de seguridad (Julio 2026):
+1. **Permisos de Archivos Sensibles**: Todo archivo `.env` y el `api_keys_vault.json` deben operar exclusivamente con permisos **600** (`-rw-------`). Está estrictamente prohibido que sean legibles por otros usuarios del SO.
+2. **Aislamiento de Interfaces (Binding)**: Todo microservicio orquestado en `ecosystem.config.js` **debe escuchar en `127.0.0.1`** (`--host 127.0.0.1`). Exponer servicios en `0.0.0.0` permite el bypass del Proxy Inverso y expone puertos crudos (ej. 3005) a la red local/Internet.
+3. **CORS Dinámico**: El proxy restringe ataques CSRF bloqueando conexiones originadas desde IPs locales (192.168.x.x o 10.x.x.x) a menos que se inicie en modo `NODE_ENV=development`. Para tráfico externo, se restringe estrictamente a dominios validados (ej. `msbross.me`).

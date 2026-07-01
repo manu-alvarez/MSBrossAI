@@ -41,7 +41,7 @@ module.exports = {
     {
       name: 'nikolina-api-hub',
       script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
-      args: '-m uvicorn main:app --host 0.0.0.0 --port 8001',
+      args: '-m uvicorn main:app --host 127.0.0.1 --port 8001',
       cwd: path.join(__dirname, 'apps/livekit-nikolina/server'),
       env: {
         PYTHONPATH: path.join(__dirname, 'apps/livekit-nikolina/agent/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server'),
@@ -78,7 +78,7 @@ module.exports = {
     {
       name: 'gas-station-backend',
       script: path.join(__dirname, 'apps/gas-station/backend/venv/bin/python3'),
-      args: '-m uvicorn main:app --host 0.0.0.0 --port 3005',
+      args: '-m uvicorn main:app --host 127.0.0.1 --port 3005',
       cwd: path.join(__dirname, 'apps/gas-station/backend'),
       env: {
         PORT: '3005'
@@ -98,7 +98,7 @@ module.exports = {
     {
       name: 'industrialpro-backend',
       script: path.join(__dirname, 'apps/industrialpro/backend/venv/bin/python3'),
-      args: '-m uvicorn app:app --host 0.0.0.0 --port 8002',
+      args: '-m uvicorn app:app --host 127.0.0.1 --port 8002',
       cwd: path.join(__dirname, 'apps/industrialpro/backend'),
       out_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.log'),
       error_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.error.log'),
@@ -115,7 +115,7 @@ module.exports = {
     {
       name: 'iaputa-backend',
       script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
-      args: '-m uvicorn main:app --host 0.0.0.0 --port 8006',
+      args: '-m uvicorn main:app --host 127.0.0.1 --port 8006',
       cwd: path.join(__dirname, 'apps/iaputa-os/backend'),
       out_file: path.join(__dirname, 'apps/iaputa-os/backend/iaputa.log'),
       error_file: path.join(__dirname, 'apps/iaputa-os/backend/iaputa.error.log'),
@@ -169,7 +169,7 @@ module.exports = {
     {
       name: 'cuentos-magicos-backend',
       script: path.join(__dirname, 'apps/cuentos-magicos/backend/venv/bin/python3'),
-      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8007',
+      args: '-m uvicorn app.main:app --host 127.0.0.1 --port 8007',
       cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
       out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.log'),
       error_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.error.log'),
@@ -222,7 +222,7 @@ module.exports = {
     {
       name: 'web-restaurante-atenea-backend',
       script: path.join(__dirname, 'apps/web-restaurante-atenea/venv/bin/python3'),
-      args: '-m uvicorn main:app --host 0.0.0.0 --port 8009',
+      args: '-m uvicorn main:app --host 127.0.0.1 --port 8009',
       cwd: path.join(__dirname, 'apps/web-restaurante-atenea'),
       env: {
         PYTHONPATH: '.',
@@ -243,7 +243,7 @@ module.exports = {
     {
       name: 'jartosdto-backend',
       script: path.join(__dirname, 'apps/jartosdto/server/.venv/bin/python3'),
-      args: '-m uvicorn app.main:app --host 0.0.0.0 --port 8010',
+      args: '-m uvicorn app.main:app --host 127.0.0.1 --port 8010',
       cwd: path.join(__dirname, 'apps/jartosdto/server'),
       env: {
         PYTHONPATH: '.',
@@ -265,7 +265,7 @@ module.exports = {
     {
       name: 'txa-fitness-pro',
       script: 'node_modules/.bin/next',
-      args: 'start -p 3456 -H 0.0.0.0',
+      args: 'start -p 3456 -H 127.0.0.1',
       cwd: path.join(__dirname, 'apps/txa-fitness-pro'),
       env: {
         NODE_ENV: 'production',
@@ -286,7 +286,7 @@ module.exports = {
     {
       name: 'mapfre-infocol',
       script: 'node_modules/.bin/next',
-      args: 'start -p 3333 -H 0.0.0.0',
+      args: 'start -p 3333 -H 127.0.0.1',
       cwd: path.join(__dirname, 'apps/mapfre-infocol/frontend'),
       env: {
         NODE_ENV: 'production',
@@ -352,7 +352,7 @@ module.exports = {
     {
       name: 'perfume-trading',
       script: 'node_modules/.bin/next',
-      args: 'start -p 3011 -H 0.0.0.0',
+      args: 'start -p 3011 -H 127.0.0.1',
       cwd: path.join(__dirname, 'apps/perfume-trading/erp'),
       env: {
         NODE_ENV: 'production',
