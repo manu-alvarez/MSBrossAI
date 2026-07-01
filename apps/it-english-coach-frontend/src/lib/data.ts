@@ -83,6 +83,34 @@ export const TEMARIO = [
   vi:[["experience / background","experiencia / formación"],["to troubleshoot","diagnosticar y resolver"],["hands-on experience","experiencia práctica"],["to be responsible for…","ser responsable de…"],["achievement","logro"],["team player","persona de equipo"],["to handle pressure","gestionar la presión"],["available to start","disponible para empezar"],["notice period","preaviso"],["salary expectations","expectativas salariales"]],
   gr:["Repaso general de tiempos verbales","Phrasal verbs frecuentes en IT","Marcadores del discurso"],
   ph:["I have hands-on experience troubleshooting Windows and Linux systems.","In my last role I was responsible for the first level of support."]},
+ {code:"M12",from:"C1",to:"C1",title:"Ciberseguridad · Zero Trust",
+  og:["Redactar políticas y directrices","Explicar riesgos complejos","Persuadir sobre buenas prácticas"],
+  oi:["Conceptos avanzados de ciberseguridad","Mitigación de vulnerabilidades y auditoría"],
+  vg:[["to emphasize","enfatizar"],["crucial / paramount","crucial / primordial"],["to comply with","cumplir con"],["framework","marco de trabajo"]],
+  vi:[["Zero Trust","confianza cero"],["vulnerability assessment","evaluación de vulnerabilidades"],["phishing / spear-phishing","suplantación de identidad"],["penetration testing","prueba de penetración"],["to encrypt / decrypt","cifrar / descifrar"],["data breach","brecha de datos"],["threat actor","actor de amenaza"],["multi-factor authentication (MFA)","autenticación multifactor"],["patch management","gestión de parches"],["compliance","cumplimiento normativo"]],
+  gr:["Voz pasiva avanzada","Condicionales mixtos","Inversión para énfasis (Rarely do we...)"],
+  ph:["Under no circumstances should the encryption keys be shared.","If the patch had been applied, the breach wouldn't have happened."]},
+ {code:"M13",from:"C1",to:"C1",title:"Cloud · Arquitectura y AWS/Azure",
+  og:["Comparar costes y beneficios","Describir infraestructuras complejas","Hablar de escalabilidad"],
+  oi:["Servicios en la nube (IaaS, PaaS, SaaS)","Migraciones al cloud y alta disponibilidad"],
+  vg:[["cost-effective","rentable"],["on-demand","bajo demanda"],["seamlessly","sin problemas / fluidamente"],["to scale up / down","escalar (aumentar/reducir)"]],
+  vi:[["cloud computing","computación en la nube"],["virtual private cloud (VPC)","nube privada virtual"],["high availability","alta disponibilidad"],["load balancer","balanceador de carga"],["auto-scaling group","grupo de autoescalado"],["serverless","sin servidor"],["data residency","residencia de datos"],["latency optimization","optimización de latencia"],["vendor lock-in","dependencia del proveedor"],["disaster recovery","recuperación ante desastres"]],
+  gr:["Estructuras comparativas avanzadas (the more... the more...)","Participios de relativo","Conectores de concesión (despite, although)"],
+  ph:["The more traffic we receive, the more instances are spun up automatically.","Despite the initial costs, migrating to PaaS is highly cost-effective."]},
+ {code:"M14",from:"C1",to:"C1",title:"DevOps · SRE y Pipelines",
+  og:["Debatir sobre cultura organizacional","Métricas y rendimientos","Explicar flujos de trabajo (workflows)"],
+  oi:["Integración y despliegue continuo (CI/CD)","Monitorización y Site Reliability Engineering"],
+  vg:[["mindset","mentalidad"],["bottleneck","cuello de botella"],["to streamline","optimizar / agilizar"],["throughput","rendimiento / capacidad"]],
+  vi:[["continuous integration (CI)","integración continua"],["continuous deployment (CD)","despliegue continuo"],["infrastructure as code (IaC)","infraestructura como código"],["version control","control de versiones"],["observability","observabilidad"],["telemetry","telemetría"],["service level objective (SLO)","objetivo de nivel de servicio"],["error budget","presupuesto de errores"],["microservices","microservicios"],["container orchestration","orquestación de contenedores"]],
+  gr:["Uso de gerundios como sujetos","Verbos con doble objeto","Phrasal verbs idiomáticos"],
+  ph:["Streamlining the CI/CD pipeline drastically reduced our time-to-market.","We have exhausted our error budget for this quarter."]},
+ {code:"M15",from:"C1",to:"C1",title:"Liderazgo · Soft Skills IT",
+  og:["Dar y recibir feedback constructivo","Negociación y resolución de conflictos","Liderar reuniones técnicas"],
+  oi:["Mentoring de perfiles junior","Gestión de stakeholders no técnicos"],
+  vg:[["to point out","señalar / destacar"],["to compromise","llegar a un acuerdo"],["to micromanage","microgestionar"],["big picture","visión general"]],
+  vi:[["to mentor","ser mentor / guiar"],["knowledge transfer","transferencia de conocimientos"],["technical debt","deuda técnica"],["onboarding","integración de nuevos empleados"],["burnout","agotamiento profesional"],["cross-functional team","equipo multifuncional"],["proof of concept (PoC)","prueba de concepto"],["return on investment (ROI)","retorno de inversión"],["scope creep","descontrol del alcance"],["milestone","hito"]],
+  gr:["Modales de deducción en pasado (must have, might have)","Discurso reportado avanzado","Adjetivos compuestos"],
+  ph:["We must have misunderstood the stakeholder's requirements regarding the UI.","Addressing technical debt is crucial to avoid scope creep later on."]}
 ];
 
 export const CATS = {
@@ -154,6 +182,22 @@ export const READING = [
    {q:"What can a motion sensor do?",opts:["Turn on the lights when you enter","Lock the car","Play music","Send emails"],a:0,ex:"“a motion sensor can detect when you enter a room and automatically turn on the lights.”"},
    {q:"What might happen when you say 'good night'?",opts:["Doors lock, lights off, heating lower","The alarm rings","The TV turns on","Nothing"],a:0,ex:"“lock the doors, turn off the lights, and lower the heating.”"},
    {q:"Why is security important?",opts:["Devices are connected to the internet","They use batteries","They are expensive","They are big"],a:0,ex:"“because these devices are connected to the internet.”"}]},
+ {id:"r7",level:"C1",cat:"tech",title:"Zero Trust Architecture Explained",
+  text:"In the modern cybersecurity landscape, the traditional perimeter defense model is obsolete. Enter Zero Trust Architecture (ZTA). The core tenet of ZTA is 'never trust, always verify'. Unlike legacy systems that grant broad access once a user is inside the corporate network, Zero Trust assumes that threats exist both outside and inside the network boundaries. Therefore, every request to access a resource must be strictly authenticated and authorized, regardless of where the request originates. This approach relies heavily on micro-segmentation, continuous monitoring, and multi-factor authentication (MFA). Implementing ZTA is not just about adopting new tools; it requires a fundamental shift in organizational mindset and security culture.",
+  qs:[
+   {q:"What is the core tenet of Zero Trust?",opts:["Never trust, always verify","Trust but verify","Trust everyone inside","Verify only external users"],a:0,ex:"“The core tenet of ZTA is 'never trust, always verify'.”"},
+   {q:"How does Zero Trust view the corporate network?",opts:["It assumes threats exist inside and outside","It considers it a safe zone","It ignores internal threats","It focuses only on the perimeter"],a:0,ex:"“Zero Trust assumes that threats exist both outside and inside the network boundaries.”"},
+   {q:"What is required for every resource request in ZTA?",opts:["Strict authentication and authorization","A fast internet connection","A VPN","Manager approval"],a:0,ex:"“every request to access a resource must be strictly authenticated and authorized.”"},
+   {q:"Which of the following is a key technology for ZTA?",opts:["Micro-segmentation","Legacy systems","Broad access policies","Antivirus software"],a:0,ex:"“This approach relies heavily on micro-segmentation...”"},
+   {q:"What kind of shift does implementing ZTA require?",opts:["A shift in mindset and security culture","Buying faster computers","Hiring more staff","Moving to a new office"],a:0,ex:"“it requires a fundamental shift in organizational mindset and security culture.”"}]},
+ {id:"r8",level:"C1",cat:"systems",title:"Post-Mortem: Database Failover",
+  text:"Executive Summary: On October 12th, our primary PostgreSQL cluster experienced a split-brain scenario during a routine automated failover test, leading to 45 minutes of degraded performance and a brief data inconsistency window. \n\nRoot Cause Analysis: The underlying issue was traced back to a misconfiguration in the high-availability (HA) proxy heartbeats. A temporary network partition caused the secondary node to prematurely assume the primary role while the original primary was still accepting writes. \n\nResolution & Next Steps: The SRE team manually demoted the rogue primary and initiated a partial state sync to reconcile the delta. To mitigate future occurrences, we are overhauling the consensus algorithm configuration (moving to a more robust Quorum-based approach) and implementing stricter fencing mechanisms (STONITH) to reliably power off unresponsive nodes before promotion.",
+  qs:[
+   {q:"What caused the split-brain scenario?",opts:["A misconfiguration in HA proxy heartbeats","A power outage","A cyberattack","A full hard drive"],a:0,ex:"“The underlying issue was traced back to a misconfiguration in the high-availability (HA) proxy heartbeats.”"},
+   {q:"What did the secondary node do during the network partition?",opts:["It prematurely assumed the primary role","It shut down","It deleted data","It contacted support"],a:0,ex:"“the secondary node to prematurely assume the primary role...”"},
+   {q:"How did the SRE team resolve the immediate issue?",opts:["Manually demoted the rogue primary and synced state","Restarted the servers","Restored from yesterday's backup","Ignored it"],a:0,ex:"“The SRE team manually demoted the rogue primary and initiated a partial state sync...”"},
+   {q:"What consensus approach are they moving to?",opts:["A Quorum-based approach","A Master-Slave approach","A random approach","No consensus"],a:0,ex:"“moving to a more robust Quorum-based approach.”"},
+   {q:"What is the purpose of STONITH in this context?",opts:["To reliably power off unresponsive nodes","To speed up the database","To encrypt data","To monitor traffic"],a:0,ex:"“implementing stricter fencing mechanisms (STONITH) to reliably power off unresponsive nodes...”"}]}
 ];
 
 /* listening bank (TTS reads the lines) */
@@ -202,6 +246,28 @@ export const LISTENING = [
    {q:"When will it start?",opts:["Next month","Today","Next year","Next week"],a:0,ex:"“Starting next month…”"},
    {q:"Will tickets be closed automatically?",opts:["No, a person reviews them","Yes, all of them","Only urgent ones","Yes, at night"],a:0,ex:"“every ticket will still be reviewed by a person, so nothing will be closed automatically.”"},
    {q:"How long is the trial period?",opts:["Two weeks","One month","Two days","Six months"],a:0,ex:"“We'll run a two-week trial first.”"}]},
+ {id:"l5",level:"C1",cat:"agile",title:"Cloud Migration Planning",
+  lines:[
+   {who:"Architect",text:"Alright team, let's discuss the upcoming migration from our on-premise datacenter to AWS. We need to finalize the strategy. Are we going with a lift-and-shift approach, or should we refactor the monolithic app into microservices right away?"},
+   {who:"Lead Dev",text:"If we refactor now, it's going to significantly delay the timeline. The technical debt in the legacy codebase is massive. I strongly advocate for a lift-and-shift first to get us out of the datacenter, and then we can modernize incrementally."},
+   {who:"Architect",text:"That's a valid point. However, lifting and shifting a monolithic architecture might lead to huge compute costs if we can't utilize auto-scaling properly. What does the DevOps team think?"},
+   {who:"DevOps",text:"I agree with the Lead Dev. We can use containerization to encapsulate the monolith, deploy it on EKS, and then slowly strangle the monolith by breaking off microservices over the next few quarters. It's the safest bet."}],
+  qs:[
+   {q:"What is the main topic of the meeting?",opts:["Migrating from on-premise to AWS","Buying new servers","Hiring a new developer","Updating Windows"],a:0,ex:"“let's discuss the upcoming migration from our on-premise datacenter to AWS.”"},
+   {q:"Why does the Lead Dev oppose refactoring right away?",opts:["It will delay the timeline due to technical debt","It is too expensive","They don't know how","AWS doesn't support it"],a:0,ex:"“If we refactor now, it's going to significantly delay the timeline. The technical debt in the legacy codebase is massive.”"},
+   {q:"What is the Architect's concern about lift-and-shift?",opts:["Huge compute costs without auto-scaling","It is too slow","It is not secure","It requires too much code"],a:0,ex:"“lifting and shifting a monolithic architecture might lead to huge compute costs if we can't utilize auto-scaling properly.”"},
+   {q:"What strategy does the DevOps engineer propose?",opts:["Containerize the monolith and modernize incrementally","Rewrite everything immediately","Stay on-premise","Move to Azure instead"],a:0,ex:"“containerization to encapsulate the monolith... and then slowly strangle the monolith by breaking off microservices.”"}]},
+ {id:"l6",level:"C1",cat:"networks",title:"Security Breach Escalation",
+  lines:[
+   {who:"Analyst",text:"We've got a critical alert. I'm seeing anomalous outbound traffic from the HR database server to an unknown IP address located overseas. It looks like data exfiltration."},
+   {who:"Manager",text:"Are you sure? Could it be a scheduled backup or an API integration?"},
+   {who:"Analyst",text:"Negative. I checked the logs and the traffic bypasses our standard proxy. Furthermore, the payload is heavily encrypted, which matches the signature of a known ransomware group. We need to isolate that VLAN immediately."},
+   {who:"Manager",text:"Okay, initiate the incident response protocol. Cut off external access to that subnet, but keep the server running so the forensics team can take a memory dump. I'll notify the legal team and the CISO."}],
+  qs:[
+   {q:"What issue has the Analyst detected?",opts:["Anomalous outbound traffic from the HR database","A broken router","A slow internet connection","A forgotten password"],a:0,ex:"“I'm seeing anomalous outbound traffic from the HR database server...”"},
+   {q:"What did the Manager initially think it might be?",opts:["A scheduled backup or API integration","A hardware failure","A user mistake","A power outage"],a:0,ex:"“Could it be a scheduled backup or an API integration?”"},
+   {q:"Why does the Analyst believe it is ransomware?",opts:["The payload is encrypted and matches a known signature","They received a ransom email","The screen is locked","A user told them"],a:0,ex:"“the payload is heavily encrypted, which matches the signature of a known ransomware group.”"},
+   {q:"What is the immediate action taken?",opts:["Initiate incident response and isolate the VLAN","Delete the database","Shut down the server","Pay the ransom"],a:0,ex:"“initiate the incident response protocol. Cut off external access to that subnet...”"}]}
 ];
 
 export const DICTATION = [
