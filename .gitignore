@@ -3,6 +3,7 @@
 .env.local
 .env.production
 .env.*.local
+api_keys_vault.json
 
 # Databases
 *.db
