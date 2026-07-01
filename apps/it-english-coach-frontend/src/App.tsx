@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppStore } from './store';
-import { Settings, BookOpen, MessageSquare, Headphones, FileText, ChevronRight, CheckCircle, ChevronDown, X } from 'lucide-react';
+import { Settings, BookOpen, MessageSquare, Headphones, FileText, CheckCircle, ChevronDown, X } from 'lucide-react';
 import { TEMARIO } from './lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -85,7 +85,7 @@ function NavBtn({ icon, label, active, onClick }: { icon: React.ReactNode, label
 }
 
 function SettingsModal({ onClose }: { onClose: () => void }) {
-  const { provider, model, setConfig } = useAppStore();
+  const { settings, updateSettings, updateKey, updateModel } = useAppStore();
   
   return (
     <motion.div 
@@ -102,29 +102,56 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
         <h2 className="text-xl font-bold text-white mb-6">Configuración IA</h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-muted mb-2">Proveedor / URL API</label>
-            <input 
-              type="text" 
-              value={provider} 
-              onChange={e => setConfig({ provider: e.target.value })}
+            <label className="block text-sm font-medium text-muted mb-2">Proveedor</label>
+            <select 
+              value={settings.provider} 
+              onChange={e => updateSettings({ provider: e.target.value as any })}
               className="w-full bg-[#050A14] border border-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-neon-cyan"
-              placeholder="Ej: https://api.openai.com/v1"
-            />
+            >
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="gemini">Gemini</option>
+              <option value="groq">Groq</option>
+              <option value="openrouter">OpenRouter</option>
+              <option value="custom">Local (LM Studio / Ollama)</option>
+            </select>
           </div>
+          {settings.provider === 'custom' && (
+            <div>
+              <label className="block text-sm font-medium text-muted mb-2">URL Base (Local)</label>
+              <input 
+                type="text" 
+                value={settings.customBase} 
+                onChange={e => updateSettings({ customBase: e.target.value })}
+                className="w-full bg-[#050A14] border border-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-neon-cyan"
+              />
+            </div>
+          )}
+          {settings.provider !== 'custom' && (
+            <div>
+              <label className="block text-sm font-medium text-muted mb-2">API Key ({settings.provider})</label>
+              <input 
+                type="password" 
+                value={settings.keys[settings.provider] || ''} 
+                onChange={e => updateKey(settings.provider, e.target.value)}
+                className="w-full bg-[#050A14] border border-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-neon-cyan"
+                placeholder="sk-..."
+              />
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-muted mb-2">Modelo</label>
             <input 
               type="text" 
-              value={model} 
-              onChange={e => setConfig({ model: e.target.value })}
+              value={settings.models[settings.provider] || ''} 
+              onChange={e => updateModel(settings.provider, e.target.value)}
               className="w-full bg-[#050A14] border border-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-neon-cyan"
-              placeholder="Ej: gpt-4o-mini"
             />
             <p className="text-xs text-muted mt-2">Los datos se guardan localmente en tu navegador. Tus APIs no están expuestas al servidor.</p>
           </div>
         </div>
         <button onClick={onClose} className="w-full mt-8 bg-neon-cyan/10 hover:bg-neon-cyan/20 border border-neon-cyan text-neon-cyan font-bold py-3 rounded-xl transition-colors">
-          Guardar
+          Guardar y Cerrar
         </button>
       </motion.div>
     </motion.div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { LISTENING, CATS } from '../lib/data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Headphones, Play, CheckCircle2, XCircle } from 'lucide-react';
