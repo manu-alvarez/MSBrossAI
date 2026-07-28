@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MSBrossAI — Ecosistema Digital Personal.">
+    <title>MSBrossAI • Ecosistema Digital Personal</title>
+    <meta property="og:title" content="MSBrossAI — Ecosistema Digital Personal" />
+    <meta property="og:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
+    <meta property="og:url" content="https://msbross.me/" />
+    <meta property="og:image" content="https://msbross.me/assets/img/og-image.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MSBrossAI — Ecosistema Digital Personal" />
+    <meta name="twitter:description" content="Ecosistema de Inteligencia Artificial para logística, restauración, análisis de datos y más." />
+    <meta name="twitter:image" content="https://msbross.me/assets/img/og-image.jpg" />
+    <link rel="icon" href="/assets/img/og-image.jpg">
+    <link rel="apple-touch-icon" href="/assets/img/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MSBrossAI">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #030712;
+    --text: #f8fafc;
+    --text-muted: #64748b;
+    --accent-1: #8b5cf6;
+    --accent-2: #06b6d4;
+    --accent-3: #10b981;
+    --accent-6: #ec4899;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.hero-logo-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.hero-logo{width:200px;height:200px;border-radius:32px;object-fit:cover;
+    box-shadow:0 0 60px rgba(139,92,246,0.5),0 0 120px rgba(6,182,212,0.3),0 0 200px rgba(236,72,153,0.2);
+    animation:logoPulse 4s ease-in-out infinite,logoFloat 6s ease-in-out infinite;cursor:pointer;transition:transform .3s}
+.hero-logo:hover{transform:scale(1.12) rotate(3deg)}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 60px rgba(139,92,246,0.5),0 0 120px rgba(6,182,212,0.3)}50%{box-shadow:0 0 100px rgba(139,92,246,0.7),0 0 200px rgba(6,182,212,0.4),0 0 300px rgba(236,72,153,0.3)}}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.hero-title{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;letter-spacing:-.04em;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-6));
+    background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:gradShift 6s ease infinite;text-align:center}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-sub{font-size:1.1rem;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;font-weight:500}
+.scroll-hint{position:absolute;bottom:2rem;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--text-muted);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;animation:hintPulse 2s ease-in-out infinite}
+.scroll-hint .arrow{width:24px;height:24px;border-right:2px solid var(--accent-1);border-bottom:2px solid var(--accent-1);transform:rotate(45deg);animation:arrowBounce 2s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes arrowBounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(8px)}}
+
+/* ═══ WORMHOLE TUNNEL — Full-screen fixed canvas ═══ */
+#wormhole-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity .3s}
+
+/* ═══ PORTAL SPACER ═══ */
+.portal-spacer{height:30vh;position:relative;z-index:0}
+
+/* ═══ APPS ═══ */
+.apps-container{position:relative;z-index:5;max-width:1400px;width:100%;padding:6rem 2rem 4rem;margin:0 auto}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header h2{font-size:2.5rem;font-weight:900;letter-spacing:-.03em;
+    background:linear-gradient(135deg,#fff 0%,var(--accent-2) 50%,var(--accent-1) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.section-header p{color:var(--text-muted);font-size:1rem;letter-spacing:.05em}
+.section-line{width:80px;height:3px;margin:1rem auto 0;border-radius:2px;
+    background:linear-gradient(90deg,var(--accent-1),var(--accent-2));animation:linePulse 3s ease-in-out infinite}
+@keyframes linePulse{0%,100%{width:80px;opacity:.6}50%{width:160px;opacity:1}}
+
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.5rem}
+
+/* ═══ PREMIUM CARD ═══ */
+.app-card{
+    position:relative;
+    background:rgba(255,255,255,0.02);
+    border-radius:20px;
+    padding:2px; /* border gradient space */
+    text-decoration:none;
+    color:var(--text);
+    opacity:0;
+    transform:translateY(80px) scale(0.8) rotateX(8deg);
+    transition:all .7s cubic-bezier(.16,1,.3,1);
+    perspective:800px;
+}
+.app-card.revealed{opacity:1;transform:translateY(0) scale(1) rotateX(0deg)}
+
+/* Animated gradient border */
+.app-card::before{
+    content:'';position:absolute;inset:0;border-radius:20px;padding:1.5px;
+    background:linear-gradient(var(--border-angle,0deg),var(--card-accent,#8b5cf6),transparent 40%,transparent 60%,var(--card-accent,#8b5cf6));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    animation:borderSpin 4s linear infinite;opacity:.5;transition:opacity .4s;
+}
+.app-card:hover::before{opacity:1}
+@keyframes borderSpin{to{--border-angle:360deg}}
+@property --border-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+
+/* Card inner */
+.card-inner{
+    background:rgba(8,12,24,0.85);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-radius:19px;padding:1.8rem;
+    display:flex;flex-direction:column;gap:.8rem;
+    position:relative;overflow:hidden;height:100%;
+}
+
+/* Glow follow cursor */
+.card-inner::after{
+    content:'';position:absolute;width:300px;height:300px;
+    border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,var(--card-accent,#8b5cf6) 0%,transparent 70%);
+    opacity:0;transition:opacity .4s;
+    left:var(--gx,-150px);top:var(--gy,-150px);
+    transform:translate(-50%,-50%);filter:blur(40px);
+}
+.app-card:hover .card-inner::after{opacity:.12}
+
+.app-card:hover{transform:translateY(-10px) scale(1.03)}
+
+.card-header{display:flex;align-items:center;gap:1rem;position:relative;z-index:1}
+.card-icon{
+    width:54px;height:54px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.6rem;flex-shrink:0;
+    background:linear-gradient(135deg,var(--card-accent,#8b5cf6),transparent);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 20px var(--card-accent,rgba(139,92,246,0.3));
+}
+.card-title{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;position:relative;z-index:1}
+.card-badge{
+    font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+    padding:.2rem .6rem;border-radius:100px;margin-left:auto;
+    background:rgba(255,255,255,0.06);border:1px solid var(--card-accent,#8b5cf6);
+    color:var(--card-accent,#8b5cf6);position:relative;z-index:1;
+}
+.card-desc{font-size:.85rem;color:var(--text-muted);line-height:1.6;position:relative;z-index:1}
+.card-tech{display:flex;flex-wrap:wrap;gap:.4rem;position:relative;z-index:1}
+.tech-tag{
+    font-size:.65rem;font-weight:600;padding:.25rem .6rem;border-radius:100px;
+    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+    color:var(--text-muted);font-family:'JetBrains Mono',monospace;
+    transition:all .3s;
+}
+.app-card:hover .tech-tag{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.card-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:auto;padding-top:.8rem;border-top:1px solid rgba(255,255,255,0.05);
+    position:relative;z-index:1;
+}
+.card-status{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--accent-3)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--accent-3)}50%{opacity:.4;box-shadow:none}}
+.card-arrow{font-size:1.1rem;color:var(--card-accent,var(--accent-1));transition:transform .3s;opacity:.6}
+.app-card:hover .card-arrow{transform:translateX(6px);opacity:1}
+
+/* ═══ FOOTER ═══ */
+footer{text-align:center;padding:3rem 2rem 2rem;color:var(--text-muted);font-size:.8rem;border-top:1px solid rgba(255,255,255,0.05);max-width:1400px;margin:0 auto}
+#visit-counter{margin-top:1rem;display:inline-flex;gap:1rem;background:rgba(255,255,255,0.02);padding:.5rem 1.5rem;border-radius:20px;border:1px solid rgba(255,255,255,0.05);font-size:.85rem;color:var(--text-muted)}
+
+@media(max-width:768px){
+    .hero-logo{width:140px;height:140px}
+    .hero-title{font-size:2.2rem}
+    .app-grid{grid-template-columns:1fr}
+    .apps-container{padding:3rem 1rem}
+    .portal-spacer{height:20vh}
+    .section-header h2{font-size:1.8rem}
+}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+
+/* ═══ CUSTOM CURSOR ═══ */
+@media(pointer: fine){ body { cursor: none; } a, button, .hero-logo, input { cursor: none; } }
+.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 6px; height: 6px; background: var(--accent-1); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; box-shadow: 0 0 10px var(--accent-1); display: none; }
+.cursor-trail { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; width: 34px; height: 34px; border: 1.5px solid rgba(139,92,246,0.4); border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; display: none; }
+@media(pointer: fine){ .custom-cursor, .cursor-trail { display: block; } }
+.cursor-hover .custom-cursor { width: 0; height: 0; }
+.cursor-hover .cursor-trail { width: 54px; height: 54px; background: rgba(139,92,246,0.1); border-color: var(--accent-2); box-shadow: 0 0 20px rgba(6,182,212,0.3); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+
+/* ═══ COMMAND PALETTE ═══ */
+.cmd-palette { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.cmd-palette.active { opacity: 1; pointer-events: auto; }
+.cmd-overlay { position: absolute; inset: 0; background: rgba(3,7,18,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.cmd-modal { position: relative; width: 90%; max-width: 650px; background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(139,92,246,0.2); transform: translateY(-20px) scale(0.98); transition: transform 0.3s cubic-bezier(.16,1,.3,1); }
+.cmd-palette.active .cmd-modal { transform: translateY(0) scale(1); }
+.cmd-search-wrapper { display: flex; align-items: center; padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+.cmd-icon { font-size: 1.2rem; margin-right: 1rem; opacity: 0.5; }
+#cmd-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 1.2rem; outline: none; font-family: 'Inter', sans-serif; }
+#cmd-input::placeholder { color: var(--text-muted); }
+.cmd-laser { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, transparent, var(--accent-2), transparent); animation: laserScan 2.5s linear infinite; transform-origin: left; opacity: 0.6; }
+@keyframes laserScan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.cmd-results { max-height: 400px; overflow-y: auto; padding: 0.5rem; }
+.cmd-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; text-decoration: none; color: var(--text); transition: background 0.2s; cursor: pointer; }
+.cmd-item.selected, .cmd-item:hover { background: rgba(255,255,255,0.06); }
+.cmd-item-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; background: rgba(255,255,255,0.03); }
+.cmd-item-content { flex: 1; }
+.cmd-item-title { font-weight: 600; font-size: 1rem; }
+.cmd-item-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
+.cmd-item-badge { font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 100px; background: rgba(139,92,246,0.1); color: var(--accent-1); font-weight: 700; letter-spacing: 0.05em; border: 1px solid rgba(139,92,246,0.3); }
+
+
+
+/* ═══ AUDIO UI TOGGLE ═══ */
+.audio-toggle { position: absolute; top: 2.5rem; right: 2.5rem; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.3s; backdrop-filter: blur(10px); }
+.audio-toggle:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: scale(1.1); box-shadow: 0 0 20px rgba(139,92,246,0.3); }
+
+/* ═══ CARD GLITCH & PARALLAX HOVER ═══ */
+.app-card { transform-style: preserve-3d; }
+.card-inner { transform-style: preserve-3d; transition: transform 0.3s cubic-bezier(.16,1,.3,1); }
+.app-card:hover .card-inner { transform: translateZ(20px); }
+.app-card:hover .card-header { transform: translateZ(30px); transition: transform 0.3s; }
+.app-card:hover .card-icon { transform: translateZ(40px) scale(1.1); transition: transform 0.3s; }
+.app-card:hover .card-desc { transform: translateZ(20px); transition: transform 0.3s; }
+.app-card:hover .card-footer { transform: translateZ(25px); transition: transform 0.3s; }
+
+/* Glitch Animation */
+@keyframes cardGlitch {
+  0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+  20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -2px); filter: hue-rotate(-90deg); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); filter: hue-rotate(45deg); }
+  60% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 2px); filter: hue-rotate(-45deg); }
+  80% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 1px); filter: hue-rotate(20deg); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); filter: hue-rotate(0); }
+}
+.app-card::before { transition: all 0.2s; }
+.app-card:hover::after {
+    content: ''; position: absolute; inset: 0; background: inherit;
+    border-radius: inherit; z-index: 10; pointer-events: none;
+    animation: cardGlitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
+    opacity: 0.15; mix-blend-mode: overlay;
+}
+
+</style>
+  <script async defer data-website-id="8e08d6d5-a3d8-4f17-b76e-52debeaf2e70" src="https://analytics.msbross.me/umami.js"></script>
+</head>
+<body>
+
+<section class="hero" id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-logo-wrap">
+        <img src="/assets/img/og-image.jpg" alt="MSBrossAI" class="hero-logo" id="hero-logo">
+        <h1 class="hero-title">MSBrossAI</h1>
+        <p class="hero-sub">Ecosistema Digital Personal</p>
+    </div>
+        <button class="audio-toggle" id="audio-toggle" aria-label="Toggle Audio">
+        <svg id="audio-icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        <svg id="audio-icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+    </button>
+    <div class="scroll-hint"><span>Explorar</span><div class="arrow"></div></div>
+</section>
+
+<canvas id="wormhole-canvas"></canvas>
+<div class="portal-spacer" id="portal-spacer"></div>
+
+<section class="apps-container" id="apps">
+    <div class="section-header">
+        <h2>Aplicaciones del Ecosistema</h2>
+        <p>24 servicios de inteligencia artificial en producción</p>
+        <div class="section-line"></div>
+    </div>
+    <div class="app-grid" id="app-grid"></div>
+</section>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-palette" id="cmd-palette">
+    <div class="cmd-overlay" id="cmd-overlay"></div>
+    <div class="cmd-modal">
+        <div class="cmd-search-wrapper">
+            <span class="cmd-icon">🔍</span>
+            <input type="text" id="cmd-input" placeholder="Buscar apps o tecnología (Cmd+K)" autocomplete="off">
+            <div class="cmd-laser"></div>
+        </div>
+        <div class="cmd-results" id="cmd-results"></div>
+    </div>
+</div>
+
+<footer>
+    <p>MSBrossAI © 2026 — Ecosistema Digital Personal</p>
+    <div id="visit-counter">
+        <span>Visitas hoy: <strong id="visits-today" style="color:var(--accent-1)">...</strong></span>
+        <span style="opacity:.5">|</span>
+        <span>Visitas totales: <strong id="visits-total" style="color:var(--accent-1)">...</strong></span>
+    </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   APP DATA
+   ═══════════════════════════════════════════════════════ */
+const APPS=[
+{href:"/app-generator/",icon:"⚡",name:"App Generator",badge:"DEV AI",accent:"#f472b6",desc:"Constructor asimétrico Split-View que genera Single-Page Apps usando Gemini 2.5 Flash Native.",tech:["React 19","Vite","Gemini API","Iframe"]},
+{href:"/combipro/",icon:"⚽",name:"CombiPro",badge:"SPORTS AI",accent:"#f97316",desc:"Generador de combinadas deportivas con algoritmo de probabilidad real y perfiles de riesgo.",tech:["React 19","MUI 7","Framer Motion","API-Football"]},
+{href:"/cuentos-magicos/",icon:"🦄",name:"Cuentos Mágicos",badge:"CREATIVE AI",accent:"#fbbf24",desc:"Narrador interactivo que genera cuentos personalizados con ilustraciones y audio IA.",tech:["Next.js 15","Gemini API","PWA","FastAPI"]},
+{href:"/edelweiss/",icon:"👶",name:"Edelweiss",badge:"VISION PLAY",accent:"#ec4899",desc:"Estimulación visual infantil con 5 modos, parental lock e i18n ES/EN.",tech:["React 18","Tailwind","Framer Motion","PWA"]},
+{href:"/elitescout/",icon:"✈️",name:"EliteScout",badge:"TRAVEL AI",accent:"#D4AF37",desc:"Buscador semántico de viajes y productos mediante inteligencia artificial avanzada.",tech:["Next.js 16","Tavily API","Groq Llama","Gemini API"]},
+{href:"/expositator-rte/",icon:"🗣️",name:"EXPOSITATOR RTE",badge:"EVALUATOR AI",accent:"#10b981",desc:"Motor interactivo de evaluación en tiempo real para exposiciones orales.",tech:["PWA","Speech API","Vision API","JavaScript"]},
+{href:"/gas-station/",icon:"⛽",name:"Gas Station",badge:"OPS PWA",accent:"#f97316",desc:"App PWA de gestión operativa para Estación de Servicio Repsol.",tech:["PWA","FastAPI","SQLite","Service Worker"]},
+{href:"/iaputa-os/",icon:"🤖",name:"IAPuta OS",badge:"CORE AI",accent:"#8b5cf6",desc:"Asistente IA soberano con orbe 3D reactivo, 12 herramientas y multi-LLM.",tech:["FastAPI","React 19","Three.js","Clean Arch"]},
+{href:"/industrialpro/",icon:"⚙️",name:"IndustrialPro",badge:"INDUSTRY",accent:"#3b82f6",desc:"Plataforma de gestión industrial para procesos productivos y mantenimiento.",tech:["FastAPI","React","Tailwind","SQLite"]},
+{href:"/it-english-coach/",icon:"🇬🇧",name:"IT English Coach",badge:"LANGUAGE AI",accent:"#00FFCC",desc:"Plataforma PWA multiproveedor para dominar inglés técnico IT. Reading, Listening y Temario.",tech:["PWA","Node.js","Multi-LLM","Web Speech"]},
+{href:"/jartosdto/",icon:"🧠",name:"JartosDTo",badge:"AI CHAT",accent:"#8b5cf6",desc:"Plataforma unificada de chat IA con RAG, base vectorial y iOS nativo.",tech:["FastAPI","LangChain","pgvector","iOS Native"]},
+{href:"/livekit-nikolina/",icon:"🎙️",name:"LIVEKIT Nikolina",badge:"VOICE AI",accent:"#06b6d4",desc:"Asistente de voz para restaurantes con Gemini 2.5 Flash Native Audio.",tech:["LiveKit","Gemini 2.5","FastAPI","React 18"]},
+{href:"/logisearch/",icon:"🔍",name:"LogiSearch",badge:"LOGISTICS AI",accent:"#00E5FF",desc:"Buscador logístico con IA, análisis de rutas y generación de RFQs.",tech:["React 19","TypeScript","Supabase","Tavily"]},
+{href:"/logitrack-almacen/",icon:"📦",name:"LogiTrack Almacén",badge:"LOGISTICS",accent:"#0ea5e9",desc:"Sistema de gestión integral de operaciones de almacén y supply chain.",tech:["Trello","Kanban","Operaciones","Supply Chain"]},
+{href:"/mano-electrica-azul/",icon:"📱",name:"Mano Eléctrica Azul",badge:"MOBILE APP",accent:"#10b981",desc:"App multiplataforma en Google Play para exploración interactiva y Tzolkin.",tech:["React Native","Expo Go","Android","Google Play"]},
+{href:"/manuel-alvarez-cv/",icon:"👨‍💻",name:"Manuel Álvarez Diánez",badge:"CV",accent:"#3b82f6",desc:"Técnico en Sistemas Microinformáticos y Redes · Soporte IT · Logística Industrial.",tech:["SMR","Soporte IT","Redes","SAP"]},
+{href:"/mapfre/",icon:"🛡️",name:"MAPFRE Infocol",badge:"INSURANCE",accent:"#e60028",desc:"Sistema avanzado de información, tasación y gestión documental para seguros.",tech:["Next.js 15","Enterprise","Data Grid","API Integration"]},
+{href:"/moko-tools/",icon:"🛠️",name:"Moko-Tools",badge:"DEV TOOLS",accent:"#14b8a6",desc:"Directorio curado de 167 herramientas de desarrollo en 15 categorías.",tech:["React 19","Vite 7","Tailwind","167 Tools"]},
+{href:"/msbross/",icon:"💬",name:"MSBrOSs",badge:"ASSISTANT",accent:"#a855f7",desc:"Asistente conversacional principal del ecosistema MSBrossAI.",tech:["Python","Flask","Gemini API","SQLite"]},
+{href:"/perfume-trading/",icon:"💼",name:"Perfume Trading",badge:"TRADING B2B",accent:"#f43f5e",desc:"Sistema ERP especializado en trading B2B de perfumería.",tech:["ERP","Prisma","Next.js","B2B Trading"]},
+{href:"/taskflow/",icon:"✅",name:"TaskFlowPro",badge:"PRODUCTIVITY",accent:"#f59e0b",desc:"Gestión de tareas con alarmas, categorías e integración WhatsApp.",tech:["React 18","MUI 5","Zustand","PWA"]},
+{href:"/traductor-pro/",icon:"🌐",name:"Traductor PRO",badge:"TRANSLATION",accent:"#10b981",desc:"Traductor neural con 4 modos, 4 providers y OCR con Tesseract.js.",tech:["Express","React 19","MUI 7","Multi-Provider"]},
+{href:"/tu-energia-maya/",icon:"🌀",name:"Tu Energía Maya",badge:"WEB APP",accent:"#f59e0b",desc:"Plataforma interactiva sobre sabiduría Maya, kin y firma galáctica.",tech:["Web App","JavaScript","Tzolkin","Cosmología"]},
+{href:"/txafitnesspro/",icon:"🏋️",name:"TxaFitnessPro",badge:"FITNESS AI",accent:"#a855f7",desc:"Plataforma integral de entrenamiento y nutrición inteligente con IA.",tech:["Next.js 15","React 19","Tailwind","PostgreSQL"]},
+{href:"/web-restaurante-atenea/",icon:"🏛️",name:"Web Restaurante Atenea",badge:"GASTRONOMY",accent:"#c4b5fd",desc:"Experiencia culinaria de alta gastronomía con sistema de reservas.",tech:["HTML5","CSS3","JavaScript","Reservas"]},
+];
+
+/* ═══ RENDER CARDS ═══ */
+const grid=document.getElementById('app-grid');
+APPS.forEach((a,i)=>{
+grid.innerHTML+=`
+<a href="${a.href}" class="app-card" style="--card-accent:${a.accent}" data-delay="${i*60}" data-umami-event="Launch App" data-umami-event-app="${a.name}">
+  <div class="card-inner">
+    <div class="card-header">
+      <div class="card-icon">${a.icon}</div>
+      <div><div class="card-title">${a.name}</div><span class="card-badge">${a.badge}</span></div>
+    </div>
+    <p class="card-desc">${a.desc}</p>
+    <div class="card-tech">${a.tech.map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>
+    <div class="card-footer">
+      <div class="card-status"><span class="status-dot"></span> Online</div>
+      <span class="card-arrow">→</span>
+    </div>
+  </div>
+</a>`;
+});
+
+/* ═══ CARD GLOW FOLLOW ═══ */
+document.querySelectorAll('.app-card').forEach(c=>{
+    const inner=c.querySelector('.card-inner');
+    c.addEventListener('mousemove',e=>{
+        const r=inner.getBoundingClientRect();
+        inner.style.setProperty('--gx',e.clientX-r.left+'px');
+        inner.style.setProperty('--gy',e.clientY-r.top+'px');
+    });
+});
+
+/* ═══ CARD REVEAL ═══ */
+const cards=document.querySelectorAll('.app-card');
+const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+        if(e.isIntersecting){
+            setTimeout(()=>e.target.classList.add('revealed'),+(e.target.dataset.delay||0));
+            obs.unobserve(e.target);
+        }
+    });
+},{threshold:.05,rootMargin:'0px 0px -30px 0px'});
+cards.forEach(c=>obs.observe(c));
+
+/* ═══════════════════════════════════════════════════════
+   PERFORMANCE — Mobile/low-power detection
+   ═══════════════════════════════════════════════════════ */
+const isMobile='ontouchstart'in window||navigator.maxTouchPoints>0||window.innerWidth<768;
+const dprClamp=Math.min(window.devicePixelRatio||1,isMobile?1:2);
+
+/* ═══════════════════════════════════════════════════════
+   HERO CANVAS — Gravitational particle field
+   ═══════════════════════════════════════════════════════ */
+const hc=document.getElementById('hero-canvas');
+const hx=hc.getContext('2d');
+let W,H,pts=[],mouse={x:-999,y:-999};
+function resize(){
+    W=Math.floor(window.innerWidth*dprClamp);
+    H=Math.floor(window.innerHeight*dprClamp);
+    hc.width=W;hc.height=H;
+    hc.style.width=window.innerWidth+'px';
+    hc.style.height=window.innerHeight+'px';
+    hx.setTransform(dprClamp,0,0,dprClamp,0,0);
+}
+resize();
+window.addEventListener('resize',resize);
+if(!isMobile)document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+
+class P{
+    constructor(){this.reset()}
+    reset(){
+        this.angle=Math.random()*Math.PI*2;
+        this.dist=100+Math.random()*350;
+        this.speed=.002+Math.random()*.01;
+        this.r=Math.random()*2+.4;
+        this.op=Math.random()*.6+.2;
+        this.hue=250+Math.random()*50;
+    }
+    update(){
+        this.angle+=this.speed;
+        const lW=window.innerWidth,lH=window.innerHeight;
+        this.x=lW/2+Math.cos(this.angle)*this.dist;
+        this.y=lH/2+Math.sin(this.angle)*this.dist*.55;
+        if(!isMobile){
+            const dx=mouse.x-this.x,dy=mouse.y-this.y,d2=dx*dx+dy*dy;
+            if(d2<16900){const f=.04;this.x-=dx*f;this.y-=dy*f}
+        }
+    }
+    draw(){
+        hx.beginPath();
+        hx.arc(this.x,this.y,this.r,0,Math.PI*2);
+        hx.fillStyle=`hsla(${this.hue},80%,70%,${this.op})`;
+        hx.fill();
+    }
+}
+const pN=isMobile?Math.min(45,Math.floor(window.innerWidth*window.innerHeight/20000)):Math.min(130,Math.floor(window.innerWidth*window.innerHeight/9000));
+for(let i=0;i<pN;i++)pts.push(new P);
+
+/* Connection line threshold — skip entirely on mobile */
+const LINE_DIST=90;
+const LINE_DIST2=LINE_DIST*LINE_DIST;
+
+function heroAnim(){
+    hx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    for(let i=0;i<pts.length;i++){
+        pts[i].update();pts[i].draw();
+    }
+    /* O(n²) line connections — desktop only */
+    if(!isMobile){
+        hx.lineWidth=.5;
+        for(let i=0;i<pts.length;i++){
+            for(let j=i+1;j<pts.length;j++){
+                const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d2=dx*dx+dy*dy;
+                if(d2<LINE_DIST2){
+                    const d=Math.sqrt(d2);
+                    hx.beginPath();
+                    hx.moveTo(pts[i].x,pts[i].y);
+                    hx.lineTo(pts[j].x,pts[j].y);
+                    hx.strokeStyle=`rgba(0,229,255,${.12*(1-d/LINE_DIST)})`;
+                    hx.stroke();
+                }
+            }
+        }
+    }
+    requestAnimationFrame(heroAnim);
+}
+heroAnim();
+
+/* ═══════════════════════════════════════════════════════
+   3D WORMHOLE TUNNEL — Stars rushing past camera
+   ═══════════════════════════════════════════════════════ */
+const wc=document.getElementById('wormhole-canvas');
+const wx=wc.getContext('2d');
+let wW,wH;
+function wResize(){
+    wW=Math.floor(window.innerWidth*dprClamp);
+    wH=Math.floor(window.innerHeight*dprClamp);
+    wc.width=wW;wc.height=wH;
+    wc.style.width=window.innerWidth+'px';
+    wc.style.height=window.innerHeight+'px';
+    wx.setTransform(dprClamp,0,0,dprClamp,0,0);
+}
+wResize();
+window.addEventListener('resize',wResize);
+
+const STAR_COUNT=isMobile?180:600;
+const stars=[];
+for(let i=0;i<STAR_COUNT;i++){
+    stars.push({
+        x:(Math.random()-.5)*2,
+        y:(Math.random()-.5)*2,
+        z:Math.random()*3+.1,
+        speed:.01+Math.random()*.02,
+        hue:220+Math.random()*80,
+        size:Math.random()*1.5+.5,
+    });
+}
+
+/* Nebula rings — fewer on mobile, no shadowBlur */
+const RING_COUNT=isMobile?4:8;
+const rings=[];
+for(let i=0;i<RING_COUNT;i++){
+    rings.push({
+        z:i*(.4*(8/RING_COUNT))+.5,
+        rotation:Math.random()*Math.PI*2,
+        rotSpeed:.003+Math.random()*.005,
+        hue:250+i*(15*(8/RING_COUNT)),
+        radius:.3+Math.random()*.2,
+    });
+}
+
+let wormholeProgress=0;
+
+function drawWormhole(){
+    const lW=window.innerWidth,lH=window.innerHeight;
+    wx.fillStyle='rgba(3,7,18,0.15)';
+    wx.fillRect(0,0,lW,lH);
+
+    if(wormholeProgress<=0)return;
+
+    const cx=lW/2,cy=lH/2;
+    const speedFactor=wormholeProgress;
+
+    /* Nebula rings — no shadowBlur (GPU saver) */
+    rings.forEach(ring=>{
+        ring.rotation+=ring.rotSpeed*speedFactor;
+        const perspective=1/(ring.z*.8+.2);
+        const r=ring.radius*Math.min(lW,lH)*perspective;
+        const alpha=Math.min(1,speedFactor)*(.15+.1*Math.sin(ring.rotation*3));
+
+        wx.save();
+        wx.translate(cx,cy);
+        wx.rotate(ring.rotation);
+        wx.beginPath();
+        wx.ellipse(0,0,r,r*.7,0,0,Math.PI*2);
+        wx.strokeStyle=`hsla(${ring.hue},70%,60%,${alpha})`;
+        wx.lineWidth=2*perspective;
+        /* shadowBlur only on desktop — massive GPU cost on mobile */
+        if(!isMobile){wx.shadowBlur=20*perspective;wx.shadowColor=`hsla(${ring.hue},80%,50%,.4)`}
+        wx.stroke();
+        wx.restore();
+
+        ring.z-=.008*speedFactor;
+        if(ring.z<.1){ring.z=3;ring.hue=250+Math.random()*60}
+    });
+
+    /* Stars — simple lines on mobile, gradient trails on desktop */
+    stars.forEach(star=>{
+        star.z-=star.speed*speedFactor*2;
+        if(star.z<=.01){
+            star.x=(Math.random()-.5)*2;
+            star.y=(Math.random()-.5)*2;
+            star.z=3;
+        }
+        const perspective=1/star.z;
+        const sx=cx+star.x*lW*perspective*.4;
+        const sy=cy+star.y*lH*perspective*.4;
+        const sz=star.size*perspective*.8;
+
+        if(sx<-10||sx>lW+10||sy<-10||sy>lH+10)return;
+
+        const trailLen=Math.min(isMobile?20:40,sz*(isMobile?4:8)*speedFactor);
+        const dx=sx-cx,dy=sy-cy;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist>0&&trailLen>2){
+            const nx=dx/dist,ny=dy/dist;
+            wx.beginPath();
+            wx.moveTo(sx,sy);
+            wx.lineTo(sx-nx*trailLen,sy-ny*trailLen);
+            if(isMobile){
+                /* Simple solid line — no createLinearGradient per star */
+                wx.strokeStyle=`hsla(${star.hue},80%,80%,${Math.min(.7,speedFactor)})`;
+            }else{
+                const grad=wx.createLinearGradient(sx,sy,sx-nx*trailLen,sy-ny*trailLen);
+                grad.addColorStop(0,`hsla(${star.hue},80%,80%,${Math.min(.9,speedFactor)})`);
+                grad.addColorStop(1,'transparent');
+                wx.strokeStyle=grad;
+            }
+            wx.lineWidth=Math.max(.5,sz*.6);
+            wx.stroke();
+        }
+
+        wx.beginPath();
+        wx.arc(sx,sy,Math.max(.3,sz*.4),0,Math.PI*2);
+        wx.fillStyle=`hsla(${star.hue},80%,85%,${Math.min(1,speedFactor*.8+.2)})`;
+        wx.fill();
+    });
+
+    /* Central vortex glow */
+    const vGrad=wx.createRadialGradient(cx,cy,0,cx,cy,120*speedFactor);
+    vGrad.addColorStop(0,`rgba(0,229,255,${.2*speedFactor})`);
+    vGrad.addColorStop(.5,`rgba(6,182,212,${.08*speedFactor})`);
+    vGrad.addColorStop(1,'transparent');
+    wx.fillStyle=vGrad;
+    wx.fillRect(cx-200,cy-200,400,400);
+}
+
+function animWormhole(){
+    drawWormhole();
+    requestAnimationFrame(animWormhole);
+}
+animWormhole();
+
+/* ═══ SCROLL CONTROLLER ═══ */
+const heroEl=document.getElementById('hero');
+const spacer=document.getElementById('portal-spacer');
+
+function onScroll(){
+    const scrollY=window.scrollY;
+    const vh=window.innerHeight;
+
+    // Phase 1: Hero fade (0 → 0.5vh)
+    const heroFade=Math.min(1,scrollY/(vh*0.5));
+    heroEl.style.opacity=Math.max(0,1-heroFade*2);
+    heroEl.style.transform=`scale(${1-heroFade*.2})`;
+
+    // Phase 2: Wormhole continuo (empieza antes y se queda fijo)
+    const wormStart=vh*.1;
+    const wormFull=vh*.4;
+    if(scrollY>=wormStart){
+        wormholeProgress=Math.min(1,(scrollY-wormStart)/(wormFull-wormStart));
+        wc.style.opacity=Math.min(1,(scrollY-wormStart)/(vh*.3));
+    }else{
+        wormholeProgress=0;
+        wc.style.opacity=0;
+    }
+}
+
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+
+/* ═══ VISITS ═══ */
+const apiBase=(window.__MSBROSS_CONFIG__&&window.__MSBROSS_CONFIG__.apiBase)||'';
+fetch(apiBase+'/api/track-visit')
+    .then(()=>fetch(apiBase+'/api/visits'))
+    .then(r=>r.json())
+    .then(d=>{
+        document.getElementById('visits-today').textContent=d.today||'0';
+        document.getElementById('visits-total').textContent=d.total||'0';
+    })
+    .catch(()=>{
+        fetch('https://api.counterapi.dev/v1/msbross/global/up')
+            .then(r=>r.json())
+            .then(r=>{
+                document.getElementById('visits-today').textContent='Activo';
+                document.getElementById('visits-total').textContent=r.value||'—';
+            })
+            .catch(()=>{
+                document.getElementById('visits-today').textContent='Activa';
+                document.getElementById('visits-total').textContent='—';
+            });
+    });
+
+/* ═══ COMMAND PALETTE LOGIC ═══ */
+const cmdPalette = document.getElementById('cmd-palette');
+const cmdInput = document.getElementById('cmd-input');
+const cmdResults = document.getElementById('cmd-results');
+let cmdOpen = false;
+let selectedCmdIndex = 0;
+
+function renderCmdResults(query) {
+    const q = query.toLowerCase();
+    const filtered = APPS.filter(a => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.badge.toLowerCase().includes(q) || a.tech.some(t => t.toLowerCase().includes(q)));
+    
+    if(filtered.length === 0) {
+        cmdResults.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted)">No hay coincidencias.</div>`;
+        return;
+    }
+    
+    cmdResults.innerHTML = filtered.map((a, i) => `
+        <a href="${a.href}" class="cmd-item ${i===0?'selected':''}" data-index="${i}">
+            <div class="cmd-item-icon">${a.icon}</div>
+            <div class="cmd-item-content">
+                <div class="cmd-item-title">${a.name}</div>
+                <div class="cmd-item-desc">${a.desc}</div>
+            </div>
+            <div class="cmd-item-badge">${a.badge}</div>
+        </a>
+    `).join('');
+    selectedCmdIndex = 0;
+}
+
+window.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        cmdOpen = !cmdOpen;
+        if(cmdOpen) {
+            cmdPalette.classList.add('active');
+            cmdInput.value = '';
+            renderCmdResults('');
+            setTimeout(() => cmdInput.focus(), 50);
+        } else {
+            cmdPalette.classList.remove('active');
+        }
+    }
+    if (e.key === 'Escape' && cmdOpen) {
+        cmdOpen = false;
+        cmdPalette.classList.remove('active');
+    }
+    if (cmdOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+        e.preventDefault();
+        const items = cmdResults.querySelectorAll('.cmd-item');
+        if(!items.length) return;
+        items[selectedCmdIndex].classList.remove('selected');
+        if (e.key === 'ArrowDown') selectedCmdIndex = (selectedCmdIndex + 1) % items.length;
+        else selectedCmdIndex = (selectedCmdIndex - 1 + items.length) % items.length;
+        items[selectedCmdIndex].classList.add('selected');
+        items[selectedCmdIndex].scrollIntoView({block: 'nearest'});
+    }
+    if (cmdOpen && e.key === 'Enter') {
+        e.preventDefault();
+        const selected = cmdResults.querySelector('.cmd-item.selected');
+        if(selected) window.location.href = selected.href;
+    }
+});
+
+document.getElementById('cmd-overlay').addEventListener('click', () => {
+    cmdOpen = false;
+    cmdPalette.classList.remove('active');
+});
+cmdInput.addEventListener('input', e => renderCmdResults(e.target.value));
+
+/* ═══ CUSTOM CURSOR LOGIC ═══ */
+if(window.matchMedia("(pointer: fine)").matches) {
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    document.body.appendChild(cursor);
+    document.body.appendChild(trail);
+
+    let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+    let trailX = mouseX, trailY = mouseY;
+
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+        const target = e.target.closest('a, button, .hero-logo, input, .cmd-item');
+        if(target) document.body.classList.add('cursor-hover');
+        else document.body.classList.remove('cursor-hover');
+    });
+
+    function animCursor() {
+        trailX += (mouseX - trailX) * 0.15;
+        trailY += (mouseY - trailY) * 0.15;
+        trail.style.left = trailX + 'px';
+        trail.style.top = trailY + 'px';
+        requestAnimationFrame(animCursor);
+    }
+    animCursor();
+}
+
+
+
+
+/* ═══ UI AUDIO SOUNDSCAPE ═══ */
+let audioCtx = null;
+let droneOsc = null;
+let droneGain = null;
+let isAudioEnabled = false;
+
+const audioToggle = document.getElementById('audio-toggle');
+const iconOff = document.getElementById('audio-icon-off');
+const iconOn = document.getElementById('audio-icon-on');
+
+function initAudio() {
+    if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        droneOsc = audioCtx.createOscillator();
+        droneGain = audioCtx.createGain();
+        
+        // Drone sound setup
+        droneOsc.type = 'triangle';
+        droneOsc.frequency.value = 75; // Sub-bass with harmonics for audibility
+        droneOsc.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+        droneGain.gain.value = 0;
+        droneOsc.start();
+    }
+}
+
+function playTechClick() {
+    if(!isAudioEnabled || !audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+    
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.06);
+}
+
+audioToggle.addEventListener('click', () => {
+    isAudioEnabled = !isAudioEnabled;
+    if(isAudioEnabled) {
+        initAudio();
+        audioCtx.resume();
+        iconOff.style.display = 'none';
+        iconOn.style.display = 'block';
+    } else {
+        iconOff.style.display = 'block';
+        iconOn.style.display = 'none';
+        if(droneGain) droneGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    }
+});
+
+// Drone volume based on scroll speed
+let lastScrollY = window.scrollY;
+let droneVolTarget = 0;
+window.addEventListener('scroll', () => {
+    if(!isAudioEnabled || !audioCtx) return;
+    const diff = Math.abs(window.scrollY - lastScrollY);
+    lastScrollY = window.scrollY;
+    
+    // Increase volume based on scroll speed
+    droneVolTarget = Math.min(0.3, diff * 0.004);
+}, {passive: true});
+
+// Smooth out drone volume
+setInterval(() => {
+    if(!isAudioEnabled || !droneGain) return;
+    droneVolTarget *= 0.9; // Decay
+    const currentGain = droneGain.gain.value;
+    droneGain.gain.setTargetAtTime(currentGain + (droneVolTarget - currentGain) * 0.1, audioCtx.currentTime, 0.1);
+}, 50);
+
+// Attach hover sound to cards
+document.querySelectorAll('.app-card').forEach(card => {
+    card.addEventListener('mouseenter', playTechClick);
+});
+
+// ══════════════════════════════════════════════════════
+// LIVE STATUS BADGES (fetches /__health)
+// ══════════════════════════════════════════════════════
+(function() {
+  const HREF_TO_BACKEND = {
+    '/livekit-nikolina/': 'nikolina-api-hub',
+    '/elitescout/': 'elitescout-server',
+    '/traductor-pro/': 'traductor-pro',
+    '/msbross/': 'msbross-backend',
+    '/iaputa-os/': 'iaputa-backend',
+    '/cuentos-magicos/': 'cuentos-magicos',
+    '/web-restaurante-atenea/': 'web-restaurante-atenea',
+    '/jartosdto/': 'jartosdto-backend',
+    '/gas-station/': 'gas-station',
+    '/perfume-trading/': 'perfume-trading',
+    '/mapfre/': 'mapfre-infocol',
+    '/txafitnesspro/': 'txa-fitness-pro',
+  };
+
+  fetch('/__health').then(r => r.json()).then(data => {
+    document.querySelectorAll('.app-card').forEach(card => {
+      const href = card.getAttribute('href');
+      const backend = HREF_TO_BACKEND[href];
+      const dot = card.querySelector('.status-dot');
+      const statusEl = card.querySelector('.card-status');
+      if (!dot || !statusEl) return;
+
+      if (!backend) {
+        // Static app — always online
+        dot.style.background = 'var(--accent-3)';
+        return;
+      }
+
+      const isUp = data.backends && data.backends[backend] === 'up';
+      dot.style.background = isUp ? 'var(--accent-3)' : '#ef4444';
+      dot.style.animation = isUp ? 'pulse 2s infinite' : 'none';
+      statusEl.lastChild.textContent = isUp ? ' Online' : ' Offline';
+    });
+  }).catch(() => { /* Silent fail — dots stay default green */ });
+})();
+
+// ══════════════════════════════════════════════════════
+// COMMAND PALETTE (Cmd+K / Ctrl+K)
+// ══════════════════════════════════════════════════════
+(function() {
+  // Create modal DOM
+  const overlay = document.createElement('div');
+  overlay.id = 'cmd-palette-overlay';
+  overlay.innerHTML = `
+    <div id="cmd-palette">
+      <div class="cp-search-wrap">
+        <span class="cp-icon">🔍</span>
+        <input id="cp-input" type="text" placeholder="Buscar app, tecnología, categoría..." autocomplete="off" />
+        <kbd class="cp-kbd">ESC</kbd>
+      </div>
+      <div id="cp-results"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Styles
+  const style = document.createElement('style');
+  style.textContent = `
+    #cmd-palette-overlay {
+      position:fixed;inset:0;z-index:9999;display:none;align-items:flex-start;justify-content:center;
+      padding-top:min(20vh,140px);background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+      animation:cpFadeIn .15s ease;
+    }
+    #cmd-palette-overlay.active { display:flex }
+    #cmd-palette {
+      width:min(580px,92vw);background:rgba(15,15,30,.95);border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,.5);overflow:hidden;
+    }
+    .cp-search-wrap {
+      display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .cp-icon { font-size:18px;opacity:.5 }
+    #cp-input {
+      flex:1;background:none;border:none;outline:none;color:#f8fafc;font-size:15px;
+      font-family:'Inter',sans-serif;
+    }
+    #cp-input::placeholder { color:rgba(248,250,252,.3) }
+    .cp-kbd {
+      font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;border-radius:4px;
+      background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08);
+    }
+    #cp-results { max-height:360px;overflow-y:auto;padding:8px }
+    #cp-results::-webkit-scrollbar { width:4px }
+    #cp-results::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1);border-radius:2px }
+    .cp-item {
+      display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;cursor:pointer;
+      text-decoration:none;color:#f8fafc;transition:background .12s;
+    }
+    .cp-item:hover,.cp-item.active { background:rgba(99,102,241,.15) }
+    .cp-item-icon { font-size:22px;flex-shrink:0;width:36px;text-align:center }
+    .cp-item-info { flex:1;min-width:0 }
+    .cp-item-name { font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis }
+    .cp-item-desc { font-size:11px;color:rgba(248,250,252,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis }
+    .cp-item-badge {
+      font-size:9px;font-family:'JetBrains Mono',monospace;padding:2px 6px;border-radius:4px;
+      background:rgba(99,102,241,.15);color:#818cf8;flex-shrink:0;
+    }
+    .cp-empty { text-align:center;padding:32px;color:rgba(248,250,252,.25);font-size:13px }
+    @keyframes cpFadeIn { from{opacity:0} to{opacity:1} }
+  `;
+  document.head.appendChild(style);
+
+  const input = document.getElementById('cp-input');
+  const results = document.getElementById('cp-results');
+  let activeIdx = 0;
+
+  function open() {
+    overlay.classList.add('active');
+    input.value = '';
+    activeIdx = 0;
+    render(APPS);
+    setTimeout(() => input.focus(), 50);
+  }
+  function close() { overlay.classList.remove('active') }
+
+  function render(items) {
+    if (!items.length) {
+      results.innerHTML = '<div class="cp-empty">Sin resultados</div>';
+      return;
+    }
+    results.innerHTML = items.map((a, i) => `
+      <a href="${a.href}" class="cp-item ${i === activeIdx ? 'active' : ''}" data-idx="${i}">
+        <span class="cp-item-icon">${a.icon}</span>
+        <div class="cp-item-info">
+          <div class="cp-item-name">${a.name}</div>
+          <div class="cp-item-desc">${a.desc}</div>
+        </div>
+        <span class="cp-item-badge">${a.badge}</span>
+      </a>
+    `).join('');
+  }
+
+  function search(q) {
+    const t = q.toLowerCase().trim();
+    if (!t) return APPS;
+    return APPS.filter(a =>
+      a.name.toLowerCase().includes(t) ||
+      a.badge.toLowerCase().includes(t) ||
+      a.desc.toLowerCase().includes(t) ||
+      a.tech.some(te => te.toLowerCase().includes(t))
+    );
+  }
+
+  input.addEventListener('input', () => {
+    activeIdx = 0;
+    render(search(input.value));
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = results.querySelectorAll('.cp-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, items.length - 1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); }
+    if (e.key === 'Enter' && items[activeIdx]) { items[activeIdx].click(); close(); }
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+    items[activeIdx]?.scrollIntoView({ block: 'nearest' });
+  });
+
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close() });
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); open(); }
+    if (e.key === 'Escape') close();
+  });
+})();
+
+  </script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
