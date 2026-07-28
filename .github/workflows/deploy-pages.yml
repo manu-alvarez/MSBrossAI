@@ -26,8 +26,8 @@ jobs:
       - name: Build Frontends
         run: |
           export BASE_DIR=$GITHUB_WORKSPACE
-          chmod +x rebuild_all_frontends.sh
-          ./rebuild_all_frontends.sh
+          chmod +x scripts/rebuild_all_frontends.sh
+          ./scripts/rebuild_all_frontends.sh
           
       - name: Ensure functions directory exists
         run: |

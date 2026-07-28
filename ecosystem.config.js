@@ -325,8 +325,13 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'msbross-proxy',
-      script: 'proxy_server.js',
-      cwd: BASE_DIR,
+      script: 'server.js',
+      cwd: './apps/msbross-proxy',
+      watch: false,
+      env: {
+        NODE_ENV: 'production',
+        PORT: 8080,
+      },
       out_file: path.join(BASE_DIR, 'logs/proxy.log'),
       error_file: path.join(BASE_DIR, 'logs/proxy.error.log'),
       autorestart: true,
