@@ -4,7 +4,10 @@
 # ==============================================================================
 # set -e removed to allow continuing on errors
 
-BASE_DIR="/Users/manu/Desktop/MSBrossAI"
+# Allow overriding BASE_DIR from environment variables (e.g., GitHub Actions)
+if [ -z "$BASE_DIR" ]; then
+  BASE_DIR="/Users/manu/MSBrossAI"
+fi
 WWW_APP="$BASE_DIR/www/app"
 
 echo "🧹 1. Eliminando symlink/carpetas de iCloud en www/app..."
@@ -86,13 +89,13 @@ echo "▶ Procesando Taskflow..."
 build_vite "$BASE_DIR/apps/taskflow-pro" "taskflow"
 
 echo "▶ Procesando Perfume Trading..."
-build_vite "$BASE_DIR/apps/perfume-trading" "perfume-trading"
+build_next "$BASE_DIR/apps/perfume-trading/erp" "perfume-trading"
 
 echo "▶ Procesando Traductor Pro..."
-build_vite "$BASE_DIR/apps/traductor-pro/frontend" "traductor"
+build_vite "$BASE_DIR/apps/traductor-pro/client" "traductor"
 
 echo "▶ Procesando Atenea..."
-build_vite "$BASE_DIR/apps/web-restaurante-atenea/frontend" "atenea"
+build_vite "$BASE_DIR/apps/web-restaurante-atenea" "atenea"
 
 echo "▶ Procesando IT English Coach..."
 build_vite "$BASE_DIR/apps/it-english-coach-frontend" "it-english-coach"
