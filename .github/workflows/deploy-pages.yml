@@ -1,13 +1,14 @@
-name: Build and Deploy Frontends to gh-pages
+name: Build and Deploy Frontends to Cloudflare Pages
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  deployments: write
 
 jobs:
   build-and-deploy:
@@ -22,16 +23,23 @@ jobs:
         with:
           node-version: '22'
           
-      - name: Run rebuild script
+      - name: Build Frontends
         run: |
           export BASE_DIR=$GITHUB_WORKSPACE
           chmod +x rebuild_all_frontends.sh
           ./rebuild_all_frontends.sh
+          
+      - name: Ensure functions directory exists
+        run: |
+          mkdir -p www/functions
+          cp -r functions/* www/functions/ || true
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./www
-          publish_branch: gh-pages
-          force_orphan: true
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: msbross-me
+          directory: ./www
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
