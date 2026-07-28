@@ -7,4 +7,4 @@ if [ -f .env ]; then
 fi
 
 # Run celery using the virtual environment's python
-exec /Users/manu/Desktop/MSBrossAI/apps/iaputa-os/backend/venv/bin/python3 -m celery -A app.core.celery_app worker --loglevel=info --queues=stories,images,audio,video --concurrency=2
+exec "$(dirname "$0")/venv/bin/python3" -m celery -A app.core.celery_app worker --loglevel=info --queues=stories,images,audio,video --concurrency=2

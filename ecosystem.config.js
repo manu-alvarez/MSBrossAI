@@ -19,6 +19,8 @@
  * - max_restarts: Cap at 15 restarts before triggering operator alert/stable sleep.
  */
 const path = require('path');
+// Use symlink path to avoid spaces in paths (iCloud Drive has spaces that break bash)
+const BASE_DIR = '/Users/manu/MSBrossAI';
 
 module.exports = {
   apps: [
@@ -29,9 +31,9 @@ module.exports = {
       name: 'nikolina-livekit-server',
       script: 'livekit-server',
       args: '--dev --bind 127.0.0.1 --node-ip 127.0.0.1',
-      cwd: __dirname,
-      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.log'),
-      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/livekit.error.log'),
+      cwd: BASE_DIR,
+      out_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/livekit.log'),
+      error_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/livekit.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -40,15 +42,15 @@ module.exports = {
     },
     {
       name: 'nikolina-api-hub',
-      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/livekit-nikolina/venv/bin/python3'),
       args: '-m uvicorn main:app --host 127.0.0.1 --port 8001',
-      cwd: path.join(__dirname, 'apps/livekit-nikolina/server'),
+      cwd: path.join(BASE_DIR, 'apps/livekit-nikolina/server'),
       env: {
-        PYTHONPATH: path.join(__dirname, 'apps/livekit-nikolina/agent/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server/src') + ':' + path.join(__dirname, 'apps/livekit-nikolina/server'),
+        PYTHONPATH: path.join(BASE_DIR, 'apps/livekit-nikolina/agent/src') + ':' + path.join(BASE_DIR, 'apps/livekit-nikolina/server/src') + ':' + path.join(BASE_DIR, 'apps/livekit-nikolina/server'),
         PORT: '8001'
       },
-      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/api.log'),
-      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/api.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/api.log'),
+      error_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/api.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -57,14 +59,14 @@ module.exports = {
     },
     {
       name: 'nikolina-agent',
-      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/livekit-nikolina/venv/bin/python3'),
       args: 'src/agent.py start',
-      cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
+      cwd: path.join(BASE_DIR, 'apps/livekit-nikolina/agent'),
       env: {
         PYTHONPATH: './agent/src:./server/src'
       },
-      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/agent.log'),
-      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/agent.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/agent.log'),
+      error_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/agent.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -73,15 +75,15 @@ module.exports = {
     },
     {
       name: 'it-coach-agent',
-      script: path.join(__dirname, 'apps/livekit-nikolina/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/livekit-nikolina/venv/bin/python3'),
       args: 'src/coach_agent.py start',
-      cwd: path.join(__dirname, 'apps/livekit-nikolina/agent'),
+      cwd: path.join(BASE_DIR, 'apps/livekit-nikolina/agent'),
       env: {
         PYTHONPATH: './agent/src:./server/src',
         LIVEKIT_WORKER_PORT: 8082
       },
-      out_file: path.join(__dirname, 'apps/livekit-nikolina/logs/coach_agent.log'),
-      error_file: path.join(__dirname, 'apps/livekit-nikolina/logs/coach_agent.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/coach_agent.log'),
+      error_file: path.join(BASE_DIR, 'apps/livekit-nikolina/logs/coach_agent.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -94,14 +96,14 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'gas-station-backend',
-      script: path.join(__dirname, 'apps/gas-station/backend/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/gas-station/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 127.0.0.1 --port 3005',
-      cwd: path.join(__dirname, 'apps/gas-station/backend'),
+      cwd: path.join(BASE_DIR, 'apps/gas-station/backend'),
       env: {
         PORT: '3005'
       },
-      out_file: path.join(__dirname, 'apps/gas-station/backend/gas-station.log'),
-      error_file: path.join(__dirname, 'apps/gas-station/backend/gas-station.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/gas-station/backend/gas-station.log'),
+      error_file: path.join(BASE_DIR, 'apps/gas-station/backend/gas-station.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -114,11 +116,11 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'industrialpro-backend',
-      script: path.join(__dirname, 'apps/industrialpro/backend/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/industrialpro/backend/venv/bin/python3'),
       args: '-m uvicorn app:app --host 127.0.0.1 --port 8002',
-      cwd: path.join(__dirname, 'apps/industrialpro/backend'),
-      out_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.log'),
-      error_file: path.join(__dirname, 'apps/industrialpro/backend/industrialpro.error.log'),
+      cwd: path.join(BASE_DIR, 'apps/industrialpro/backend'),
+      out_file: path.join(BASE_DIR, 'apps/industrialpro/backend/industrialpro.log'),
+      error_file: path.join(BASE_DIR, 'apps/industrialpro/backend/industrialpro.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -131,11 +133,11 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'iaputa-backend',
-      script: path.join(__dirname, 'apps/iaputa-os/backend/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/iaputa-os/backend/venv/bin/python3'),
       args: '-m uvicorn main:app --host 127.0.0.1 --port 8006',
-      cwd: path.join(__dirname, 'apps/iaputa-os/backend'),
-      out_file: path.join(__dirname, 'apps/iaputa-os/backend/iaputa.log'),
-      error_file: path.join(__dirname, 'apps/iaputa-os/backend/iaputa.error.log'),
+      cwd: path.join(BASE_DIR, 'apps/iaputa-os/backend'),
+      out_file: path.join(BASE_DIR, 'apps/iaputa-os/backend/iaputa.log'),
+      error_file: path.join(BASE_DIR, 'apps/iaputa-os/backend/iaputa.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -150,12 +152,12 @@ module.exports = {
       name: 'traductor-pro-server',
       script: 'node',
       args: 'dist/index.js',
-      cwd: path.join(__dirname, 'apps/traductor-pro/server'),
+      cwd: path.join(BASE_DIR, 'apps/traductor-pro/server'),
       env: {
         PORT: '8004'
       },
-      out_file: path.join(__dirname, 'apps/traductor-pro/server/arantxa.log'),
-      error_file: path.join(__dirname, 'apps/traductor-pro/server/arantxa.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/traductor-pro/server/arantxa.log'),
+      error_file: path.join(BASE_DIR, 'apps/traductor-pro/server/arantxa.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -168,11 +170,11 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'msbross-backend',
-      script: path.join(__dirname, 'apps/msbross/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/msbross/venv/bin/python3'),
       args: 'server.py',
-      cwd: path.join(__dirname, 'apps/msbross'),
-      out_file: path.join(__dirname, 'apps/msbross/msbross.log'),
-      error_file: path.join(__dirname, 'apps/msbross/msbross.error.log'),
+      cwd: path.join(BASE_DIR, 'apps/msbross'),
+      out_file: path.join(BASE_DIR, 'apps/msbross/msbross.log'),
+      error_file: path.join(BASE_DIR, 'apps/msbross/msbross.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -185,11 +187,11 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'cuentos-magicos-backend',
-      script: path.join(__dirname, 'apps/cuentos-magicos/backend/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/cuentos-magicos/backend/venv/bin/python3'),
       args: '-m uvicorn app.main:app --host 127.0.0.1 --port 8007',
-      cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
-      out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.log'),
-      error_file: path.join(__dirname, 'apps/cuentos-magicos/backend/cuentosmagicos.error.log'),
+      cwd: path.join(BASE_DIR, 'apps/cuentos-magicos/backend'),
+      out_file: path.join(BASE_DIR, 'apps/cuentos-magicos/backend/cuentosmagicos.log'),
+      error_file: path.join(BASE_DIR, 'apps/cuentos-magicos/backend/cuentosmagicos.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -201,9 +203,9 @@ module.exports = {
       name: 'cuentos-magicos-celery',
       script: 'start-celery.sh',
       interpreter: '/bin/bash',
-      cwd: path.join(__dirname, 'apps/cuentos-magicos/backend'),
-      out_file: path.join(__dirname, 'apps/cuentos-magicos/backend/celery.log'),
-      error_file: path.join(__dirname, 'apps/cuentos-magicos/backend/celery.error.log'),
+      cwd: path.join(BASE_DIR, 'apps/cuentos-magicos/backend'),
+      out_file: path.join(BASE_DIR, 'apps/cuentos-magicos/backend/celery.log'),
+      error_file: path.join(BASE_DIR, 'apps/cuentos-magicos/backend/celery.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -217,15 +219,15 @@ module.exports = {
     {
       name: 'elitescout-server',
       script: 'start-server.sh',
-      cwd: path.join(__dirname, 'apps/elitescout'),
+      cwd: path.join(BASE_DIR, 'apps/elitescout'),
       interpreter: '/bin/bash',
       env: {
         PORT: '8003',
         NEXT_SERVER_MODE: 'true',
         NODE_ENV: 'production'
       },
-      out_file: path.join(__dirname, 'apps/elitescout/elitescout.log'),
-      error_file: path.join(__dirname, 'apps/elitescout/elitescout.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/elitescout/elitescout.log'),
+      error_file: path.join(BASE_DIR, 'apps/elitescout/elitescout.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -238,15 +240,15 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'web-restaurante-atenea-backend',
-      script: path.join(__dirname, 'apps/web-restaurante-atenea/venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/web-restaurante-atenea/venv/bin/python3'),
       args: '-m uvicorn main:app --host 127.0.0.1 --port 8009',
-      cwd: path.join(__dirname, 'apps/web-restaurante-atenea'),
+      cwd: path.join(BASE_DIR, 'apps/web-restaurante-atenea'),
       env: {
         PYTHONPATH: '.',
         PORT: '8009'
       },
-      out_file: path.join(__dirname, 'apps/web-restaurante-atenea/atenea.log'),
-      error_file: path.join(__dirname, 'apps/web-restaurante-atenea/atenea.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/web-restaurante-atenea/atenea.log'),
+      error_file: path.join(BASE_DIR, 'apps/web-restaurante-atenea/atenea.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -259,15 +261,15 @@ module.exports = {
     // ──────────────────────────────────────────────
     {
       name: 'jartosdto-backend',
-      script: path.join(__dirname, 'apps/jartosdto/server/.venv/bin/python3'),
+      script: path.join(BASE_DIR, 'apps/jartosdto/server/.venv/bin/python3'),
       args: '-m uvicorn app.main:app --host 127.0.0.1 --port 8010',
-      cwd: path.join(__dirname, 'apps/jartosdto/server'),
+      cwd: path.join(BASE_DIR, 'apps/jartosdto/server'),
       env: {
         PYTHONPATH: '.',
         PORT: '8010'
       },
-      out_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.log'),
-      error_file: path.join(__dirname, 'apps/jartosdto/server/jartosdto.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/jartosdto/server/jartosdto.log'),
+      error_file: path.join(BASE_DIR, 'apps/jartosdto/server/jartosdto.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -283,13 +285,13 @@ module.exports = {
       name: 'txa-fitness-pro',
       script: 'node_modules/.bin/next',
       args: 'start -p 3456 -H 127.0.0.1',
-      cwd: path.join(__dirname, 'apps/txa-fitness-pro'),
+      cwd: path.join(BASE_DIR, 'apps/txa-fitness-pro'),
       env: {
         NODE_ENV: 'production',
         PORT: '3456'
       },
-      out_file: path.join(__dirname, 'apps/txa-fitness-pro/txa-fitness.log'),
-      error_file: path.join(__dirname, 'apps/txa-fitness-pro/txa-fitness.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/txa-fitness-pro/txa-fitness.log'),
+      error_file: path.join(BASE_DIR, 'apps/txa-fitness-pro/txa-fitness.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -304,13 +306,13 @@ module.exports = {
       name: 'mapfre-infocol',
       script: 'node_modules/.bin/next',
       args: 'start -p 3333 -H 127.0.0.1',
-      cwd: path.join(__dirname, 'apps/mapfre-infocol/frontend'),
+      cwd: path.join(BASE_DIR, 'apps/mapfre-infocol/frontend'),
       env: {
         NODE_ENV: 'production',
         PORT: '3333'
       },
-      out_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre-infocol.log'),
-      error_file: path.join(__dirname, 'apps/mapfre-infocol/frontend/mapfre-infocol.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/mapfre-infocol/frontend/mapfre-infocol.log'),
+      error_file: path.join(BASE_DIR, 'apps/mapfre-infocol/frontend/mapfre-infocol.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -324,9 +326,9 @@ module.exports = {
     {
       name: 'msbross-proxy',
       script: 'proxy_server.js',
-      cwd: __dirname,
-      out_file: path.join(__dirname, 'logs/proxy.log'),
-      error_file: path.join(__dirname, 'logs/proxy.error.log'),
+      cwd: BASE_DIR,
+      out_file: path.join(BASE_DIR, 'logs/proxy.log'),
+      error_file: path.join(BASE_DIR, 'logs/proxy.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -340,7 +342,7 @@ module.exports = {
     {
       name: 'it-english-backend',
       script: 'server.js',
-      cwd: path.join(__dirname, 'apps/it-english-coach'),
+      cwd: path.join(BASE_DIR, 'apps/it-english-coach'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -355,7 +357,7 @@ module.exports = {
       name: 'cloudflare-tunnel',
       script: 'cloudflared',
       args: 'tunnel run msbross-main',
-      cwd: __dirname,
+      cwd: BASE_DIR,
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
@@ -370,13 +372,13 @@ module.exports = {
       name: 'perfume-trading',
       script: 'node_modules/.bin/next',
       args: 'start -p 3011 -H 127.0.0.1',
-      cwd: path.join(__dirname, 'apps/perfume-trading/erp'),
+      cwd: path.join(BASE_DIR, 'apps/perfume-trading/erp'),
       env: {
         NODE_ENV: 'production',
         PORT: '3011'
       },
-      out_file: path.join(__dirname, 'apps/perfume-trading/erp/perfume.log'),
-      error_file: path.join(__dirname, 'apps/perfume-trading/erp/perfume.error.log'),
+      out_file: path.join(BASE_DIR, 'apps/perfume-trading/erp/perfume.log'),
+      error_file: path.join(BASE_DIR, 'apps/perfume-trading/erp/perfume.error.log'),
       autorestart: true,
       max_restarts: 15,
       exp_backoff_delay: 1000,
