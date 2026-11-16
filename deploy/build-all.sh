@@ -1,51 +1,74 @@
 #!/bin/bash
 # MSBrossAI — Build ALL apps for self-hosted msbross.me
 # Removes Cloudflare tunnel dependency; apps connect via relative paths or wss://msbross.me
+set -Eeuo pipefail
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 export NEXT_TELEMETRY_DISABLED=1
 export CI=true
 
-BASE_DIR="/Users/manu/Desktop/MSBrossAI"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 WWW_DIR="$BASE_DIR/www"
+BUILD_BACKUP_ROOT="$BASE_DIR/.build-backups/$(date +%Y%m%d-%H%M%S)"
 
 build_app() {
   local app_dir=$1
   local target_dir=$2
-  local build_type=$3 # "vite" (dist) or "next" (out)
-  local env_vars=$4  # optional env vars for build
+  local build_type=$3 # "vite" (dist), "vite-public" (build), or "next" (out)
+  local env_vars=${4:-}
+  local source_dir
+  local destination="$WWW_DIR/app/$target_dir"
+  local stage_dir
+  local backup_dir="$BUILD_BACKUP_ROOT/$target_dir"
 
   echo "=> Construyendo $app_dir..."
-  cd "$BASE_DIR/$app_dir" || return
+  cd "$BASE_DIR/$app_dir"
 
-  echo "=> Instalando dependencias..."
-  rm -rf node_modules package-lock.json
-  npm install
+  if [ ! -f package-lock.json ]; then
+    echo "❌ Falta package-lock.json en $app_dir" >&2
+    return 1
+  fi
+  echo "=> Instalando dependencias bloqueadas..."
+  npm ci
 
   if [ -n "$env_vars" ]; then
-    eval "$env_vars" npm run build || { echo "❌ Fallo el build de $app_dir"; return; }
+    eval "$env_vars npm run build"
   else
-    npm run build || { echo "❌ Fallo el build de $app_dir"; return; }
+    npm run build
   fi
 
-  rm -rf "$WWW_DIR/app/$target_dir"/*
-  mkdir -p "$WWW_DIR/app/$target_dir"
-
-  if [ "$build_type" == "next" ]; then
-    cp -r out/* "$WWW_DIR/app/$target_dir/"
-  elif [ "$build_type" == "vite-public" ]; then
-    cp -r build/* "$WWW_DIR/app/$target_dir/"
-  else
-    cp -r dist/* "$WWW_DIR/app/$target_dir/"
+  case "$build_type" in
+    next) source_dir="$BASE_DIR/$app_dir/out" ;;
+    vite-public) source_dir="$BASE_DIR/$app_dir/build" ;;
+    vite) source_dir="$BASE_DIR/$app_dir/dist" ;;
+    *) echo "❌ Tipo de build desconocido: $build_type" >&2; return 1 ;;
+  esac
+  if [ ! -d "$source_dir" ] || [ -z "$(find "$source_dir" -mindepth 1 -maxdepth 1 -print -quit)" ]; then
+    echo "❌ Salida de build vacía o inexistente: $source_dir" >&2
+    return 1
   fi
 
-  # Clean Turbopack metadata files (not needed in production)
-  find "$WWW_DIR/app/$target_dir" -name '__next.*' -delete 2>/dev/null
+  mkdir -p "$WWW_DIR/app"
+  stage_dir="$(mktemp -d "$WWW_DIR/app/.${target_dir}.stage.XXXXXX")"
+  cp -R "$source_dir"/. "$stage_dir"/
+  find "$stage_dir" -name '__next.*' -delete 2>/dev/null || true
 
   # Inject Service Worker Kill Switch
-  if [ -f "$WWW_DIR/app/$target_dir/index.html" ]; then
-    sed -i '' -e 's|<head>|<head><script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(reg=>reg.unregister()));}</script>|' "$WWW_DIR/app/$target_dir/index.html"
+  if [ -f "$stage_dir/index.html" ]; then
+    sed -i '' -e 's|<head>|<head><script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(reg=>reg.unregister()));}</script>|' "$stage_dir/index.html"
+  fi
+
+  if [ -e "$destination" ]; then
+    mkdir -p "$(dirname "$backup_dir")"
+    mv "$destination" "$backup_dir"
+  fi
+  if ! mv "$stage_dir" "$destination"; then
+    if [ -e "$backup_dir" ]; then mv "$backup_dir" "$destination"; fi
+    echo "❌ No se pudo publicar $target_dir; restaurado el build anterior si existía" >&2
+    return 1
   fi
 
   echo "✓ $app_dir -> www/app/$target_dir"
