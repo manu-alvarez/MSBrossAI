@@ -5,16 +5,15 @@
 echo "=========================================================="
 echo "🚀 INICIANDO SECUENCIA MASTER MSBROSS NATIVE MAC (PM2) 🚀"
 echo "=========================================================="
-BASE_DIR="$(pwd)"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "🧹 1. Limpieza de Procesos Antiguos..."
-pm2 delete all > /dev/null 2>&1 || true
+echo "🧭 1. Iniciando o actualizando solo las apps de este ecosystem..."
 
 echo "----------------------------------------------------------"
 echo "🧠 2. Inicializando Ecosistema Global a través de PM2..."
 echo "   ➤ Leyendo ecosystem.config.js..."
 
-pm2 start ecosystem.config.js
+pm2 startOrReload "$BASE_DIR/ecosystem.config.js" --update-env
 pm2 save
 
 echo "----------------------------------------------------------"
@@ -23,5 +22,5 @@ echo "✅ MSBROSS ECOSYSTEM ESTÁ TOTALMENTE EN LÍNEA."
 echo "▶ Ecosistema Unificado (Reverse Proxy): http://localhost:8080"
 echo "▶ Monitor de procesos: Ejecuta 'pm2 status' o 'pm2 monit'"
 echo ""
-echo "🌐 Para apagar el sistema ejecuta: pm2 stop all"
+echo "🌐 Para apagar el sistema ejecuta: pm2 stop $BASE_DIR/ecosystem.config.js"
 echo "=========================================================="
