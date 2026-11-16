@@ -4,7 +4,7 @@ import path from "path";
 
 const HOST = "msbross.me";
 const USER = "manu@msbross.me";
-const PASS = "Br3an1sB3tt3r!";
+const PASS = process.env.NOMINALIA_FTP_PASSWORD;
 const APPS = ["gas-station", "industrialpro", "traductor", "logisearch"];
 
 async function main() {
