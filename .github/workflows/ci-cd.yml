@@ -1,4 +1,4 @@
-name: MSBrossAI CI/CD
+name: MSBrossAI CI (no deploy)
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ matrix.app.path }}
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts
 
       - name: Build
         working-directory: ${{ matrix.app.path }}
@@ -60,46 +60,4 @@ jobs:
           name: build-${{ matrix.app.name }}
           path: ${{ matrix.app.path }}/dist
           retention-days: 7
-
-  deploy:
-    name: Deploy to Production
-    needs: lint-and-build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment: production
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download all build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: builds
-
-      - name: Deploy via custom FTP script
-        env:
-          FTP_HOST: msbros.ftp.tb-hosting.com
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASS }}
-          FTP_LOCAL_DIR: ./www
-        run: python3 deploy/ftp-deploy-full.py
-
-      - name: Verify deployment
-        run: |
-          echo "Verifying 13 apps..."
-          PASS=0
-          FAIL=0
-          for slug in app-generator combipro edelweiss elitescout gas-station industrialpro logisearch moko-tools taskflow iaputa-os jartosdto livekit-nikolina traductor-pro; do
-            HTTP=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 --retry 2 --retry-delay 2 "https://msbross.me/app/$slug/")
-            if [ "$HTTP" = "200" ]; then
-              echo "  ✅ $slug: HTTP $HTTP"
-              PASS=$((PASS + 1))
-            else
-              echo "  ⚠️ $slug: HTTP $HTTP (Non-critical check)"
-              FAIL=$((FAIL + 1))
-            fi
-          done
-          echo ""
-          echo "Result: $PASS PASS / $FAIL FAIL"
-          echo "Deployment completed successfully."
 
