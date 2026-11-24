@@ -69,3 +69,16 @@ bash deploy/build-all.sh
 export FTP_PASSWORD="tu-password"
 python3 deploy/ftp-deploy-full.py
 ```
+
+## Fuentes oficiales y copias integradas
+
+El monorrepositorio incluye implementaciones históricas y artefactos que **no deben considerarse automáticamente la fuente oficial**. Para evitar cambios divergentes:
+
+| Aplicación | Fuente de edición | Copias integradas |
+| --- | --- | --- |
+| CombiPro | [manu-alvarez/CombiPro](https://github.com/manu-alvarez/CombiPro) | `apps/combipro`, `www/app/combipro` si existe |
+| TaskFlowPro | [manu-alvarez/TaskFlowPro](https://github.com/manu-alvarez/TaskFlowPro) | `apps/taskflow-pro` y artefactos publicados |
+| Portal MSB | [manu-alvarez/MSB](https://github.com/manu-alvarez/MSB) | El panel de Pages y su catálogo son independientes de `www` |
+| Infraestructura VPS/local | [manu-alvarez/SERVER-DEV](https://github.com/manu-alvarez/SERVER-DEV) | No importar frontends antiguos como si fuesen los actuales |
+
+**Regla de sincronización:** desarrollar en la fuente oficial, compilar y verificar el artefacto, comparar las diferencias y publicar solo mediante el procedimiento explícito del destino. Ningún cambio de documentación activa despliegues de producción.
