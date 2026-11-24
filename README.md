@@ -1,12 +1,12 @@
 # MSBrossAI — Suite de Aplicaciones de Software
 
-MSBrossAI es un ecosistema consolidado de 22 aplicaciones avanzadas de inteligencia artificial, productividad, gestión empresarial y herramientas interconectadas mediante un proxy centralizado.
+MSBrossAI es un monorrepositorio que integra código, configuraciones y recursos web de aplicaciones de inteligencia artificial, productividad y gestión empresarial. Su inventario incluye aplicaciones con distintos grados de desarrollo; disponer de código o de un frontend compilado no implica disponibilidad del backend ni aceptación funcional.
 
 El ecosistema opera mediante una arquitectura altamente integrada sobre **macOS** (y compatible con Linux/Bash), estructurada en:
 - **Proxy Central Reverso (`proxy_server.js`)**: Gestiona toda la capa de routing inverso y sirve las Single Page Applications desde `/www/app/<nombre-app>`. Mapea endpoints internos de API en puertos dedicados (`/_traductor`, `/_nikolina`, etc.). Admite almacenamiento centralizado de datos y el **Contador Global de Visitas** (`/api/track-visit`) con persistencia directa en disco.
 - **Orquestación PM2 (`ecosystem.config.js`)**: Proporciona alta disponibilidad, auto-recovery exponencial y limitación de memoria a todos los microservicios en NodeJS, FastAPI y Express.
 - **Túnel Nombrado de Cloudflare (`msbross-main`)**: Habilita acceso WAN cifrado continuo hacia los backends locales de forma segura.
-- **Bases de Datos de Producción Integradas**: Todos los clientes (como Perfume Trading, JartosDTo y LogiSearch) operan de forma nativa e incondicional conectados a sus bases de datos reales en la nube (Supabase en la instancia de producción `ujktxhqxhxkbrhczbhcf.supabase.co` y APIs en vivo). Se han erradicado por completo los modos simulados offline/demo locales de la suite de software en favor de entornos 100% interactivos y reales.
+- **Persistencia e integraciones**: cada aplicación declara sus dependencias de base de datos y proveedores externos en su propia configuración. La disponibilidad de Supabase, API, tokens y servicios en ejecución debe comprobarse por aplicación; las compilaciones de CI no verifican estos servicios.
 
 ## Aplicaciones Incluidas (22)
 
@@ -54,20 +54,19 @@ Comandos útiles de mantenimiento:
 ```bash
 pm2 status    # Comprobar el estado de los servicios
 pm2 monit     # Ver telemetría de CPU/Memoria y registros en tiempo real
-pm2 stop all  # Apagar todo el entorno de desarrollo
+pm2 describe <nombre-proceso>  # Consultar únicamente el proceso previsto; no detener servicios ajenos
 ```
 
 ## Producción y CI/CD
 
-El ecosistema utiliza scripts propios para la compilación de todos los clientes React y un despliegue vía FTP automatizado.
+El repositorio dispone de scripts de construcción y un workflow de Cloudflare Pages **manual**. No existe un despliegue FTP automático desde CI. La publicación FTP correspondiente al gateway de `msbross.me` se gestiona desde [MSBross.me](https://github.com/manu-alvarez/MSBross.me) y requiere revisión del destino y respaldo previo.
 
 ```bash
 # Compilación secuencial de todos los proyectos frontend
 bash deploy/build-all.sh
 
-# Despliegue de los binarios al servidor FTP en producción
-export FTP_PASSWORD="tu-password"
-python3 deploy/ftp-deploy-full.py
+# Para inspeccionar el proceso de publicación, revisar el workflow manual
+# .github/workflows/deploy-pages.yml y validar los artefactos antes de publicar
 ```
 
 ## Fuentes oficiales y copias integradas
